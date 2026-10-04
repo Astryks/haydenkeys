@@ -116,6 +116,8 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-badge-confirmed { background: rgba(88, 214, 141, 0.2); color: var(--hk-accent-2); }
 .hk-badge-unverified { background: rgba(232, 184, 75, 0.2); color: var(--hk-warn); cursor: help; }
 .hk-badge-match { background: rgba(124, 92, 255, 0.25); color: #c9bfff; margin-left: 6px; }
+.hk-badge-advanced { background: rgba(255, 107, 107, 0.2); color: var(--hk-danger); margin-right: 4px; }
+.hk-song-card-advanced { border-color: var(--hk-danger); }
 
 /* Keyboard */
 .hk-keyboard-wrap { margin: 16px 0; }

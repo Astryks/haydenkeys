@@ -16,10 +16,11 @@ function matchBadge(song) {
 function songCard(song, onStart) {
   const saved = getSavedSongs()[song.title];
   const div = document.createElement("div");
-  div.className = "hk-song-card";
+  div.className = "hk-song-card" + (song.advanced ? " hk-song-card-advanced" : "");
   div.innerHTML = `
     <div class="hk-song-card-top">
       <h3>${song.title}</h3>
+      ${song.advanced ? `<span class="hk-badge hk-badge-advanced" title="Not part of the beginner curriculum">Advanced / bonus</span>` : ""}
       ${confidenceBadge(song)}
     </div>
     <p class="hk-song-artist">${song.artist} &middot; ${song.genre}</p>

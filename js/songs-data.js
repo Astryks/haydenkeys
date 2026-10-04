@@ -26,11 +26,29 @@
 // the same broader "four chords, a hundred songs" phenomenon).
 //
 // oneFiveSixFourMatch:
-//   "exact"    — the progression is a straight rotation of I-V-vi-IV
-//                (e.g. vi-IV-I-V, V-vi-IV-I — same cycle, same order).
+//   "exact"    — the progression is a true cyclic rotation of
+//                I-V-vi-IV in the SAME direction (i.e. every chord is
+//                followed by the same next chord as in I->V->vi->IV->I
+//                — e.g. starting instead at V gives V-vi-IV-I). A loop
+//                played in the opposite direction (e.g. vi-V-I-IV) uses
+//                the identical four chords but is a genuinely different
+//                progression to the ear, not an "exact" match — see
+//                `fourChordOrderFamily` below. (An earlier draft of
+//                this data incorrectly called two reverse-direction
+//                songs — Riptide, The Night We Met — "exact"; fixed
+//                after re-deriving each song's chord-to-chord adjacency
+//                by hand and catching the error.)
 //   "variant"  — uses the same four chords {I, IV, V, vi} but in a
-//                different functional order (e.g. I-vi-IV-V).
+//                functionally different order/direction.
 //   false      — does not reduce to that four-chord family.
+//
+// fourChordOrderFamily (only set on "variant" entries): which of the
+// non-Lesson-1 four-chord cyclic orders a song uses, so Lesson 4 (which
+// specifically teaches the I-vi-IV-V reordering) can credit only the
+// families that actually match it, not every "variant" song generically:
+//   "B" — I-IV-vi-V direction (e.g. Riptide, The Night We Met)
+//   "C" — I-vi-IV-V direction (e.g. Perfect) — this is what Lesson 4 teaches
+//   "D" — I-vi-V-IV direction (e.g. Photograph) — close to Lesson 4's order
 
 const SONGS = [
   {
@@ -207,6 +225,7 @@ const SONGS = [
     degreeSequence: "I - vi - IV - V",
     confidence: "confirmed",
     oneFiveSixFourMatch: "variant",
+    fourChordOrderFamily: "C",
     notes:
       "Loops G-Em-C-D the entire way through (verse, chorus, bridge) — the same four chords as the 1-5-6-4 family, just in I-vi-IV-V order rather than I-V-vi-IV.",
   },
@@ -281,8 +300,10 @@ const SONGS = [
     chords: ["Em", "D", "G", "C"],
     degreeSequence: "vi - V - I - IV",
     confidence: "confirmed",
-    oneFiveSixFourMatch: "exact",
-    notes: "Same four chords as 1-5-6-4, starting on the vi chord (Em) instead of the I chord.",
+    oneFiveSixFourMatch: "variant",
+    fourChordOrderFamily: "B",
+    notes:
+      "Uses the same four chords as 1-5-6-4, but walked in the opposite direction around the cycle (vi to V to I to IV, vs. Lesson 1's I to V to vi to IV) — correcting an earlier draft of this data that called it an exact match. Same ingredients, genuinely different-sounding progression, not just a different starting point.",
   },
   {
     title: "Closer",
@@ -306,8 +327,10 @@ const SONGS = [
     chords: ["Am", "G", "C", "F"],
     degreeSequence: "vi - V - I - IV",
     confidence: "confirmed",
-    oneFiveSixFourMatch: "exact",
-    notes: "The famous ukulele-driven Am-G-C loop — the same four chords as 1-5-6-4.",
+    oneFiveSixFourMatch: "variant",
+    fourChordOrderFamily: "B",
+    notes:
+      "The famous ukulele-driven Am-G-C-F loop — same four chords as 1-5-6-4, but (like The Night We Met) walked in the opposite cyclic direction, not an exact match to Lesson 1's specific loop. Corrected from an earlier draft that called it exact.",
   },
   {
     title: "Levitating",
@@ -344,12 +367,641 @@ const SONGS = [
     degreeSequence: "I - vi - V - IV",
     confidence: "confirmed",
     oneFiveSixFourMatch: "variant",
+    fourChordOrderFamily: "D",
     notes:
       "Four chords for the entire song (I-vi-V-IV in its common teaching key) — same four-chord family as 1-5-6-4, different order.",
+  },
+
+  // --- Second batch, added after launch (2026-10-05) ---------------------
+  // Sid pasted a 55-song wishlist with suggested chords. Those pasted
+  // chords were explicitly NOT trusted (tells: the identical G-D-Em-C /
+  // Am-F-C-G progression was assigned to a suspicious number of unrelated
+  // songs, including "Despacito," which has a very different harmonic
+  // character on its face; "Shape of You"'s entry had a garbled chord
+  // symbol). Every song below was independently re-researched the same
+  // way as the original 25 — titles only were taken from the list, not
+  // chords. A few pasted guesses turned out to hold up under independent
+  // verification anyway (Despacito genuinely does reduce to the 1-5-6-4
+  // family once correctly read as Bm-G-D-A in D major — see its entry);
+  // most did not, and are marked needs-verification or corrected below.
+  //
+  // This pass also caught and fixed a real bug in the ORIGINAL 25: two
+  // songs (Riptide, The Night We Met) were marked as "exact" 1-5-6-4
+  // matches, but re-deriving their chord-to-chord adjacency by hand
+  // showed they actually walk the same four chords in the OPPOSITE
+  // cyclic direction — a genuinely different-sounding progression, not
+  // an exact match. Fixed in those entries above with a correction note.
+  {
+    title: "You Belong With Me",
+    artist: "Taylor Swift",
+    genre: "Pop/Country",
+    popularityRank: 26,
+    key: "F# (sources disagree on the practical chord reading)",
+    chords: ["D", "A", "Em", "G"],
+    degreeSequence: "disputed — sources give inconsistent readings",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Sources conflict: one cites key F# with a very different chord set, another gives D-A-Em-G (which would be I-V-ii-IV in D major, not our vi-based family), and yet another claims a simplified G-D-Em-C teaching version. Too inconsistent across sources to present one confident chart.",
+  },
+  {
+    title: "Lover",
+    artist: "Taylor Swift",
+    genre: "Pop",
+    popularityRank: 27,
+    key: "G major",
+    chords: ["G", "D", "C"],
+    degreeSequence: "I - V - IV (core loop; bridge adds vi and other chords)",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Verse/chorus center on G-D-C (with Dsus4/Cadd9 color tones) — three chords, no vi in the main loop. The bridge is more harmonically complex (adds Em, F, Am, C/B) but that's not the core progression.",
+  },
+  {
+    title: "Shake It Off",
+    artist: "Taylor Swift",
+    genre: "Pop",
+    popularityRank: 28,
+    key: "G major",
+    chords: ["Am", "C", "G"],
+    degreeSequence: "vi - IV - I (3-chord loop, no V)",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes: "A genuinely simple, well-documented three-chord song — Am-C-G repeating, never resolving to D (V).",
+  },
+  {
+    title: "Wildest Dreams",
+    artist: "Taylor Swift",
+    genre: "Pop",
+    popularityRank: 29,
+    key: "F minor",
+    chords: ["varies by capo position — see notes"],
+    degreeSequence: "needs verification",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Key (F minor) is well agreed on, but sources describe the actual chords only in terms of various capo positions (capo 1, 4, or 6, each implying different absolute chord names) without agreeing on one real-sounding chord set — not confident enough to present a single chart.",
+  },
+  {
+    title: "Shallow",
+    artist: "Lady Gaga, Bradley Cooper",
+    genre: "Pop/Soundtrack",
+    popularityRank: 30,
+    key: "G major",
+    chords: ["G", "D", "Em", "C"],
+    degreeSequence: "I - V - vi - IV",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: "exact",
+    notes: "Verse progression is explicitly G-D-Em-C — the exact Lesson 1 shape, independently confirmed.",
+  },
+  {
+    title: "Million Reasons",
+    artist: "Lady Gaga",
+    genre: "Pop",
+    popularityRank: 31,
+    key: "C major",
+    chords: ["C", "Am", "F", "G"],
+    degreeSequence: "I - vi - IV - V (reported; limited independent corroboration)",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "One source explicitly describes an I-vi-IV-V progression that 'inverts itself for the chorus,' which would make this a Lesson-4-family song — but this wasn't independently cross-confirmed by a second source with the same specificity, so flagging rather than claiming it solidly.",
+  },
+  {
+    title: "Always Remember Us This Way",
+    artist: "Lady Gaga",
+    genre: "Pop/Soundtrack",
+    popularityRank: 32,
+    key: "A minor (relative to C major)",
+    chords: ["Am", "F", "C", "G"],
+    degreeSequence: "vi - IV - I - V",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: "exact",
+    notes:
+      "Verse is Am-F-C-G, relative to C major. Re-derived its chord-to-chord adjacency by hand (vi→IV, IV→I, I→V, V→vi) and confirmed it's the identical edge set to Lesson 1's G-D-Em-C loop, just starting at a different point in the cycle — a genuine exact match, not just a superficial 'same chords' claim.",
+  },
+  {
+    title: "Have Yourself a Merry Little Christmas",
+    artist: "Various (originally Judy Garland)",
+    genre: "Christmas/Jazz Standard",
+    popularityRank: 33,
+    key: "G major (one common version; varies a lot by arrangement)",
+    chords: ["G", "Em7", "Am7", "D7"],
+    degreeSequence: "I - vi7 - ii7 - V7",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "A 1944 jazz standard with many different published arrangements/keys (G and C both common) — a ii-V-I-style turnaround, not our 4-chord family. Too many materially different chord charts across sources to call one definitive.",
+  },
+  {
+    title: "Thinking Out Loud",
+    artist: "Ed Sheeran",
+    genre: "Pop Ballad",
+    popularityRank: 34,
+    key: "D major",
+    chords: ["D", "D/F#", "G", "A"],
+    degreeSequence: "I - I/III - IV - V",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes:
+      "The D/F# walking-bass chord (not a plain D) is the signature of this progression. No vi chord in the main loop.",
+  },
+  {
+    title: "The A Team",
+    artist: "Ed Sheeran",
+    genre: "Pop/Folk",
+    popularityRank: 35,
+    key: "A major (commonly taught in G with capo 2)",
+    chords: ["G", "D", "Em", "C"],
+    degreeSequence: "I - V - vi - IV",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: "exact",
+    notes: "The capo-2 teaching version is explicitly G-D-Em-C shapes — the exact Lesson 1 order.",
+  },
+  {
+    title: "Galway Girl",
+    artist: "Ed Sheeran",
+    genre: "Pop/Folk",
+    popularityRank: 36,
+    key: "A major (commonly taught in G with capo 2)",
+    chords: ["Em", "G", "D", "Cadd9"],
+    degreeSequence: "needs verification (chord set confirmed, exact order not)",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Sources agree on the four chords (Em, G, D, Cadd9) but didn't give a crisply confirmed sequential order strong enough to classify which four-chord family this belongs to.",
+  },
+  {
+    title: "Drop It Like It's Hot",
+    artist: "Snoop Dogg ft. Pharrell",
+    genre: "Hip-Hop",
+    popularityRank: 37,
+    key: "Db major (reported)",
+    chords: ["insufficient data"],
+    degreeSequence: "needs verification",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Extremely sparse, beat-driven production (tongue clicks, minimal keyboard) — sources agree on key but not on a chord-by-chord progression; may not have a conventional one to document.",
+  },
+  {
+    title: "Gin and Juice",
+    artist: "Snoop Dogg",
+    genre: "Hip-Hop",
+    popularityRank: 38,
+    key: "F Phrygian / F minor",
+    chords: ["Fm", "F#", "G#", "C#"],
+    degreeSequence: "Phrygian-mode progression — not a standard major/minor pattern",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Built on the Phrygian mode (interpolates Slave's 'Watching You' and samples George McRae's 'I Get Lifted') — unusual enough harmonically that it doesn't fit this app's major/minor beginner framework well, and sources don't agree on a precise chord-by-chord chart.",
+  },
+  {
+    title: "Young, Wild & Free",
+    artist: "Snoop Dogg, Wiz Khalifa ft. Bruno Mars",
+    genre: "Hip-Hop",
+    popularityRank: 39,
+    key: "D major",
+    chords: ["insufficient data"],
+    degreeSequence: "needs verification",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes: "Key is reasonably well corroborated, but no source gave a confident full chord-by-chord progression.",
+  },
+  {
+    title: "Let It Be",
+    artist: "The Beatles",
+    genre: "Rock/Pop",
+    popularityRank: 40,
+    key: "C major",
+    chords: ["C", "G", "Am", "F"],
+    degreeSequence: "I - V - vi - IV",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: "exact",
+    notes: "Verse is explicitly C-G-Am-F, with sources directly naming it an I-V-vi-IV progression — textbook Lesson 1 match.",
+  },
+  {
+    title: "No Woman No Cry",
+    artist: "Bob Marley & The Wailers",
+    genre: "Reggae",
+    popularityRank: 41,
+    key: "C major",
+    chords: ["C", "G", "Am", "F"],
+    degreeSequence: "I - V - vi - IV",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: "exact",
+    notes: "The same C-G-Am-F loop as Let It Be, repeating unchanged for the entire song — no bridge, no key change.",
+  },
+  {
+    title: "With or Without You",
+    artist: "U2",
+    genre: "Rock",
+    popularityRank: 42,
+    key: "D major",
+    chords: ["D", "A", "Bm", "G"],
+    degreeSequence: "I - V - vi - IV",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: "exact",
+    notes: "Explicitly described as an I-V-vi-IV progression (D-A-Bm-G) that repeats for the entire song.",
+  },
+  {
+    title: "Don't Stop Believin'",
+    artist: "Journey",
+    genre: "Rock",
+    popularityRank: 43,
+    key: "G major (commonly taught; originally E major)",
+    chords: ["G", "D", "Em", "C", "Bm"],
+    degreeSequence: "I - V - vi - IV - I - V - iii - IV (8-chord loop)",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: "variant",
+    fourChordOrderFamily: "A",
+    notes:
+      "An 8-chord extension, not a pure 4-chord loop — but the first half is literally Lesson 1's G-D-Em-C (I-V-vi-IV) before continuing on to iii (Bm) and IV again. Counted as a variant match since the full loop isn't identical to Lesson 1's, but it's the closest possible relative.",
+  },
+  {
+    title: "I'm Yours",
+    artist: "Jason Mraz",
+    genre: "Pop/Reggae",
+    popularityRank: 44,
+    key: "B major",
+    chords: ["B", "F#", "G#m", "E"],
+    degreeSequence: "I - V - vi - IV",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: "exact",
+    notes: "Explicitly described as following the I-V-vi-IV pattern for the entire verse and chorus.",
+  },
+  {
+    title: "Despacito",
+    artist: "Luis Fonsi ft. Daddy Yankee",
+    genre: "Latin Pop/Reggaeton",
+    popularityRank: 45,
+    key: "B minor (relative to D major)",
+    chords: ["Bm", "G", "D", "A"],
+    degreeSequence: "vi - IV - I - V",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: "exact",
+    notes:
+      "This one was specifically flagged as suspicious in a pasted draft list that assigned the same progression to many unrelated songs — but independent verification actually bears it out: Bm-G-D-A, read relative to D major, has the identical chord-to-chord adjacency as Lesson 1's loop (vi→IV→I→V→vi...). A case where double-checking confirmed rather than debunked the claim.",
+  },
+  {
+    title: "Someone Like You",
+    artist: "Adele",
+    genre: "Pop Ballad",
+    popularityRank: 46,
+    key: "A major",
+    chords: ["A", "E", "F#m", "D"],
+    degreeSequence: "I - V - vi - IV",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: "exact",
+    notes: "Explicitly confirmed as a I-V-vi-IV progression (A-E-F#m-D) repeating through verse and chorus.",
+  },
+  {
+    title: "Let Her Go",
+    artist: "Passenger",
+    genre: "Folk/Pop",
+    popularityRank: 47,
+    key: "C major (recording in G, capo 7)",
+    chords: ["G", "D", "Em", "C"],
+    degreeSequence: "disputed — see notes",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Sources gave two descriptions that don't actually agree with each other once compared chord-by-chord: one cites a no-capo verse of Am-F-G-Em (which includes iii, not a repeat of vi), another separately summarizes the chords as simply 'G, D, Em, and C' without a confirmed order. Flagging the inconsistency rather than picking one arbitrarily.",
+  },
+  {
+    title: "Stand By Me",
+    artist: "Ben E. King",
+    genre: "Soul/R&B",
+    popularityRank: 48,
+    key: "A major",
+    chords: ["A", "F#m", "D", "E"],
+    degreeSequence: "I - vi - IV - V",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: "variant",
+    fourChordOrderFamily: "C",
+    notes: "Classic doo-wop progression, I-vi-IV-V — the same family as Lesson 4 and Perfect, not Lesson 1's exact order.",
+  },
+  {
+    title: "A Horse With No Name",
+    artist: "America",
+    genre: "Folk Rock",
+    popularityRank: 49,
+    key: "E minor",
+    chords: ["Em", "D6/9"],
+    degreeSequence: "i - VII (2-chord loop)",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes: "Genuinely a two-chord song — Em and a D variant, looped for the entire track. About as simple as it gets.",
+  },
+  {
+    title: "Knockin' on Heaven's Door",
+    artist: "Bob Dylan",
+    genre: "Rock/Folk",
+    popularityRank: 50,
+    key: "G major",
+    chords: ["G", "D", "Am", "C"],
+    degreeSequence: "I - V - ii - IV",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes: "Uses the 2 (ii, Am) chord instead of the 6 (vi) — a Lesson 5 song, not a Lesson 1 match.",
+  },
+  {
+    title: "Wonderwall",
+    artist: "Oasis",
+    genre: "Britpop/Rock",
+    popularityRank: 51,
+    key: "F# minor / G major (genuinely ambiguous)",
+    chords: ["Em7", "G", "Dsus4", "A7sus4"],
+    degreeSequence: "needs verification",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Sources themselves describe this song as 'meandering between the keys of E minor and G major' — a real harmonic ambiguity, not just conflicting research. Not confident enough to assign one clean roman-numeral analysis.",
+  },
+  {
+    title: "Love Yourself",
+    artist: "Justin Bieber",
+    genre: "Pop",
+    popularityRank: 52,
+    key: "E major",
+    chords: ["E", "B/D#", "C#m", "F#m"],
+    degreeSequence: "I - V - vi - ii",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "A simplified G-D-Em-C 'teaching version' is widely shared online, but the real recording's chords (E-B/D#-C#m-F#m) are actually I-V-vi-ii, not I-V-vi-IV — the popular teaching simplification appears to be musically inaccurate to the actual recording. Flagging rather than repeating the inaccurate popular version.",
+  },
+  {
+    title: "Count on Me",
+    artist: "Bruno Mars",
+    genre: "Pop",
+    popularityRank: 53,
+    key: "C major",
+    chords: ["C", "Em", "Am", "G", "F"],
+    degreeSequence: "uses I, iii, vi, V, IV — richer than a simple 4-chord loop",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes: "Five chords across verse/chorus/bridge; key and chord set are well corroborated, but not a clean 4-chord loop.",
+  },
+  {
+    title: "Zombie",
+    artist: "The Cranberries",
+    genre: "Alternative Rock",
+    popularityRank: 54,
+    key: "E minor (relative to G major)",
+    chords: ["Em", "C", "G", "D"],
+    degreeSequence: "vi - IV - I - V",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: "exact",
+    notes:
+      "Em-C-G-D repeats for the entire song. Read relative to its relative major (G), this has the identical chord-to-chord adjacency as Lesson 1's loop — a genuine exact match, not just a shared chord set.",
+  },
+  {
+    title: "Hey Soul Sister",
+    artist: "Train",
+    genre: "Pop Rock",
+    popularityRank: 55,
+    key: "E major (reported) — see notes",
+    chords: ["Em7", "C", "G", "D"],
+    degreeSequence: "needs verification — see notes",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "One source reports the key as E major but gives a guitar chord progression (Em7-C-G-D) that doesn't actually fit E major diatonically — those chords fit G major instead. This internal inconsistency in the source itself is exactly why it's flagged rather than resolved by guessing.",
+  },
+  {
+    title: "Viva La Vida",
+    artist: "Coldplay",
+    genre: "Alternative Rock",
+    popularityRank: 56,
+    key: "Ab major (commonly taught in G)",
+    chords: ["G", "D", "Em", "C"],
+    degreeSequence: "I - V - vi - IV",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: "exact",
+    notes: "The simplified teaching version is explicitly described as 'a classic I-V-vi-IV progression in the key of G major.'",
+  },
+  {
+    title: "Let It Go",
+    artist: "Idina Menzel (Frozen)",
+    genre: "Soundtrack/Pop",
+    popularityRank: 57,
+    key: "F minor / Ab major (power ballad, builds through several sections)",
+    chords: ["Em", "C", "G", "D", "Am"],
+    degreeSequence: "needs verification",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "A through-composed power ballad that builds across multiple sections rather than looping one progression — sources list chords used but not a single confident chart, similar in spirit to Die With a Smile's complexity.",
+  },
+  {
+    title: "Budapest",
+    artist: "George Ezra",
+    genre: "Folk/Pop",
+    popularityRank: 58,
+    key: "G major",
+    chords: ["G", "C", "D"],
+    degreeSequence: "I - IV - V (3-chord loop, no vi)",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes: "A genuinely simple three-chord song, well corroborated — verse is mostly G and C, chorus brings in D.",
+  },
+  {
+    title: "Sweet Home Alabama",
+    artist: "Lynyrd Skynyrd",
+    genre: "Southern Rock",
+    popularityRank: 59,
+    key: "G major (sources conflict — see notes)",
+    chords: ["D", "C", "G"],
+    degreeSequence: "V - IV - I (as commonly simplified)",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Sources gave genuinely conflicting chord sets for this one — a simple D-C-G (V-IV-I) loop in G is the most commonly cited, but another source described entirely different chords (C-A-F-G, or even Bb-Ab-Db-G) in a different key. Flagging the real disagreement rather than picking one.",
+  },
+  {
+    title: "Wonderful Tonight",
+    artist: "Eric Clapton",
+    genre: "Rock Ballad",
+    popularityRank: 60,
+    key: "G major",
+    chords: ["G", "Em", "C", "D"],
+    degreeSequence: "I - vi - IV - V",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: "variant",
+    fourChordOrderFamily: "C",
+    notes: "Explicitly listed as 'G Em C D' — the same I-vi-IV-V family as Lesson 4 and Perfect.",
+  },
+  {
+    title: "Over the Rainbow",
+    artist: "Israel Kamakawiwo'ole",
+    genre: "Ukulele/Pop Standard",
+    popularityRank: 61,
+    key: "C major",
+    chords: ["C", "Em", "F", "G", "Am"],
+    degreeSequence: "uses I, iii, IV, V, vi — richer than a simple 4-chord loop",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes: "The famous ukulele medley uses five chords including both iii (Em) and vi (Am) — not a clean 4-chord loop.",
+  },
+  {
+    title: "Chasing Cars",
+    artist: "Snow Patrol",
+    genre: "Alternative Rock",
+    popularityRank: 62,
+    key: "A major",
+    chords: ["A", "D", "E"],
+    degreeSequence: "I - IV - V (3-chord loop; F#m appears occasionally)",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes: "Core progression is a simple I-IV-V; the vi chord (F#m) shows up only as an occasional variation, not the main loop.",
+  },
+  {
+    title: "Happy",
+    artist: "Pharrell Williams",
+    genre: "Pop/Soul",
+    popularityRank: 63,
+    key: "genuinely disputed — see notes",
+    chords: ["insufficient agreement across sources"],
+    degreeSequence: "needs verification",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Sources describe this song using at least three different modal frameworks (Em with capo, F with a flat-heavy chord set, B Phrygian Dominant, F Dorian with dominant 7th extensions) — a genuinely unusual, funk-influenced harmony that doesn't reduce to a simple major/minor chart.",
+  },
+  {
+    title: "Banana Pancakes",
+    artist: "Jack Johnson",
+    genre: "Folk/Acoustic",
+    popularityRank: 64,
+    key: "G major",
+    chords: ["G7", "D7", "Am7", "C7"],
+    degreeSequence: "I7 - V7 - ii7 - IV7",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes: "Built entirely on dominant-7th chords and uses the 2 (ii, Am7) chord — relevant to both Lesson 5 and Lesson 8.",
+  },
+  {
+    title: "Can You Feel the Love Tonight",
+    artist: "Elton John (The Lion King)",
+    genre: "Soundtrack/Pop",
+    popularityRank: 65,
+    key: "Bb major (main); alternate chorus transposes to G major",
+    chords: ["G", "D", "Em", "C"],
+    degreeSequence: "I - V - vi - IV (alternate G-major chorus version)",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: "exact",
+    notes:
+      "The main recording is in Bb major with richer chords (Bb-F/A-Gm-Eb, etc.), but a commonly-cited alternate version transposes the chorus to G major as G-D-Em-C — the exact Lesson 1 shape. Counted as a match for that version specifically, not the main recording's full harmony.",
+  },
+  {
+    title: "Sweet Caroline",
+    artist: "Neil Diamond",
+    genre: "Pop/Rock",
+    popularityRank: 66,
+    key: "B major (commonly taught in G)",
+    chords: ["G", "C", "D"],
+    degreeSequence: "I - IV - V (3-chord loop; A7 turnaround, no vi)",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes: "A simple, well-documented three-chord singalong — no vi chord in the main loop.",
+  },
+  {
+    title: "Livin' on a Prayer",
+    artist: "Bon Jovi",
+    genre: "Rock",
+    popularityRank: 67,
+    key: "E minor, modulating through G minor and C minor",
+    chords: ["Em", "C", "D"],
+    degreeSequence: "needs verification — genuine key changes",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "This one genuinely modulates key more than once (sources describe a move from E minor to G minor, then to C minor for the second chorus) — too much real harmonic movement to reduce to one simple chart.",
+  },
+  {
+    title: "I Will Survive",
+    artist: "Gloria Gaynor",
+    genre: "Disco",
+    popularityRank: 68,
+    key: "A minor",
+    chords: ["Am", "Dm", "G", "Cmaj7", "Fmaj7", "Bm7b5", "E"],
+    degreeSequence: "a circle-of-fifths-style descending minor progression",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes: "A rich, 7-chord descending progression (including two major-7th chords) — relevant to Lesson 8's seventh-chord theme.",
+  },
+  {
+    title: "Mr. Brightside",
+    artist: "The Killers",
+    genre: "Rock",
+    popularityRank: 69,
+    key: "Db major (commonly played in C)",
+    chords: ["C", "F", "G", "F"],
+    degreeSequence: "I - IV - V - IV (no vi)",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes: "A driving, anthemic I-IV-V-IV loop — no minor chord in the progression at all.",
+  },
+  {
+    title: "Dancing Queen",
+    artist: "ABBA",
+    genre: "Disco/Pop",
+    popularityRank: 70,
+    key: "A major",
+    chords: ["A", "D", "F#m", "E"],
+    degreeSequence: "uses I, IV, vi, V — exact sequential order not clearly confirmed",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "All four of the 1-5-6-4 chords show up somewhere in this song, which is why a pasted draft list guessed it matches — but no source gave a clean, confidently-ordered 4-chord loop the way Let It Be or No Woman No Cry have. Flagging the order rather than assuming it matches just because the chords overlap.",
+  },
+  {
+    title: "Summer Nights",
+    artist: "John Travolta, Olivia Newton-John (Grease)",
+    genre: "Soundtrack/Pop",
+    popularityRank: 71,
+    key: "D major",
+    chords: ["D", "G", "A"],
+    degreeSequence: "I - IV - V (3-chord loop, no vi)",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes: "A simple three-chord showtune progression, well corroborated across sources.",
+  },
+  {
+    title: "Africa",
+    artist: "Toto",
+    genre: "Pop Rock",
+    popularityRank: 72,
+    key: "genuinely disputed — modulates between C#m/B/A sections",
+    chords: ["insufficient agreement across sources"],
+    degreeSequence: "needs verification",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Sources disagree on the home key (C minor vs C# minor) and describe the song moving through multiple keys/modes across its verse and chorus — a genuinely complex song, not simplified here.",
+  },
+  {
+    title: "Bohemian Rhapsody",
+    artist: "Queen",
+    genre: "Rock/Advanced",
+    popularityRank: 73,
+    key: "Modulates through Bb, Eb, A, and F major across distinct sections",
+    chords: ["varies dramatically by section — see notes"],
+    degreeSequence: "not applicable — not a loop-based song",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    advanced: true,
+    notes:
+      "Added as a clearly-labeled advanced/bonus entry, not part of the beginner curriculum — Sid's own instinct going in was correct, this is genuinely not a simple beginner song. It moves through at least four different keys across a ballad intro, an operatic section with diminished/augmented chords and rapid changes, and a hard-rock section. For what it's worth, the ballad intro alone (commonly cited as C-G-Am-F) is literally Lesson 1's exact I-V-vi-IV shape — a fun 'you already know the first 20 seconds' fact — but the rest of the song is well beyond this app's beginner scope, and no simplified version is presented here to avoid misrepresenting its real difficulty.",
   },
 ];
 
 // Precomputed, honestly-reported summary for the Lesson 1 payoff screen.
-const ONE_FIVE_SIX_FOUR_SONGS = SONGS.filter((s) => s.oneFiveSixFourMatch);
+// Advanced/bonus entries (e.g. Bohemian Rhapsody) are deliberately
+// excluded from this beginner-curriculum payoff count even if some
+// section of theirs happens to share the pattern.
+const ONE_FIVE_SIX_FOUR_SONGS = SONGS.filter((s) => s.oneFiveSixFourMatch && !s.advanced);
 
 export { SONGS, ONE_FIVE_SIX_FOUR_SONGS };

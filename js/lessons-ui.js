@@ -183,13 +183,13 @@ function initLessonsTab(root) {
         const variant = ONE_FIVE_SIX_FOUR_SONGS.filter((s) => s.oneFiveSixFourMatch === "variant");
         content.innerHTML = `
           <h3>You just learned the most common chord pattern in pop music.</h3>
-          <p>Out of the 25 songs in this app's library, <strong>${ONE_FIVE_SIX_FOUR_SONGS.length}</strong> use this
+          <p>Out of the ${SONGS.length} songs in this app's library, <strong>${ONE_FIVE_SIX_FOUR_SONGS.length}</strong> use this
              exact four-chord family:</p>
           <p><strong>Same 1-5-6-4 loop, different starting point (${exact.length}):</strong></p>
           <ul>${exact.map((s) => `<li>${s.title} — ${s.artist} (${s.degreeSequence})</li>`).join("")}</ul>
           <p><strong>Same 4 chords, different order (${variant.length}):</strong></p>
           <ul>${variant.map((s) => `<li>${s.title} — ${s.artist} (${s.degreeSequence})</li>`).join("")}</ul>
-          <p class="hk-honest-note">Honest count: that's ${ONE_FIVE_SIX_FOUR_SONGS.length} of 25 — not all 25. The rest use other
+          <p class="hk-honest-note">Honest count: that's ${ONE_FIVE_SIX_FOUR_SONGS.length} of ${SONGS.length} — not all of them. The rest use other
              (often minor-key or more complex) progressions, which is exactly what later lessons will cover.</p>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
         controls.querySelector("#hk-done").addEventListener("click", showMap);
@@ -368,12 +368,15 @@ function initLessonsTab(root) {
         markLessonComplete("lesson-4");
         kb.clearHighlights();
         kb.onKeyPress(() => {});
-        const variant = ONE_FIVE_SIX_FOUR_SONGS.filter((s) => s.oneFiveSixFourMatch === "variant");
+        const variant = SONGS.filter((s) => s.fourChordOrderFamily === "C" || s.fourChordOrderFamily === "D");
         content.innerHTML = `
           <h3>Same four chords, new order — a different set of songs.</h3>
-          <p><strong>${variant.length} of 25</strong> library songs use this exact I-vi-IV-V (or I-vi-V-IV) order:</p>
+          <p><strong>${variant.length} of ${SONGS.length}</strong> library songs use this specific I-vi-IV-V (or the very
+             close I-vi-V-IV) order:</p>
           <ul>${variant.map((s) => `<li>${s.title} — ${s.artist} (${s.degreeSequence})</li>`).join("")}</ul>
-          <p class="hk-honest-note">Small, honest number — most "4-chord" songs use the Lesson 1 order, not this one. Still real.</p>`;
+          <p class="hk-honest-note">Small, honest number — most "4-chord" songs use the Lesson 1 order, not this one. Still real.
+             (There's a third variant, Lesson 1's payoff screen calls out separately — same four chords walked in the opposite
+             direction, which sounds different enough that we don't credit it here.)</p>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
@@ -414,7 +417,7 @@ function initLessonsTab(root) {
         const usesIi = SONGS.filter((s) => s.confidence === "confirmed" && /\bii\b/.test(s.degreeSequence));
         content.innerHTML = `
           <h3>One more shape, more of the library unlocked.</h3>
-          <p><strong>${usesIi.length} of 25</strong> confirmed-chord songs use the 2 (ii) chord somewhere in their progression:</p>
+          <p><strong>${usesIi.length} of ${SONGS.length}</strong> confirmed-chord songs use the 2 (ii) chord somewhere in their progression:</p>
           <ul>${usesIi.map((s) => `<li>${s.title} — ${s.artist} (${s.degreeSequence})</li>`).join("")}</ul>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
         controls.querySelector("#hk-done").addEventListener("click", showMap);
@@ -474,7 +477,7 @@ function initLessonsTab(root) {
         const minorKeySongs = SONGS.filter((s) => s.confidence === "confirmed" && /minor/i.test(s.key));
         content.innerHTML = `
           <h3>This is the big one — most of the library is minor-key.</h3>
-          <p><strong>${minorKeySongs.length} of 25</strong> confirmed-chord songs are in a minor key:</p>
+          <p><strong>${minorKeySongs.length} of ${SONGS.length}</strong> confirmed-chord songs are in a minor key:</p>
           <ul>${minorKeySongs.map((s) => `<li>${s.title} — ${s.artist} (${s.key})</li>`).join("")}</ul>
           <p class="hk-honest-note">Knowing the pattern doesn't mean every chord choice is "obvious" yet (some songs
              borrow chords from outside the key for effect) — but it explains most of what you're hearing.</p>`;
@@ -633,9 +636,9 @@ function initLessonsTab(root) {
         content.innerHTML = `
           <h3>Curriculum complete — for this release.</h3>
           <p>You've read your first real classical melody from notation, in a key whose signature you understand.</p>
-          <p>Honest tally across everything taught so far: <strong>${touched.size} of 25</strong> library songs use a
+          <p>Honest tally across everything taught so far: <strong>${touched.size} of ${SONGS.length}</strong> library songs use a
              progression pattern you now recognize at least the core of (the 1-5-6-4 family, the 2 chord, or the
-             natural-minor pattern). The remaining ${25 - touched.size} mostly need theory beyond this release —
+             natural-minor pattern). The remaining ${SONGS.length - touched.size} mostly need theory beyond this release —
              borrowed chords, more seventh-chord harmony, or longer loops — which is exactly where a Phase 2
              curriculum would continue. See the README for the full honest breakdown.</p>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
