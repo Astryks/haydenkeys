@@ -1,0 +1,218 @@
+:root {
+  --hk-bg: #15131f;
+  --hk-panel: #1f1c2e;
+  --hk-accent: #7c5cff;
+  --hk-accent-2: #58d68d;
+  --hk-text: #f0eefc;
+  --hk-text-dim: #a9a3c4;
+  --hk-danger: #ff6b6b;
+  --hk-warn: #e8b84b;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--hk-bg);
+  color: var(--hk-text);
+  min-height: 100vh;
+}
+
+.hk-header {
+  padding: 24px 20px 8px;
+  text-align: center;
+}
+.hk-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  background: linear-gradient(90deg, var(--hk-accent), var(--hk-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hk-tagline { color: var(--hk-text-dim); margin: 4px 0 0; }
+
+.hk-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 0;
+  flex-wrap: wrap;
+}
+.hk-tab {
+  background: var(--hk-panel);
+  color: var(--hk-text-dim);
+  border: 1px solid transparent;
+  padding: 10px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+.hk-tab-active {
+  color: var(--hk-text);
+  border-color: var(--hk-accent);
+  background: rgba(124, 92, 255, 0.15);
+}
+
+main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+.hk-panel { min-height: 300px; }
+.hk-hidden { display: none !important; }
+
+.hk-footer {
+  text-align: center;
+  color: var(--hk-text-dim);
+  font-size: 0.8rem;
+  padding: 20px;
+}
+.hk-footer a { color: var(--hk-accent-2); }
+
+/* Buttons */
+.hk-btn {
+  background: var(--hk-panel);
+  color: var(--hk-text);
+  border: 1px solid #3a3550;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin: 4px 4px 4px 0;
+}
+.hk-btn:hover { border-color: var(--hk-accent); }
+.hk-btn-primary { background: var(--hk-accent); border-color: var(--hk-accent); }
+.hk-btn-small { padding: 6px 10px; font-size: 0.8rem; }
+.hk-btn-danger { border-color: var(--hk-danger); color: var(--hk-danger); }
+
+/* Discover */
+.hk-discover-controls { display: flex; gap: 8px; margin: 16px 0; flex-wrap: wrap; }
+.hk-discover-controls input, .hk-discover-controls select {
+  background: var(--hk-panel); color: var(--hk-text); border: 1px solid #3a3550;
+  padding: 10px; border-radius: 8px; font-size: 0.9rem;
+}
+.hk-discover-controls input { flex: 1; min-width: 200px; }
+.hk-scope-note {
+  background: rgba(232, 184, 75, 0.1); border: 1px solid var(--hk-warn);
+  padding: 12px; border-radius: 8px; font-size: 0.85rem; color: var(--hk-text-dim);
+}
+.hk-song-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px; margin-top: 16px;
+}
+.hk-song-card {
+  background: var(--hk-panel); border-radius: 10px; padding: 14px;
+  border: 1px solid #2c2840;
+}
+.hk-song-card-top { display: flex; justify-content: space-between; align-items: start; gap: 8px; }
+.hk-song-card h3 { margin: 0 0 4px; font-size: 1.05rem; }
+.hk-song-artist, .hk-song-key { margin: 2px 0; color: var(--hk-text-dim); font-size: 0.85rem; }
+.hk-song-chords { font-family: monospace; margin: 8px 0 4px; }
+.hk-song-degrees { color: var(--hk-text-dim); font-size: 0.8rem; }
+.hk-song-notes { font-size: 0.78rem; color: var(--hk-text-dim); }
+
+.hk-badge {
+  display: inline-block; font-size: 0.7rem; padding: 3px 8px; border-radius: 999px;
+  background: #3a3550; color: var(--hk-text);
+}
+.hk-badge-confirmed { background: rgba(88, 214, 141, 0.2); color: var(--hk-accent-2); }
+.hk-badge-unverified { background: rgba(232, 184, 75, 0.2); color: var(--hk-warn); cursor: help; }
+.hk-badge-match { background: rgba(124, 92, 255, 0.25); color: #c9bfff; margin-left: 6px; }
+
+/* Keyboard */
+.hk-keyboard-wrap { margin: 16px 0; }
+.hk-keyboard {
+  position: relative; height: 160px; background: #0d0c14; border-radius: 8px;
+  user-select: none; touch-action: none;
+}
+.hk-key { position: absolute; top: 0; box-sizing: border-box; cursor: pointer; }
+.hk-key-white {
+  height: 100%; background: #f5f3fa; border: 1px solid #2c2840; border-radius: 0 0 6px 6px;
+  z-index: 1;
+}
+.hk-key-black {
+  height: 60%; background: #1a1824; border: 1px solid #000; border-radius: 0 0 4px 4px;
+  z-index: 2;
+}
+.hk-key-pressed.hk-key-white { background: #d8cfff; }
+.hk-key-pressed.hk-key-black { background: #4a3f80; }
+.hk-key-highlight.hk-key-white { background: #b9a6ff; }
+.hk-key-highlight.hk-key-black { background: var(--hk-accent); }
+.hk-key-selectable { outline: 1px dashed var(--hk-accent-2); outline-offset: -2px; }
+.hk-key-badge {
+  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; pointer-events: none;
+}
+.hk-badge-number { font-size: 1.3rem; font-weight: bold; color: #241c40; }
+.hk-badge-letter { font-size: 0.7rem; color: #4a3f80; }
+
+/* Lessons */
+.hk-lesson-map { display: flex; flex-direction: column; gap: 10px; padding: 16px 0; }
+.hk-streak { font-size: 1rem; margin-bottom: 8px; }
+.hk-lesson-node {
+  display: flex; gap: 14px; align-items: center; text-align: left;
+  background: var(--hk-panel); border: 1px solid #2c2840; border-radius: 10px;
+  padding: 14px; cursor: pointer; color: var(--hk-text);
+}
+.hk-lesson-node:disabled { opacity: 0.5; cursor: not-allowed; }
+.hk-lesson-node.hk-done { border-color: var(--hk-accent-2); }
+.hk-lesson-node-icon {
+  width: 36px; height: 36px; border-radius: 50%; background: var(--hk-accent);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: bold;
+}
+.hk-lesson-node-title { font-weight: bold; }
+.hk-lesson-node-subtitle { color: var(--hk-accent-2); font-size: 0.85rem; }
+.hk-lesson-node-desc { color: var(--hk-text-dim); font-size: 0.8rem; margin-top: 2px; }
+
+.hk-lesson-player { padding: 12px 0; }
+.hk-lesson-exit { background: none; border: none; color: var(--hk-text-dim); cursor: pointer; margin-bottom: 8px; }
+.hk-lesson-content { min-height: 120px; }
+.hk-big-degree {
+  font-size: 4rem; font-weight: bold; text-align: center; color: var(--hk-accent);
+  display: flex; flex-direction: column; align-items: center; line-height: 1;
+}
+.hk-big-letter { font-size: 1.2rem; color: var(--hk-text-dim); margin-top: 4px; }
+.hk-step-indicator { color: var(--hk-text-dim); font-size: 0.8rem; }
+.hk-honest-note { font-size: 0.8rem; color: var(--hk-text-dim); font-style: italic; }
+.hk-lesson-controls { margin-top: 10px; }
+
+.hk-staff { width: 100%; height: 140px; background: #0d0c14; border-radius: 8px; }
+.hk-staff-line { stroke: #4a3f80; stroke-width: 1; }
+.hk-staff-note { fill: var(--hk-accent-2); }
+.hk-staff-note-dim { fill: #3a3550; }
+
+/* Saved */
+.hk-saved section { margin-bottom: 24px; }
+.hk-empty { color: var(--hk-text-dim); }
+.hk-saved-row {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  background: var(--hk-panel); border-radius: 8px; padding: 10px 14px; margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+/* Practice */
+.hk-practice-header { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.hk-practice-header select {
+  background: var(--hk-panel); color: var(--hk-text); border: 1px solid #3a3550;
+  padding: 10px; border-radius: 8px; flex: 1; min-width: 200px;
+}
+.hk-practice-meta { color: var(--hk-text-dim); font-size: 0.85rem; }
+.hk-timeline {
+  position: relative; height: 50px; background: var(--hk-panel); border-radius: 8px;
+  margin: 10px 0; cursor: pointer; overflow: hidden;
+}
+.hk-timeline-chord {
+  position: absolute; top: 0; height: 100%; border-right: 1px solid #2c2840;
+  display: flex; align-items: center; justify-content: center; font-size: 0.8rem;
+  color: var(--hk-text-dim);
+}
+.hk-timeline-cursor {
+  position: absolute; top: 0; width: 2px; height: 100%; background: var(--hk-accent-2);
+  pointer-events: none;
+}
+.hk-practice-controls { margin: 10px 0; }
+.hk-calibration-panel { background: var(--hk-panel); border-radius: 10px; padding: 16px; margin-top: 10px; }
+.hk-cal-status { color: var(--hk-accent-2); font-size: 0.85rem; min-height: 1.2em; }
+.hk-upload-section {
+  margin-top: 24px; padding: 16px; background: var(--hk-panel); border-radius: 10px;
+  font-size: 0.85rem; color: var(--hk-text-dim);
+}
+.hk-upload-section input { margin-top: 8px; }
