@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hayden Keys — Learn Piano, Gamified</title>
+<meta name="description" content="A free, gamified, Duolingo-style piano learning web app. 100% local, zero backend, runs entirely in your browser." />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="hk-header">
+    <h1>Hayden Keys</h1>
+    <p class="hk-tagline">Learn piano the way four chords taught the world a hundred songs.</p>
+  </header>
+
+  <nav class="hk-tabs">
+    <button class="hk-tab hk-tab-active" data-tab="discover">Discover</button>
+    <button class="hk-tab" data-tab="practice">Practice</button>
+    <button class="hk-tab" data-tab="saved">Saved</button>
+    <button class="hk-tab" data-tab="lessons">Lessons</button>
+  </nav>
+
+  <main>
+    <section id="panel-discover" class="hk-panel"></section>
+    <section id="panel-practice" class="hk-panel hk-hidden"></section>
+    <section id="panel-saved" class="hk-panel hk-hidden"></section>
+    <section id="panel-lessons" class="hk-panel hk-hidden"></section>
+  </main>
+
+  <footer class="hk-footer">
+    <p>Hayden Keys runs 100% in your browser. No account, no server, no cost. See
+       <a href="README.md">README</a> and <a href="THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES</a>.</p>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
