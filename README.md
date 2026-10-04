@@ -229,9 +229,36 @@ js/
   pitch.js            Pitch detection (reused from Dawsons) + live wrapper
 ```
 
-Deploy: push to `main`, enable GitHub Pages on the repo (Settings →
-Pages → Deploy from branch → `main` → `/`). No build step, no secrets,
-no server.
+## Deploying (GitHub Pages) — current status: blocked on a one-time manual step
+
+A self-deploying workflow (`.github/workflows/deploy-pages.yml`) is
+already committed — `actions/configure-pages` → `actions/upload-pages-artifact`
+→ `actions/deploy-pages@v4`, triggered on every push to `main`, using
+only the repo's automatic `GITHUB_TOKEN` (no PAT, no manual dashboard
+toggle needed *in the common case*).
+
+**However, it's currently failing**, confirmed by actually running it
+(not just reading the YAML): both runs so far fail at the "Configure
+Pages" step. Checked via the public API (`has_pages: false` on the
+repo) and cross-referenced against `actions/configure-pages`' own
+changelog (PR #48, "Update default behavior to NOT attempt to
+create/enable the Pages site") — **GitHub deliberately does not allow
+the default `GITHUB_TOKEN` to perform the very first enablement of
+Pages on a repo, for security reasons, regardless of the
+`pages: write` permission declared in the workflow.** That permission
+covers deploying to an *already-enabled* Pages site, not creating one
+for the first time. First-time enablement requires either:
+
+1. A one-time manual toggle: repo Settings → Pages → Source → "GitHub
+   Actions" (takes 10 seconds, needs repo admin access neither this
+   agent nor the coordinator has), or
+2. A Personal Access Token with `repo`/admin scope supplied as a
+   workflow secret (requires the repo owner to generate one).
+
+**Once either of those happens one time, this workflow will deploy
+automatically on every future push with no further manual steps** —
+the blocker is specifically the *first* enablement, not the ongoing
+deploy mechanism. The live URL will be `https://astryks.github.io/haydenkeys/`.
 
 ## Verification
 
