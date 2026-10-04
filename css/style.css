@@ -178,6 +178,8 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-staff-line { stroke: #4a3f80; stroke-width: 1; }
 .hk-staff-note { fill: var(--hk-accent-2); }
 .hk-staff-note-dim { fill: #3a3550; }
+.hk-staff-accidental { fill: var(--hk-accent-2); font-size: 14px; font-weight: bold; }
+.hk-staff-keysig { fill: var(--hk-warn); font-size: 16px; font-weight: bold; }
 
 /* Saved */
 .hk-saved section { margin-bottom: 24px; }

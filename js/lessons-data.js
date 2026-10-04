@@ -37,6 +37,59 @@ const ODE_TO_JOY_MELODY = [
   64, 64, 65, 67, 67, 65, 64, 62, 60, 60, 62, 64, 64, 62, 62,
 ];
 
+// Lesson 4 — same four chords as Lesson 1, reordered to I-vi-IV-V
+// (the "Perfect"/"Photograph" shape). Reuses LESSON1_CHORDS' shapes.
+const LESSON4_SEQUENCE = ["G", "Em", "C", "D"];
+
+// Lesson 5 — the 2 chord (ii), beyond the core four. In G major, ii is
+// A minor.
+const LESSON5_CHORD = { notes: [69, 72, 76], root: 69, number: "2", letter: "Am", quality: "minor" };
+
+// Lesson 6 — natural-minor diatonic triads built on every degree of A
+// natural minor, teaching that minor keys have their own major/minor
+// pattern too: i, iv, v minor; III, VI, VII major; ii diminished.
+const LESSON6_DEGREES = [
+  { degree: "1", roman: "i", letter: "Am", notes: [57, 60, 64], quality: "minor" },
+  { degree: "2", roman: "ii°", letter: "Bdim", notes: [59, 62, 65], quality: "diminished" },
+  { degree: "3", roman: "III", letter: "C", notes: [60, 64, 67], quality: "major" },
+  { degree: "4", roman: "iv", letter: "Dm", notes: [62, 65, 69], quality: "minor" },
+  { degree: "5", roman: "v", letter: "Em", notes: [64, 67, 71], quality: "minor" },
+  { degree: "6", roman: "VI", letter: "F", notes: [65, 69, 72], quality: "major" },
+  { degree: "7", roman: "VII", letter: "G", notes: [67, 71, 74], quality: "major" },
+];
+const MINOR_KEY_MINOR_DEGREES = ["1", "4", "5"]; // i, iv, v are minor in a natural minor key
+
+// Lesson 7 — inversions: the same C major triad in root position, 1st,
+// and 2nd inversion, to demonstrate smoother voice leading from G.
+const LESSON7_CHORDS = [
+  { label: "G (root position)", notes: [67, 71, 74] },
+  { label: "C (root position) — biggest jump", notes: [60, 64, 67] },
+  { label: "C (1st inversion) — smoother from G", notes: [64, 67, 72] },
+];
+
+// Lesson 8 — seventh chords: the flavor behind several library songs'
+// jazzier harmony (Die With a Smile's Amaj7/Dmaj7, Closer's Fm7).
+const LESSON8_CHORDS = [
+  { label: "G (triad)", notes: [67, 71, 74] },
+  { label: "G7 (dominant 7th)", notes: [67, 71, 74, 77] },
+  { label: "Gmaj7 (major 7th)", notes: [67, 71, 74, 78] },
+  { label: "Em7", notes: [64, 67, 71, 74] },
+];
+
+// Lesson 9 — key signatures: G major has one sharp (F#), which is
+// exactly the F# already played inside the D and Em chords since
+// Lesson 1 — the key signature is just a shorthand for "every F in
+// this piece is F#", not new information.
+const G_MAJOR_SCALE_FOR_STAFF = [67, 69, 71, 72, 74, 76, 78, 79]; // G4..G5, F# not F
+
+// Lesson 10 capstone — "Minuet in G" (BWV Anh. 114, composed by
+// Christian Petzold c.1720-25; long misattributed to J.S. Bach because
+// it appeared in the Notebook for Anna Magdalena Bach — public domain
+// either way). This is the famous opening phrase only: a stepwise
+// ascending run from G to D, bracketed by the melody's opening and
+// closing D/G — not a full transcription of the piece.
+const MINUET_IN_G_OPENING = [74, 67, 69, 71, 72, 74, 67, 67];
+
 const LESSONS = [
   {
     id: "lesson-1",
@@ -59,6 +112,52 @@ const LESSONS = [
     description:
       "An optional first look at the staff notation professional musicians use — starting with a famous, simple melody.",
   },
+  {
+    id: "lesson-4",
+    title: "Flip the order",
+    subtitle: "The 1-6-4-5 pattern",
+    description:
+      "Same four chords as Lesson 1, different order — the shape behind a different set of songs.",
+  },
+  {
+    id: "lesson-5",
+    title: "A fifth chord",
+    subtitle: "Meet the 2",
+    description: "One more shape beyond the core four unlocks even more of the library.",
+  },
+  {
+    id: "lesson-6",
+    title: "Minor keys have a pattern too",
+    subtitle: "i, iv, v minor; III, VI, VII major",
+    description:
+      "Most of the library's songs are actually in minor keys — this is the pattern that unlocks them.",
+  },
+  {
+    id: "lesson-7",
+    title: "Same chord, different shape",
+    subtitle: "Inversions",
+    description: "Rearranging a chord's notes for smoother, more professional-sounding transitions.",
+  },
+  {
+    id: "lesson-8",
+    title: "A touch of jazz",
+    subtitle: "Seventh chords",
+    description: "The richer, 4-note chords behind some of the library's more sophisticated songs.",
+  },
+  {
+    id: "lesson-9",
+    title: "Reading key signatures",
+    subtitle: "One sharp = the key of G",
+    description:
+      "The staff shorthand for 'every F in this piece is F#' — notation catching up to a shape you already know.",
+  },
+  {
+    id: "lesson-10",
+    title: "Day 10: a classical piece",
+    subtitle: "Minuet in G",
+    description:
+      "The capstone: reading a real, famous classical melody from notation, in the key you just learned.",
+  },
 ];
 
 export {
@@ -67,5 +166,13 @@ export {
   LESSON2_DEGREES,
   MINOR_DEGREES,
   ODE_TO_JOY_MELODY,
+  LESSON4_SEQUENCE,
+  LESSON5_CHORD,
+  LESSON6_DEGREES,
+  MINOR_KEY_MINOR_DEGREES,
+  LESSON7_CHORDS,
+  LESSON8_CHORDS,
+  G_MAJOR_SCALE_FOR_STAFF,
+  MINUET_IN_G_OPENING,
   LESSONS,
 };
