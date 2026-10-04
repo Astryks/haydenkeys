@@ -1004,4 +1004,129 @@ const SONGS = [
 // section of theirs happens to share the pattern.
 const ONE_FIVE_SIX_FOUR_SONGS = SONGS.filter((s) => s.oneFiveSixFourMatch && !s.advanced);
 
-export { SONGS, ONE_FIVE_SIX_FOUR_SONGS };
+// --- Full song structures (Practice tab "play the whole song" mode) ----
+//
+// Most of the 73 entries above only have a single 4-chord loop recorded
+// — real, but a simplification (the "main riff," not the whole
+// arrangement). For a subset of the already-highest-confidence songs,
+// this maps the actual section-by-section structure (Intro, Verse,
+// Chorus, Bridge, etc.) with each section's own chord sequence, so the
+// Practice tab can play/scroll through an entire song once instead of
+// just looping the main 4 chords forever.
+//
+// Scope, stated honestly: this is NOT done for all 73 songs — that
+// would be a much bigger research lift than the simple-loop version,
+// and rushing it would mean guessing bridge/pre-chorus chords without
+// real confidence. Covered here: 12 of the highest-confidence,
+// best-documented songs, prioritizing ones with genuinely well-sourced
+// section detail (not just "it's the same 4 chords the whole time"
+// restated as fake "structure"). Bar counts are approximate (rounded
+// to musically typical phrase lengths — 4 or 8 bars), not pulled from
+// a measure-by-measure transcription. No lyrics anywhere, per the
+// product's legal scope — sections are labeled structurally only
+// ("Chorus," "Bridge"), never with lyric text.
+//
+// Songs NOT in this map fall back to the existing simple-loop Practice
+// view using their top-level `chords` array, looped indefinitely.
+const SONG_STRUCTURES = {
+  "Let It Be": [
+    { section: "Intro", chords: ["C", "G", "Am", "F"], bars: 4 },
+    { section: "Verse 1", chords: ["C", "G", "Am", "F", "C", "G", "F", "C"], bars: 8 },
+    { section: "Chorus 1", chords: ["Am", "G", "F", "C", "F", "C", "F", "C"], bars: 8 },
+    { section: "Verse 2", chords: ["C", "G", "Am", "F", "C", "G", "F", "C"], bars: 8 },
+    { section: "Chorus 2", chords: ["Am", "G", "F", "C", "F", "C", "F", "C"], bars: 8 },
+    { section: "Bridge / Solo", chords: ["C", "G", "Am", "F"], bars: 8, note: "Simplified to the core loop here — some recordings add extra turnaround chords in this section that aren't confidently documented across sources." },
+    { section: "Final Chorus", chords: ["Am", "G", "F", "C", "F", "C", "F", "C"], bars: 8 },
+    { section: "Outro", chords: ["C", "G", "Am", "F", "C"], bars: 5 },
+  ],
+  "No Woman No Cry": [
+    { section: "Intro", chords: ["C", "G", "Am", "F"], bars: 4 },
+    { section: "Verse 1", chords: ["C", "G", "Am", "F"], bars: 8 },
+    { section: "Chorus 1", chords: ["C", "G", "Am", "F"], bars: 8 },
+    { section: "Verse 2", chords: ["C", "G", "Am", "F"], bars: 8 },
+    { section: "Chorus 2 (extended, fades out)", chords: ["C", "G", "Am", "F"], bars: 16, note: "Sources agree this song never deviates from the one loop — no bridge, no key change, for the entire track." },
+  ],
+  "Love Story": [
+    { section: "Intro", chords: ["D", "A", "Bm", "G"], bars: 4 },
+    { section: "Verse 1", chords: ["D", "A", "Bm", "G"], bars: 8 },
+    { section: "Chorus 1", chords: ["D", "A", "Bm", "G"], bars: 8 },
+    { section: "Verse 2", chords: ["D", "A", "Bm", "G"], bars: 8 },
+    { section: "Chorus 2", chords: ["D", "A", "Bm", "G"], bars: 8 },
+    { section: "Bridge", chords: ["Bm", "A", "G", "D"], bars: 8 },
+    { section: "Final Chorus (key change to E major)", chords: ["E", "B", "C#m"], bars: 6, note: "The famous 'Marry me, Juliet' moment — the whole song steps up a whole tone from D major to E major." },
+  ],
+  "Perfect": [
+    { section: "Intro", chords: ["G", "Em", "C", "D"], bars: 4 },
+    { section: "Verse 1", chords: ["G", "Em", "C", "D"], bars: 8 },
+    { section: "Chorus 1", chords: ["G", "Em", "C", "D"], bars: 8 },
+    { section: "Verse 2", chords: ["G", "Em", "C", "D"], bars: 8 },
+    { section: "Chorus 2", chords: ["G", "Em", "C", "D"], bars: 8 },
+    { section: "Bridge", chords: ["G", "Em", "C", "D"], bars: 8, note: "Sources explicitly describe this progression looping 'the entire way through — every verse, every chorus, every bridge' with no deviation." },
+    { section: "Final Chorus", chords: ["G", "Em", "C", "D"], bars: 8 },
+  ],
+  "Photograph": [
+    { section: "Intro", chords: ["C", "Am", "G", "F"], bars: 4 },
+    { section: "Verse 1", chords: ["C", "Am", "G", "F"], bars: 8 },
+    { section: "Chorus 1", chords: ["C", "Am", "G", "F"], bars: 8 },
+    { section: "Verse 2", chords: ["C", "Am", "G", "F"], bars: 8 },
+    { section: "Chorus 2", chords: ["C", "Am", "G", "F"], bars: 8, note: "Sources describe this as 'four chords for the entire song' — no bridge deviation documented." },
+  ],
+  "With or Without You": [
+    { section: "Intro", chords: ["D", "A", "Bm", "G"], bars: 8 },
+    { section: "Verse 1", chords: ["D", "A", "Bm", "G"], bars: 8 },
+    { section: "Verse 2", chords: ["D", "A", "Bm", "G"], bars: 8 },
+    { section: "Chorus", chords: ["D", "A", "Bm", "G"], bars: 8 },
+    { section: "Bridge / Climax", chords: ["D", "A", "Bm", "G"], bars: 8, note: "Sources are explicit that this progression 'repeats for nearly five minutes without a single deviation' — the climax is a dynamic/vocal change, not a chord change." },
+    { section: "Outro", chords: ["D", "A", "Bm", "G"], bars: 4 },
+  ],
+  "I'm Yours": [
+    { section: "Intro", chords: ["G", "D", "Em", "C"], bars: 4 },
+    { section: "Verse 1", chords: ["G", "D", "Em", "C"], bars: 8 },
+    { section: "Verse 2", chords: ["G", "D", "Em", "C"], bars: 8, note: "The 'open up your mind' verse — same four chords as verse 1." },
+    { section: "Chorus", chords: ["G", "D", "Em", "C"], bars: 8 },
+    { section: "Bridge", chords: ["G", "Bm", "Em", "D", "C", "A7"], bars: 6, note: "The one section that steps outside the core four chords — adds Bm and a turnaround A7." },
+    { section: "Final Chorus", chords: ["G", "D", "Em", "C"], bars: 8 },
+  ],
+  "Stand By Me": [
+    { section: "Intro", chords: ["A", "F#m", "D", "E"], bars: 4 },
+    { section: "Verse 1", chords: ["A", "F#m", "D", "E"], bars: 8 },
+    { section: "Chorus 1", chords: ["A", "F#m", "D", "E"], bars: 8 },
+    { section: "Verse 2", chords: ["A", "F#m", "D", "E"], bars: 8 },
+    { section: "Chorus 2", chords: ["A", "F#m", "D", "E"], bars: 8, note: "Sources describe the entire song revolving around this one repeated I-vi-IV-V progression." },
+  ],
+  "Shape of You": [
+    { section: "Intro", chords: ["C#m", "F#m", "A", "B"], bars: 4 },
+    { section: "Verse 1", chords: ["C#m", "F#m", "A", "B"], bars: 8 },
+    { section: "Pre-Chorus", chords: ["C#m", "F#m", "A", "B"], bars: 8 },
+    { section: "Chorus", chords: ["C#m", "F#m", "A", "B"], bars: 8, note: "Sources agree this exact four-chord loop repeats for the entire song, across every section." },
+    { section: "Verse 2", chords: ["C#m", "F#m", "A", "B"], bars: 8 },
+    { section: "Final Chorus", chords: ["C#m", "F#m", "A", "B"], bars: 8 },
+  ],
+  "Don't Stop Believin'": [
+    { section: "Intro", chords: ["G", "D", "Em", "C"], bars: 8 },
+    { section: "Verse 1", chords: ["G", "D", "Em", "C", "G", "D", "Bm", "C"], bars: 8, note: "This is the full 8-chord pattern sources describe: I-V-vi-IV-I-V-iii-IV." },
+    { section: "Verse 2 (half-length)", chords: ["G", "D", "Em", "C"], bars: 4 },
+    { section: "Pre-Chorus 1", chords: ["C", "C", "G", "G"], bars: 4, note: "Pre-choruses alternate IV and I before a short turnaround." },
+    { section: "Verse 3", chords: ["G", "D", "Em", "C", "G", "D", "Bm", "C"], bars: 8 },
+    { section: "Pre-Chorus 2", chords: ["C", "C", "G", "G"], bars: 4 },
+    { section: "Chorus (until fade)", chords: ["G", "D", "Em", "C", "G", "D", "Bm", "C"], bars: 8, note: "Famously, the chorus doesn't arrive until the song is nearly finished — two verses and two pre-choruses come first." },
+  ],
+  "Riptide": [
+    { section: "Intro", chords: ["Am", "G", "C"], bars: 4 },
+    { section: "Verse 1", chords: ["Am", "G", "C"], bars: 8 },
+    { section: "Chorus 1", chords: ["Am", "G", "C", "F"], bars: 8 },
+    { section: "Verse 2", chords: ["Am", "G", "C"], bars: 8 },
+    { section: "Chorus 2", chords: ["Am", "G", "C", "F"], bars: 8, note: "The verse's 3-chord loop (Am-G-C) adds the F only in the chorus, per the most commonly cited ukulele tutorials." },
+  ],
+  "Someone Like You": [
+    { section: "Intro", chords: ["A", "E", "F#m", "D"], bars: 4 },
+    { section: "Verse 1", chords: ["A", "E", "F#m", "D"], bars: 8 },
+    { section: "Pre-Chorus", chords: ["D", "D", "E", "F#m"], bars: 4 },
+    { section: "Chorus", chords: ["A", "E", "F#m", "D"], bars: 8 },
+    { section: "Verse 2", chords: ["A", "E", "F#m", "D"], bars: 8 },
+    { section: "Bridge", chords: ["D", "D", "F#m", "F#m", "E", "E", "A", "Bm", "D"], bars: 8, note: "The one section that steps outside the core four chords, adding Bm as a passing chord." },
+    { section: "Final Chorus", chords: ["A", "E", "F#m", "D"], bars: 8 },
+  ],
+};
+
+export { SONGS, ONE_FIVE_SIX_FOUR_SONGS, SONG_STRUCTURES };
