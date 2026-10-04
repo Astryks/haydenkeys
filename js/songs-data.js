@@ -81,9 +81,9 @@ const SONGS = [
     chords: ["Bb", "F", "Gm", "Eb"],
     degreeSequence: "I - V - vi - IV (verse, simplified)",
     confidence: "needs-verification",
-    oneFiveSixFourMatch: "variant",
+    oneFiveSixFourMatch: false,
     notes:
-      "Widely simplified/taught as a I-V-vi-IV pattern (commonly shown as C-G-Am-F using a capo/transposed teaching key), but the real recording has considerably more harmonic movement (secondary dominants, a minor-plagal Cmin6/Eb cadence) that the simplified version leaves out. Flagging as needs-verification for the full chart; the simplified teaching version is a reasonable, honest approximation.",
+      "Widely simplified/taught as a I-V-vi-IV pattern (commonly shown as C-G-Am-F using a capo/transposed teaching key), but the real recording has considerably more harmonic movement (secondary dominants, a minor-plagal Cmin6/Eb cadence) that the simplified version leaves out. Not counted in the Lesson 1 payoff list since we're not confident enough in the simplification to call it a real match — flagging as needs-verification instead of guessing.",
   },
   {
     title: "Die With a Smile",
