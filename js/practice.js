@@ -5,6 +5,7 @@ import { initCalibration } from "./calibration.js";
 import { getCalibration } from "./storage.js";
 import { startLivePitchDetection } from "./pitch.js";
 import { initCameraOverlay } from "./camera-overlay.js";
+import { renderNoteHighway, stepsToHighwayNotes } from "./note-highway.js";
 
 const CHORD_DURATION_SEC = 1.6;
 const MODES = ["follow", "ear", "camera"];
@@ -40,6 +41,8 @@ function initPracticeTab(root, { initialSong } = {}) {
   let playStartedAt = 0;
   let lastChordIndex = -1;
   let kb = null;
+  let highway = null;
+  let highwayNotes = [];
   let songMeta = getSongSteps(currentSong);
   let ended = false; // true once a non-looping structured song finishes
 
@@ -75,6 +78,7 @@ function initPracticeTab(root, { initialSong } = {}) {
           ${MODES.map((m) => `<button class="hk-mode-btn ${m === mode ? "hk-mode-active" : ""}" data-mode="${m}">${MODE_LABELS[m]}</button>`).join("")}
         </div>
         <p class="hk-mode-desc">${modeDescription()}</p>
+        <div id="hk-highway" class="hk-highway-slot ${mode === "follow" ? "" : "hk-hidden"}"></div>
         <div id="hk-practice-keyboard" class="hk-keyboard-wrap"></div>
         <div id="hk-sections" class="hk-sections"></div>
         <div class="hk-timeline" id="hk-timeline">
@@ -100,6 +104,11 @@ function initPracticeTab(root, { initialSong } = {}) {
     const kbWrap = root.querySelector("#hk-practice-keyboard");
     kb = renderKeyboard(kbWrap, { startMidi: 48, endMidi: 84 });
 
+    const highwayWrap = root.querySelector("#hk-highway");
+    if (highway) highway.destroy();
+    highway = renderNoteHighway(highwayWrap, kb.keyLayout);
+    highwayNotes = stepsToHighwayNotes(songMeta.steps, CHORD_DURATION_SEC, chordSymbolToMidi);
+
     root.querySelector("#hk-song-select").addEventListener("change", (e) => {
       stopAll();
       currentSong = SONGS.find((s) => s.title === e.target.value);
@@ -119,12 +128,13 @@ function initPracticeTab(root, { initialSong } = {}) {
     renderSections();
     renderControls();
     updateCursor();
+    if (mode === "follow" && highway) highway.render(pausedAt, highwayNotes);
 
     if (mode === "camera") startCameraMode();
   }
 
   function modeDescription() {
-    if (mode === "follow") return "The keyboard highlights each chord as it plays — watch and play along at your own pace. No microphone needed.";
+    if (mode === "follow") return "Notes fall down the highway toward the hit line above each key, timed so they arrive exactly when you should play them — plus the keyboard highlights each chord as it plays. Amber = left hand, purple = right hand. No microphone needed.";
     if (mode === "ear") return "Play each chord's root note on your real piano — the mic listens via the same pitch tracker used for calibration and advances when you get it right.";
     return "Point your camera at your real keyboard. After a quick two-tap calibration, the next key to press is highlighted right on the video.";
   }
@@ -191,6 +201,7 @@ function initPracticeTab(root, { initialSong } = {}) {
     lastChordIndex = -1;
     ended = false;
     updateCursor();
+    if (mode === "follow" && highway) highway.render(pausedAt, highwayNotes);
   }
 
   function togglePlay() {
@@ -212,6 +223,7 @@ function initPracticeTab(root, { initialSong } = {}) {
     lastChordIndex = -1;
     ended = false;
     updateCursor();
+    if (mode === "follow" && highway) highway.render(0, highwayNotes);
   }
 
   function stopAll() {
@@ -244,6 +256,7 @@ function initPracticeTab(root, { initialSong } = {}) {
       const step = songMeta.steps[songMeta.steps.length - 1];
       if (step) highlightActiveSection(step.section);
       updateCursor();
+      if (mode === "follow" && highway) highway.render(t, highwayNotes);
       return;
     }
     const loopedT = songMeta.loops ? t % total : t;
@@ -253,12 +266,13 @@ function initPracticeTab(root, { initialSong } = {}) {
       const step = songMeta.steps[chordIndex];
       const midiNotes = chordSymbolToMidi(step.chord);
       if (kb && midiNotes.length) {
-        kb.highlightChord(midiNotes, { letter: step.chord, rootMidi: midiNotes[0] });
+        kb.highlightHands({ left: [midiNotes[0] - 12], right: midiNotes, rightLabel: step.chord });
         playChord(midiNotes, { duration: CHORD_DURATION_SEC * 0.9 });
       }
       highlightActiveSection(step.section);
     }
     updateCursor();
+    if (mode === "follow" && highway) highway.render(loopedT, highwayNotes);
     if (playing) raf = requestAnimationFrame(loop);
   }
 

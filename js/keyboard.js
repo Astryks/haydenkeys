@@ -53,39 +53,46 @@ function playChord(midiNotes, opts = {}) {
   midiNotes.forEach((m) => playTone(m, opts));
 }
 
-// Renders a keyboard into `container` and returns a control API.
-function renderKeyboard(container, { startMidi = 60, endMidi = 84 } = {}) {
-  container.innerHTML = "";
-  container.classList.add("hk-keyboard");
-
+// Computes each key's horizontal position/width as a percentage of the
+// full keyboard width, for a given MIDI range. Shared by the keyboard
+// renderer itself and by the falling-note highway (note-highway.js),
+// so falling blocks land in exact horizontal alignment with the real
+// keys underneath them — one source of layout truth, not two.
+function computeKeyLayout(startMidi, endMidi) {
   const whiteKeys = [];
   const blackKeys = [];
   for (let midi = startMidi; midi <= endMidi; midi++) {
     (isBlackKey(midi) ? blackKeys : whiteKeys).push(midi);
   }
-
   const whiteKeyWidthPct = 100 / whiteKeys.length;
+  const layout = new Map();
+  whiteKeys.forEach((midi, i) => {
+    layout.set(midi, { xPct: i * whiteKeyWidthPct, widthPct: whiteKeyWidthPct, isBlack: false });
+  });
+  blackKeys.forEach((midi) => {
+    const whiteBefore = whiteKeys.filter((w) => w < midi).length;
+    layout.set(midi, {
+      xPct: whiteBefore * whiteKeyWidthPct - whiteKeyWidthPct * 0.3,
+      widthPct: whiteKeyWidthPct * 0.6,
+      isBlack: true,
+    });
+  });
+  return layout;
+}
+
+// Renders a keyboard into `container` and returns a control API.
+function renderKeyboard(container, { startMidi = 60, endMidi = 84 } = {}) {
+  container.innerHTML = "";
+  container.classList.add("hk-keyboard");
+
+  const keyLayout = computeKeyLayout(startMidi, endMidi);
   const keyElements = new Map();
 
-  whiteKeys.forEach((midi, i) => {
+  keyLayout.forEach((pos, midi) => {
     const el = document.createElement("div");
-    el.className = "hk-key hk-key-white";
-    el.style.left = `${i * whiteKeyWidthPct}%`;
-    el.style.width = `${whiteKeyWidthPct}%`;
-    el.dataset.midi = String(midi);
-    container.appendChild(el);
-    keyElements.set(midi, el);
-  });
-
-  // Position black keys relative to the white key they sit between.
-  blackKeys.forEach((midi) => {
-    // Count how many white keys precede this black key to find its
-    // fractional position.
-    const whiteBefore = whiteKeys.filter((w) => w < midi).length;
-    const el = document.createElement("div");
-    el.className = "hk-key hk-key-black";
-    el.style.left = `${whiteBefore * whiteKeyWidthPct - whiteKeyWidthPct * 0.3}%`;
-    el.style.width = `${whiteKeyWidthPct * 0.6}%`;
+    el.className = `hk-key ${pos.isBlack ? "hk-key-black" : "hk-key-white"}`;
+    el.style.left = `${pos.xPct}%`;
+    el.style.width = `${pos.widthPct}%`;
     el.dataset.midi = String(midi);
     container.appendChild(el);
     keyElements.set(midi, el);
@@ -177,7 +184,7 @@ function renderKeyboard(container, { startMidi = 60, endMidi = 84 } = {}) {
     return keyElements.get(midi);
   }
 
-  return { clearHighlights, highlightChord, highlightHands, onKeyPress, getKeyElement, keyElements };
+  return { clearHighlights, highlightChord, highlightHands, onKeyPress, getKeyElement, keyElements, keyLayout, startMidi, endMidi };
 }
 
-export { renderKeyboard, playTone, playChord, midiToName, isBlackKey, freqFromMidi, getAudioContext };
+export { renderKeyboard, computeKeyLayout, playTone, playChord, midiToName, isBlackKey, freqFromMidi, getAudioContext };

@@ -261,3 +261,8 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-camera-stage canvas {
   position: absolute; top: 0; left: 0; width: 100%; height: 100%; touch-action: none;
 }
+
+/* Falling-note highway */
+.hk-highway-slot { margin: 10px 0 0; }
+.hk-highway-wrap { position: relative; width: 100%; height: 160px; background: #0d0c14; border-radius: 8px 8px 0 0; overflow: hidden; }
+.hk-highway-canvas { display: block; width: 100%; height: 100%; }
