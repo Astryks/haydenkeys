@@ -24,6 +24,13 @@ function initHowItWorksTab(root) {
             <input type="range" id="hk-wave-freq" min="80" max="800" value="262" />
           </div>
         </div>
+        <p class="hk-honest-note">Quick detour on the name: "Hz" is short for Hertz, and it just means
+           "wiggles per second" — if a string wiggles back and forth 100 times every second, that's
+           100 Hz. It's named after a real scientist, <strong>Heinrich Hertz</strong>, who in the 1880s
+           was the first person to actually create and detect invisible waves traveling through the air
+           (the same kind radios use today), proving a big theory that had only existed on paper before.
+           Scientists later named the unit after him — before that, it was just called "cycles per
+           second," which means exactly the same thing (one wiggle = one cycle), just a plainer name.</p>
       </section>
 
       <section class="hk-how-section">

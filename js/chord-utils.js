@@ -9,12 +9,28 @@ const PITCH_CLASS = {
   G: 7, "G#": 8, Ab: 8, A: 9, "A#": 10, Bb: 10, B: 11,
 };
 
+// Order matters: more specific/longer suffixes must be checked before
+// shorter ones they'd otherwise be swallowed by (e.g. "mmaj7" and "m6"
+// both start with "m", so they have to come before the plain "m" entry
+// or they'd silently lose their defining color note — a real bug found
+// and fixed while building the "My Funny Valentine" lesson, whose whole
+// point is the Cm -> CmMaj7 -> Cm7 -> Cm6 descending line).
 const QUALITY_INTERVALS = [
-  { suffix: "maj7", intervals: [0, 4, 7, 11] },
+  { suffix: "mmaj7", intervals: [0, 3, 7, 11] },
+  { suffix: "m(maj7)", intervals: [0, 3, 7, 11] },
+  { suffix: "m7b5", intervals: [0, 3, 6, 10] },
   { suffix: "m7", intervals: [0, 3, 7, 10] },
+  { suffix: "m6", intervals: [0, 3, 7, 9] },
+  { suffix: "dim7", intervals: [0, 3, 6, 9] },
   { suffix: "dim", intervals: [0, 3, 6] },
+  { suffix: "maj7", intervals: [0, 4, 7, 11] },
   { suffix: "add9", intervals: [0, 4, 7, 14] },
+  { suffix: "sus2", intervals: [0, 2, 7] },
   { suffix: "sus4", intervals: [0, 5, 7] },
+  { suffix: "aug", intervals: [0, 4, 8] },
+  { suffix: "6/9", intervals: [0, 4, 7, 9] },
+  { suffix: "6", intervals: [0, 4, 7, 9] },
+  { suffix: "9", intervals: [0, 4, 7, 10] },
   { suffix: "7", intervals: [0, 4, 7, 10] },
   { suffix: "m", intervals: [0, 3, 7] },
   { suffix: "", intervals: [0, 4, 7] }, // bare major, must be last (empty match)

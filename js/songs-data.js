@@ -85,10 +85,10 @@ const SONGS = [
     key: "D major",
     chords: ["D", "Bm", "Em", "A"],
     degreeSequence: "I - vi - ii - V",
-    confidence: "needs-verification",
+    confidence: "confirmed",
     oneFiveSixFourMatch: false,
     notes:
-      "Sources agree on key (D major) and the four main chords, but disagree on finer harmonic detail (one source rates it unusually harmonically complex for a pop song, citing an added ii(add11) chord). Treat the headline D-Bm-Em-A as a reasonable simplification, not a note-perfect chart.",
+      "Re-verified independently (item 25): the verse/intro/interlude chords D-Bm-Em-A are consistently confirmed across multiple independent chord-chart sources, including the exact lyric-to-chord mapping (D: \"Once bitten and twice shy\", Bm: \"I keep my distance...\", Em: \"Tell me baby...\", A: \"...it doesn't surprise me\"). Upgraded from needs-verification to confirmed on that basis. Important honesty note: this is I-vi-ii-V, NOT the Lesson 1 pattern (I-V-vi-IV) — it shares 2 of 4 chords/degrees (I, vi) but is a genuinely different progression, not \"the same 4 chords.\" The in-app lesson that teaches this song says so plainly rather than overstating the connection to Lesson 1.",
   },
   {
     title: "All I Want for Christmas Is You",

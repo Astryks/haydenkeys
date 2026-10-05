@@ -16,9 +16,10 @@ import {
   G_MAJOR_SCALE_FOR_STAFF,
   MINUET_IN_G_OPENING,
   LESSONS,
+  CHOOSE_SONGS,
 } from "./lessons-data.js";
 import { SONGS, ONE_FIVE_SIX_FOUR_SONGS } from "./songs-data.js";
-import { isLessonComplete, markLessonComplete, getStreak, getDailyGoal } from "./storage.js";
+import { isLessonComplete, markLessonComplete, getStreak, getDailyGoal, markSongStatus } from "./storage.js";
 import { checkBadges } from "./badges.js";
 import {
   MAJOR_SCALES,
@@ -106,18 +107,35 @@ function dailyGoalHtml() {
     </div>`;
 }
 
+// Pre-lessons ("Get yourself a piano," "Get Started") sit before the
+// numbered sequence and are shown as "Pre-lesson," not "Lesson N" — so
+// Lesson 1 is genuinely "The 4 keys to play 100 songs," matching Sid's
+// exact spec, not pushed down by the setup steps ahead of it.
+function lessonDisplayNumber(lesson, index) {
+  if (lesson.pre) return null;
+  let n = 0;
+  for (let i = 0; i <= index; i++) if (!LESSONS[i].pre) n++;
+  return n;
+}
+
+function lessonCountLabel() {
+  const numbered = LESSONS.filter((l) => !l.pre).length;
+  return `${numbered} real lessons (plus ${LESSONS.length - numbered} pre-lesson step${LESSONS.length - numbered === 1 ? "" : "s"})`;
+}
+
 function lessonMapHtml() {
   const streak = getStreak();
   const rows = LESSONS.map((lesson, i) => {
     const prevId = LESSONS[i - 1]?.id;
     const locked = prevId && !isLessonComplete(prevId);
     const done = isLessonComplete(lesson.id);
+    const num = lessonDisplayNumber(lesson, i);
     return `
       <button class="hk-lesson-node ${locked ? "hk-locked" : ""} ${done ? "hk-done" : ""}"
               data-lesson="${lesson.id}" ${locked ? "disabled" : ""}>
-        <div class="hk-lesson-node-icon">${done ? "&#10003;" : locked ? "&#128274;" : i + 1}</div>
+        <div class="hk-lesson-node-icon">${done ? "&#10003;" : locked ? "&#128274;" : (num ?? "•")}</div>
         <div class="hk-lesson-node-body">
-          <div class="hk-lesson-node-title">${lesson.title}</div>
+          <div class="hk-lesson-node-title">${lesson.pre ? "Pre-lesson" : `Lesson ${num}`}: ${lesson.title}</div>
           <div class="hk-lesson-node-subtitle">${lesson.subtitle}</div>
           <div class="hk-lesson-node-desc">${lesson.description}</div>
         </div>
@@ -126,6 +144,8 @@ function lessonMapHtml() {
 
   return `
     <div class="hk-lesson-map">
+      <h2 class="hk-lessons-title">100 Lessons to Learn Any Song — START HERE.</h2>
+      <p class="hk-honest-note">${lessonCountLabel()} — real and clickable, nothing padded.</p>
       <div class="hk-streak">🔥 ${streak.count}-day streak</div>
       ${dailyGoalHtml()}
       ${badgesStripHtml()}
@@ -134,11 +154,10 @@ function lessonMapHtml() {
 }
 
 // Persistent right-side roadmap (item 22): every single entry here is a
-// real, built, clickable lesson — no "coming soon" placeholders, since
-// interleaving real song-mastery lessons (see lessons-data.js) got the
-// real total to 102 without padding. Completed lessons fill in purple
-// (a deliberate accent distinct from the site's blue/pink base theme);
-// the next lesson up gets its own "you are here" treatment.
+// real, built, clickable lesson — no "coming soon" placeholders.
+// Completed lessons fill in purple (a deliberate accent distinct from
+// the site's blue/pink base theme); the next lesson up gets its own
+// "you are here" treatment.
 function timelineHtml() {
   const nextId = LESSONS.find((l) => !isLessonComplete(l.id))?.id;
   const rows = LESSONS.map((lesson, i) => {
@@ -146,11 +165,12 @@ function timelineHtml() {
     const locked = prevId && !isLessonComplete(prevId);
     const done = isLessonComplete(lesson.id);
     const current = lesson.id === nextId;
+    const num = lessonDisplayNumber(lesson, i);
     return `
       <button class="hk-roadmap-node ${done ? "hk-roadmap-done" : ""} ${current ? "hk-roadmap-current" : ""} ${locked ? "hk-roadmap-locked" : ""}"
               data-lesson="${lesson.id}" ${locked ? "disabled" : ""} title="${lesson.title}">
-        <span class="hk-roadmap-num">${done ? "&#10003;" : i + 1}</span>
-        <span class="hk-roadmap-label">${lesson.title}</span>
+        <span class="hk-roadmap-num">${done ? "&#10003;" : (num ?? "•")}</span>
+        <span class="hk-roadmap-label">${lesson.pre ? "Pre: " : ""}${lesson.title}</span>
         ${current ? '<span class="hk-roadmap-here">you are here</span>' : ""}
       </button>`;
   }).join("");
@@ -231,13 +251,26 @@ function initLessonsTab(root) {
       "lesson-35": runLesson35,
       "lesson-36": runLesson36,
       "lesson-37": runLesson37,
+      "lesson-lastchristmas": runLastChristmas,
+      "lesson-choose": runChooseSong,
+      "lesson-twohand-preview": runTwoHandPreview,
+      "lesson-jazz-preview": runJazzPreview,
+      "lesson-eartraining": runEarTraining,
+      "lesson-almostblue": runAlmostBluePreview,
+      "lesson-myfunnyvalentine": runMyFunnyValentinePreview,
+      "lesson-beethoven": runBeethovenShowcase,
+      "lesson-vivaldi": runVivaldiAttempt,
+      "lesson-chopin": runChopinShowcase,
     };
     // "Master this song" lessons (item 22's path toward ~100 real
     // lessons) are generated from real song data rather than hand-listed
     // here one at a time — wire them up the same way.
     LESSONS.forEach((l) => {
       if (l.songTitle) {
-        runners[l.id] = () => runMasterSongLesson(SONGS.find((s) => s.title === l.songTitle), l.id);
+        runners[l.id] = () =>
+          runMasterSongLesson(SONGS.find((s) => s.title === l.songTitle), l.id, {
+            intermediateUnlock: Boolean(l.intermediateUnlock),
+          });
       }
     });
     (runners[id] || showMap)();
@@ -332,7 +365,7 @@ function initLessonsTab(root) {
   // the same chord-symbol parser practice.js/camera-overlay.js use —
   // genuinely playable chords, not a new simplified-for-kids fake
   // version of the song.
-  function runMasterSongLesson(song, lessonId) {
+  function runMasterSongLesson(song, lessonId, { intermediateUnlock = false } = {}) {
     const { content, keyboardWrap, controls } = lessonShell(`Master: ${song.title}`);
     const kb = renderKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
     let step = "intro";
@@ -341,8 +374,8 @@ function initLessonsTab(root) {
     function renderStep() {
       if (step === "intro") {
         content.innerHTML = mascotSay(`
-          <h3>${song.title}</h3>
-          <p>By ${song.artist}. Real, verified chords: <strong>${song.chords.join(" - ")}</strong>.</p>
+          ${intermediateUnlock ? "<h3>Intermediate unlocked!</h3><p>You've completed enough Beginner songs to get here for real.</p>" : `<h3>${song.title}</h3>`}
+          <p>${intermediateUnlock ? `"${song.title}" by ${song.artist}` : `By ${song.artist}`}. Real, verified chords: <strong>${song.chords.join(" - ")}</strong>.</p>
           <p>Let's press them one at a time, together.</p>`);
         controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Start</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step = "play"; idx = 0; renderStep(); });
@@ -361,6 +394,12 @@ function initLessonsTab(root) {
         });
       } else {
         markLessonComplete(lessonId);
+        // Mark the SONG itself completed too (not just the lesson) — this
+        // is what Discover's tier-gating and the badge thresholds actually
+        // read (getSavedSongs()/countCompletedByDifficulty), so finishing
+        // a "Master this song" lesson genuinely counts toward unlocking
+        // the next difficulty tier, not just toward lesson progress.
+        markSongStatus(song.title, "completed");
         kb.clearHighlights();
         const { newlyEarned } = checkBadges();
         content.innerHTML = mascotSay(`
@@ -373,6 +412,449 @@ function initLessonsTab(root) {
       }
     }
     renderStep();
+  }
+
+  // ----- Lesson 2: Last Christmas (item 25) ------------------------------
+  // Independently re-verified chords (D-Bm-Em-A, I-vi-ii-V) — honestly
+  // NOT the same progression as Lesson 1 (shares the I and vi chords,
+  // but is genuinely a different 4-chord pattern). Said plainly here
+  // instead of overstating the connection, per this app's honesty rule.
+  function runLastChristmas() {
+    const song = SONGS.find((s) => s.title === "Last Christmas");
+    const { content, keyboardWrap, controls } = lessonShell("Last Christmas");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
+    let step = "intro";
+    let idx = 0;
+
+    function renderStep() {
+      if (step === "intro") {
+        content.innerHTML = mascotSay(`
+          <h3>Last Christmas — Wham!</h3>
+          <p>Honest heads-up: this song does NOT use Lesson 1's exact chords. It's its own 4-chord
+             pattern: <strong>${song.chords.join(" - ")}</strong> (D, Bm, Em, A).</p>
+          <p>It does share 2 of the 4 chords with what you just learned — but it's a real, different
+             pattern, not a repeat. Let's press them one at a time.</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Start</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step = "play"; idx = 0; renderStep(); });
+      } else if (step === "play") {
+        const symbol = song.chords[idx];
+        const notes = chordSymbolToMidi(symbol);
+        kb.highlightChord(notes, { letter: symbol, rootMidi: notes[0] });
+        playChord(notes, { delay: 0.1 });
+        content.innerHTML = `
+          <p class="hk-step-indicator">Chord ${idx + 1} of ${song.chords.length}</p>
+          ${mascotSay(`<p><strong>Press and hold ${symbol}.</strong> It's the lit-up keys below.</p>`)}`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next chord</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => {
+          if (idx < song.chords.length - 1) { idx++; renderStep(); }
+          else { step = "done"; renderStep(); }
+        });
+      } else {
+        markLessonComplete("lesson-lastchristmas");
+        markSongStatus(song.title, "completed");
+        kb.clearHighlights();
+        content.innerHTML = mascotSay(`<h3>Nice — a second real song down, a different pattern learned.</h3>
+          <p>Not every song reuses Lesson 1's exact shape — and that's normal. Recognizing when it's the
+             same pattern (and when it's genuinely different) is half the skill.</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Lesson 3: Choose your song (item 25) -----------------------------
+  // A real choice menu, not a forced one-at-a-time montage — 10 real
+  // 1-5-6-4-family songs (see lessons-data.js CHOOSE_SONGS), pick one.
+  function runChooseSong() {
+    const { content, keyboardWrap, controls } = lessonShell("Choose your song");
+    keyboardWrap.innerHTML = "";
+    content.innerHTML = mascotSay(`
+      <h3>Pick a song — any of these use the chords you already know.</h3>
+      <p>All ${CHOOSE_SONGS.length} use the same 1-5-6-4 chord family as Lesson 1.</p>`) +
+      `<div class="hk-choose-list">${CHOOSE_SONGS.map((s) => `
+        <button class="hk-btn hk-choose-btn" data-song="${s.title}">${s.title} — ${s.artist}</button>`).join("")}</div>`;
+    controls.innerHTML = "";
+    content.querySelectorAll("[data-song]").forEach((btn) => {
+      btn.addEventListener("click", () => playChosenSong(btn.dataset.song));
+    });
+
+    function playChosenSong(title) {
+      const song = CHOOSE_SONGS.find((s) => s.title === title);
+      const kb = renderKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
+      let idx = 0;
+      function renderChord() {
+        if (idx < song.chords.length) {
+          const symbol = song.chords[idx];
+          const notes = chordSymbolToMidi(symbol);
+          kb.highlightChord(notes, { letter: symbol, rootMidi: notes[0] });
+          playChord(notes, { delay: 0.1 });
+          content.innerHTML = `
+            <p class="hk-step-indicator">${song.title} — chord ${idx + 1} of ${song.chords.length}</p>
+            ${mascotSay(`<p><strong>Press and hold ${symbol}.</strong></p>`)}`;
+          controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next chord</button>`;
+          controls.querySelector("#hk-next").addEventListener("click", () => { idx++; renderChord(); });
+        } else {
+          markLessonComplete("lesson-choose");
+          markSongStatus(song.title, "completed");
+          kb.clearHighlights();
+          content.innerHTML = mascotSay(`<h3>You just played "${song.title}" start to finish!</h3>
+            <p>Your choice, your song — same chords you already had from Lesson 1.</p>`);
+          controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+          controls.querySelector("#hk-done").addEventListener("click", showMap);
+        }
+      }
+      renderChord();
+    }
+  }
+
+  // ----- Lesson 4: Left hand vs. right hand (early preview) ---------------
+  // Deliberately lightweight — the real two-hand coordination depth
+  // (alternating bass, Alberti bass, arpeggios) stays later in the arc
+  // (Days 21-25). This is just a first, easy taste of the idea: left
+  // hand holds the chord root, right hand plays one simple note on top.
+  function runTwoHandPreview() {
+    const { content, keyboardWrap, controls } = lessonShell("Left hand vs. right hand");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 45, endMidi: 79 });
+    let step = 0;
+
+    function renderStep() {
+      if (step === 0) {
+        content.innerHTML = mascotSay(`
+          <h3>A quick first taste of two hands.</h3>
+          <p>Your left hand and right hand can do two different jobs at once. Here: left hand holds down
+             the chord (low, pink), right hand taps one simple note on top (high, light blue).</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Try it</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step = 1; renderStep(); });
+      } else if (step < 1 + LESSON1_SEQUENCE.length) {
+        const key = LESSON1_SEQUENCE[step - 1];
+        const chord = LESSON1_CHORDS[key];
+        const topNote = chord.notes[chord.notes.length - 1] + 12; // one octave above the chord's top note
+        kb.highlightHands({ left: chord.notes.map((n) => n - 12), right: [topNote], leftLabel: chord.letter });
+        playChord([...chord.notes.map((n) => n - 12), topNote], { duration: 0.8 });
+        content.innerHTML = `
+          <p class="hk-step-indicator">Chord ${step} of ${LESSON1_SEQUENCE.length}</p>
+          ${mascotSay(`<p>Left hand: ${chord.letter} chord, low. Right hand: one note, high. Press both.</p>`)}`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+      } else {
+        markLessonComplete("lesson-twohand-preview");
+        kb.clearHighlights();
+        content.innerHTML = mascotSay(`<h3>That's the whole idea.</h3>
+          <p>Two hands, two different jobs, at the same time. The real depth (busier left-hand patterns,
+             real melodies) comes later — Days 21-25. This was just the taste.</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Lesson 5: The jazz trick (early preview) --------------------------
+  // Short, fun preview of left-hand-comps/right-hand-improvises, using
+  // chords the user already knows by Lesson 5 (Lesson 1's G-D-Em-C) —
+  // not full jazz theory. The deeper version (ii-V-I, 7th chords) stays
+  // at the bonus Jazz comping lesson later in the arc.
+  function runJazzPreview() {
+    const { content, keyboardWrap, controls } = lessonShell("The jazz trick");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
+    let step = 0;
+    let compInterval = null;
+    const safeNotes = [60, 62, 64, 67, 69]; // C major pentatonic, safe over G-D-Em-C
+
+    function renderStep() {
+      if (step === 0) {
+        content.innerHTML = mascotSay(`
+          <h3>Here's a fun trick real jazz musicians use.</h3>
+          <p>Left hand loops the G-D-Em-C chords you already know. Right hand plays ANY of a few
+             "safe" notes, in any order, any rhythm — it'll sound good no matter what.</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Try noodling</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step = 1; renderStep(); });
+      } else {
+        content.innerHTML = `
+          ${mascotSay(`<p>The left hand is looping the chords. Tap any of the <strong>outlined</strong> keys —
+             there's no wrong note here.</p>`)}
+          <p class="hk-honest-note">Just a preview — when you've noodled a bit, mark it complete.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Mark complete</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", finish);
+        kb.clearHighlights();
+        safeNotes.forEach((midi) => {
+          const el = kb.getKeyElement(midi);
+          if (el) el.classList.add("hk-key-selectable");
+        });
+        let i = 0;
+        compInterval = setInterval(() => {
+          const key = LESSON1_SEQUENCE[i % LESSON1_SEQUENCE.length];
+          const chord = LESSON1_CHORDS[key];
+          playChord(chord.notes.map((n) => n - 12), { duration: 1.1 });
+          i++;
+        }, 1200);
+      }
+    }
+    function finish() {
+      if (compInterval) clearInterval(compInterval);
+      markLessonComplete("lesson-jazz-preview");
+      kb.clearHighlights();
+      kb.onKeyPress(() => {});
+      content.innerHTML = mascotSay(`<h3>That's the jazz trick in miniature.</h3>
+        <p>Loop known chords, improvise over "safe" notes. The real, deeper version (with 7th chords and
+           a proper ii-V-I) is later in the arc, at the Jazz comping bonus lesson.</p>`);
+      controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-back">Back to lessons</button>`;
+      controls.querySelector("#hk-back").addEventListener("click", showMap);
+    }
+    renderStep();
+  }
+
+  // ----- Lesson 6: Train your ear -----------------------------------------
+  // Honesty note (item 25): Sid's original worked example was Hans
+  // Zimmer's "Interstellar" main theme. That piece is (a) a complex,
+  // non-public-domain film score by a living composer — not the kind of
+  // 70-years-dead-composer public domain material this app's classical
+  // catalog is built on — and (b) genuinely not reducible to a simple
+  // beginner pattern without misrepresenting it. Rather than fake a
+  // "simplified Interstellar chart" with neither of those things true,
+  // this lesson uses "Ode to Joy" (Beethoven, public domain, already
+  // verified elsewhere in this app for Lesson 3) as the honest worked
+  // example instead — the EAR-TRAINING SKILL is what's meant to transfer
+  // to songs like Interstellar on the user's own instrument, not a
+  // canned chart we can't responsibly provide for that specific piece.
+  function runEarTraining() {
+    const { content, keyboardWrap, controls } = lessonShell("Train your ear");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    let step = 0;
+
+    function renderStep() {
+      if (step === 0) {
+        content.innerHTML = mascotSay(`
+          <h3>The real skill: figuring out a song just by listening.</h3>
+          <p>Every musician does this. Pick any song you hear on the radio, hum the melody back slowly,
+             and try to find those notes on your piano by trial and error. That's it — that's the whole
+             trick, just practiced over and over.</p>
+          <p class="hk-honest-note">Honest note: we originally planned to use Hans Zimmer's "Interstellar"
+             theme as the worked example here. We're skipping that — it's a complex, modern film score by
+             a living composer, not something we can responsibly turn into a "simplified official chart"
+             without either misrepresenting it or straying past this app's own public-domain-only rule for
+             full pieces. Instead, here's the exact same ear-training process on a simple, honest example
+             you can fully trust: "Ode to Joy" (Beethoven, public domain).</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Try it</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step = 1; renderStep(); });
+      } else if (step <= ODE_TO_JOY_MELODY.length) {
+        const i = step - 1;
+        const midi = ODE_TO_JOY_MELODY[i];
+        kb.highlightChord([midi], { rootMidi: midi });
+        playTone(midi, { duration: 0.5 });
+        content.innerHTML = `
+          <p class="hk-step-indicator">Note ${i + 1} of ${ODE_TO_JOY_MELODY.length}</p>
+          ${mascotSay(`<p>Listen, then find this exact note on the keyboard by ear. Press it, then tap Next.</p>`)}`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+      } else {
+        markLessonComplete("lesson-eartraining");
+        kb.clearHighlights();
+        content.innerHTML = mascotSay(`<h3>That's ear training.</h3>
+          <p>You just found a whole melody by trial and error — no sheet music, no chart. Try this same
+             process on a song you actually like next; it gets faster every time you do it.</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Lesson 11: Almost Blue (early jazz preview) -----------------------
+  // Honesty note: Almost Blue's own song-data entry is flagged
+  // "needs-verification" — only its intro (Am, Dm9) has solid sourcing;
+  // a third chord in the raw data is literally placeholder text ("see
+  // notes"), not a real chord, so it's excluded here. This lesson
+  // teaches only the two confidently-sourced intro chords, explicitly
+  // labeled as a glimpse, not the full tune's harmony.
+  function runAlmostBluePreview() {
+    const song = SONGS.find((s) => s.title === "Almost Blue");
+    const { content, keyboardWrap, controls } = lessonShell("Almost Blue");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
+    const introChords = ["Am", "Dm9"]; // the only two chords with solid independent sourcing
+    let idx = 0;
+
+    function renderStep() {
+      if (idx < introChords.length) {
+        const symbol = introChords[idx];
+        const notes = chordSymbolToMidi(symbol);
+        kb.highlightChord(notes, { letter: symbol, rootMidi: notes[0] });
+        playChord(notes, { delay: 0.1 });
+        content.innerHTML = `
+          <p class="hk-step-indicator">Chord ${idx + 1} of ${introChords.length}</p>
+          ${mascotSay(idx === 0
+            ? `<h3>Almost Blue — a glimpse of real jazz ballad harmony.</h3>
+               <p>Elvis Costello wrote it; Chet Baker's version made it a jazz standard. Honest heads-up:
+                  only its first two chords are confidently sourced for this app — the rest of the tune's
+                  harmony needs more research, so we're not guessing at it.</p>
+               <p><strong>Press and hold ${symbol}.</strong></p>`
+            : `<p><strong>Press and hold ${symbol}.</strong></p>`)}`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next chord</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { idx++; renderStep(); });
+      } else {
+        markLessonComplete("lesson-almostblue");
+        kb.clearHighlights();
+        content.innerHTML = mascotSay(`<h3>That's a real taste of jazz ballad harmony.</h3>
+          <p>Just 2 chords of a much richer tune — an early preview of where the Jazz comping bonus lesson
+             (later in the arc) goes much deeper.</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Lesson 15: My Funny Valentine (the "minor line cliché") ----------
+  function runMyFunnyValentinePreview() {
+    const song = SONGS.find((s) => s.title === "My Funny Valentine");
+    const { content, keyboardWrap, controls } = lessonShell("My Funny Valentine");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
+    let idx = 0;
+
+    function renderStep() {
+      if (idx < song.chords.length) {
+        const symbol = song.chords[idx];
+        const notes = chordSymbolToMidi(symbol);
+        kb.highlightChord(notes, { letter: symbol, rootMidi: notes[0] });
+        playChord(notes, { delay: 0.1 });
+        content.innerHTML = `
+          <p class="hk-step-indicator">Chord ${idx + 1} of ${song.chords.length}</p>
+          ${mascotSay(idx === 0
+            ? `<h3>My Funny Valentine — the "minor line cliché."</h3>
+               <p>This exact 4-chord descending line is so famous it's nicknamed after this very song —
+                  you'll hear it in countless other jazz tunes and film scores once you know to listen
+                  for it. One note moves down by a half-step each chord: C, B, Bb, A.</p>
+               <p><strong>Press and hold ${symbol}.</strong></p>`
+            : `<p><strong>Press and hold ${symbol}.</strong></p>`)}`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next chord</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { idx++; renderStep(); });
+      } else {
+        markLessonComplete("lesson-myfunnyvalentine");
+        markSongStatus(song.title, "completed");
+        kb.clearHighlights();
+        content.innerHTML = mascotSay(`<h3>That descending line is real jazz vocabulary.</h3>
+          <p>Keep an ear out for it — once you've heard it once, you'll start noticing it everywhere.</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Lesson 25: Für Elise (early classical preview) --------------------
+  // Reuses the exact same verified FUR_ELISE_OPENING data as the Bonus:
+  // Advanced repertoire lesson later in the arc — same real excerpt,
+  // surfaced early as a taste per Sid's exact placement request.
+  function runBeethovenShowcase() {
+    const { content, keyboardWrap, controls } = lessonShell("Für Elise");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 40, endMidi: 79 });
+    let step = 0;
+
+    function renderStep() {
+      if (step === 0) {
+        content.innerHTML = mascotSay(`
+          <h3>An early preview: a real piece by a legend.</h3>
+          <p>Beethoven's "Für Elise" (1810) — one of the most famous nine notes in piano repertoire.
+             The full capstone two-hand treatment is still ahead in the arc; this is just a taste.</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Play it</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step = 1; renderStep(); });
+      } else if (step <= FUR_ELISE_OPENING.rightHand.length) {
+        const i = step - 1;
+        const midi = FUR_ELISE_OPENING.rightHand[i];
+        kb.highlightHands({ left: FUR_ELISE_OPENING.leftHand, right: [midi], leftLabel: "Am" });
+        playTone(midi, { duration: 0.4 });
+        if (i === 0) playChord(FUR_ELISE_OPENING.leftHand, { duration: 2.0, gain: 0.1 });
+        content.innerHTML = `
+          <p class="hk-step-indicator">Note ${i + 1} of ${FUR_ELISE_OPENING.rightHand.length}</p>
+          ${mascotSay(`<p>Right hand (light blue) plays the melody; left hand (pink) holds a simple
+             A minor broken chord underneath.</p>`)}`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+      } else {
+        markLessonComplete("lesson-beethoven");
+        kb.clearHighlights();
+        content.innerHTML = mascotSay(`<h3>That's the most famous nine notes in piano repertoire.</h3>
+          <p>The full piece gets considerably harder from here — a real taste, not the whole piece.</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Lesson 30: Vivaldi's Spring — an honest attempt -------------------
+  // Sid's own word was "attempt." The full violin melodic theme is NOT
+  // confidently reducible to a verified simple excerpt this pass (it's
+  // genuinely a string-orchestra texture, and no independently-confirmed
+  // simplified note-for-note version was found) — so rather than fake
+  // one, this is honestly scoped down to just the single most iconic,
+  // extremely well-documented fragment: the bright, repeated E major
+  // chord hits that open the piece's ritornello, before the solo violin
+  // melody even begins. Real, scoped, honest — not the full theme.
+  function runVivaldiAttempt() {
+    const { content, keyboardWrap, controls } = lessonShell("Vivaldi's Spring (an attempt)");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    const eMajor = chordSymbolToMidi("E");
+    let hits = 0;
+    const TOTAL_HITS = 4;
+
+    function renderStep() {
+      if (hits < TOTAL_HITS) {
+        kb.highlightChord(eMajor, { letter: "E", rootMidi: eMajor[0] });
+        playChord(eMajor, { duration: 0.4 });
+        content.innerHTML = `
+          <p class="hk-step-indicator">Chord hit ${hits + 1} of ${TOTAL_HITS}</p>
+          ${mascotSay(hits === 0
+            ? `<h3>An honest attempt, not the full piece.</h3>
+               <p>Vivaldi's "Spring" opens with a bright, repeated E major chord, announcing the famous
+                  theme before the solo violin even enters. That's what you're about to play.</p>
+               <p class="hk-honest-note">Scoped down on purpose: the actual violin melody that follows is a
+                  real string-orchestra texture that isn't confidently reducible to a verified beginner
+                  excerpt yet — so rather than guess at it, this stays honestly limited to the iconic
+                  opening gesture. The full catalog entry (still "attempt not complete") is in the
+                  repertoire list on the Bonus: Advanced repertoire lesson.</p>
+               <p><strong>Press the E chord.</strong></p>`
+            : `<p><strong>Press the E chord again.</strong></p>`)}`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next hit</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { hits++; renderStep(); });
+      } else {
+        markLessonComplete("lesson-vivaldi");
+        kb.clearHighlights();
+        content.innerHTML = mascotSay(`<h3>That's the honest attempt.</h3>
+          <p>A real, scoped-down fragment — not a fabricated "simplified Spring." The full piece stays a
+             verified catalog entry until it can be simplified responsibly.</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Lesson 35: Chopin's Nocturne — honest catalog showcase ------------
+  // No fabricated note-by-note excerpt: independent verification of the
+  // opening phrase's exact notes wasn't confidently obtained this pass,
+  // so rather than guess, this lesson presents real, verified facts
+  // about the piece and is explicit that it's catalog-only.
+  function runChopinShowcase() {
+    const entry = ADVANCED_REPERTOIRE.find((p) => p.title === "Nocturne Op. 9 No. 2");
+    const { content, keyboardWrap, controls } = lessonShell("Chopin's Nocturne");
+    keyboardWrap.innerHTML = "";
+    content.innerHTML = mascotSay(`
+      <h3>Nocturne Op. 9 No. 2 — Frédéric Chopin (1832)</h3>
+      <p>Chopin's single most iconic piece, in ${entry ? entry.key : "Eb major"} — a flowing, lyrical
+         melody over a broken-chord left hand, repeated three times with increasingly elaborate
+         ornamentation each time.</p>
+      <p class="hk-honest-note">Honest note: we did not build a note-by-note excerpt for this one.
+         Independent sources confirm the piece's key, structure, and character, but not a specific,
+         confidently-verified opening note sequence we'd be comfortable teaching as "the real thing" —
+         rather than guess at the melody, this stays a real, verified catalog entry, same as several
+         other pieces in the Bonus: Advanced repertoire lesson.</p>`);
+    controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+    controls.querySelector("#hk-done").addEventListener("click", () => {
+      markLessonComplete("lesson-chopin");
+      showMap();
+    });
   }
 
   // ----- Lesson 1: 1-5-6-4 ---------------------------------------------

@@ -108,19 +108,21 @@ const PRE_LESSONS = [
     title: "Get yourself a piano",
     subtitle: "Before you start",
     description: "You don't need to own a real piano yet — here's how to find something to practice on, cheap or free.",
+    pre: true,
   },
   {
     id: "lesson-getstarted",
     title: "Get Started",
     subtitle: "Find your starting key",
     description: "A quick audio check: play a note, and the app listens through your microphone to confirm you found the right key.",
+    pre: true,
   },
 ];
 
 const THEORY_LESSONS = [
   {
     id: "lesson-1",
-    title: "Your first 4 chords",
+    title: "The 4 keys to play 100 songs",
     subtitle: "The 1-5-6-4 pattern",
     description:
       "The chord pattern behind more pop songs than any other. Learn it once, recognize it everywhere.",
@@ -203,7 +205,7 @@ const THEORY_LESSONS = [
   { id: "lesson-22", title: "Day 22: Alberti bass", subtitle: "A busier, smoother pattern", description: "The broken-chord left-hand pattern found all over classical piano repertoire." },
   { id: "lesson-23", title: "Day 23: Arpeggios", subtitle: "Chords, one note at a time", description: "The technique bridge between scales and chords — playing a chord's notes one at a time instead of together." },
   { id: "lesson-24", title: "Day 24: Two hands together", subtitle: "Coordination practice", description: "Combining a left-hand bass pattern with a right-hand chord or melody." },
-  { id: "lesson-25", title: "Day 25: Two-hand review", subtitle: "Apply it to a real progression", description: "Playing Lesson 1's G-D-Em-C with real two-hand technique for the first time." },
+  { id: "lesson-25", title: "Day 25: Two-hand review", subtitle: "Apply it to a real progression", description: "Playing Lesson 1's G-D-Em-C with real, full two-hand technique — deeper than the early preview back in Lesson 4." },
   { id: "lesson-26", title: "Day 26: Dominant 7th chords", subtitle: "A classic richer color", description: "The 7th chord behind blues, jazz, and a lot of pop harmony." },
   { id: "lesson-27", title: "Day 27: Major 7th chords", subtitle: "A dreamier color", description: "Softer and jazzier than a plain major triad." },
   { id: "lesson-28", title: "Day 28: Minor 7th chords", subtitle: "A smoother minor color", description: "The minor equivalent — smoother and less tense than a plain minor triad." },
@@ -214,7 +216,7 @@ const THEORY_LESSONS = [
   { id: "lesson-33", title: "Day 33: Canon's chords", subtitle: "Right-hand practice", description: "Adding the right-hand chords over the bass line." },
   { id: "lesson-34", title: "Day 34: Canon, richer", subtitle: "Adding 7th-chord color", description: "Trying a 7th-chord variation on the Canon progression." },
   { id: "lesson-35", title: "Day 35: Full performance", subtitle: "The capstone, both hands", description: "Playing the complete Canon in D progression with both hands — the arc's final payoff." },
-  { id: "lesson-36", title: "Bonus: Jazz comping & improv", subtitle: "Left hand comps, right hand improvises", description: "Builds on Days 26-30's 7th chords: left hand plays a ii-V-I, right hand improvises freely using the major pentatonic scale — no right/wrong answer, just noodle." },
+  { id: "lesson-36", title: "Bonus: Jazz comping & improv", subtitle: "Left hand comps, right hand improvises", description: "The real, deeper version of the early 'jazz trick' preview: builds on Days 26-30's 7th chords, left hand plays a ii-V-I, right hand improvises freely using the major pentatonic scale — no right/wrong answer, just noodle." },
   { id: "lesson-37", title: "Bonus: Advanced repertoire", subtitle: "Für Elise, and a verified catalog beyond it", description: "A real excerpt of Beethoven's famous opening phrase, plus a researched (not guessed) catalog of Chopin, Debussy, and Satie pieces for later." },
 ];
 
@@ -238,7 +240,7 @@ const INTERMEDIATE_SONGS = MASTERABLE_SONGS.filter((s) => getDifficulty(s) === "
 const ADVANCED_SONGS = MASTERABLE_SONGS.filter((s) => getDifficulty(s) === "Advanced");
 
 let songLessonCounter = 0;
-function masterSongLesson(song) {
+function masterSongLesson(song, extra = {}) {
   songLessonCounter++;
   return {
     id: `song-${songLessonCounter}`,
@@ -246,41 +248,168 @@ function masterSongLesson(song) {
     subtitle: song.artist,
     description: `A real song, real verified chords (${song.chords.join("-")}) — play it start to finish with what you already know.`,
     songTitle: song.title,
+    ...extra,
   };
 }
-
-const beginnerSongLessons = BEGINNER_SONGS.map(masterSongLesson);
-const intermediateSongLessons = INTERMEDIATE_SONGS.map(masterSongLesson);
-const advancedSongLessons = ADVANCED_SONGS.map(masterSongLesson);
 
 function insertAfter(list, id, items) {
   const idx = list.findIndex((l) => l.id === id);
   list.splice(idx === -1 ? list.length : idx + 1, 0, ...items);
 }
 
-// Beginner song-mastery lessons split across the two points in the arc
-// where a beginner actually has enough chords to play them: right after
-// the core 1-5-6-4 pattern (Lesson 1), and again after the natural-minor
-// pattern (Lesson 6) once minor-key songs are also fair game.
-const LESSONS = [...PRE_LESSONS, ...THEORY_LESSONS];
-insertAfter(LESSONS, "lesson-1", beginnerSongLessons.slice(0, 10));
-insertAfter(LESSONS, "lesson-6", beginnerSongLessons.slice(10));
-// Intermediate tier unlocks around richer 7th-chord harmony (Lesson 30).
-insertAfter(LESSONS, "lesson-30", intermediateSongLessons);
-// Advanced tier unlocks after the jazz/classical bonus content (Lesson 37).
-insertAfter(LESSONS, "lesson-37", advancedSongLessons);
+// ===== Item 25: front-loaded practical sequence (Lessons 2-12) =====
+//
+// Sid's exact spec for the start of the curriculum: real songs and fun
+// previews FIRST, with the deeper theory arc (already fully built)
+// continuing right after. Every song used here is pulled from the real,
+// verified library — nothing invented. "Last Christmas" was
+// specifically re-verified as part of this change (see its updated
+// notes in songs-data.js): its real chords are D-Bm-Em-A (I-vi-ii-V),
+// which is NOT the same progression as Lesson 1 — close (shares the I
+// and vi chords) but genuinely different, so the lesson that teaches it
+// says so honestly instead of pretending it's an exact match.
+const NEW_FRONT_LESSONS = [
+  {
+    id: "lesson-lastchristmas",
+    title: "Last Christmas",
+    subtitle: "A close cousin of Lesson 1's pattern",
+    description: "Apply chord-reading to a real, famous song — honestly, a different (but related) 4-chord pattern, not literally Lesson 1's chords.",
+  },
+  {
+    id: "lesson-choose",
+    title: "Choose your song",
+    subtitle: "Pick one — you decide",
+    description: "10 popular songs that use Lesson 1's exact chord family. Pick whichever one you actually want to play.",
+  },
+  {
+    id: "lesson-twohand-preview",
+    title: "Left hand vs. right hand",
+    subtitle: "A first taste of two hands",
+    description: "One hand holds the chord, the other plays a simple note on top — an early, easy preview of real two-hand playing (the full depth comes later, Days 21-25).",
+  },
+  {
+    id: "lesson-jazz-preview",
+    title: "The jazz trick",
+    subtitle: "A first taste of improvising",
+    description: "Left hand loops chords you already know, right hand noodles freely over safe notes — a quick, fun preview (the full version comes later, the Jazz comping bonus lesson).",
+  },
+  {
+    id: "lesson-eartraining",
+    title: "Train your ear",
+    subtitle: "Figure out a song by ear",
+    description: "The real skill behind learning any song you hear on the radio — worked through on a simple, honestly-chosen example.",
+  },
+];
 
-// Honest final count: 2 pre-lessons + 37 theory lessons +
-// (beginnerSongLessons.length + intermediateSongLessons.length +
-// advancedSongLessons.length) real, individually-playable song lessons.
-// This intentionally lands near-but-not-exactly 100 — every single
-// entry is real and clickable; nothing was padded to hit a round number.
+// Songs for "Choose your song" (Lesson 3): real 1-5-6-4-family songs,
+// excluding Shallow (already fully played through inside Lesson 1
+// itself) so this feels like fresh choices, not a repeat.
+const CHOOSE_SONGS = BEGINNER_SONGS.filter((s) => s.oneFiveSixFourMatch && s.title !== "Shallow").slice(0, 10);
+
+const consumedTitles = new Set(["Shallow", "Last Christmas", ...CHOOSE_SONGS.map((s) => s.title)]);
+
+// Lessons 7-10: four more individual Beginner-tier songs, distinct from
+// the "Choose your song" list.
+const FRONT_SONGS_7_10 = BEGINNER_SONGS.filter((s) => !consumedTitles.has(s.title)).slice(0, 4);
+FRONT_SONGS_7_10.forEach((s) => consumedTitles.add(s.title));
+
+// Lesson 11: "Intermediate unlocked" — the first genuinely Intermediate
+// song, distinct from Last Christmas (which already has its own lesson
+// even though it's technically Intermediate-tier too).
+const INTERMEDIATE_UNLOCK_SONG = INTERMEDIATE_SONGS.find((s) => !consumedTitles.has(s.title));
+if (INTERMEDIATE_UNLOCK_SONG) consumedTitles.add(INTERMEDIATE_UNLOCK_SONG.title);
+
+// By Lesson 10, the user has completed 5 real Beginner-tier songs
+// (1 from "Choose your song" + 4 from Lessons 7-10) — exactly the
+// existing 5-songs-to-unlock threshold (see badges.js /
+// discover.js), so Intermediate genuinely unlocks around here without
+// needing to change that threshold at all. The "Intermediate unlocked"
+// showcase lesson itself was moved out of the Lesson 11 slot (see
+// below — Sid gave that slot an exact repertoire placement instead) and
+// now just flows naturally into the Lesson 13+ continuation.
+const frontSongLessons78910 = FRONT_SONGS_7_10.map((s) => masterSongLesson(s));
+const intermediateUnlockLesson = INTERMEDIATE_UNLOCK_SONG
+  ? masterSongLesson(INTERMEDIATE_UNLOCK_SONG, { intermediateUnlock: true, title: `Intermediate unlocked: ${INTERMEDIATE_UNLOCK_SONG.title}` })
+  : null;
+
+// Remaining song pools (everything not already placed up front) keep
+// getting woven into the theory arc exactly as before, just from a
+// smaller remaining pool.
+const BEGINNER_REMAINING = BEGINNER_SONGS.filter((s) => !consumedTitles.has(s.title));
+const INTERMEDIATE_REMAINING = INTERMEDIATE_SONGS.filter((s) => !consumedTitles.has(s.title));
+const beginnerRemainingLessons = BEGINNER_REMAINING.map((s) => masterSongLesson(s));
+const intermediateRemainingLessons = INTERMEDIATE_REMAINING.map((s) => masterSongLesson(s));
+const advancedSongLessons = ADVANCED_SONGS.map((s) => masterSongLesson(s));
+
+const theoryById = Object.fromEntries(THEORY_LESSONS.map((l) => [l.id, l]));
+// lesson-1 (the 4 keys) and lesson-11 (C major scale, pulled forward as
+// Lesson 12's "Learn a scale") are relocated to the front; everything
+// else keeps its original relative order and content, just picking up
+// after the new front-loaded run. The "Intermediate unlocked" showcase
+// is unshifted onto the very front of this continuation.
+const theoryRest = [
+  ...(intermediateUnlockLesson ? [intermediateUnlockLesson] : []),
+  ...THEORY_LESSONS.filter((l) => l.id !== "lesson-1" && l.id !== "lesson-11"),
+];
+insertAfter(theoryRest, "lesson-6", beginnerRemainingLessons);
+insertAfter(theoryRest, "lesson-30", intermediateRemainingLessons);
+insertAfter(theoryRest, "lesson-37", advancedSongLessons);
+
+// ===== Sid's exact repertoire placements (update to item 25) =====
+//
+// Jazz/classical showcase lessons dropped at specific, EXACT numbered
+// positions, well before a user would naturally unlock Advanced tier
+// through the 5-songs-per-tier gate — same "early preview" pattern
+// already used for Lessons 4/5 (two-hand/jazz previews). Reachability
+// here is just normal linear lesson-sequence progress (complete the
+// lesson before it); it's intentionally independent of the Discover
+// tab's separate Advanced-tier unlock, which still gates the *rest* of
+// the Advanced song library normally.
+const SPECIAL_POSITIONS = {
+  11: { id: "lesson-almostblue", title: "Almost Blue", subtitle: "A glimpse of real jazz ballad harmony", description: "Chet Baker's famous version of the Elvis Costello song — just its two confidently-sourced intro chords, honestly labeled as a glimpse, not the full tune." },
+  15: { id: "lesson-myfunnyvalentine", title: "My Funny Valentine", subtitle: "The 'minor line cliché'", description: "A real, famous 4-chord descending line (Cm-CmMaj7-Cm7-Cm6) used in jazz standards and film scores alike." },
+  25: { id: "lesson-beethoven", title: "Für Elise", subtitle: "A real piece by a legend", description: "An early preview of Beethoven's famous opening phrase — the full capstone treatment of two-hand technique is still ahead, this is just a taste of real repertoire." },
+  30: { id: "lesson-vivaldi", title: "Vivaldi's Spring (an attempt)", subtitle: "The famous opening gesture, honestly scoped", description: "An attempt at Vivaldi's Four Seasons — scoped down to just the iconic repeated opening chord gesture, not the full violin theme, which resists confident simplification this pass." },
+  35: { id: "lesson-chopin", title: "Chopin's Nocturne", subtitle: "A real, verified catalog entry", description: "Nocturne Op. 9 No. 2 — Chopin's most iconic piece. Honestly catalog-only this pass: no confidently-verified note-by-note excerpt was built, rather than guess at one." },
+};
+
+const numbered = [
+  theoryById["lesson-1"],
+  ...NEW_FRONT_LESSONS,
+  ...frontSongLessons78910,
+  theoryById["lesson-11"],
+  ...theoryRest,
+];
+
+function withReservedPositions(list, reserved) {
+  const remaining = new Map(Object.entries(reserved));
+  const out = [];
+  let pos = 0;
+  let i = 0;
+  while (i < list.length || remaining.size) {
+    pos++;
+    if (remaining.has(String(pos))) {
+      out.push(remaining.get(String(pos)));
+      remaining.delete(String(pos));
+    } else if (i < list.length) {
+      out.push(list[i]);
+      i++;
+    }
+  }
+  return out;
+}
+
+const LESSONS = [...PRE_LESSONS, ...withReservedPositions(numbered, SPECIAL_POSITIONS)];
+
+// Honest final count: every entry above, real and clickable — nothing
+// padded to hit a round number.
 const TOTAL_LESSON_COUNT = LESSONS.length;
 
 export {
   PRE_LESSONS,
   THEORY_LESSONS,
   MASTERABLE_SONGS,
+  CHOOSE_SONGS,
   TOTAL_LESSON_COUNT,
 };
 

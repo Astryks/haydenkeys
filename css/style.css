@@ -116,6 +116,15 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 }
 .hk-upload-banner h3 { margin: 0 0 10px; color: var(--hk-accent-2); }
 .hk-upload-banner input[type="file"] { margin-bottom: 8px; }
+/* Prominent, always-first banner at the top of Discover (item 25) */
+.hk-upload-banner-top {
+  background: linear-gradient(135deg, var(--hk-accent-soft), var(--hk-accent-2-soft));
+  border: none; margin: 0 0 16px; padding: 20px;
+}
+.hk-upload-banner-top h2 { margin: 0 0 8px; color: var(--hk-text); }
+.hk-upload-banner-top input[type="file"] {
+  background: var(--hk-panel); border-radius: 8px; padding: 8px; display: block; width: 100%;
+}
 .hk-scope-note {
   background: rgba(232, 184, 75, 0.1); border: 1px solid var(--hk-warn);
   padding: 12px; border-radius: 8px; font-size: 0.85rem; color: var(--hk-text-dim);
@@ -127,7 +136,16 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-song-card {
   background: var(--hk-panel); border-radius: 10px; padding: 14px;
   border: 1px solid var(--hk-border);
+  display: flex; gap: 12px;
 }
+.hk-song-art-slot { flex: 0 0 64px; width: 64px; height: 64px; border-radius: 8px; overflow: hidden; }
+.hk-song-art-fallback {
+  display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
+  background: var(--hk-accent-soft);
+}
+.hk-song-art { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hk-song-card-body { flex: 1 1 auto; min-width: 0; }
+.hk-song-chords-glance { font-family: monospace; font-size: 0.85rem; color: var(--hk-accent); margin: 0 0 4px; }
 .hk-song-card-top { display: flex; justify-content: space-between; align-items: start; gap: 8px; }
 .hk-song-card h3 { margin: 0 0 4px; font-size: 1.05rem; }
 .hk-song-artist, .hk-song-key { margin: 2px 0; color: var(--hk-text-dim); font-size: 0.85rem; }
@@ -199,7 +217,10 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 
 /* Lessons */
 .hk-lesson-map { display: flex; flex-direction: column; gap: 10px; padding: 16px 0; }
+.hk-lessons-title { margin: 0 0 2px; font-size: 1.4rem; color: var(--hk-accent-2); }
 .hk-streak { font-size: 1rem; margin-bottom: 8px; }
+.hk-choose-list { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+.hk-choose-btn { text-align: left; }
 
 .hk-daily-goal { margin-bottom: 14px; }
 .hk-daily-goal-label { font-size: 0.85rem; color: var(--hk-text-dim); margin-bottom: 4px; }

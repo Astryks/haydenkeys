@@ -350,3 +350,104 @@ why) — this pass rebuilt the whole first-run experience end to end.
   pre-existing theory lessons (Lessons 2-37) in this pass — those still
   use the copy style from earlier audits, which is numbers-first but not
   rewritten to this stricter bar.
+
+## 2026-10-05 update: front-loaded lesson sequence, repertoire showcases, Discover redesign
+
+Also added: the "How It Works" page now explains what "Hz" itself means
+and where the name came from (Heinrich Hertz, 1880s), same tone as the
+rest of that page.
+
+- [x] **Chord-symbol parser bug found and fixed** (`js/chord-utils.js`,
+      shared by Practice/Camera Overlay/Lessons): suffixes like "mMaj7"
+      and "m6" were being swallowed by the plain "m" (minor) rule
+      because of check ordering, silently dropping their defining color
+      note — e.g. "CmMaj7" played as a bare C minor triad. Found while
+      building the My Funny Valentine lesson (whose whole point is the
+      Cm -> CmMaj7 -> Cm7 -> Cm6 line) and fixed by reordering/adding
+      more-specific suffix checks before shorter ones.
+- [x] **"Last Christmas" independently re-verified** (not just trusted
+      from the old flagged data): multiple independent chord-chart
+      sources confirm D-Bm-Em-A for the verse/intro/interlude, including
+      exact lyric-to-chord alignment. Upgraded from needs-verification
+      to confirmed. Important honesty catch: this is I-vi-ii-V, **not**
+      Lesson 1's I-V-vi-IV — shares 2 of 4 chords but is a genuinely
+      different progression. The lesson that teaches it says so plainly
+      instead of overstating the connection, even though the original
+      brief for this lesson assumed it was "the same 4 chords."
+- [x] **Lesson sequence front-loaded per Sid's exact spec**: Pre-lesson
+      (piano), Pre-lesson (Get Started/calibration), Lesson 1 ("The 4
+      keys to play 100 songs"), 2 (Last Christmas), 3 (Choose your
+      song — a real 10-song choice menu, not a forced montage), 4 (Left
+      hand vs. right hand, an early two-hand preview), 5 (The jazz
+      trick, an early improv preview), 6 (Train your ear), 7-10 (four
+      more real songs). By Lesson 10 the user has completed exactly 5
+      real Beginner-tier songs (1 from Lesson 3 + 4 from Lessons 7-10)
+      — exactly the existing 5-songs-to-unlock threshold — so
+      Intermediate unlocks naturally without changing that number.
+- [x] **"Master this song" lessons now mark the song itself completed**
+      (`markSongStatus`), not just the lesson — a real latent bug from
+      the previous pass: Discover's tier-gating and the "Leveling Up"/
+      "Going Pro" badges read `getSavedSongs()`, which lesson completion
+      alone never touched. Fixed so finishing a song-mastery lesson
+      genuinely counts toward unlocking the next tier.
+- [x] **Exact repertoire placements** (update mid-pass, overriding the
+      earlier generic "Lesson 11 = any popular Intermediate song" plan):
+      Lesson 11 = Almost Blue (Chet Baker) — honestly scoped to just its
+      two confidently-sourced intro chords (Am, Dm9); its data's third
+      "chord" is literal placeholder text ("see notes"), correctly
+      excluded. Lesson 15 = My Funny Valentine (the real "minor line
+      cliché," Cm-CmMaj7-Cm7-Cm6). Lesson 25 = Für Elise (reuses the
+      existing verified excerpt). Lesson 30 = Vivaldi's Spring, Sid's
+      own word "attempt" — honestly scoped down to just the iconic
+      repeated opening E major chord gesture (extremely well-documented,
+      structural, not guessed), explicitly NOT the full violin melodic
+      theme, which no independently-confirmed simplified transcription
+      was found for. Lesson 35 = Chopin's Nocturne Op. 9 No. 2 — kept
+      catalog-only with an honest in-lesson explanation (a web search
+      confirmed the piece's key/structure/character but not a specific
+      note-by-note opening phrase trustworthy enough to teach as real).
+      These 5 are reachable via normal linear lesson progress regardless
+      of Discover's separate Advanced-tier gate, same "early preview"
+      pattern as Lessons 4/5. The previous "Intermediate unlocked"
+      showcase lesson was moved out of slot 11 and now flows naturally
+      into the Lesson 13+ continuation instead.
+- [x] **Lesson numbering now excludes pre-lessons**: "Get yourself a
+      piano" and "Get Started" show as "Pre-lesson," not "Lesson 1/2,"
+      so Lesson 1 is genuinely "The 4 keys to play 100 songs" as asked.
+      Top-of-tab title added: "100 Lessons to Learn Any Song — START
+      HERE." Honest real count: **101 total entries** (2 pre-lessons +
+      99 numbered lessons) — close to but not exactly 100, stated
+      plainly rather than padded.
+- [x] **Discover tab redesigned**: album art now fetched live from the
+      iTunes Search API (`itunes.apple.com/search`, free, no API key,
+      an explicitly public lookup service for exactly this use) with a
+      graceful plain-card fallback on any failure; chords shown directly
+      under the title on every card (even locked ones), not hidden
+      behind a click; the "Upload any song" flow moved to a prominent,
+      visually distinct banner at the very top of the tab.
+      **Verification caveat, stated honestly**: this sandbox's shared
+      outbound IP hit iTunes' rate limiting partway through testing
+      (confirmed via direct `curl` — real `access-control-allow-origin:
+      *` header present on a successful request, then 403s on
+      subsequent ones from the same IP). Album art genuinely loaded and
+      rendered correctly for several songs before the rate limit kicked
+      in (confirmed visually), and the fallback correctly took over for
+      the rest with zero layout breakage — but a full, unthrottled
+      verification should be re-checked on the real production domain,
+      same pattern as the service-worker registration quirk documented
+      earlier in this file.
+
+### Honestly, what's simplified/not done in this pass
+
+- Lesson 25 (Für Elise) and Lesson 37 (the existing "Bonus: Advanced
+  repertoire" lesson) both independently show the same Für Elise
+  excerpt — intentional light duplication (Lesson 25 is an early taste,
+  Lesson 37 is the fuller catalog context) rather than a refactor risk
+  taken under time pressure; not a bug, but worth noting as duplicated
+  content rather than a single shared touchpoint.
+- The "Choose your song" and front-loaded song lessons (Lessons 2-10)
+  reuse the same lightweight chord-walkthrough format as every other
+  "Master this song" lesson — no deeper per-song structure than that.
+- Jazz/classical showcase lessons at 11/15/25/30/35 are deliberately
+  thin (a handful of chords/notes each) — real, verified, honestly
+  scoped, but not full performances of those pieces/tunes.

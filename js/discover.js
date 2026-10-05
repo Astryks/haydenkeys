@@ -5,6 +5,37 @@ import { transcribeFile } from "./transcribe.js";
 const TIER_ORDER = ["Beginner", "Intermediate", "Advanced"];
 const UNLOCK_THRESHOLD = 5; // complete 5 songs in a tier to unlock the next
 
+// ----- Album art via the iTunes Search API (item 25) ---------------------
+// https://itunes.apple.com/search — a free, no-API-key, explicitly public
+// lookup service Apple provides for exactly this purpose: letting
+// third-party apps display cover art for song identification. We do NOT
+// scrape image search or any other source — this is the one legitimate,
+// defensible path, same "real public lookup" reasoning already used for
+// chord verification elsewhere in this app. Results are cached in memory
+// (per session) so re-rendering the grid on search/filter changes doesn't
+// re-fetch art we already have. Any failure (network, no match, CORS)
+// falls back to the existing plain card style — never breaks the layout.
+const albumArtCache = new Map();
+async function fetchAlbumArt(song) {
+  const key = `${song.title}|${song.artist}`;
+  if (albumArtCache.has(key)) return albumArtCache.get(key);
+  try {
+    const term = encodeURIComponent(`${song.title} ${song.artist}`);
+    const res = await fetch(`https://itunes.apple.com/search?term=${term}&entity=song&limit=1`);
+    if (!res.ok) throw new Error(`iTunes lookup failed: ${res.status}`);
+    const data = await res.json();
+    const raw = data.results && data.results[0] && data.results[0].artworkUrl100;
+    // iTunes's own documented trick: swap the 100x100 thumbnail size in
+    // the URL for a larger one, same image, no extra API call.
+    const url = raw ? raw.replace("100x100", "300x300") : null;
+    albumArtCache.set(key, url);
+    return url;
+  } catch (e) {
+    albumArtCache.set(key, null);
+    return null;
+  }
+}
+
 function confidenceBadge(song) {
   return song.confidence === "confirmed"
     ? `<span class="hk-badge hk-badge-confirmed">Chords verified</span>`
@@ -44,43 +75,71 @@ function tierUnlockStatus(difficulty) {
   return { unlocked: have >= UNLOCK_THRESHOLD, have, need: UNLOCK_THRESHOLD, priorTier: "Intermediate" };
 }
 
+// Fire off the async art lookup and swap it into the card's art slot
+// whenever it resolves — the card itself renders synchronously first
+// (with the plain fallback style) so slow/failed lookups never block or
+// break the grid.
+function hydrateArt(div, song) {
+  const slot = div.querySelector(".hk-song-art-slot");
+  if (!slot) return;
+  fetchAlbumArt(song).then((url) => {
+    if (!url) return; // graceful fallback: leave the plain placeholder in place
+    slot.innerHTML = `<img src="${url}" alt="${song.title} album art" class="hk-song-art" loading="lazy" />`;
+  });
+}
+
 function songCard(song, onStart) {
   const saved = getSavedSongs()[song.title];
   const difficulty = getDifficulty(song);
   const lock = tierUnlockStatus(difficulty);
   const div = document.createElement("div");
   div.className = "hk-song-card" + (song.advanced ? " hk-song-card-advanced" : "") + (!lock.unlocked ? " hk-song-card-locked" : "");
+  const artSlot = `<div class="hk-song-art-slot hk-song-art-fallback">&#127925;</div>`;
+  // Chords shown right under the title on every card (even locked ones)
+  // so the chord family is visible while browsing, not hidden behind a
+  // click into the song's own detail state.
+  const chordsLine = `<p class="hk-song-chords-glance">${song.chords.join(" · ")}</p>`;
 
   if (!lock.unlocked) {
     div.innerHTML = `
-      <div class="hk-song-card-top">
-        <h3>${song.title}</h3>
-        ${difficultyBadge(difficulty)}
-      </div>
-      <p class="hk-song-artist">${song.artist} &middot; ${song.genre}</p>
-      <p class="hk-lock-message">&#128274; Complete ${lock.need - lock.have} more ${lock.priorTier} song${lock.need - lock.have === 1 ? "" : "s"}
-         (${lock.have}/${lock.need} so far) to unlock ${difficulty} songs like this one.</p>`;
+      ${artSlot}
+      <div class="hk-song-card-body">
+        <div class="hk-song-card-top">
+          <h3>${song.title}</h3>
+          ${difficultyBadge(difficulty)}
+        </div>
+        ${chordsLine}
+        <p class="hk-song-artist">${song.artist} &middot; ${song.genre}</p>
+        <p class="hk-lock-message">&#128274; Complete ${lock.need - lock.have} more ${lock.priorTier} song${lock.need - lock.have === 1 ? "" : "s"}
+           (${lock.have}/${lock.need} so far) to unlock ${difficulty} songs like this one.</p>
+      </div>`;
+    hydrateArt(div, song);
     return div;
   }
 
   div.innerHTML = `
-    <div class="hk-song-card-top">
-      <h3>${song.title}</h3>
-      ${song.advanced ? `<span class="hk-badge hk-badge-advanced" title="Not part of the beginner curriculum">Advanced / bonus</span>` : ""}
-      ${difficultyBadge(difficulty)}
-      ${confidenceBadge(song)}
-    </div>
-    <p class="hk-song-artist">${song.artist} &middot; ${song.genre}</p>
-    <p class="hk-song-key">Key: ${song.key}</p>
-    <p class="hk-song-chords">${song.chords.join(" – ")} <span class="hk-song-degrees">(${song.degreeSequence})</span> ${matchBadge(song)}</p>
-    <p class="hk-song-notes">${song.notes}</p>
-    <button class="hk-btn hk-btn-small" data-start="${song.title}">
-      ${saved ? `Saved (${saved.status})` : "Start learning"}
-    </button>`;
+    ${artSlot}
+    <div class="hk-song-card-body">
+      <div class="hk-song-card-top">
+        <h3>${song.title}</h3>
+        ${song.advanced ? `<span class="hk-badge hk-badge-advanced" title="Not part of the beginner curriculum">Advanced / bonus</span>` : ""}
+        ${difficultyBadge(difficulty)}
+        ${confidenceBadge(song)}
+      </div>
+      ${chordsLine}
+      <p class="hk-song-artist">${song.artist} &middot; ${song.genre}</p>
+      <p class="hk-song-key">Key: ${song.key}</p>
+      <p class="hk-song-chords">${song.chords.join(" · ")} <span class="hk-song-degrees">(${song.degreeSequence})</span> ${matchBadge(song)}</p>
+      <p class="hk-song-notes">${song.notes}</p>
+      <button class="hk-btn hk-btn-small" data-start="${song.title}">
+        ${saved ? `Saved (${saved.status})` : "Start learning"}
+      </button>
+    </div>`;
   div.querySelector("[data-start]").addEventListener("click", () => {
     markSongStatus(song.title, "started");
     onStart(song);
   });
+  hydrateArt(div, song);
   return div;
 }
 
@@ -88,6 +147,21 @@ function initDiscoverTab(root, { onStartSong } = {}) {
   const genres = Array.from(new Set(SONGS.map((s) => s.genre))).sort();
   root.innerHTML = `
     <div class="hk-discover">
+      <div class="hk-upload-banner hk-upload-banner-top">
+        <h2>🎵 Upload any song and learn it!</h2>
+        <p>Got a song that's not in the library below? Upload your own recording and Hayden Keys will
+           figure out the notes, right in your browser.</p>
+        <input type="file" id="hk-discover-upload" accept="audio/*,video/*" />
+        <div id="hk-discover-upload-status" class="hk-cal-status"></div>
+        <p class="hk-scope-note">
+          Note: Hayden Keys teaches from a curated library of real, chord-verified songs below.
+          It does <strong>not</strong> support pasting a YouTube link or any other URL to import
+          arbitrary audio — that would require extracting audio from streaming platforms, which
+          violates their terms of service. Your own recordings are welcome via the
+          <strong>upload button above</strong> instead (transcribed locally in your browser,
+          nothing uploaded to a server).
+        </p>
+      </div>
       <div class="hk-discover-controls">
         <input type="search" id="hk-search" placeholder="Search songs or artists..." />
         <select id="hk-genre-filter">
@@ -107,19 +181,6 @@ function initDiscoverTab(root, { onStartSong } = {}) {
             : `<span class="hk-tier-status">${t}: ${lock.have}/${lock.need} ${lock.priorTier} songs completed</span>`;
         }).join(" &middot; ")}
       </p>
-      <div class="hk-upload-banner">
-        <h3>Upload any song and learn it with Hayden Keys!</h3>
-        <input type="file" id="hk-discover-upload" accept="audio/*,video/*" />
-        <div id="hk-discover-upload-status" class="hk-cal-status"></div>
-        <p class="hk-scope-note">
-          Note: Hayden Keys teaches from a curated library of real, chord-verified songs below.
-          It does <strong>not</strong> support pasting a YouTube link or any other URL to import
-          arbitrary audio — that would require extracting audio from streaming platforms, which
-          violates their terms of service. Your own recordings are welcome via the
-          <strong>upload button above</strong> instead (transcribed locally in your browser,
-          nothing uploaded to a server).
-        </p>
-      </div>
       <div class="hk-song-grid" id="hk-song-grid"></div>
     </div>`;
 
