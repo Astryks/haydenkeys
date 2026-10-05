@@ -7,6 +7,8 @@ import { startLivePitchDetection } from "./pitch.js";
 import { initCameraOverlay } from "./camera-overlay.js";
 import { renderNoteHighway, stepsToHighwayNotes } from "./note-highway.js";
 import { transcribeFile, renderTranscribedPlayback } from "./transcribe.js";
+import { playBeat } from "./drums.js";
+import { getAudioContext } from "./keyboard.js";
 
 const BASE_CHORD_DURATION_SEC = 1.6; // duration per chord at 1x (normal) speed
 const SPEEDS = [0.5, 0.75, 1];
@@ -48,6 +50,11 @@ function initPracticeTab(root, { initialSong } = {}) {
   let songMeta = getSongSteps(currentSong);
   let ended = false; // true once a non-looping structured song finishes
   let playbackSpeed = 1;
+  // Item 45: optional drum layer under Follow Along playback, default
+  // off (same spirit as every other optional add-on in this app — on
+  // by explicit choice, never forced into the default experience).
+  let drumsOn = false;
+  let lastBeatSlot = -1;
 
   // Ear Check mode state
   let stopListening = null;
@@ -119,6 +126,10 @@ function initPracticeTab(root, { initialSong } = {}) {
           <img src="assets/mascot-poses/metronome.png" alt="" class="hk-speed-mascot" />
           <span class="hk-speed-label">Speed:</span>
           ${SPEEDS.map((s) => `<button class="hk-speed-btn ${s === playbackSpeed ? "hk-speed-active" : ""}" data-speed="${s}">${s}×${s === 1 ? " (normal)" : s === 0.5 ? " (slow)" : ""}</button>`).join("")}
+          <button class="hk-btn hk-btn-small hk-drums-toggle ${drumsOn ? "hk-drums-on" : ""}" id="hk-drums-toggle"
+                  title="A simple kick/snare/hi-hat beat under playback, roughly matched to the tempo">
+            🥁 Beat: ${drumsOn ? "On" : "Off"}
+          </button>
         </div>
         <div id="hk-highway" class="hk-highway-slot ${mode === "follow" ? "" : "hk-hidden"}"></div>
         <div id="hk-practice-keyboard" class="hk-keyboard-wrap"></div>
@@ -167,6 +178,13 @@ function initPracticeTab(root, { initialSong } = {}) {
     });
     root.querySelectorAll("[data-speed]").forEach((btn) => {
       btn.addEventListener("click", () => setSpeed(Number(btn.dataset.speed)));
+    });
+    root.querySelector("#hk-drums-toggle").addEventListener("click", () => {
+      drumsOn = !drumsOn;
+      lastBeatSlot = -1;
+      const btn = root.querySelector("#hk-drums-toggle");
+      btn.textContent = `🥁 Beat: ${drumsOn ? "On" : "Off"}`;
+      btn.classList.toggle("hk-drums-on", drumsOn);
     });
     root.querySelector("#hk-open-calibration").addEventListener("click", toggleCalibration);
     root.querySelector("#hk-timeline").addEventListener("pointerdown", onPlayheadDown);
@@ -369,6 +387,20 @@ function initPracticeTab(root, { initialSong } = {}) {
       return;
     }
     const loopedT = songMeta.loops ? t % total : t;
+    // Item 45: an optional drum layer, treating each chord/bar as 4
+    // beats. Driven off the same `t` the highway/keyboard already use
+    // (via chordDuration(), which already divides by playbackSpeed),
+    // so it can't drift out of sync with the falling notes or desync
+    // on a speed change — there's no separate scheduling clock to
+    // disagree with this one.
+    if (drumsOn && mode === "follow" && playing) {
+      const beatLenSec = chordDuration() / 4;
+      const beatSlot = Math.floor(t / beatLenSec);
+      if (beatSlot !== lastBeatSlot) {
+        lastBeatSlot = beatSlot;
+        playBeat(getAudioContext(), beatSlot, getAudioContext().currentTime);
+      }
+    }
     const chordIndex = Math.min(songMeta.steps.length - 1, Math.floor(loopedT / chordDuration()));
     if (chordIndex !== lastChordIndex) {
       lastChordIndex = chordIndex;

@@ -654,3 +654,7 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
   padding: 6px 12px; border-radius: 999px; cursor: pointer; font-size: 0.8rem; min-height: 32px;
 }
 .hk-speed-active { color: var(--hk-text); border-color: var(--hk-accent); background: rgba(124, 92, 255, 0.15); }
+/* Item 45: drum-beat toggle, same visible/easy-to-find placement next
+   to Speed, off by default like every other optional add-on. */
+.hk-drums-toggle { margin-left: 4px; }
+.hk-drums-toggle.hk-drums-on { color: var(--hk-text); border-color: var(--hk-accent-2); background: rgba(217, 103, 143, 0.15); }

@@ -1316,3 +1316,52 @@ and correctly scrolls/focuses the upload banner; a synthetic test
 upload produced a clean 2-note falling-notes playback with working
 speed controls. Zero new console errors beyond the known sandbox-only
 service-worker noise.
+
+## 2026-10-05 update: optional drum beat + real sampled-piano timbre (item 45)
+
+- [x] **Checked the Dawsons sibling project first, per the instruction**:
+      `website/js/synth.js`'s `DRUM_VOICES` (procedural kick/snare/hihat
+      DSP, no samples) adapted cleanly as live-triggered Web Audio nodes
+      in a new `js/drums.js` — reused the actual synthesis approach
+      (pitch-dropping sine for kick, filtered noise for snare/hihat),
+      re-expressed for real-time triggering instead of Dawsons'
+      offline-buffer-write usage. `website/js/dj-mixer.js` didn't have
+      drum-pattern logic (it's a DJ-deck crossfader/EQ module) and
+      wasn't a fit — not forced in.
+- [x] **Drum toggle added to Practice's Follow Along view**, next to
+      the existing Speed control, default off. Driven by the same
+      `currentTime()`/`chordDuration()` clock the highway/keyboard
+      already use (one bar = 4 beats: kick on beat 1, snare on beat 3,
+      hi-hat every beat) — speed-aware and can't drift out of sync with
+      the falling notes since there's no separate scheduling clock.
+      Verified live: toggle switches "Beat: Off" -> "Beat: On" with
+      distinct styling.
+- [x] **Real sampled-piano timbre added** (`js/piano-sample.js` +
+      vendored `js/vendor/smplr-1.1.0.mjs`, MIT, the exact same
+      already-vetted library + `SplendidGrandPiano` sample set already
+      in production in the Dawsons project — not re-researched,
+      directly reused). Wired into `keyboard.js`'s shared `playTone()`,
+      so every caller across the whole app (lessons, Practice's Follow
+      Along, uploaded-song playback) gets the richer timbre automatically
+      with zero caller-side changes, once the sample set finishes
+      loading. Strictly a progressive enhancement: loads lazily/async,
+      and falls back to the original oscillator synth with zero errors
+      if loading fails or the browser is offline.
+- [x] **Honest disclosure of the real new network dependency**: unlike
+      the library code (vendored, no network needed), the actual piano
+      sample AUDIO files stream from smplr's own public sample host
+      (`smpldsnds.github.io`) on first use. Documented in both
+      `THIRD_PARTY_NOTICES.md` and `privacy.html`, same standard as the
+      iTunes album-art lookup (item 25) — this app is no longer
+      zero-network-request once this feature is used, and says so
+      plainly.
+- [x] **Verified it's not a mock**: loaded the real sampled piano in a
+      live browser (confirmed the actual network fetch to
+      `smpldsnds.github.io` succeeded), then called `playTone(60)` and
+      confirmed it plays with zero console errors beyond the known
+      sandbox-only service-worker noise.
+
+Honest scope note: the drum toggle only exists in Practice's Follow
+Along mode (the one Sid screenshotted) — Ear Check and Camera Overlay
+modes, and the curated lesson screens' own chord-teaching playback,
+were not wired up with a beat layer this pass.

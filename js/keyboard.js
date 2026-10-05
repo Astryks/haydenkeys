@@ -3,6 +3,8 @@
 // a set of notes (for chord-shape teaching), click/tap-to-play with a
 // synthesized tone, and reports which MIDI note was pressed.
 
+import { loadSampledPiano, getSampledPianoIfReady } from "./piano-sample.js";
+
 const NOTE_NAMES = [
   "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
 ];
@@ -34,7 +36,7 @@ function freqFromMidi(midi) {
   return 440 * Math.pow(2, (midi - 69) / 12);
 }
 
-function playTone(midi, { duration = 0.6, gain = 0.18, delay = 0 } = {}) {
+function playSynthTone(midi, { duration = 0.6, gain = 0.18, delay = 0 } = {}) {
   const ctx = getAudioContext();
   const osc = ctx.createOscillator();
   const g = ctx.createGain();
@@ -47,6 +49,26 @@ function playTone(midi, { duration = 0.6, gain = 0.18, delay = 0 } = {}) {
   osc.connect(g).connect(ctx.destination);
   osc.start(startAt);
   osc.stop(startAt + duration + 0.05);
+}
+
+// Item 45: richer piano timbre, as a progressive enhancement over the
+// plain oscillator synth above. Kicks off loading the real sampled
+// piano (piano-sample.js) on first call (idempotent, safe to call
+// repeatedly) but NEVER waits on it — if it's not ready yet (or never
+// becomes ready, e.g. offline), this plays the exact same synth tone
+// as before with zero behavior change. Once it IS ready, every note
+// everywhere that calls playTone/playChord sounds like a real sampled
+// piano instead, with no caller-side code changes needed.
+function playTone(midi, opts = {}) {
+  const ctx = getAudioContext();
+  loadSampledPiano(ctx);
+  const piano = getSampledPianoIfReady();
+  if (piano) {
+    const { duration = 0.6, delay = 0 } = opts;
+    piano.start({ note: midi, duration, time: ctx.currentTime + delay });
+    return;
+  }
+  playSynthTone(midi, opts);
 }
 
 function playChord(midiNotes, opts = {}) {
