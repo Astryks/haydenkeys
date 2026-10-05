@@ -20,6 +20,7 @@ const APP_SHELL = [
   "./js/how-it-works.js",
   "./js/keyboard.js",
   "./js/note-highway.js",
+  "./js/transcribe.js",
   "./js/camera-overlay.js",
   "./js/chord-utils.js",
   "./js/discover.js",

@@ -1,5 +1,6 @@
 import { SONGS } from "./songs-data.js";
 import { markSongStatus, getSavedSongs } from "./storage.js";
+import { transcribeFile } from "./transcribe.js";
 
 function confidenceBadge(song) {
   return song.confidence === "confirmed"
@@ -48,19 +49,40 @@ function initDiscoverTab(root, { onStartSong } = {}) {
           ${genres.map((g) => `<option value="${g}">${g}</option>`).join("")}
         </select>
       </div>
-      <p class="hk-scope-note">
-        Note: Hayden Keys teaches from a curated library of real, chord-verified songs below.
-        It does <strong>not</strong> support pasting a YouTube link or any other URL to import
-        arbitrary audio — that would require extracting audio from streaming platforms, which
-        violates their terms of service. Your own recordings are welcome in the
-        <strong>Practice</strong> tab instead.
-      </p>
+      <div class="hk-upload-banner">
+        <h3>Upload any song and learn it with Hayden Keys!</h3>
+        <input type="file" id="hk-discover-upload" accept="audio/*,video/*" />
+        <div id="hk-discover-upload-status" class="hk-cal-status"></div>
+        <p class="hk-scope-note">
+          Note: Hayden Keys teaches from a curated library of real, chord-verified songs below.
+          It does <strong>not</strong> support pasting a YouTube link or any other URL to import
+          arbitrary audio — that would require extracting audio from streaming platforms, which
+          violates their terms of service. Your own recordings are welcome via the
+          <strong>upload button above</strong> instead (transcribed locally in your browser,
+          nothing uploaded to a server).
+        </p>
+      </div>
       <div class="hk-song-grid" id="hk-song-grid"></div>
     </div>`;
 
   const grid = root.querySelector("#hk-song-grid");
   const searchInput = root.querySelector("#hk-search");
   const genreSelect = root.querySelector("#hk-genre-filter");
+
+  root.querySelector("#hk-discover-upload").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const statusEl = root.querySelector("#hk-discover-upload-status");
+    try {
+      const notes = await transcribeFile(file, (text) => {
+        statusEl.textContent = text;
+      });
+      statusEl.textContent = `Done — detected ${notes.length} notes. Head to the Practice tab to play along with a library song while you're at it. (Turning your own upload into a playable lesson is a Phase 2 item — this confirms transcription itself works.)`;
+    } catch (err) {
+      statusEl.textContent = err.message;
+      console.error(err);
+    }
+  });
 
   function render() {
     const query = searchInput.value.trim().toLowerCase();

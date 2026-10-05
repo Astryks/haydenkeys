@@ -6,6 +6,7 @@ import { getCalibration } from "./storage.js";
 import { startLivePitchDetection } from "./pitch.js";
 import { initCameraOverlay } from "./camera-overlay.js";
 import { renderNoteHighway, stepsToHighwayNotes } from "./note-highway.js";
+import { transcribeFile } from "./transcribe.js";
 
 const BASE_CHORD_DURATION_SEC = 1.6; // duration per chord at 1x (normal) speed
 const SPEEDS = [0.5, 0.75, 1];
@@ -468,99 +469,19 @@ function initPracticeTab(root, { initialSong } = {}) {
   }
 
   // --- Upload-your-own-audio transcription (basic-pitch, Apache-2.0) ---
-  // basic-pitch requires mono audio at exactly 22050 Hz. decodeAudioData
-  // gives back whatever sample rate the source file/container actually
-  // used (commonly 44100/48000 Hz, and stereo) — e.g. a real bug caught
-  // in testing: uploading fortnite.mp4 decoded fine (decodeAudioData
-  // already pulls the audio track out of a video container on its own)
-  // but then failed inside basic-pitch with "Input audio buffer is not
-  // at correct sample rate! Is 48000. Should be 22050." This resamples
-  // AND downmixes to mono via an OfflineAudioContext rendered at the
-  // target rate — a standard technique, no new dependency. Connecting a
-  // multi-channel source to a 1-channel destination downmixes
-  // automatically per the Web Audio spec's channel-interpretation rules
-  // (equal-power sum of channels), which is the normal mono-summing
-  // approach.
-  async function resampleToMono22050(audioBuffer) {
-    const targetRate = 22050;
-    if (audioBuffer.sampleRate === targetRate && audioBuffer.numberOfChannels === 1) {
-      return audioBuffer; // already in the right format, nothing to do
-    }
-    const length = Math.ceil(audioBuffer.duration * targetRate);
-    const offlineCtx = new OfflineAudioContext(1, length, targetRate);
-    const source = offlineCtx.createBufferSource();
-    source.buffer = audioBuffer;
-    source.connect(offlineCtx.destination);
-    source.start(0);
-    return offlineCtx.startRendering();
-  }
-
+  // Shared with the Discover tab's upload entry point via transcribe.js
+  // — one real implementation, not a parallel copy.
   async function handleUpload(e) {
     const file = e.target.files[0];
     if (!file) return;
     const statusEl = root.querySelector("#hk-upload-status");
-
-    // Decode first (format/sample-rate issues are unrelated to network
-    // access, and reported with their own distinct message).
-    let audioBuffer;
     try {
-      statusEl.textContent = "Decoding audio...";
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const arrayBuffer = await file.arrayBuffer();
-      const decoded = await audioCtx.decodeAudioData(arrayBuffer);
-      statusEl.textContent = `Resampling from ${decoded.sampleRate} Hz / ${decoded.numberOfChannels}ch to 22050 Hz mono...`;
-      audioBuffer = await resampleToMono22050(decoded);
-    } catch (err) {
-      statusEl.textContent = `Couldn't decode this file: ${err.message}. Try a standard mp3, wav, or mp4/mov file.`;
-      console.error(err);
-      return;
-    }
-
-    // basic-pitch (code + model weights) is vendored locally in
-    // js/vendor/basic-pitch/ — no runtime CDN dependency. This protects
-    // against unpkg/esm.sh dropping the package or Spotify archiving the
-    // project out from under a live site; Apache-2.0 explicitly permits
-    // redistribution. See THIRD_PARTY_NOTICES.md for exact version/
-    // provenance. A failure here now means a genuinely different problem
-    // than "no internet" (since nothing is fetched from a CDN anymore) —
-    // most likely the browser itself lacking WebGL/WASM support that
-    // TensorFlow.js needs — reported as such rather than blaming the
-    // network for something no longer network-dependent.
-    let BasicPitch, outputToNotesPoly, addPitchBendsToNoteEvents, noteFramesToTime, basicPitch;
-    try {
-      statusEl.textContent = "Loading transcription model (vendored locally, no network needed)...";
-      ({ BasicPitch, outputToNotesPoly, addPitchBendsToNoteEvents, noteFramesToTime } =
-        await import("./vendor/basic-pitch/basic-pitch.bundle.js"));
-      basicPitch = new BasicPitch(new URL("./vendor/basic-pitch/model/model.json", import.meta.url).href);
-    } catch (err) {
-      statusEl.textContent = `Couldn't load the local transcription model (${err.message}). This usually means your browser lacks WebGL/WASM support for TensorFlow.js.`;
-      console.error(err);
-      return;
-    }
-
-    try {
-      const frames = [];
-      const onsets = [];
-      const contours = [];
-      statusEl.textContent = "Transcribing in your browser (this can take a while for longer clips)...";
-      await basicPitch.evaluateModel(
-        audioBuffer,
-        (f, o, c) => {
-          frames.push(...f);
-          onsets.push(...o);
-          contours.push(...c);
-        },
-        (progress) => {
-          statusEl.textContent = `Transcribing... ${Math.round(progress * 100)}%`;
-        }
-      );
-      const notes = noteFramesToTime(
-        addPitchBendsToNoteEvents(contours, outputToNotesPoly(frames, onsets, 0.25, 0.25, 5))
-      );
+      const notes = await transcribeFile(file, (text) => {
+        statusEl.textContent = text;
+      });
       statusEl.textContent = `Done — detected ${notes.length} notes. (Playback of transcribed notes is a Phase 2 item; this confirms transcription itself works.)`;
-      console.log("Hayden Keys: basic-pitch transcription result", notes);
     } catch (err) {
-      statusEl.textContent = `Transcription failed: ${err.message}.`;
+      statusEl.textContent = err.message;
       console.error(err);
     }
   }
