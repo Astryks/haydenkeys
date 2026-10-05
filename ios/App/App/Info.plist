@@ -7,11 +7,11 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Hayden Keys uses your camera in the Practice tab's Camera Overlay mode to show which key to press next, projected right onto a live view of your real keyboard. Nothing is recorded or uploaded — the video is only used live, on your device.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Hayden Keys uses your microphone for two things, both entirely on-device: keyboard calibration (confirming which note you played by ear) and Ear Check practice mode (listening to check you played the right note). Audio is never recorded, stored, or sent anywhere.</string>
+	<string>Hayden Keys listens through your microphone only when you start keyboard calibration, Ear Check practice, or a lesson's "Tune this note" button, to check which note you played on your real piano. It all happens on your device; audio is never recorded, stored, or sent anywhere.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-        <string>Hayden Keys</string>
+	<string>Hayden Keys</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -53,8 +53,12 @@
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
-		<string>armv7</string>
+		<string>arm64</string>
 	</array>
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Privacy Policy — Hayden Keys</title>
 <meta name="description" content="Hayden Keys' privacy policy: no accounts, no data collection, no server. Plain language, accurate to the real app." />
 <link rel="icon" href="assets/icons/icon-32.png" sizes="32x32" type="image/png" />
@@ -38,7 +38,8 @@
           <ul>
             <li>Never leaves your device or gets sent to us or anyone else.</li>
             <li>Isn't tied to your identity in any way — there's no account, no email, no name attached to it.</li>
-            <li>Can be erased at any time by clearing your browser's site data for haydenkeys.com.</li>
+            <li>Can be erased at any time by clearing your browser's site data for haydenkeys.com — or, in the
+               iPhone/iPad app, by deleting the app.</li>
           </ul>
         </section>
 
@@ -53,15 +54,18 @@
 
         <section class="hk-how-section">
           <h3>Microphone access</h3>
-          <p>Hayden Keys asks for microphone access in two places, both entirely on-device:</p>
+          <p>Hayden Keys asks for microphone access in three places, all entirely on-device:</p>
           <ul>
             <li><strong>Keyboard calibration</strong> ("Get Started") — listens briefly to confirm which physical key
                you played, by ear, using real pitch-detection math running in your browser.</li>
             <li><strong>Ear Check practice mode</strong> — listens to check you played the right note while practicing
                a song.</li>
+            <li><strong>"Tune this note" buttons</strong> in lessons — a tuner-style needle showing whether the note
+               you played on your real piano matches the one on screen.</li>
           </ul>
-          <p>In both cases, audio is analyzed live and <strong>never recorded, stored, or sent anywhere</strong>. You
-             can decline microphone access and still use the rest of the app; those two features just won't work.</p>
+          <p>In every case, audio is analyzed live and <strong>never recorded, stored, or sent anywhere</strong>, and
+             the microphone only turns on when you tap to start one of these. You can decline microphone access and
+             still use the rest of the app; those features just won't work.</p>
         </section>
 
         <section class="hk-how-section">
@@ -69,20 +73,20 @@
           <p>If you upload an audio/video file to have Hayden Keys figure out its notes, that file is processed
              <strong>entirely in your browser</strong> using an on-device machine learning model (Spotify's
              open-source <code>basic-pitch</code>, vendored directly in this app's own code — see
-             <a href="THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a>). The file is never uploaded to a server;
+             <a href="https://github.com/Astryks/haydenkeys/blob/main/THIRD_PARTY_NOTICES.md" target="_blank" rel="noopener">THIRD_PARTY_NOTICES.md</a>). The file is never uploaded to a server;
              it never leaves your device.</p>
         </section>
 
         <section class="hk-how-section">
-          <h3>Two real network requests, disclosed honestly</h3>
+          <h3>The only network requests, disclosed honestly</h3>
           <p>The Discover tab looks up each song's album cover art using Apple's free, public <strong>iTunes Search
              API</strong> — sending just a song title and artist name as a search query, nothing about you
-             personally. This is a lookup, not a data collection mechanism, and no response is stored beyond
-             your current browsing session.</p>
-          <p>Played notes/chords can optionally sound like a real sampled piano instead of a plain synthesized
-             tone — the first time this happens, your browser streams the actual piano sample audio from a
+             personally. The cover images themselves then load from Apple's image servers. This is a lookup, not a
+             data collection mechanism, and no response is stored beyond your current session.</p>
+          <p>To make played notes sound like a real piano instead of a plain synthesized tone, the first time
+             any note plays your device automatically downloads the actual piano sample audio from a
              public sample host (<code>smpldsnds.github.io</code>, part of the open-source <strong>smplr</strong>
-             project — see <a href="THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a>). Nothing about you or
+             project — see <a href="https://github.com/Astryks/haydenkeys/blob/main/THIRD_PARTY_NOTICES.md" target="_blank" rel="noopener">THIRD_PARTY_NOTICES.md</a>). Nothing about you or
              what you're doing in the app is sent with that request; it's just downloading audio files. If
              that request fails or you're offline, the app quietly falls back to its own plain synthesized
              tone — this is a nice-to-have, never a requirement to use the app.</p>
@@ -107,7 +111,7 @@
         <section class="hk-how-section">
           <h3>Changes to this policy</h3>
           <p>If this app's real behavior changes in a way that affects this policy, this page will be updated to
-             match — same honesty standard as the rest of the project (see <a href="STATUS.md">STATUS.md</a> for a
+             match — same honesty standard as the rest of the project (see <a href="https://github.com/Astryks/haydenkeys/blob/main/STATUS.md" target="_blank" rel="noopener">STATUS.md</a> for a
              full, dated history of what's actually been built).</p>
         </section>
 
@@ -122,7 +126,7 @@
 
   <footer class="hk-footer">
     <p><a href="index.html">&larr; Back to Hayden Keys</a> ·
-       <a href="README.md">README</a> · <a href="THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES</a></p>
+       <a href="https://github.com/Astryks/haydenkeys/blob/main/README.md" target="_blank" rel="noopener">README</a> · <a href="https://github.com/Astryks/haydenkeys/blob/main/THIRD_PARTY_NOTICES.md" target="_blank" rel="noopener">THIRD_PARTY_NOTICES</a></p>
   </footer>
 </body>
 </html>

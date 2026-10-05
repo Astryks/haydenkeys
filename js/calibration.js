@@ -15,6 +15,9 @@ const REFERENCE_FREQ = 261.63;
 //     confirm octave range instead of a camera-detected physical one.
 function initCalibration(root, { onComplete } = {}) {
   let stopListening = null;
+  let listening = false;
+  let destroyed = false;
+  let heardIt = false;
   let audioConfirmedMidi = null;
 
   function render() {
@@ -54,10 +57,14 @@ function initCalibration(root, { onComplete } = {}) {
     root.querySelector("#hk-play-ref").addEventListener("click", () => playTone(REFERENCE_MIDI, { duration: 1.2, gain: 0.2 }));
 
     root.querySelector("#hk-start-listen").addEventListener("click", async () => {
+      // Item 56: a second tap used to open a second mic stream and leak
+      // the first one (the iOS mic indicator stayed on).
+      if (listening) return;
+      listening = true;
       const statusEl = root.querySelector("#hk-cal-status");
       statusEl.textContent = "Listening... play the key you found.";
       try {
-        stopListening = await startLivePitchDetection((result) => {
+        const stop = await startLivePitchDetection((result) => {
           if (!result) return;
           const diff = result.noteMidi - REFERENCE_MIDI;
           if (Math.abs(diff) <= 0 && Math.abs(result.cents) < 40) {
@@ -72,7 +79,10 @@ function initCalibration(root, { onComplete } = {}) {
             statusEl.textContent = `Heard a note, but not quite Middle C yet. Keep trying.`;
           }
         });
+        if (destroyed || heardIt) stop();
+        else stopListening = stop;
       } catch (err) {
+        listening = false;
         statusEl.textContent = `Microphone access failed (${err.message}). You can skip audio calibration and continue.`;
         root.insertAdjacentHTML(
           "beforeend",
@@ -84,7 +94,10 @@ function initCalibration(root, { onComplete } = {}) {
   }
 
   function finishListening() {
+    if (heardIt) return;
+    heardIt = true;
     if (stopListening) stopListening();
+    stopListening = null;
     setTimeout(renderStepTwo, 900);
   }
 
@@ -114,6 +127,16 @@ function initCalibration(root, { onComplete } = {}) {
   }
 
   render();
+
+  // Item 56: callers close the calibration panel (or leave the screen)
+  // without finishing — release the mic when they do.
+  return {
+    destroy() {
+      destroyed = true;
+      if (stopListening) stopListening();
+      stopListening = null;
+    },
+  };
 }
 
 export { initCalibration, REFERENCE_MIDI, REFERENCE_FREQ };

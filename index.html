@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Hayden Keys — Learn Piano, Gamified</title>
 <meta name="description" content="A free, gamified, Duolingo-style piano learning web app. 100% local, zero backend, runs entirely in your browser." />
 <link rel="manifest" href="manifest.webmanifest" />
@@ -45,12 +45,16 @@
     <p>Hayden Keys runs 100% in your browser. No account, no server, no cost.
        <button class="hk-footer-link" data-tab="about">About &amp; Credits</button> ·
        <a href="privacy.html">Privacy Policy</a> ·
-       <a href="README.md">README</a> · <a href="THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES</a> ·
-       <!-- Item 43: placeholder until Sid provides the real Stripe Payment Link URL he's
-            creating himself -- swap href, remove data-stripe-link-pending, and add
-            target="_blank" rel="noopener" once he sends it (it'll leave the app to an
-            external payment page). -->
-       <a href="#" id="hk-support-link" data-stripe-link-pending="true" class="hk-support-link">Support Hayden Keys</a>.</p>
+       <!-- Item 56: README/notices point at GitHub's rendered copies instead of the raw .md
+            files -- the .md files aren't bundled into the iOS app (only www/ is), and raw
+            markdown in the app's WebView was a dead end with no way back. -->
+       <a href="https://github.com/Astryks/haydenkeys/blob/main/README.md" target="_blank" rel="noopener">README</a> · <a href="https://github.com/Astryks/haydenkeys/blob/main/THIRD_PARTY_NOTICES.md" target="_blank" rel="noopener">THIRD_PARTY_NOTICES</a><span class="hk-web-only"> ·
+       <!-- Item 43: placeholder until Sid creates the real Stripe Payment Link -- paste it
+            into STRIPE_PAYMENT_LINK at the top of js/app.js (nothing to change here).
+            Item 56: hidden inside the native iOS app (.hk-web-only)
+            -- an external payment link for tips/donations in an App Store app runs into
+            App Review guideline 3.1.1; the web version keeps it. -->
+       <a href="#" id="hk-support-link" data-stripe-link-pending="true" class="hk-support-link">Support Hayden Keys</a></span>.</p>
   </footer>
 
   <!-- Item 55: the native app is locked to landscape only, but the web

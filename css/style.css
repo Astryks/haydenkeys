@@ -37,7 +37,16 @@ body {
   background-attachment: fixed;
   color: var(--hk-text);
   min-height: 100vh;
+  /* Item 56: with viewport-fit=cover the page fills the whole screen in
+     the iOS app; keep content clear of the notch / Dynamic Island and
+     home indicator, which sit on the left/right edges in landscape. */
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
+/* Item 56: web-only bits (e.g. the Support link) hidden inside the
+   native iOS app — app.js adds .hk-native on <html> under Capacitor. */
+.hk-native .hk-web-only { display: none !important; }
 
 .hk-header {
   padding: 24px 20px 8px;
@@ -170,6 +179,17 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
    picker, reusing .hk-highway-wrap/.hk-speed-btn's existing styling. */
 .hk-upload-player { margin-top: 10px; }
 .hk-upload-player .hk-speed-picker { margin-top: 8px; }
+/* Item 56: seek bar, "now playing" readout, per-key note names. */
+.hk-upload-mode-label { margin-left: 8px; }
+.hk-upload-seek { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; }
+.hk-upload-seek-range { flex: 1; min-width: 0; accent-color: var(--hk-accent); height: 28px; }
+.hk-upload-clock { font-variant-numeric: tabular-nums; font-size: 0.8rem; color: var(--hk-text-dim); min-width: 36px; text-align: center; }
+.hk-upload-now { margin: 0 0 6px; font-size: 0.9rem; font-weight: 600; color: var(--hk-text); min-height: 1.3em; }
+.hk-key-notename {
+  position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%);
+  font-size: 0.62rem; font-weight: bold; color: #1a2a33; pointer-events: none; white-space: nowrap;
+}
+.hk-key-black .hk-key-notename { color: #fff; bottom: 4px; font-size: 0.55rem; }
 .hk-song-grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 12px; margin-top: 16px;
@@ -293,6 +313,27 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
   font-size: 0.7rem; font-weight: bold; color: var(--hk-text-dim); pointer-events: none;
 }
 .hk-key-black .hk-midi-keylabel { color: #d8d8e0; }
+/* Item 56: full 88-key MIDI keyboard — scrolls sideways on narrow
+   screens instead of squeezing 52 white keys into a phone width. */
+.hk-midi-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 6px; }
+.hk-midi-full { min-width: 1040px; }
+.hk-midi-full .hk-midi-keylabel { font-size: 0.62rem; top: 4px; }
+.hk-midi-full .hk-key-white .hk-midi-keylabel { top: auto; bottom: 16px; color: var(--hk-text); }
+.hk-midi-zone-left.hk-key-white { box-shadow: inset 0 -6px 0 var(--hk-accent-2-soft); }
+.hk-midi-zone-right.hk-key-white { box-shadow: inset 0 -6px 0 var(--hk-accent-soft); }
+.hk-midi-zone-left.hk-key-black { box-shadow: inset 0 -5px 0 var(--hk-accent-2); }
+.hk-midi-zone-right.hk-key-black { box-shadow: inset 0 -5px 0 var(--hk-accent); }
+.hk-midi-middlec {
+  position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+  font-size: 0.5rem; font-weight: bold; color: var(--hk-accent-2); white-space: nowrap; pointer-events: none;
+}
+.hk-midi-zones { display: flex; flex-direction: column; gap: 6px; margin: 0 0 12px; font-size: 0.9rem; }
+.hk-midi-zone { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.hk-midi-octave-keys { color: var(--hk-text-dim); font-size: 0.8rem; }
+.hk-midi kbd {
+  font-family: ui-monospace, Menlo, monospace; font-size: 0.8em; background: var(--hk-panel);
+  border: 1px solid var(--hk-border); border-bottom-width: 2px; border-radius: 4px; padding: 0 4px;
+}
 @media (max-width: 640px) {
   /* Computer-key labels are meaningless without a physical keyboard —
      de-emphasize them on touch-sized widths so tapping is the obvious

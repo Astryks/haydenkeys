@@ -184,6 +184,53 @@ function timelineHtml() {
     </div>`;
 }
 
+// Item 56: real Back support for the counter-driven lessons (Lessons
+// 2-37, scale/seventh/two-hand templates, the early previews) — the
+// remaining screens that only had item 42's history-based Back on
+// Lesson 1 and the shared templates. Every one of these drives its
+// screen purely from a few local counters (`step`, `idx`, `hits`) and
+// re-renders via renderStep(), so rather than hand-writing a history
+// stack into ~35 functions, this wraps renderStep(): whenever it renders
+// a different state than last time, the previous state is pushed onto
+// a history stack; Back pops it, restores the counters, and re-renders.
+// Re-renders of the SAME state (e.g. a quiz re-showing itself) don't
+// add history. Back also detaches any quiz key-press handler / selectable
+// outlines so a quiz step's listener can't keep firing on the screen
+// you went back to. No Back on a lesson's final "done" screen (the one
+// with the #hk-done "Back to lessons" button) — the lesson is already
+// marked complete there.
+function withStepBack(render, { controls, kb, getState, setState, onBack }) {
+  const history = [];
+  let lastKey = null;
+  let restoring = false;
+  function wrapped() {
+    const key = JSON.stringify(getState());
+    if (!restoring && lastKey !== null && key !== lastKey) history.push(lastKey);
+    restoring = false;
+    lastKey = key;
+    render();
+    if (!history.length || controls.querySelector("#hk-done")) return;
+    const backBtn = document.createElement("button");
+    backBtn.type = "button";
+    backBtn.className = "hk-btn hk-btn-lesson-back";
+    backBtn.id = "hk-back";
+    backBtn.textContent = "Back";
+    backBtn.addEventListener("click", () => {
+      if (!history.length) return;
+      if (kb) {
+        kb.onKeyPress(() => {});
+        kb.keyElements.forEach((el) => el.classList.remove("hk-key-selectable"));
+      }
+      if (onBack) onBack();
+      restoring = true;
+      setState(JSON.parse(history.pop()));
+      wrapped();
+    });
+    controls.insertBefore(backBtn, controls.firstChild);
+  }
+  return wrapped;
+}
+
 function initLessonsTab(root) {
   // Persistent two-column layout: lesson content on the left, the
   // roadmap timeline pinned on the right — set up once, not rebuilt on
@@ -204,7 +251,21 @@ function initLessonsTab(root) {
     });
   }
 
+  // Item 56: lessons that run their own timers (the two jazz backing
+  // loops) register a cleanup here, run whenever the lesson is left —
+  // via "<- Lessons", the roadmap sidebar, or starting another lesson.
+  // Before this, leaving mid-loop kept the backing chords playing
+  // forever over whatever screen came next.
+  const exitCleanups = [];
+  function onLessonExit(fn) {
+    exitCleanups.push(fn);
+  }
+  function runLessonExitCleanups() {
+    exitCleanups.splice(0).forEach((fn) => fn());
+  }
+
   function showMap() {
+    runLessonExitCleanups();
     main.innerHTML = lessonMapHtml();
     main.querySelectorAll("[data-lesson]").forEach((btn) => {
       btn.addEventListener("click", () => startLesson(btn.dataset.lesson));
@@ -283,6 +344,7 @@ function initLessonsTab(root) {
   }
 
   function lessonShell(title) {
+    runLessonExitCleanups();
     main.innerHTML = `
       <div class="hk-lesson-player">
         <button class="hk-lesson-exit" id="hk-lesson-exit">&larr; Lessons</button>
@@ -382,7 +444,8 @@ function initLessonsTab(root) {
       <div id="hk-getstarted-cal"></div>`;
     controls.innerHTML = `<button class="hk-btn" id="hk-skip-cal">Skip — I already know where Middle C is</button>`;
     controls.querySelector("#hk-skip-cal").addEventListener("click", finish);
-    initCalibration(content.querySelector("#hk-getstarted-cal"), { onComplete: finish });
+    const calibration = initCalibration(content.querySelector("#hk-getstarted-cal"), { onComplete: finish });
+    onLessonExit(() => calibration.destroy());
 
     function finish() {
       markLessonComplete("lesson-getstarted");
@@ -517,6 +580,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step, idx }), setState: (s) => ({ step, idx } = s) });
     renderStep();
   }
 
@@ -561,6 +625,7 @@ function initLessonsTab(root) {
           controls.querySelector("#hk-done").addEventListener("click", showMap);
         }
       }
+      renderChord = withStepBack(renderChord, { controls, kb, getState: () => ({ idx }), setState: (st) => ({ idx } = st) });
       renderChord();
     }
   }
@@ -611,6 +676,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -624,6 +690,7 @@ function initLessonsTab(root) {
     const kb = renderKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
     let step = 0;
     let compInterval = null;
+    onLessonExit(() => { if (compInterval) clearInterval(compInterval); });
     const safeNotes = [60, 62, 64, 67, 69]; // C major pentatonic, safe over G-D-Em-C
 
     function renderStep() {
@@ -645,8 +712,8 @@ function initLessonsTab(root) {
         // step, which deliberately doesn't need this.
         controls.innerHTML = `
           <button class="hk-btn" id="hk-pause">Pause loop</button>
-          <button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Mark complete</button>`;
-        controls.querySelector("#hk-done").addEventListener("click", finish);
+          <button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-finish">Mark complete</button>`;
+        controls.querySelector("#hk-finish").addEventListener("click", finish);
         kb.clearHighlights();
         safeNotes.forEach((midi) => {
           const el = kb.getKeyElement(midi);
@@ -683,9 +750,10 @@ function initLessonsTab(root) {
       content.innerHTML = mascotSay(`<h3>That's the jazz trick in miniature.</h3>
         <p>Loop known chords, improvise over "safe" notes. The real, deeper version (with 7th chords and
            a proper ii-V-I) is later in the arc, at the Jazz comping bonus lesson.</p>`);
-      controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-back">Back to lessons</button>`;
-      controls.querySelector("#hk-back").addEventListener("click", showMap);
+      controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
+      controls.querySelector("#hk-done").addEventListener("click", showMap);
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s), onBack: () => { if (compInterval) clearInterval(compInterval); compInterval = null; kb.clearHighlights(); } });
     renderStep();
   }
 
@@ -742,6 +810,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -786,6 +855,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ idx }), setState: (s) => ({ idx } = s) });
     renderStep();
   }
 
@@ -823,6 +893,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ idx }), setState: (s) => ({ idx } = s) });
     renderStep();
   }
 
@@ -864,6 +935,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -912,6 +984,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ hits }), setState: (s) => ({ hits } = s) });
     renderStep();
   }
 
@@ -1004,9 +1077,10 @@ function initLessonsTab(root) {
     // shortcut — tap works everywhere already, this is just a bonus for
     // anyone without a real piano/keyboard handy and not touching a
     // touchscreen either.
-    const KEYBOARD_HINT = `<p class="hk-keyboard-hint">No piano handy? Tap the keys above, or on a laptop:
-      the QWERTY row (Q W E R T Y U I O P) is your left hand, the ASDF row (A S D F G H J K L) is your right
-      hand — together they cover this whole progression.</p>`;
+    // Item 56: matches computer-keys.js's piano-shaped two-hand layout.
+    const KEYBOARD_HINT = `<p class="hk-keyboard-hint">No piano handy? Tap the keys above, or on a laptop use
+      your right hand on <strong>T Y U I O P [ ] \\</strong> (white keys, Middle C up to D) with the black keys on the
+      number row just above — that covers this whole progression. The MIDI tab has the full key chart.</p>`;
 
     // Finding your starting key itself now has its own earlier lesson
     // ("Get Started" — see runGetStarted below); this lesson opens with
@@ -1026,6 +1100,7 @@ function initLessonsTab(root) {
       if (activeTuner) activeTuner.destroy();
       activeTuner = createTunerWidget(mountEl, targetMidi, opts);
     }
+    onLessonExit(() => activeTuner && activeTuner.stop());
 
     // Item 42: a real Back button, not just a visual flicker — every
     // forward transition below pushes a full snapshot of this lesson's
@@ -1388,6 +1463,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -1435,6 +1511,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -1495,6 +1572,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -1537,6 +1615,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -1599,6 +1678,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -1892,6 +1972,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -1927,6 +2008,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -1970,6 +2052,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -2020,6 +2103,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -2075,6 +2159,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -2148,6 +2233,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -2180,6 +2266,7 @@ function initLessonsTab(root) {
         });
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -2229,6 +2316,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -2255,6 +2343,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -2281,6 +2370,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -2308,6 +2398,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -2347,6 +2438,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -2376,6 +2468,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -2401,6 +2494,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -2430,6 +2524,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -2454,6 +2549,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -2478,6 +2574,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -2505,6 +2602,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -2542,6 +2640,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -2557,6 +2656,10 @@ function initLessonsTab(root) {
     let compInterval = null;
     let secondsElapsed = 0;
     let timerInterval = null;
+    onLessonExit(() => {
+      if (compInterval) clearInterval(compInterval);
+      if (timerInterval) clearInterval(timerInterval);
+    });
 
     function renderStep() {
       if (step === 0) {
@@ -2581,8 +2684,8 @@ function initLessonsTab(root) {
         // playing through time gets pause/resume parity with Practice.
         controls.innerHTML = `
           <button class="hk-btn" id="hk-pause">Pause loop</button>
-          <button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Mark lesson complete</button>`;
-        controls.querySelector("#hk-done").addEventListener("click", finish);
+          <button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-finish">Mark lesson complete</button>`;
+        controls.querySelector("#hk-finish").addEventListener("click", finish);
 
         kb.clearHighlights();
         JAZZ_COMPING.pentatonicNotes.forEach((midi) => {
@@ -2627,10 +2730,11 @@ function initLessonsTab(root) {
         <h3>Lesson complete.</h3>
         <p>That trick — major pentatonic over a diatonic progression — works in any key: find the 1, 2, 3, 5,
            and 6 of whatever key you're in, and you have a safe improvising palette.</p>`);
-      controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-back">Back to lessons</button>`;
-      controls.querySelector("#hk-back").addEventListener("click", showMap);
+      controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
+      controls.querySelector("#hk-done").addEventListener("click", showMap);
     }
 
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s), onBack: () => { if (compInterval) clearInterval(compInterval); if (timerInterval) clearInterval(timerInterval); compInterval = null; timerInterval = null; kb.clearHighlights(); } });
     renderStep();
   }
 
@@ -2680,6 +2784,7 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
     renderStep();
   }
 
@@ -2710,6 +2815,13 @@ function initLessonsTab(root) {
     refresh() {
       if (root.querySelector(".hk-lesson-map")) showMap();
       else renderSidebar();
+    },
+    // Item 56: called when another tab is shown — pauses a running jazz
+    // backing loop (through its own Pause button, so the button label
+    // stays truthful) instead of letting it play under another tab.
+    suspend() {
+      const pauseBtn = root.querySelector("#hk-pause");
+      if (pauseBtn && pauseBtn.textContent === "Pause loop") pauseBtn.click();
     },
   };
 }

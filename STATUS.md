@@ -2,43 +2,21 @@
 
 ## TODO — not yet done (handoff for a future session)
 
-Session paused here to conserve credits mid-task. These are real,
-specific gaps, not vague follow-ups:
+Item 56 (2026-10-05) finished the previous handoff list: Back on every
+lesson, the upload-playback seek bar / note labels / Easy mode, and an
+iOS submission-readiness sweep (see the item 56 entry at the bottom).
+What's genuinely left:
 
-- **Back-button navigation not yet swept across the ~37 individual
-  Lesson 2-37 functions** (`runLesson2()` through `runLesson37()` in
-  `js/lessons-ui.js`). Only Lesson 1 and the shared `masterSongLesson()`/
-  `runLessonTouch()`/`runChordQuizLesson()` templates have real Back
-  support (item 50). Investigation already confirmed all ~24 remaining
-  functions consistently use a numeric `let step = 0` counter with a
-  `renderStep()` function driven purely by that counter — so a
-  straightforward `step > 0 ? step-- : noop` Back button should work
-  safely for the simple numeric ones; a few larger functions (6, 36, 37)
-  may need closer reading before assuming the same pattern applies
-  cleanly. No code was written for this yet — only the audit above.
-- **No scrubber/seek bar on the uploaded-song playback view**
-  (`renderTranscribedPlayback()` in `js/transcribe.js`) — can't rewind
-  or fast-forward, only fixed-speed playback from the start. Needs to
-  reuse the existing `currentTime()`/`pausedAt` position tracking that
-  already drives the falling-notes highway.
-- **Uploaded-song playback doesn't label which note name is currently
-  highlighted** on the keyboard — reuse `midiToName()` (already in
-  `js/keyboard.js`) to add a visible label near/on the highlighted
-  key(s) during playback.
-- **Add an "Easy mode" toggle for uploaded-song playback** that
-  clusters/quantizes detected notes into simplified chord-level blocks,
-  since even after the item 44 threshold fix, full-detail
-  transcriptions still look intimidating for simple songs — keep the
-  detailed view as the default, add Easy as an opt-in simplification.
-- **Stripe Payment Link not yet wired into the Support button** —
-  still a placeholder (`data-stripe-link-pending="true"` in the
-  `index.html` footer, item 43). Needs Sid to create the actual link in
-  his own Stripe dashboard first; swap the `href` in once he has it.
-- **Final iOS build/code-sign/App Store submit step is still Sid's own
-  action** (needs his Apple Developer account, can't be scripted from
-  here) — everything buildable around it (icons, launch screen,
-  listing copy, submission checklist, `Info.plist` orientation lock)
-  is already done; see `ios/SUBMISSION_CHECKLIST.md`.
+- **Stripe Payment Link still needs creating** in Sid's own Stripe
+  dashboard (Payment Links → Create). Once it exists, paste the
+  `https://buy.stripe.com/...` URL into `STRIPE_PAYMENT_LINK` at the top
+  of `js/app.js` — that's the whole change. Web only: the link is
+  deliberately hidden inside the iOS app (App Review guideline 3.1.1).
+- **Final iOS sign/archive/submit is still Sid's own action** (needs his
+  Apple Developer account) — follow `ios/SUBMISSION_CHECKLIST.md`. The
+  project now builds clean (Debug simulator + Release device, unsigned)
+  but hasn't been launched on a simulator or device yet: this Mac has no
+  iOS Simulator runtime installed. First real launch = checklist step 5.
 - **"Jaxx Guitar" (guitar version) and "Westbrooks" (fitness app) are
   logged as future apps, not started.** See the "Playbook for future
   instrument apps" section below for what's directly reusable for Jaxx
@@ -1961,3 +1939,73 @@ instead of a cramped layout; a plain landscape resize back to
 812x375/900x400 confirms the prompt correctly does not appear outside
 portrait. Zero new console errors beyond the known sandbox-only
 service-worker noise. `node --check` passes on every touched JS file.
+
+## 2026-10-05 update: handoff TODOs, full review fixes, iOS submission sweep, MIDI redesign (item 56)
+
+**Handoff TODOs, all done:**
+- **Back on every lesson.** `withStepBack()` in `js/lessons-ui.js` wraps
+  the counter-driven lessons' `renderStep()` (34 lessons/templates plus
+  Choose-your-song): each change of `step`/`idx`/`hits` pushes the
+  previous state; Back restores it, and detaches any quiz key handler so
+  it can't fire on the earlier screen. No Back on a final "done" screen.
+  Verified in-browser across 19 lessons (forward 3, back 2, lands on the
+  right step), plus a quiz step (Lesson 4) and both jazz loops.
+- **Upload playback** (`renderTranscribedPlayback()`, `js/transcribe.js`):
+  seek bar with clock (drag to scrub, resumes on release); every lit key
+  shows its note name (`midiToName()`) plus a "Now playing" readout;
+  opt-in **Easy** view (`simplifyToBlocks()`: 1-second windows, ≤4 notes
+  per block, lowest = left hand, broken/repeated chords merged into one
+  held block). Detailed stays the default.
+
+**Review fixes (bugs found reading the whole project):**
+- Practice was re-created on every song opened from Discover/Saved
+  without stopping the old copy — ghost chords, mic/camera left on. Now
+  one live instance; leaving the Practice tab stops audio/mic/camera.
+- Practice: Pause restarted from the last Play press; changing speed
+  mid-song jumped back; Camera Overlay never advanced (now Prev/Next
+  chord); Ear Check skipped through repeated same-root chords and got
+  stuck on prose "chords"; prose chord entries no longer become steps.
+- Mic/camera leaks: calibration (closing the panel, double-tapping
+  Start), lesson tuner widgets left behind by Next/Back, camera granted
+  after leaving the mode, Recalibrate stacking draw loops. Mic
+  AudioContext is now resumed (could read silence on iOS).
+- Jazz backing loops kept playing after leaving the lesson / tab.
+- Streak and daily goal used UTC dates (rolled over mid-afternoon in the
+  US); streak now shows 0 once it's actually broken.
+- Discover: reopening a completed song downgraded it to "started"
+  (could re-lock a tier); album art fired ~100 requests at once (now
+  lazy + de-duplicated); unescaped attribute values.
+- Service worker: network-first (was cache-first, so returning visitors
+  saw the previous deploy), cache bumped to v2, every shell file listed.
+- Privacy policy / mic usage string corrected (three mic uses; piano
+  samples download automatically; album art images from Apple's
+  servers; iOS data-deletion note).
+
+**iOS submission sweep** — see `ios/SUBMISSION_CHECKLIST.md` "Item 56":
+`UIRequiresFullScreen` (iPad landscape-only upload blocker), removed the
+unused `@capacitor/camera` plugin (photo-library purpose-string
+rejection), `arm64`, `ITSAppUsesNonExemptEncryption`, an app
+`PrivacyInfo.xcprivacy`, Support link hidden in-app, .md links → GitHub,
+safe-area insets, subtitle trimmed to fit 30 chars, keywords
+de-duplicated. `xcodebuild` Debug + Release both succeed.
+
+**MIDI tab redesign** (Sid's report: the right hand sat directly under
+the left, keys didn't feel like a piano). `js/computer-keys.js` now uses
+a piano-shaped layout — white notes on one row, black notes on the row
+above in the gaps — with octave shifting across all 88 keys (A0-C8):
+- *Two hands* (default): left Z-M whites / S D G H J blacks (C3-B3, ↓/↑),
+  right T–\ whites / 6 7 9 0 - blacks (C4-D5, ←/→). Hands sit
+  bottom-left and top-right instead of stacked.
+- *One hand*: GarageBand Musical Typing — A-' whites, W E T Y U O P
+  blacks, Z/X octave.
+Physical key codes, so Shift/Caps/other layouts don't break it. The MIDI
+tab shows the whole 88-key piano with each hand's zone tinted and
+labelled. Verified by simulated key presses (Z=C3, T=C4, \=D5, left
+hand down to A0, one-hand up to C8).
+
+### Honestly, what's not done
+- Nothing was run on an iOS device or simulator (no runtime installed).
+- Stripe link still needs Sid's Stripe account.
+- Easy mode is a heuristic, not chord recognition — it can keep an odd
+  passing note.
+

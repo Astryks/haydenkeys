@@ -80,7 +80,7 @@ function initAboutTab(root) {
            audio into notes, vendored locally in this app's own code rather than loaded from a CDN, so it
            keeps working even if that CDN ever goes away. Full license details, version numbers, and
            exactly what was checked before including it live in
-           <a href="THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a>.</p>
+           <a href="https://github.com/Astryks/haydenkeys/blob/main/THIRD_PARTY_NOTICES.md" target="_blank" rel="noopener">THIRD_PARTY_NOTICES.md</a>.</p>
       </section>
 
       <section class="hk-how-section">
@@ -93,8 +93,8 @@ function initAboutTab(root) {
       <section class="hk-how-section">
         <h3>Want the full technical detail?</h3>
         <p>This page is the friendly summary. For the complete, dated log of exactly what's been built,
-           verified, and any honest gaps still open, see <a href="README.md">README.md</a> and
-           <a href="STATUS.md">STATUS.md</a> in the project's source repository.</p>
+           verified, and any honest gaps still open, see <a href="https://github.com/Astryks/haydenkeys/blob/main/README.md" target="_blank" rel="noopener">README.md</a> and
+           <a href="https://github.com/Astryks/haydenkeys/blob/main/STATUS.md" target="_blank" rel="noopener">STATUS.md</a> in the project's source repository.</p>
       </section>
     </div>`;
 }

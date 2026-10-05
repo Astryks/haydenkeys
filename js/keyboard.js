@@ -142,8 +142,7 @@ function renderKeyboard(container, { startMidi = 60, endMidi = 84 } = {}) {
   function clearHighlights() {
     keyElements.forEach((el) => {
       el.classList.remove("hk-key-highlight", "hk-key-hand-left", "hk-key-hand-right");
-      const badge = el.querySelector(".hk-key-badge");
-      if (badge) badge.remove();
+      el.querySelectorAll(".hk-key-badge, .hk-key-notename").forEach((b) => b.remove());
     });
   }
 

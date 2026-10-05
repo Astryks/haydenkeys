@@ -71,15 +71,29 @@ function isLessonComplete(lessonId) {
 
 // --- Streak ------------------------------------------------------------
 
+// Item 56: the user's LOCAL calendar day as YYYY-MM-DD. This used to be
+// toISOString(), which is the UTC date — e.g. in US Pacific time the
+// "day" rolled over at 4-5pm, so practicing Monday afternoon and Tuesday
+// evening could count as two days apart and silently break the streak.
+function localDay(offsetDays = 0) {
+  const now = new Date();
+  const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offsetDays);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 function getStreak() {
-  return safeGet(KEYS.STREAK, { count: 0, lastDay: null });
+  const streak = safeGet(KEYS.STREAK, { count: 0, lastDay: null });
+  // A streak that wasn't continued yesterday or today is over — show 0
+  // rather than the last stored count forever.
+  if (streak.lastDay !== localDay() && streak.lastDay !== localDay(-1)) return { ...streak, count: 0 };
+  return streak;
 }
 
 function bumpStreak() {
   const streak = getStreak();
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDay();
   if (streak.lastDay === today) return streak; // already counted today
-  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  const yesterday = localDay(-1);
   const count = streak.lastDay === yesterday ? streak.count + 1 : 1;
   const next = { count, lastDay: today };
   safeSet(KEYS.STREAK, next);
@@ -96,14 +110,14 @@ function bumpStreak() {
 // times after the goal is met on the same day is harmless).
 
 function getDailyGoal() {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDay();
   const stored = safeGet(KEYS.DAILY_GOAL, { date: today, count: 0 });
   if (stored.date !== today) return { date: today, count: 0, target: DAILY_GOAL_TARGET, metToday: false };
   return { ...stored, target: DAILY_GOAL_TARGET, metToday: stored.count >= DAILY_GOAL_TARGET };
 }
 
 function recordDailyProgress() {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDay();
   const current = getDailyGoal();
   const count = current.date === today ? current.count + 1 : 1;
   safeSet(KEYS.DAILY_GOAL, { date: today, count });

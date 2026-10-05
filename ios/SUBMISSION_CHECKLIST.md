@@ -64,10 +64,52 @@ Sid still needs to do himself.
       text, full description, keywords, support/marketing/privacy URLs,
       category, age-rating answers with reasoning, "What's New" text).
 
+- [x] **Item 56 submission-blocker sweep (2026-10-05)** — fixed things
+      that would have bounced the upload or the review:
+      - `UIRequiresFullScreen = true` added. The app supports iPad
+        (`TARGETED_DEVICE_FAMILY = 1,2`) but only landscape; without this
+        flag App Store Connect rejects the upload (ITMS-90474: iPad
+        multitasking requires all four orientations).
+      - Removed the unused `@capacitor/camera` plugin. Nothing in the app
+        called it (Camera Overlay uses the WebView's own camera access),
+        but it linked photo-library APIs into the binary with no
+        `NSPhotoLibraryUsageDescription` — an automatic ITMS-90683
+        rejection.
+      - `UIRequiredDeviceCapabilities` changed from the obsolete `armv7`
+        to `arm64`.
+      - `ITSAppUsesNonExemptEncryption = false` added, so App Store
+        Connect stops asking the export-compliance question on every
+        build (HTTPS only, same answer as step 12 below).
+      - App privacy manifest added (`ios/App/App/PrivacyInfo.xcprivacy`,
+        in the Xcode project's Resources): no tracking, no collected data,
+        and the UserDefaults reason Capacitor's bridge needs.
+      - "Support Hayden Keys" (an external Stripe payment link) is hidden
+        inside the native app — tips/donations through an outside payment
+        link are a guideline 3.1.1 rejection risk. The website keeps it.
+      - Links to `README.md` / `THIRD_PARTY_NOTICES.md` / `STATUS.md` now
+        open GitHub's rendered copies (in Safari, from the app) instead of
+        raw .md files that aren't bundled in the app and left the WebView
+        on a dead-end 404 with no way back.
+      - `viewport-fit=cover` plus safe-area padding, so nothing sits under
+        the notch / Dynamic Island in landscape.
+      - Microphone usage string and privacy policy corrected: the mic is
+        used in three places (the lessons' "Tune this note" button was
+        missing), and the piano-sample download is automatic, not
+        optional.
+      - Verified: `npx cap sync ios` clean; `xcodebuild` Debug
+        (simulator) and Release (device, unsigned) both **BUILD
+        SUCCEEDED**, and `PrivacyInfo.xcprivacy` is in the built `.app`.
+        Not verified here: running it — this Mac has no iOS Simulator
+        runtime installed, so step 5 below is still the first real launch.
+
 ## What Sid needs to do himself, in order
 
-1. **Install dependencies once**: `npm install` in the repo root
-   (installs the Capacitor CLI — small, already gitignored).
+1. **Install dependencies and copy the web app in**: `npm install`, then
+   `npx cap sync ios`, in the repo root. Both are required on a fresh
+   clone: the Xcode project resolves Capacitor from `node_modules/`, and
+   the app's web files (`ios/App/App/public/`) are gitignored and only
+   created by `cap sync` — skip it and the app launches to a blank
+   screen.
 2. **Open the project in Xcode**: `npx cap open ios`, or open
    `ios/App/App.xcodeproj` directly.
 3. **Sign the app**: in Xcode, select the `App` target → **Signing &
@@ -85,9 +127,12 @@ Sid still needs to do himself.
    prompts on a **real device** specifically — a simulator has a fake
    microphone but no real camera.
 6. **Take App Store screenshots**: Apple requires screenshots for at
-   least one device size per device family you support (typically a
-   6.9" or 6.5" iPhone size, plus iPad if you mark the app as
-   iPad-compatible). Take these on a simulator or device running the
+   least one device size per device family you support. This app
+   supports iPad, so you need **both** a 6.9" iPhone set (e.g. iPhone 17
+   Pro Max simulator) **and** a 13" iPad set (e.g. iPad Pro 13-inch
+   simulator) — landscape, since the app is landscape-only. (Or remove
+   iPad support in Signing & Capabilities → Supported Destinations if
+   you'd rather only ship iPhone for now.) Take these on a simulator or device running the
    actual app — a few good screens: the Lessons map/roadmap, a lesson
    mid-chord (showing the keyboard highlight), the Discover tab with
    album art, and the MIDI tab.
@@ -99,10 +144,18 @@ Sid still needs to do himself.
 9. **Paste in the Privacy Policy URL**:
    `https://haydenkeys.com/privacy.html` (must be live/reachable before
    submitting — confirm it resolves after your next deploy).
-10. **Answer the age rating questionnaire** using the table in
+10. **App Privacy ("nutrition label")**: in App Store Connect → App
+    Privacy, choose **"Data Not Collected"**. True for this app: no
+    accounts, no analytics, progress stays on the device; the only
+    network requests (album-art lookup by song title, piano-sample
+    audio download) send nothing about the user. Matches
+    `PrivacyInfo.xcprivacy`.
+11. **Answer the age rating questionnaire** using the table in
     `ios/APP_STORE_LISTING.md` — every category is "None"/"No", which
     should land on the lowest rating (4+).
-11. **Answer export compliance**: when Xcode/App Store Connect asks
+12. **Export compliance**: now pre-answered by
+    `ITSAppUsesNonExemptEncryption = false` in `Info.plist`, so this
+    usually won't be asked. If it is: when Xcode/App Store Connect asks
     "Does your app use encryption?", the standard answer for an app that
     only uses HTTPS (no custom/proprietary encryption) is **"No"** — or
     more precisely, if asked the follow-up, this app qualifies for the
@@ -111,13 +164,17 @@ Sid still needs to do himself.
     which is exactly what this app does — it's a common point of
     confusion, but the answer is the same simple "no custom encryption"
     answer the vast majority of apps give).
-12. **Upload a build**: back in Xcode, **Product → Archive**, then use
+13. **App Review notes**: there's no login, so no demo account is needed.
+    Worth adding one line for the reviewer: "Camera and microphone are
+    optional — used only by Practice → Camera Overlay / Ear Check and the
+    lessons' Tune this note button; everything else works without them."
+14. **Upload a build**: back in Xcode, **Product → Archive**, then use
     the Organizer window's **Distribute App** flow to upload to App
     Store Connect.
-13. **Attach the build, add screenshots, submit for review**: in App
+15. **Attach the build, add screenshots, submit for review**: in App
     Store Connect, select the uploaded build on the app version page,
     upload the screenshots from step 6, and submit for review.
-14. **After any future web app changes**: run `npx cap sync` again
+16. **After any future web app changes**: run `npx cap sync` again
     before re-archiving in Xcode, so the native copy picks up the
     latest site files.
 

@@ -91,6 +91,10 @@ function refineLag(correlations, index, minLag) {
 async function startLivePitchDetection(onPitch, { fftSize = 2048 } = {}) {
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  // Item 56: created after the permission prompt, i.e. outside the tap
+  // that started this — WebKit (Safari / the iOS app) can then hand
+  // back a suspended context whose analyser only ever reads silence.
+  if (audioCtx.state === "suspended") await audioCtx.resume().catch(() => {});
   const source = audioCtx.createMediaStreamSource(stream);
   const analyser = audioCtx.createAnalyser();
   analyser.fftSize = fftSize;
@@ -168,6 +172,13 @@ function createTunerWidget(container, targetMidi, { label = "Tune this note" } =
     needle.className = "hk-tuner-needle";
     try {
       stopListening = await startLivePitchDetection((result) => {
+        // Item 56: the lesson step this tuner lived on was replaced (Next,
+        // Back, or leaving the lesson) while it was still listening —
+        // release the mic instead of keeping it open off-screen.
+        if (!container.isConnected) {
+          stop();
+          return;
+        }
         if (!result) {
           readout.textContent = "Listening — play the note on your real piano.";
           return;

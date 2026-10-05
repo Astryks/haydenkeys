@@ -24,19 +24,39 @@ const MODE_LABELS = {
 // real section labels. Songs without one fall back to looping their
 // simple 4-ish-chord `chords` array forever — the honest "main riff"
 // view, not pretending every song has full-structure data.
+//
+// Item 56: only real, parseable chord symbols become steps. A handful of
+// songs keep a prose caveat ("insufficient data — see notes") inside
+// their `chords` array; as a step it showed that sentence on the
+// timeline, played nothing, and left Ear Check waiting forever for a
+// root note that doesn't exist. Same filter idea as Discover's
+// realChords().
 function getSongSteps(song) {
+  const isReal = (c) => parseChordSymbol(c) !== null;
   const structure = SONG_STRUCTURES[song.title];
   if (structure) {
     const steps = [];
     structure.forEach((section) => {
-      section.chords.forEach((chord) => steps.push({ chord, section: section.section }));
+      section.chords.filter(isReal).forEach((chord) => steps.push({ chord, section: section.section }));
     });
-    return { steps, loops: false };
+    if (steps.length) return { steps, loops: false };
   }
-  return { steps: song.chords.map((c) => ({ chord: c, section: null })), loops: true };
+  const steps = song.chords.filter(isReal).map((c) => ({ chord: c, section: null }));
+  // Nothing playable at all: one harmless C step so the tab still
+  // renders, with the song's own notes explaining the gap.
+  return { steps: steps.length ? steps : [{ chord: "C", section: null }], loops: true, noRealChords: !steps.length };
 }
 
+// Item 56: Practice used to be re-initialised (initPracticeTab) every
+// time a song was opened from Discover/Saved, on the SAME panel, without
+// stopping the previous copy — its playback loop, Ear Check mic, camera
+// and calibration mic all kept running underneath the new one (ghost
+// chords, a live mic indicator on iOS). Exactly one live instance now:
+// starting a new one tears the previous one down first.
+let activePractice = null;
+
 function initPracticeTab(root, { initialSong } = {}) {
+  if (activePractice) activePractice.destroy();
   let currentSong = initialSong || SONGS[0];
   let mode = "follow";
   let raf = null;
@@ -59,6 +79,19 @@ function initPracticeTab(root, { initialSong } = {}) {
   // Ear Check mode state
   let stopListening = null;
   let earCheckIndex = 0;
+  // Item 56: after a correct note, ignore input until the next step is
+  // on screen — and if the next chord has the same root, until the mic
+  // hears a gap first — so one held note can't skip through several
+  // back-to-back identical chords.
+  let earMatchLocked = false;
+  let earNeedSilence = false;
+
+  // Camera Overlay mode: its own step index (stepped with Prev/Next),
+  // not Ear Check's — camera mode never advanced before.
+  let cameraOverlay = null;
+  let cameraStepIndex = 0;
+  let calibration = null;
+  let suspended = false;
 
   // The single tempo multiplier every piece of playback timing math
   // derives from — chord-change timing, the falling-note highway's fall
@@ -78,7 +111,7 @@ function initPracticeTab(root, { initialSong } = {}) {
   // is re-derived from this same chordDuration(), so they can't drift
   // apart from each other when speed changes.
   function setSpeed(newSpeed) {
-    const stepFraction = pausedAt / chordDuration();
+    const stepFraction = currentTime() / chordDuration();
     playbackSpeed = newSpeed;
     pausedAt = stepFraction * chordDuration();
     playStartedAt = performance.now();
@@ -118,6 +151,7 @@ function initPracticeTab(root, { initialSong } = {}) {
           Key: ${currentSong.key} &middot; ${currentSong.degreeSequence}
           ${SONG_STRUCTURES[currentSong.title] ? `<span class="hk-badge hk-badge-match">Full song structure</span>` : `<span class="hk-badge" title="Only the main repeating loop is mapped for this song">Main loop only</span>`}
         </p>
+        ${songMeta.noRealChords ? `<p class="hk-honest-note">This song's chords are still being verified, so there's nothing real to practice yet — the C chord below is only a placeholder. ${currentSong.notes || ""}</p>` : ""}
         <div class="hk-mode-picker" id="hk-mode-picker">
           ${MODES.map((m) => `<button class="hk-mode-btn ${m === mode ? "hk-mode-active" : ""}" data-mode="${m}">${MODE_LABELS[m]}</button>`).join("")}
         </div>
@@ -220,7 +254,11 @@ function initPracticeTab(root, { initialSong } = {}) {
   function renderControls() {
     const controls = root.querySelector("#hk-practice-controls");
     if (mode === "camera") {
-      controls.innerHTML = "";
+      controls.innerHTML = `
+        <button class="hk-btn" id="hk-cam-prev">◀ Previous chord</button>
+        <button class="hk-btn hk-btn-primary" id="hk-cam-next">Next chord ▶</button>`;
+      controls.querySelector("#hk-cam-prev").addEventListener("click", () => showCameraStep(cameraStepIndex - 1));
+      controls.querySelector("#hk-cam-next").addEventListener("click", () => showCameraStep(cameraStepIndex + 1));
       return;
     }
     if (mode === "ear") {
@@ -260,10 +298,12 @@ function initPracticeTab(root, { initialSong } = {}) {
   function toggleCalibration() {
     const panel = root.querySelector("#hk-calibration-panel");
     const hidden = panel.classList.toggle("hk-hidden");
+    closeCalibration();
     if (!hidden) {
-      initCalibration(panel, {
+      calibration = initCalibration(panel, {
         onComplete: () => {
           panel.classList.add("hk-hidden");
+          closeCalibration();
         },
       });
     }
@@ -346,15 +386,20 @@ function initPracticeTab(root, { initialSong } = {}) {
 
   function togglePlay() {
     if (ended) rewind();
-    playing = !playing;
-    root.querySelector("#hk-playpause").textContent = playing ? "⏸ Pause" : "▶ Play";
     if (playing) {
+      // Read the position BEFORE flipping `playing` — currentTime() only
+      // adds elapsed time while playing, so the old order always saved
+      // the position from the last Play press.
+      pausedAt = currentTime();
+      playing = false;
+      cancelAnimationFrame(raf);
+      updateCursor();
+    } else {
+      playing = true;
       playStartedAt = performance.now();
       loop();
-    } else {
-      pausedAt = currentTime();
-      cancelAnimationFrame(raf);
     }
+    root.querySelector("#hk-playpause").textContent = playing ? "⏸ Pause" : "▶ Play";
   }
 
   function rewind() {
@@ -374,6 +419,14 @@ function initPracticeTab(root, { initialSong } = {}) {
     ended = false;
     stopEarCheck();
     stopCameraMode();
+    closeCalibration();
+    const uploadEl = root.querySelector("#hk-upload-playback");
+    if (uploadEl && uploadEl._hkStopPlayback) uploadEl._hkStopPlayback();
+  }
+
+  function closeCalibration() {
+    if (calibration) calibration.destroy();
+    calibration = null;
   }
 
   function updateCursor() {
@@ -441,13 +494,19 @@ function initPracticeTab(root, { initialSong } = {}) {
   // than this pass's scope.
   async function startEarCheck() {
     earCheckIndex = 0;
+    earMatchLocked = false;
+    earNeedSilence = false;
     pausedAt = 0;
     updateCursor();
     showEarCheckStep();
     const statusEl = root.querySelector("#hk-ear-status");
     try {
-      stopListening = await startLivePitchDetection((result) => {
-        if (!result || earCheckIndex >= songMeta.steps.length) return;
+      const stop = await startLivePitchDetection((result) => {
+        if (!result) {
+          earNeedSilence = false;
+          return;
+        }
+        if (earMatchLocked || earNeedSilence || earCheckIndex >= songMeta.steps.length) return;
         const step = songMeta.steps[earCheckIndex];
         const parsed = parseChordSymbol(step.chord);
         if (!parsed) return;
@@ -456,6 +515,7 @@ function initPracticeTab(root, { initialSong } = {}) {
         if (heardPitchClass === expectedPitchClass && Math.abs(result.cents) < 45) {
           statusEl.textContent = `Correct — that's ${step.chord}'s root note.`;
           statusEl.classList.add("hk-ear-correct");
+          earMatchLocked = true;
           earCheckIndex++;
           pausedAt = earCheckIndex * chordDuration();
           updateCursor();
@@ -468,9 +528,22 @@ function initPracticeTab(root, { initialSong } = {}) {
               pausedAt = 0;
             }
           }
-          setTimeout(showEarCheckStep, 400);
+          setTimeout(() => {
+            const next = songMeta.steps[earCheckIndex];
+            const nextParsed = next && parseChordSymbol(next.chord);
+            earNeedSilence = Boolean(nextParsed && nextParsed.root === expectedPitchClass);
+            earMatchLocked = false;
+            showEarCheckStep();
+          }, 400);
         }
       });
+      // Left Ear Check (or the tab) while the mic permission prompt was
+      // still up — release the mic right away instead of leaking it.
+      if (mode !== "ear" || suspended || !root.querySelector("#hk-ear-status")) stop();
+      else {
+        if (stopListening) stopListening();
+        stopListening = stop;
+      }
     } catch (err) {
       statusEl.textContent = `Microphone access failed (${err.message}) — Ear Check needs the mic. Try Follow Along instead.`;
     }
@@ -502,12 +575,26 @@ function initPracticeTab(root, { initialSong } = {}) {
   function startCameraMode() {
     const panel = root.querySelector("#hk-camera-panel");
     panel.classList.remove("hk-hidden");
-    initCameraOverlay(panel, {
-      getCurrentStep: () => songMeta.steps[earCheckIndex] || songMeta.steps[0],
+    if (cameraOverlay) cameraOverlay.destroy();
+    cameraOverlay = initCameraOverlay(panel, {
+      getCurrentStep: () => songMeta.steps[cameraStepIndex] || songMeta.steps[0],
       calibration: getCalibration(),
     });
+    showCameraStep(0);
+  }
+  function showCameraStep(i) {
+    const n = songMeta.steps.length;
+    cameraStepIndex = ((i % n) + n) % n;
+    const step = songMeta.steps[cameraStepIndex];
+    const midiNotes = chordSymbolToMidi(step.chord);
+    if (kb && midiNotes.length) kb.highlightChord(midiNotes, { letter: step.chord, rootMidi: midiNotes[0] });
+    highlightActiveSection(step.section);
+    pausedAt = cameraStepIndex * chordDuration();
+    updateCursor();
   }
   function stopCameraMode() {
+    if (cameraOverlay) cameraOverlay.destroy();
+    cameraOverlay = null;
     const panel = root.querySelector("#hk-camera-panel");
     if (panel) {
       panel.classList.add("hk-hidden");
@@ -582,6 +669,34 @@ function initPracticeTab(root, { initialSong } = {}) {
   }
 
   render();
+
+  activePractice = {
+    destroy() {
+      stopAll();
+      if (highway) highway.destroy();
+      if (activePractice === this) activePractice = null;
+    },
+    // Called when another tab is shown: stop sound, mic and camera
+    // (keeping the song position), and bring live modes back on return.
+    suspend() {
+      if (suspended) return;
+      suspended = true;
+      if (playing) togglePlay();
+      stopEarCheck();
+      stopCameraMode();
+      closeCalibration();
+      root.querySelector("#hk-calibration-panel")?.classList.add("hk-hidden");
+      const uploadEl = root.querySelector("#hk-upload-playback");
+      if (uploadEl && uploadEl._hkStopPlayback) uploadEl._hkStopPlayback();
+    },
+    resume() {
+      if (!suspended) return;
+      suspended = false;
+      if (mode === "ear") startEarCheck();
+      if (mode === "camera") startCameraMode();
+    },
+  };
+  return activePractice;
 }
 
 export { initPracticeTab };

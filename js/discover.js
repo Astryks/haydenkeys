@@ -15,10 +15,19 @@ const UNLOCK_THRESHOLD = 5; // complete 5 songs in a tier to unlock the next
 // (per session) so re-rendering the grid on search/filter changes doesn't
 // re-fetch art we already have. Any failure (network, no match, CORS)
 // falls back to the existing plain card style — never breaks the layout.
+//
+// Item 56: caches the in-flight PROMISE (not just the finished result),
+// so re-rendering on every search keystroke can't fire duplicate
+// lookups, and cards only look up art once they scroll near the screen
+// (IntersectionObserver below) — the first render used to fire ~100
+// requests at once, enough to get rate-limited so most cards got no art.
 const albumArtCache = new Map();
-async function fetchAlbumArt(song) {
+function fetchAlbumArt(song) {
   const key = `${song.title}|${song.artist}`;
-  if (albumArtCache.has(key)) return albumArtCache.get(key);
+  if (!albumArtCache.has(key)) albumArtCache.set(key, lookupAlbumArt(song));
+  return albumArtCache.get(key);
+}
+async function lookupAlbumArt(song) {
   try {
     const term = encodeURIComponent(`${song.title} ${song.artist}`);
     const res = await fetch(`https://itunes.apple.com/search?term=${term}&entity=song&limit=1`);
@@ -27,19 +36,20 @@ async function fetchAlbumArt(song) {
     const raw = data.results && data.results[0] && data.results[0].artworkUrl100;
     // iTunes's own documented trick: swap the 100x100 thumbnail size in
     // the URL for a larger one, same image, no extra API call.
-    const url = raw ? raw.replace("100x100", "300x300") : null;
-    albumArtCache.set(key, url);
-    return url;
+    return raw ? raw.replace("100x100", "300x300") : null;
   } catch (e) {
-    albumArtCache.set(key, null);
     return null;
   }
+}
+
+function escapeAttr(text) {
+  return String(text ?? "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 }
 
 function confidenceBadge(song) {
   return song.confidence === "confirmed"
     ? `<span class="hk-badge hk-badge-confirmed">Chords verified</span>`
-    : `<span class="hk-badge hk-badge-unverified" title="${song.notes}">Needs verification</span>`;
+    : `<span class="hk-badge hk-badge-unverified" title="${escapeAttr(song.notes)}">Needs verification</span>`;
 }
 
 function matchBadge(song) {
@@ -79,13 +89,36 @@ function tierUnlockStatus(difficulty) {
 // whenever it resolves — the card itself renders synchronously first
 // (with the plain fallback style) so slow/failed lookups never block or
 // break the grid.
-function hydrateArt(div, song) {
+const artObserver = typeof IntersectionObserver !== "undefined"
+  ? new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        artObserver.unobserve(entry.target);
+        loadArtInto(entry.target, entry.target._hkSong);
+      });
+    }, { rootMargin: "300px" })
+  : null;
+
+function loadArtInto(div, song) {
   const slot = div.querySelector(".hk-song-art-slot");
   if (!slot) return;
   fetchAlbumArt(song).then((url) => {
     if (!url) return; // graceful fallback: leave the plain placeholder in place
-    slot.innerHTML = `<img src="${url}" alt="${song.title} album art" class="hk-song-art" loading="lazy" />`;
+    // Built as an element, not an HTML string, since the URL comes from
+    // a third-party response.
+    const img = document.createElement("img");
+    img.src = url;
+    img.alt = `${song.title} album art`;
+    img.className = "hk-song-art";
+    img.loading = "lazy";
+    slot.replaceChildren(img);
   });
+}
+
+function hydrateArt(div, song) {
+  if (!artObserver) return loadArtInto(div, song);
+  div._hkSong = song;
+  artObserver.observe(div);
 }
 
 // Item 44: a real display bug Sid caught via screenshot — a handful of
@@ -147,12 +180,14 @@ function songCard(song, onStart) {
       <p class="hk-song-key">Key: ${song.key}</p>
       <p class="hk-song-chords">${chordsDisplay(song)} <span class="hk-song-degrees">(${song.degreeSequence})</span> ${matchBadge(song)}</p>
       <p class="hk-song-notes">${song.notes}</p>
-      <button class="hk-btn hk-btn-small" data-start="${song.title}">
+      <button class="hk-btn hk-btn-small" data-start="${escapeAttr(song.title)}">
         ${saved ? `Saved (${saved.status})` : "Start learning"}
       </button>
     </div>`;
   div.querySelector("[data-start]").addEventListener("click", () => {
-    markSongStatus(song.title, "started");
+    // Item 56: only for songs not saved yet — reopening a COMPLETED song
+    // used to downgrade it to "started", which could re-lock a tier.
+    if (!getSavedSongs()[song.title]) markSongStatus(song.title, "started");
     onStart(song);
   });
   hydrateArt(div, song);

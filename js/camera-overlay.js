@@ -35,7 +35,8 @@ function initCameraOverlay(container, { getCurrentStep } = {}) {
   let stream = null;
   let calPoints = []; // up to 2 { midi, x, y }
   let raf = null;
-  let lastStepKey = null;
+  let destroyed = false;
+  let removeTapListener = null;
 
   function render() {
     container.innerHTML = `
@@ -63,11 +64,19 @@ function initCameraOverlay(container, { getCurrentStep } = {}) {
     try {
       stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
     } catch (err) {
+      if (destroyed) return;
       container.innerHTML = `
         <p class="hk-cal-status">Camera access failed (${err.message}). This is expected in
         environments without a real camera (e.g. this review sandbox) or if permission was
         denied — Camera Overlay needs a real device camera to do anything useful. Try Follow
         Along or Ear Check instead.</p>`;
+      return;
+    }
+    // Item 56: left Camera mode while the permission prompt was up — the
+    // stage this would draw into is gone; release the camera.
+    if (destroyed || !container.querySelector("#hk-camera-start")) {
+      stream.getTracks().forEach((t) => t.stop());
+      stream = null;
       return;
     }
     container.querySelector("#hk-camera-start").style.display = "none";
@@ -83,6 +92,12 @@ function initCameraOverlay(container, { getCurrentStep } = {}) {
   }
 
   function beginCalibration() {
+    // Item 56: Recalibrate used to stack a second draw loop (the first
+    // could never be cancelled) and, mid-calibration, a second tap
+    // listener that recorded both points from one tap.
+    if (raf) cancelAnimationFrame(raf);
+    raf = null;
+    if (removeTapListener) removeTapListener();
     calPoints = [];
     const statusEl = container.querySelector("#hk-camera-status");
     statusEl.textContent = "Tap where Middle C is in the video.";
@@ -111,6 +126,7 @@ function initCameraOverlay(container, { getCurrentStep } = {}) {
       }
     }
     canvas.addEventListener("pointerdown", onTap);
+    removeTapListener = () => canvas.removeEventListener("pointerdown", onTap);
   }
 
   function startOverlayLoop() {
@@ -159,8 +175,11 @@ function initCameraOverlay(container, { getCurrentStep } = {}) {
 
   return {
     destroy() {
+      destroyed = true;
       if (raf) cancelAnimationFrame(raf);
+      raf = null;
       if (stream) stream.getTracks().forEach((t) => t.stop());
+      stream = null;
     },
   };
 }

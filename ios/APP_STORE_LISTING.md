@@ -18,12 +18,12 @@ everywhere.)
 ## Subtitle (max 30 characters)
 
 ```
-Learn Piano, One Song at a Time
+Learn Piano, Chord by Chord
 ```
-(31 characters — **one over the limit**, pick one before submitting):
-- `Learn Piano, Chord by Chord` (28 chars) — recommended
-- `Piano Lessons That Stick` (25 chars)
-- `Free, Gamified Piano Lessons` (29 chars)
+(27 characters. The earlier draft, "Learn Piano, One Song at a Time,"
+is 31 — one over Apple's limit — so it was swapped for this one.
+Alternatives that also fit: `Piano Lessons That Stick` (24),
+`Free, Gamified Piano Lessons` (28).)
 
 ## Promotional text (max 170 characters, editable anytime without a new review)
 
@@ -86,8 +86,13 @@ technique, Hayden Keys gets you playing songs you actually know, fast.
 ## Keywords (max 100 characters, comma-separated, no spaces after commas)
 
 ```
-piano,learn piano,piano lessons,chords,music theory,beginner piano,piano app,free piano,play piano
+piano,lessons,chords,keyboard,learn,beginner,music theory,songs,practice,ear training,scales,jazz
 ```
+(Each word is indexed on its own, and words in the app name are
+indexed already, so repeating "piano" in every phrase wastes room — this
+version covers more distinct searches in the same 100 characters. The
+earlier draft, for reference:
+`piano,learn piano,piano lessons,chords,music theory,beginner piano,piano app,free piano,play piano`.)
 
 ## Support URL
 
