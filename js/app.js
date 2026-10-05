@@ -7,6 +7,7 @@ import { initAboutTab } from "./about.js";
 import { initMidiTab } from "./midi.js";
 import { checkBadges } from "./badges.js";
 import { getLevel } from "./storage.js";
+import { maybeShowFunFact, showFunFact } from "./fun-facts.js";
 
 // Stripe Payment Link for the footer's "Support Hayden Keys" link —
 // empty until Sid creates one in his own Stripe dashboard.
@@ -154,6 +155,12 @@ window.addEventListener("hk-xp", (e) => {
   renderLevelChip();
 });
 window.addEventListener("hk-toast", (e) => toast(e.detail.text, { big: e.detail.big }));
-window.addEventListener("hk-celebrate", confetti);
+document.addEventListener("click", (e) => {
+  if (e.target.closest(".hk-funfact-open")) showFunFact();
+});
+window.addEventListener("hk-celebrate", () => {
+  confetti();
+  maybeShowFunFact();
+});
 
 document.addEventListener("DOMContentLoaded", init);

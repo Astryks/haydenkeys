@@ -142,6 +142,7 @@ function questsHtml() {
     <h4>Today's quests <span class="hk-honest-note">· Level ${lv.level} ${lv.title}, ${lv.xp} XP</span></h4>
     ${qs.map((q) => `<div class="hk-quest ${q.done ? "hk-quest-done" : ""}">${q.done ? "✅" : "⬜"} ${q.text} <span class="hk-honest-note">+10 XP</span></div>`).join("")}
     <div class="hk-quest hk-honest-note">Finish all three for a +20 XP bonus.</div>
+    <button class="hk-btn hk-funfact-open" type="button">🎹 Did you know? — a piano fun fact</button>
   </div>`;
 }
 
