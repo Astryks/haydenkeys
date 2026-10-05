@@ -158,6 +158,35 @@ const LESSONS = [
     description:
       "The capstone: reading a real, famous classical melody from notation, in the key you just learned.",
   },
+
+  // --- Days 11-35: the extended arc. Framed honestly throughout as ---
+  // "strong early-intermediate," never "advanced" — real advanced piano
+  // takes years, not 35 lessons.
+  { id: "lesson-11", title: "Day 11: C major scale", subtitle: "A scale is just degrees 1-7 in a row", description: "No black keys — the easiest possible scale, and the same numbers you already know from chords." },
+  { id: "lesson-12", title: "Day 12: G major scale", subtitle: "Same shape, new key", description: "One sharp (F#) — the exact note already hiding inside your D and Em chords." },
+  { id: "lesson-13", title: "Day 13: D major scale", subtitle: "Same shape again", description: "Two sharps — the pattern keeps transposing, just like the chords did." },
+  { id: "lesson-14", title: "Day 14: F major scale", subtitle: "The one exception", description: "One flat (Bb) — and the one scale where the fingering pattern genuinely changes." },
+  { id: "lesson-15", title: "Day 15: Scales review", subtitle: "A chord is a scale, stacked", description: "Connecting the dots: scale degrees 1-3-5 played together are literally the chords you already know." },
+  { id: "lesson-16", title: "Day 16: Minor scales, the pattern", subtitle: "A different 7-note shape", description: "The natural minor scale's own whole-step/half-step pattern — transposable just like major scales." },
+  { id: "lesson-17", title: "Day 17: A minor", subtitle: "C major's relative minor", description: "Same notes, same key signature as C major — just starting from a different note." },
+  { id: "lesson-18", title: "Day 18: E minor", subtitle: "G major's relative minor", description: "Same key signature as G major (one sharp) — the relative-minor pattern keeps transposing." },
+  { id: "lesson-19", title: "Day 19: D minor", subtitle: "F major's relative minor", description: "Same key signature as F major (one flat)." },
+  { id: "lesson-20", title: "Day 20: Minor scales review", subtitle: "Every major key has a minor twin", description: "Review and payoff: which library songs live in these relative-minor keys." },
+  { id: "lesson-21", title: "Day 21: Alternating bass", subtitle: "Your first two-hand pattern", description: "A simple root-fifth left-hand pattern under a right-hand chord — the classic 'oom-pah.'" },
+  { id: "lesson-22", title: "Day 22: Alberti bass", subtitle: "A busier, smoother pattern", description: "The broken-chord left-hand pattern found all over classical piano repertoire." },
+  { id: "lesson-23", title: "Day 23: Arpeggios", subtitle: "Chords, one note at a time", description: "The technique bridge between scales and chords — playing a chord's notes one at a time instead of together." },
+  { id: "lesson-24", title: "Day 24: Two hands together", subtitle: "Coordination practice", description: "Combining a left-hand bass pattern with a right-hand chord or melody." },
+  { id: "lesson-25", title: "Day 25: Two-hand review", subtitle: "Apply it to a real progression", description: "Playing Lesson 1's G-D-Em-C with real two-hand technique for the first time." },
+  { id: "lesson-26", title: "Day 26: Dominant 7th chords", subtitle: "A classic richer color", description: "The 7th chord behind blues, jazz, and a lot of pop harmony." },
+  { id: "lesson-27", title: "Day 27: Major 7th chords", subtitle: "A dreamier color", description: "Softer and jazzier than a plain major triad." },
+  { id: "lesson-28", title: "Day 28: Minor 7th chords", subtitle: "A smoother minor color", description: "The minor equivalent — smoother and less tense than a plain minor triad." },
+  { id: "lesson-29", title: "Day 29: Inversions with 7ths", subtitle: "Smoother voice leading", description: "Applying Lesson 7's inversion idea to richer 4-note chords." },
+  { id: "lesson-30", title: "Day 30: Richer harmony payoff", subtitle: "Your Lesson 1 song, re-voiced", description: "Hear how much richer G-D-Em-C sounds as Gmaj7-D7-Em7-Cmaj7." },
+  { id: "lesson-31", title: "Day 31: Canon in D", subtitle: "The capstone progression", description: "A second classical piece — Pachelbel's famous 8-chord progression, the direct ancestor of Lesson 1's pattern." },
+  { id: "lesson-32", title: "Day 32: Canon's bass line", subtitle: "Left-hand practice", description: "Playing the famous descending-feel bass line on its own." },
+  { id: "lesson-33", title: "Day 33: Canon's chords", subtitle: "Right-hand practice", description: "Adding the right-hand chords over the bass line." },
+  { id: "lesson-34", title: "Day 34: Canon, richer", subtitle: "Adding 7th-chord color", description: "Trying a 7th-chord variation on the Canon progression." },
+  { id: "lesson-35", title: "Day 35: Full performance", subtitle: "The capstone, both hands", description: "Playing the complete Canon in D progression with both hands — the arc's final payoff." },
 ];
 
 export {

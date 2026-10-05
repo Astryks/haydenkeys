@@ -17,6 +17,14 @@ import {
 } from "./lessons-data.js";
 import { SONGS, ONE_FIVE_SIX_FOUR_SONGS } from "./songs-data.js";
 import { isLessonComplete, markLessonComplete, getStreak } from "./storage.js";
+import {
+  MAJOR_SCALES,
+  MINOR_SCALES,
+  TWO_HAND_PATTERNS,
+  SEVENTH_CHORDS,
+  LESSON1_WITH_SEVENTHS,
+  CANON_IN_D,
+} from "./lessons-data-advanced.js";
 
 // --- Shared staff-notation rendering (used by Lessons 3, 9, 10) -------
 // Vertical position is by diatonic letter (C/D/E/F/G/A/B), ignoring
@@ -109,6 +117,31 @@ function initLessonsTab(root) {
       "lesson-8": runLesson8,
       "lesson-9": runLesson9,
       "lesson-10": runLesson10,
+      "lesson-11": () => runMajorScaleLesson(MAJOR_SCALES[0]),
+      "lesson-12": () => runMajorScaleLesson(MAJOR_SCALES[1]),
+      "lesson-13": () => runMajorScaleLesson(MAJOR_SCALES[2]),
+      "lesson-14": () => runMajorScaleLesson(MAJOR_SCALES[3]),
+      "lesson-15": runLesson15,
+      "lesson-16": runLesson16,
+      "lesson-17": () => runMinorScaleLesson(MINOR_SCALES[0]),
+      "lesson-18": () => runMinorScaleLesson(MINOR_SCALES[1]),
+      "lesson-19": () => runMinorScaleLesson(MINOR_SCALES[2]),
+      "lesson-20": runLesson20,
+      "lesson-21": () => runTwoHandLesson("lesson-21", "Alternating bass", TWO_HAND_PATTERNS.alternatingBass),
+      "lesson-22": () => runTwoHandLesson("lesson-22", "Alberti bass", TWO_HAND_PATTERNS.albertiBass),
+      "lesson-23": runLesson23,
+      "lesson-24": runLesson24,
+      "lesson-25": runLesson25,
+      "lesson-26": () => runSeventhChordLesson("lesson-26", SEVENTH_CHORDS.dominant7, "dominant 7th"),
+      "lesson-27": () => runSeventhChordLesson("lesson-27", SEVENTH_CHORDS.major7, "major 7th"),
+      "lesson-28": () => runSeventhChordLesson("lesson-28", SEVENTH_CHORDS.minor7, "minor 7th"),
+      "lesson-29": runLesson29,
+      "lesson-30": runLesson30,
+      "lesson-31": runLesson31,
+      "lesson-32": runLesson32,
+      "lesson-33": runLesson33,
+      "lesson-34": runLesson34,
+      "lesson-35": runLesson35,
     };
     (runners[id] || showMap)();
   }
@@ -641,6 +674,528 @@ function initLessonsTab(root) {
              natural-minor pattern). The remaining ${SONGS.length - touched.size} mostly need theory beyond this release —
              borrowed chords, more seventh-chord harmony, or longer loops — which is exactly where a Phase 2
              curriculum would continue. See the README for the full honest breakdown.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  // ===== Days 11-35: extended "strong early-intermediate" arc ===========
+
+  // ----- Days 11-14: major scales (generic) ------------------------------
+  function runMajorScaleLesson(scale) {
+    const { content, keyboardWrap, controls } = lessonShell(`Day ${scale.day}: ${scale.key} major scale`);
+    const kb = renderKeyboard(keyboardWrap, { startMidi: scale.notes[0] - 5, endMidi: scale.notes[7] + 5 });
+    let step = 0; // 0..7 walk the scale, 8 = chord connection, 9 = quiz, 10 = done
+
+    function renderStep() {
+      if (step < 8) {
+        const midi = scale.notes[step];
+        const finger = scale.fingeringRH[step];
+        kb.highlightChord([midi], { number: String(step + 1), letter: `finger ${finger}`, rootMidi: midi });
+        content.innerHTML = `
+          <p class="hk-step-indicator">Note ${step + 1} of 8</p>
+          <div class="hk-big-degree">${step + 1}<span class="hk-big-letter">finger ${finger}</span></div>
+          <p>${scale.key} major scale, degree ${step + 1}. Key signature: <strong>${scale.accidentals}</strong>.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+        playTone(midi, { duration: 0.4 });
+      } else if (step === 8) {
+        const triad = [scale.notes[0], scale.notes[2], scale.notes[4]];
+        kb.highlightChord(triad, { number: "1-3-5", letter: `${scale.key}`, rootMidi: triad[0] });
+        content.innerHTML = `
+          <h3>A chord is a scale, stacked.</h3>
+          <p>Degrees 1, 3, and 5 of this scale, played together instead of in a row, are exactly the
+             <strong>${scale.key} major</strong> chord you already know how to play. Same notes, different arrangement.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Try it</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step = 9; renderStep(); });
+        playChord(triad, { delay: 0.1 });
+      } else if (step === 9) {
+        content.innerHTML = `<p>Press the <strong>1st</strong> degree, then the <strong>5th</strong> degree of the scale (the tonic, then the dominant).</p><p id="hk-quiz-progress"></p>`;
+        controls.innerHTML = "";
+        kb.clearHighlights();
+        const targets = [scale.notes[0], scale.notes[4]];
+        let idx = 0;
+        kb.onKeyPress((midi) => {
+          if (midi === targets[idx]) {
+            idx++;
+            if (idx >= targets.length) { step = 10; renderStep(); }
+            else content.querySelector("#hk-quiz-progress").textContent = "Now the 5th degree.";
+          }
+        });
+      } else {
+        markLessonComplete(`lesson-${scale.day === 11 ? 11 : scale.day === 12 ? 12 : scale.day === 13 ? 13 : 14}`);
+        kb.clearHighlights();
+        kb.onKeyPress(() => {});
+        content.innerHTML = `<h3>Lesson complete.</h3><p>Same shape, new key — that's the whole trick behind every major scale.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Day 15: scales review — the scale/chord connection, quizzed ----
+  function runLesson15() {
+    const { content, keyboardWrap, controls } = lessonShell("Day 15: Scales review");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    const cMajor = MAJOR_SCALES[0];
+    let step = 0;
+
+    function renderStep() {
+      if (step === 0) {
+        content.innerHTML = `
+          <h3>Four scales, one shape.</h3>
+          <p>This week you played C, G, D, and F major — all the same 1-2-3-1-2-3-4-5 shape (F's thumb tuck aside),
+             just starting from a different key. That's the same "same shape, new key" idea from Lesson 1's chords,
+             now applied to scales.</p>
+          <p>Quick check: press the <strong>1st, 3rd, and 5th</strong> degrees of the C major scale, in any order —
+             the three notes that make up the C major chord.</p>
+          <p id="hk-quiz-status"></p>`;
+        controls.innerHTML = "";
+        const targets = new Set([cMajor.notes[0], cMajor.notes[2], cMajor.notes[4]]);
+        const pressed = new Set();
+        kb.onKeyPress((midi) => {
+          if (targets.has(midi)) {
+            pressed.add(midi);
+            kb.getKeyElement(midi).classList.add("hk-key-highlight");
+            if (pressed.size === targets.size) {
+              content.querySelector("#hk-quiz-status").textContent = "Correct — that's the C major chord, built right out of the scale.";
+              step = 1;
+              setTimeout(renderStep, 1200);
+            }
+          }
+        });
+      } else {
+        markLessonComplete("lesson-15");
+        kb.clearHighlights();
+        kb.onKeyPress(() => {});
+        content.innerHTML = `<h3>Lesson complete.</h3><p>Up next: minor scales, and the relative-minor connection from Lesson 2.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Day 16: the natural minor scale pattern --------------------------
+  function runLesson16() {
+    const { content, keyboardWrap, controls } = lessonShell("Day 16: The minor scale pattern");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 52, endMidi: 72 });
+    const aMinor = MINOR_SCALES[0];
+    let step = 0;
+
+    function renderStep() {
+      if (step < 8) {
+        const midi = aMinor.notes[step];
+        kb.highlightChord([midi], { number: String(step + 1), rootMidi: midi });
+        content.innerHTML = `
+          <p class="hk-step-indicator">Note ${step + 1} of 8</p>
+          <div class="hk-big-degree">${step + 1}</div>
+          <p>A natural minor scale, degree ${step + 1}. Notice it's a different 7-note shape from major —
+             its own pattern of whole and half steps.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+        playTone(midi, { duration: 0.4 });
+      } else {
+        markLessonComplete("lesson-16");
+        kb.clearHighlights();
+        content.innerHTML = `<h3>Lesson complete.</h3><p>Next: this exact A natural minor scale turns out to share something surprising with C major.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Days 17-19: relative minor scales (generic) ----------------------
+  function runMinorScaleLesson(scale) {
+    const { content, keyboardWrap, controls } = lessonShell(`Day ${scale.day}: ${scale.key} minor scale`);
+    const kb = renderKeyboard(keyboardWrap, { startMidi: scale.notes[0] - 5, endMidi: scale.notes[7] + 5 });
+    let step = 0;
+
+    function renderStep() {
+      if (step < 8) {
+        const midi = scale.notes[step];
+        kb.highlightChord([midi], { number: String(step + 1), rootMidi: midi });
+        content.innerHTML = `
+          <p class="hk-step-indicator">Note ${step + 1} of 8</p>
+          <div class="hk-big-degree">${step + 1}</div>
+          <p>${scale.key} natural minor — key signature: <strong>${scale.accidentals}</strong>.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+        playTone(midi, { duration: 0.4 });
+      } else if (step === 8) {
+        content.innerHTML = `
+          <h3>${scale.key} minor is ${scale.relativeMajor} major's relative minor.</h3>
+          <p>Same notes, same key signature (${scale.accidentals}) — just a different starting ("home") note.
+             This is exactly the relative-minor idea from Lesson 2, now applied to full scales instead of single chords.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", () => {
+          markLessonComplete(`lesson-${scale.day}`);
+          showMap();
+        });
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Day 20: minor scales review / payoff -----------------------------
+  function runLesson20() {
+    const { content, keyboardWrap, controls } = lessonShell("Day 20: Minor scales review");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    kb.clearHighlights();
+    const minorKeySongs = SONGS.filter((s) => s.confidence === "confirmed" && /minor/i.test(s.key));
+    content.innerHTML = `
+      <h3>Every major key has a relative minor — and vice versa.</h3>
+      <p>C/Am, G/Em, F/Dm: same notes, same key signature, different home note. Combined with Lesson 6's
+         "minor keys have a pattern too," you now have real tools for the <strong>${minorKeySongs.length} of ${SONGS.length}</strong>
+         confirmed-chord library songs written in a minor key.</p>
+      <p class="hk-honest-note">This is review, not new material — the goal is making sure the relative-minor
+         connection actually stuck before moving on to two-hand technique.</p>`;
+    controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+    controls.querySelector("#hk-done").addEventListener("click", () => {
+      markLessonComplete("lesson-20");
+      showMap();
+    });
+  }
+
+  // ----- Days 21-22: two-hand bass patterns (generic) ---------------------
+  function runTwoHandLesson(lessonId, title, pattern) {
+    const { content, keyboardWrap, controls } = lessonShell(title);
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 45, endMidi: 79 });
+    let step = 0;
+
+    function renderStep() {
+      if (step < pattern.leftHand.length) {
+        const midi = pattern.leftHand[step];
+        kb.highlightChord([...pattern.rightHandChord, midi], { number: "LH", letter: `beat ${step + 1}`, rootMidi: midi });
+        content.innerHTML = `
+          <p class="hk-step-indicator">Beat ${step + 1} of ${pattern.leftHand.length}</p>
+          <p>${pattern.description}</p>
+          <p>Left hand plays this bass note while the right hand holds the chord (both highlighted together —
+             this app doesn't yet distinguish hands visually on the keyboard, a real current limitation).</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next beat</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+        playChord([...pattern.rightHandChord, midi], { duration: 0.6 });
+      } else {
+        markLessonComplete(lessonId);
+        kb.clearHighlights();
+        content.innerHTML = `<h3>Lesson complete.</h3><p>Try looping this pattern slowly on a real keyboard — left hand on the beats, right hand holding steady.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Day 23: arpeggios -------------------------------------------------
+  function runLesson23() {
+    const { content, keyboardWrap, controls } = lessonShell("Day 23: Arpeggios");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    const pattern = TWO_HAND_PATTERNS.arpeggio;
+    let step = 0;
+
+    function renderStep() {
+      if (step < pattern.notes.length) {
+        const midi = pattern.notes[step];
+        kb.highlightChord([midi], { rootMidi: midi });
+        content.innerHTML = `<p class="hk-step-indicator">Note ${step + 1} of ${pattern.notes.length}</p><p>${pattern.description}</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+        playTone(midi, { duration: 0.45 });
+      } else {
+        markLessonComplete("lesson-23");
+        kb.clearHighlights();
+        content.innerHTML = `<h3>Lesson complete.</h3><p>That's a C major arpeggio — the exact technique behind Day 31-35's capstone piece.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Day 24: two hands together ---------------------------------------
+  function runLesson24() {
+    const { content, keyboardWrap, controls } = lessonShell("Day 24: Two hands together");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 45, endMidi: 79 });
+    const pattern = TWO_HAND_PATTERNS.albertiBass;
+    let step = 0;
+
+    function renderStep() {
+      if (step < pattern.leftHand.length) {
+        const midi = pattern.leftHand[step];
+        kb.highlightChord([...pattern.rightHandChord, midi], { rootMidi: midi });
+        content.innerHTML = `<p class="hk-step-indicator">Beat ${step + 1} of ${pattern.leftHand.length}</p><p>Combining Alberti bass (left hand) with a held chord (right hand) — real two-hand coordination.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next beat</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+        playChord([...pattern.rightHandChord, midi], { duration: 0.6 });
+      } else {
+        markLessonComplete("lesson-24");
+        kb.clearHighlights();
+        content.innerHTML = `<h3>Lesson complete.</h3><p>This is genuinely hard to coordinate at first — slow, steady practice is the only real way through it, same as for any pianist.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Day 25: two-hand payoff — apply to Lesson 1's progression --------
+  function runLesson25() {
+    const { content, keyboardWrap, controls } = lessonShell("Day 25: Two-hand review — your Lesson 1 song");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 45, endMidi: 79 });
+    let step = 0;
+
+    function renderStep() {
+      if (step < LESSON1_SEQUENCE.length) {
+        const key = LESSON1_SEQUENCE[step];
+        const chord = LESSON1_CHORDS[key];
+        const bass = chord.root - 12;
+        kb.highlightChord([...chord.notes, bass], { number: chord.number, letter: chord.letter, rootMidi: bass });
+        content.innerHTML = `<p class="hk-step-indicator">Chord ${step + 1} of 4</p><p>${chord.number} (${chord.letter}) — right-hand chord over a left-hand root, an octave down.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+        playChord([...chord.notes, bass], { duration: 0.8 });
+      } else {
+        markLessonComplete("lesson-25");
+        kb.clearHighlights();
+        content.innerHTML = `<h3>Lesson complete.</h3><p>The same G-D-Em-C from Lesson 1, now with real two-hand technique — the payoff for three weeks of scale and coordination work.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Days 26-28: seventh chords (generic) ------------------------------
+  function runSeventhChordLesson(lessonId, chordInfo, label) {
+    const { content, keyboardWrap, controls } = lessonShell(chordInfo.label);
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 84 });
+    let step = 0; // 0 = triad, 1 = seventh, 2 = quiz, 3 = done
+    const triad = chordInfo.notes.slice(0, 3);
+    const seventhNote = chordInfo.notes[3];
+
+    function renderStep() {
+      if (step === 0) {
+        kb.highlightChord(triad, { rootMidi: triad[0] });
+        content.innerHTML = `<h3>First, the plain triad.</h3><p>This is the three-note chord you already know.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Add the 7th</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step = 1; renderStep(); });
+        playChord(triad, { duration: 0.8 });
+      } else if (step === 1) {
+        kb.highlightChord(chordInfo.notes, { letter: chordInfo.label, rootMidi: chordInfo.notes[0] });
+        content.innerHTML = `<h3>${chordInfo.label}</h3><p>One note added on top turns the plain triad into a ${label} chord — a noticeably richer, jazzier color.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Try it</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step = 2; renderStep(); });
+        playChord(chordInfo.notes, { duration: 1.0 });
+      } else if (step === 2) {
+        content.innerHTML = `<p>Press the <strong>added 7th note</strong> on its own.</p><p id="hk-quiz-status"></p>`;
+        controls.innerHTML = "";
+        kb.onKeyPress((midi) => {
+          if (midi === seventhNote) { step = 3; renderStep(); }
+        });
+      } else {
+        markLessonComplete(lessonId);
+        kb.clearHighlights();
+        kb.onKeyPress(() => {});
+        content.innerHTML = `<h3>Lesson complete.</h3><p>Keep an ear out for this color — it's a real part of several library songs' actual recordings.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Day 29: inversions with 7th chords --------------------------------
+  function runLesson29() {
+    const { content, keyboardWrap, controls } = lessonShell("Day 29: Inversions with 7th chords");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 84 });
+    const steps = [
+      { label: "Gmaj7 (root position)", notes: [67, 71, 74, 78] },
+      { label: "Gmaj7 (1st inversion)", notes: [71, 74, 78, 79] },
+    ];
+    let step = 0;
+
+    function renderStep() {
+      if (step < steps.length) {
+        const s = steps[step];
+        kb.highlightChord(s.notes, { rootMidi: s.notes[0] });
+        content.innerHTML = `<p class="hk-step-indicator">${step + 1} of ${steps.length}</p><p>${s.label} — same chord, same idea as Lesson 7, now with a 4-note chord.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+        playChord(s.notes, { duration: 0.9 });
+      } else {
+        markLessonComplete("lesson-29");
+        kb.clearHighlights();
+        content.innerHTML = `<h3>Lesson complete.</h3><p>Inversions work exactly the same way on richer chords as on plain triads.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Day 30: richer harmony payoff -------------------------------------
+  function runLesson30() {
+    const { content, keyboardWrap, controls } = lessonShell("Day 30: Your Lesson 1 song, re-voiced");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 84 });
+    let step = 0;
+
+    function renderStep() {
+      if (step < LESSON1_WITH_SEVENTHS.length) {
+        const c = LESSON1_WITH_SEVENTHS[step];
+        kb.highlightChord(c.notes, { letter: c.label, rootMidi: c.notes[0] });
+        content.innerHTML = `<p class="hk-step-indicator">${step + 1} of 4</p><p style="font-size:1.2rem">${c.label}</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+        playChord(c.notes, { duration: 1.0 });
+      } else {
+        markLessonComplete("lesson-30");
+        kb.clearHighlights();
+        content.innerHTML = `<h3>Hear the difference?</h3><p>Same G-D-Em-C progression from Day 1, re-voiced as Gmaj7-D7-Em7-Cmaj7 — the "four chords, a hundred songs" pattern, now with real jazz color. This closes out the richer-harmony arc.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Days 31-35: capstone — Pachelbel's Canon in D ---------------------
+  function runLesson31() {
+    const { content, keyboardWrap, controls } = lessonShell("Day 31: Canon in D — the capstone progression");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 40, endMidi: 79 });
+    let step = 0;
+
+    function renderStep() {
+      if (step < CANON_IN_D.chords.length) {
+        const c = CANON_IN_D.chords[step];
+        kb.highlightChord(c.notes, { number: c.roman, letter: c.label, rootMidi: c.notes[0] });
+        content.innerHTML = `
+          <p class="hk-step-indicator">Chord ${step + 1} of 8</p>
+          <div class="hk-big-degree">${c.roman}<span class="hk-big-letter">${c.label}</span></div>
+          ${step === 0 ? `<p>Pachelbel's Canon in D (c. 1680-1706) — public domain, and the direct ancestor of Lesson 1's
+             I-V-vi-IV pattern, extended to 8 chords: I-V-vi-iii-IV-I-IV-V.</p>` : ""}`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+        playChord(c.notes, { duration: 0.8 });
+      } else {
+        markLessonComplete("lesson-31");
+        kb.clearHighlights();
+        content.innerHTML = `<h3>Lesson complete.</h3><p>Next: the famous bass line on its own.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  function runLesson32() {
+    const { content, keyboardWrap, controls } = lessonShell("Day 32: Canon's bass line");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 38, endMidi: 67 });
+    let step = 0;
+
+    function renderStep() {
+      if (step < CANON_IN_D.chords.length) {
+        const c = CANON_IN_D.chords[step];
+        kb.highlightChord([c.bass], { rootMidi: c.bass });
+        content.innerHTML = `<p class="hk-step-indicator">Bass note ${step + 1} of 8 (under the ${c.label} chord)</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+        playTone(c.bass, { duration: 0.6 });
+      } else {
+        markLessonComplete("lesson-32");
+        kb.clearHighlights();
+        content.innerHTML = `<h3>Lesson complete.</h3><p>Left-hand foundation set — next, the right-hand chords go on top.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  function runLesson33() {
+    const { content, keyboardWrap, controls } = lessonShell("Day 33: Canon's chords, over the bass");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 38, endMidi: 79 });
+    let step = 0;
+
+    function renderStep() {
+      if (step < CANON_IN_D.chords.length) {
+        const c = CANON_IN_D.chords[step];
+        kb.highlightChord([...c.notes, c.bass], { letter: c.label, rootMidi: c.bass });
+        content.innerHTML = `<p class="hk-step-indicator">${step + 1} of 8</p><p>${c.label} over its bass note — both hands' notes highlighted together.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+        playChord([...c.notes, c.bass], { duration: 0.8 });
+      } else {
+        markLessonComplete("lesson-33");
+        kb.clearHighlights();
+        content.innerHTML = `<h3>Lesson complete.</h3><p>That's the full Canon progression, both hands.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  function runLesson34() {
+    const { content, keyboardWrap, controls } = lessonShell("Day 34: Canon, with richer color");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 38, endMidi: 79 });
+    const plain = CANON_IN_D.chords[2]; // Bm
+    const richer = { label: "Bm7", notes: [59, 62, 66, 69], bass: 47 };
+    let step = 0;
+    const steps = [plain, richer];
+
+    function renderStep() {
+      if (step < steps.length) {
+        const c = steps[step];
+        kb.highlightChord([...c.notes, c.bass], { letter: c.label, rootMidi: c.bass });
+        content.innerHTML = `<p class="hk-step-indicator">${step + 1} of 2</p><p>${c.label}${step === 1 ? " — swapping in a 7th chord for one more color, the same trick from Day 26-30" : " (the plain version, for comparison)"}.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+        playChord([...c.notes, c.bass], { duration: 0.9 });
+      } else {
+        markLessonComplete("lesson-34");
+        kb.clearHighlights();
+        content.innerHTML = `<h3>Lesson complete.</h3><p>One more day — the full performance.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  function runLesson35() {
+    const { content, keyboardWrap, controls } = lessonShell("Day 35: Full performance");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 38, endMidi: 79 });
+    let step = 0;
+
+    function renderStep() {
+      if (step < CANON_IN_D.chords.length) {
+        const c = CANON_IN_D.chords[step];
+        kb.highlightChord([...c.notes, c.bass], { number: c.roman, letter: c.label, rootMidi: c.bass });
+        content.innerHTML = `<p class="hk-step-indicator">${step + 1} of 8</p><div class="hk-big-degree">${c.roman}<span class="hk-big-letter">${c.label}</span></div>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+        playChord([...c.notes, c.bass], { duration: 0.8 });
+      } else {
+        markLessonComplete("lesson-35");
+        kb.clearHighlights();
+        const touched = new Set([
+          ...ONE_FIVE_SIX_FOUR_SONGS.map((s) => s.title),
+          ...SONGS.filter((s) => s.confidence === "confirmed" && /\bii\b/.test(s.degreeSequence)).map((s) => s.title),
+          ...SONGS.filter((s) => s.confidence === "confirmed" && /minor/i.test(s.key)).map((s) => s.title),
+        ]);
+        content.innerHTML = `
+          <h3>35 days done.</h3>
+          <p>To be honest about what this is and isn't: you now have real scale technique in four major and three
+             minor keys, basic two-hand coordination, a working vocabulary of 7th chords and inversions, and you've
+             performed two public-domain classical pieces from real notation. That's a genuine, meaningful step —
+             best described as <strong>strong early-intermediate</strong>, not "advanced." Real advanced piano takes
+             years of study, not 35 lessons, and this app won't pretend otherwise.</p>
+          <p>Across the whole curriculum, you now recognize at least the core pattern behind
+             <strong>${touched.size} of ${SONGS.length}</strong> library songs.</p>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
