@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <title>Hayden Keys — Learn Piano, Gamified</title>
 <meta name="description" content="A free, gamified, Duolingo-style piano learning web app. 100% local, zero backend, runs entirely in your browser." />
 <link rel="manifest" href="manifest.webmanifest" />
@@ -58,15 +58,8 @@
        <a href="#" id="hk-support-link" data-stripe-link-pending="true" class="hk-support-link">Support Hayden Keys</a></span>.</p>
   </footer>
 
-  <!-- Item 55: the native app is locked to landscape only, but the web
-       version can't force orientation -- shown via CSS media query only
-       when the browser viewport is actually portrait-shaped and phone-
-       sized, so it never appears on desktop or in landscape. -->
-  <div class="hk-rotate-prompt">
-    <div class="hk-rotate-prompt-icon">📱</div>
-    <h2>Rotate your phone</h2>
-    <p>Hayden Keys needs a bit of width to show the piano keyboard clearly — turn your phone sideways to keep going.</p>
-  </div>
+  <!-- Portrait phones only (CSS): a dismissible tip, never a block. -->
+  <button type="button" class="hk-rotate-tip" onclick="this.remove()" aria-label="Dismiss tip">📱 Tip: turn your phone sideways for bigger piano keys. <span aria-hidden="true">✕</span></button>
 
   <script type="module" src="js/app.js"></script>
   <script>

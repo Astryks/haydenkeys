@@ -33,6 +33,27 @@ function getAudioContext() {
   return sharedAudioCtx;
 }
 
+// iOS: Web Audio stays silent until it's resumed inside a real tap, and
+// in Safari/the app it follows the ringer switch unless the page asks for
+// "playback" audio (like a music app). Unlock on the first touch, with a
+// one-sample silent buffer, so the very first key/strum is heard.
+if (typeof navigator !== "undefined" && navigator.audioSession) {
+  try { navigator.audioSession.type = "playback"; } catch (e) { /* older Safari */ }
+}
+function unlockAudio() {
+  const c = getAudioContext();
+  try {
+    const b = c.createBuffer(1, 1, c.sampleRate);
+    const s = c.createBufferSource();
+    s.buffer = b;
+    s.connect(c.destination);
+    s.start(0);
+  } catch (e) { /* ignore */ }
+  if (c.state !== "running") c.resume?.();
+  else ["touchend", "pointerdown", "keydown"].forEach((t) => window.removeEventListener(t, unlockAudio, true));
+}
+if (typeof window !== "undefined") ["touchend", "pointerdown", "keydown"].forEach((t) => window.addEventListener(t, unlockAudio, true));
+
 function freqFromMidi(midi) {
   return 440 * Math.pow(2, (midi - 69) / 12);
 }

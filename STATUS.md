@@ -2136,3 +2136,12 @@ the existing 🥁 Beat.
 - **App Store screenshots** in `ios/screenshots/` (7 per device, exact required sizes: iPhone 6.9" 2868×1320,
   iPad 13" 2752×2064), captured with `shoot.mjs` (headless Chrome) in the native look (Support link hidden).
 
+
+## 2026-10-06 — any orientation, text size, zoom, iOS sound
+- **Orientation:** no longer locked to landscape. The iOS app supports portrait and landscape (iPad: all four). The web "rotate your phone" blocker is replaced by a dismissible tip that fades after a few seconds.
+- **Text size:** `-webkit-text-size-adjust: 100%` stops iOS from inflating text in landscape, which made everything look zoomed in.
+- **Zoom:** pinch and double-tap zoom are disabled (`maximum-scale=1`, `touch-action: manipulation`). Zooming in over the keyboard could get stuck, because the keyboard captures touches, so you couldn't pinch back out.
+- **Sound on iOS:**
+  - The native app sets `AVAudioSession` to `.playback`, so it's audible with the ringer switch on silent.
+  - The web app sets `navigator.audioSession.type = "playback"`.
+  - The first touch unlocks Web Audio, so the first key press makes a sound.

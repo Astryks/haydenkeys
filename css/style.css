@@ -9,6 +9,7 @@
    "stage" background on purpose — those need strong white/black key
    contrast regardless of the page theme, the same way a dark stage
    floor under real piano keys doesn't clash with a bright room. */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; touch-action: manipulation; }
 :root {
   --hk-bg: #fdf6fa;
   --hk-bg-2: #eef7fb;
@@ -713,31 +714,14 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
   .hk-highway-wrap, .hk-keyboard { height: 130px; }
 }
 
-/* Item 55: the native app is now locked to landscape only (see
-   ios/App/App/Info.plist), so the portrait horizontal-scroll
-   workaround from item 54 is dead code there and has been removed.
-   The plain WEB version can't force orientation the way the native
-   app can, though — a visitor on a phone browser can still hold it in
-   portrait. Rather than leave the keyboard cramped (the original
-   item-54 bug) with no native lock to prevent it, show a friendly
-   full-screen "rotate your phone" prompt instead, same idea as native
-   landscape-only games/apps commonly do for the web. */
+/* Any orientation. In portrait on a phone the keyboard fits the width
+   (narrower keys); a small dismissible tip suggests turning sideways
+   for bigger keys — it never blocks the app. */
+.hk-rotate-tip { display: none; }
 @media (orientation: portrait) and (max-width: 700px) {
-  body > *:not(.hk-rotate-prompt) { display: none !important; }
-  .hk-rotate-prompt {
-    display: flex !important;
-    position: fixed; inset: 0; z-index: 9999;
-    flex-direction: column; align-items: center; justify-content: center; text-align: center;
-    background: var(--hk-bg); padding: 24px;
-  }
-  .hk-rotate-prompt-icon { font-size: 3rem; margin-bottom: 12px; animation: hk-rotate-hint 1.6s ease-in-out infinite; }
-  .hk-rotate-prompt h2 { margin: 0 0 8px; color: var(--hk-text); }
-  .hk-rotate-prompt p { color: var(--hk-text-dim); max-width: 320px; margin: 0; }
-}
-.hk-rotate-prompt { display: none; }
-@keyframes hk-rotate-hint {
-  0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(90deg); }
+  .hk-rotate-tip { display: block; position: fixed; left: 12px; right: 12px; top: calc(8px + env(safe-area-inset-top, 0px)); z-index: 50; animation: hk-tip-out 0.6s ease-in 9s forwards; box-shadow: 0 4px 16px rgba(0,0,0,0.15); padding: 6px 10px; border: 1px solid var(--hk-border); border-radius: 10px; background: var(--hk-panel); color: var(--hk-text-dim); font-size: 0.82rem; text-align: left; cursor: pointer; }
+  .hk-rotate-tip span { float: right; }
+  .hk-keyboard { height: 140px; }
 }
 
 /* Item 55 polish: real landscape phones (~375-430px tall) have very
@@ -911,3 +895,5 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-funfact-note { font-size: 0.85rem; color: var(--hk-text-dim); font-style: italic; }
 .hk-funfact-open { margin-top: 8px; }
 @keyframes hk-funfact-in { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: none; } }
+
+@keyframes hk-tip-out { to { opacity: 0; visibility: hidden; } }
