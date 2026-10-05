@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Privacy Policy — Hayden Keys</title>
+<meta name="description" content="Hayden Keys' privacy policy: no accounts, no data collection, no server. Plain language, accurate to the real app." />
+<link rel="icon" href="assets/icons/icon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="assets/icons/icon-180.png" />
+<meta name="theme-color" content="#fdf6fa" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="hk-header">
+    <img src="assets/mascot-square.png" alt="Hayden Keys mascot — a hand-drawn panda playing an upright piano" class="hk-logo" />
+    <h1>Hayden Keys</h1>
+    <p class="hk-tagline">Learn piano the way four chords taught the world a hundred songs.</p>
+  </header>
+
+  <main>
+    <section class="hk-panel">
+      <div class="hk-how">
+        <h2>Privacy Policy</h2>
+        <p class="hk-how-sub">Last updated 2026-10-05. Plain language, and accurate to exactly what this app does — not boilerplate.</p>
+
+        <section class="hk-how-section">
+          <h3>The short version</h3>
+          <p>Hayden Keys has <strong>no account system, no server, and no database</strong>. It's a static web app
+             that runs entirely in your browser. There is nothing to sign up for, nothing we store about you on a
+             server, and nothing we sell — we have no server to store it on or business selling it from.</p>
+        </section>
+
+        <section class="hk-how-section">
+          <h3>What's stored, and where</h3>
+          <p>Hayden Keys remembers your lesson progress, practice streak, earned badges, saved/completed songs, and
+             keyboard calibration settings using your browser's own <strong>local storage</strong> — a standard
+             browser feature, private to your device. This data:</p>
+          <ul>
+            <li>Never leaves your device or gets sent to us or anyone else.</li>
+            <li>Isn't tied to your identity in any way — there's no account, no email, no name attached to it.</li>
+            <li>Can be erased at any time by clearing your browser's site data for haydenkeys.com.</li>
+          </ul>
+        </section>
+
+        <section class="hk-how-section">
+          <h3>Camera access</h3>
+          <p>The Practice tab's <strong>Camera Overlay</strong> mode can use your device's camera to show you which
+             key to press next, overlaid live on a view of your real keyboard. The video feed is used only live, in
+             your browser, to calculate where to draw that overlay — it is <strong>never recorded, saved, uploaded,
+             or transmitted anywhere</strong>. You can decline camera access and still use every other part of the
+             app; Camera Overlay just won't be available.</p>
+        </section>
+
+        <section class="hk-how-section">
+          <h3>Microphone access</h3>
+          <p>Hayden Keys asks for microphone access in two places, both entirely on-device:</p>
+          <ul>
+            <li><strong>Keyboard calibration</strong> ("Get Started") — listens briefly to confirm which physical key
+               you played, by ear, using real pitch-detection math running in your browser.</li>
+            <li><strong>Ear Check practice mode</strong> — listens to check you played the right note while practicing
+               a song.</li>
+          </ul>
+          <p>In both cases, audio is analyzed live and <strong>never recorded, stored, or sent anywhere</strong>. You
+             can decline microphone access and still use the rest of the app; those two features just won't work.</p>
+        </section>
+
+        <section class="hk-how-section">
+          <h3>Uploading your own recording</h3>
+          <p>If you upload an audio/video file to have Hayden Keys figure out its notes, that file is processed
+             <strong>entirely in your browser</strong> using an on-device machine learning model (Spotify's
+             open-source <code>basic-pitch</code>, vendored directly in this app's own code — see
+             <a href="THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a>). The file is never uploaded to a server;
+             it never leaves your device.</p>
+        </section>
+
+        <section class="hk-how-section">
+          <h3>One real network request, disclosed honestly</h3>
+          <p>The Discover tab looks up each song's album cover art using Apple's free, public <strong>iTunes Search
+             API</strong> — sending just a song title and artist name as a search query, nothing about you
+             personally. This is the one feature that talks to an outside service; it's a lookup, not a data
+             collection mechanism, and no response is stored beyond your current browsing session.</p>
+        </section>
+
+        <section class="hk-how-section">
+          <h3>What we don't do</h3>
+          <ul>
+            <li>No account creation, no login, no password.</li>
+            <li>No analytics, no trackers, no advertising, no third-party ad SDKs.</li>
+            <li>No selling, renting, or sharing of any data — we have none to share.</li>
+            <li>No cookies used for tracking (none at all, beyond what your browser itself may use for local storage).</li>
+          </ul>
+        </section>
+
+        <section class="hk-how-section">
+          <h3>Children's privacy</h3>
+          <p>Hayden Keys collects no personal information from anyone, of any age — there's no account system or
+             data collection to begin with, so this holds equally whether you're 8 or 80.</p>
+        </section>
+
+        <section class="hk-how-section">
+          <h3>Changes to this policy</h3>
+          <p>If this app's real behavior changes in a way that affects this policy, this page will be updated to
+             match — same honesty standard as the rest of the project (see <a href="STATUS.md">STATUS.md</a> for a
+             full, dated history of what's actually been built).</p>
+        </section>
+
+        <section class="hk-how-section">
+          <h3>Contact</h3>
+          <p>Questions about this policy or the app: open an issue on the
+             <a href="https://github.com/Astryks/haydenkeys">GitHub repository</a>.</p>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="hk-footer">
+    <p><a href="index.html">&larr; Back to Hayden Keys</a> ·
+       <a href="README.md">README</a> · <a href="THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES</a></p>
+  </footer>
+</body>
+</html>

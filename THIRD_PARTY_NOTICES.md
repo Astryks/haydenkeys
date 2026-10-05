@@ -36,8 +36,15 @@ project.
 ## Hosting
 
 Deployed as a static site (e.g. GitHub Pages). No server-side code, no
-database, no paid API calls at runtime, and (as of 2026-10-05) **no
-runtime CDN dependency at all** — `basic-pitch` and its own dependencies
-are vendored locally, so the app makes zero third-party network
-requests after the initial page load, even when a user uploads their
-own audio.
+database, no paid API calls at runtime. `basic-pitch` and its own
+dependencies are vendored locally (no runtime CDN dependency), so
+uploading your own audio for transcription makes zero network requests
+— that specific feature is 100% on-device.
+
+**One honest exception, added later (item 25):** the Discover tab looks
+up each song's album art via Apple's free, no-API-key iTunes Search API
+(`itunes.apple.com/search`) — sending a song title/artist as a search
+term, nothing personal, no user data. This is a real third-party network
+request, disclosed here and in the Privacy Policy, not hidden behind the
+"zero network requests" claim above (which still correctly describes the
+audio-transcription feature specifically).

@@ -315,11 +315,10 @@ function initLessonsTab(root) {
       <h3>You don't need a fancy piano to start.</h3>
       <p>A basic 61-key keyboard is enough. You can get a nicer one later, once you know you'll stick with it.</p>
       <h3>Where to find one, cheap or free</h3>
-      <p>Check <strong>Facebook Marketplace</strong>, <strong>Craigslist or OfferUp</strong>, and thrift stores.</p>
-      <p>Also look for <strong>"free" listings</strong>, not just "for sale" ones — people often give pianos away
-         for free, because moving a real piano is expensive and hard.</p>
-      <p>Ask your <strong>school</strong> (music rooms often sit empty during free periods) or a local
-         <strong>church or community center</strong> — many have a piano you can use.</p>
+      <p>Check <strong>Facebook Marketplace</strong>. Also look for <strong>"free" listings</strong>, not just "for
+         sale" ones — people often give pianos away for free, because moving a real piano is expensive and hard.</p>
+      <p>Or borrow access to one: ask your <strong>school</strong> (music rooms often sit empty during free
+         periods) or a local <strong>church or community center</strong> — many have a piano you can use.</p>
       <h3>What to check before you take one home</h3>
       <p>Press <strong>every single key</strong>, not just a few — old keyboards often have one or two that stick
          or stay silent.</p>

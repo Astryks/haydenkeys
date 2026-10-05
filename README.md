@@ -121,11 +121,14 @@ this.
 ## iOS app (Capacitor)
 
 The project is scaffolded as a native iOS app via Capacitor (same
-HTML/CSS/JS, no rewrite) and is ready to open in Xcode. Actually
-building, signing, and submitting the app needs Xcode running on a Mac
-with a real Apple Developer account logged in — a local, interactive,
-credentialed step that can't be done from here. See STATUS.md for the
-exact current state and next steps.
+HTML/CSS/JS, no rewrite), with real app icons/launch screen generated
+from the current mascot art, a live Privacy Policy (`privacy.html`),
+and App Store Connect listing copy drafted and ready to paste in (see
+`ios/APP_STORE_LISTING.md`). Actually building, signing, and submitting
+the app needs Xcode running on a Mac with a real Apple Developer account
+logged in — a local, interactive, credentialed step that can't be done
+from here. See `ios/SUBMISSION_CHECKLIST.md` for the exact, numbered
+list of what's left to do, and STATUS.md for the full current state.
 
 ## Questions a curious visitor might have
 

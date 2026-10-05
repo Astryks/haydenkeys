@@ -84,6 +84,13 @@ function initAboutTab(root) {
       </section>
 
       <section class="hk-how-section">
+        <h3>Privacy</h3>
+        <p>No account, no server, no data collection — see the full
+           <a href="privacy.html">Privacy Policy</a> for exactly what camera/microphone access is used for and
+           what's stored (hint: only in your own browser, never sent anywhere).</p>
+      </section>
+
+      <section class="hk-how-section">
         <h3>Want the full technical detail?</h3>
         <p>This page is the friendly summary. For the complete, dated log of exactly what's been built,
            verified, and any honest gaps still open, see <a href="README.md">README.md</a> and

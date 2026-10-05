@@ -670,3 +670,71 @@ directly. That's no longer true: future requests like "change the
 mascot's pose" or "make it a different color" need a **new image
 supplied by Sid**, the same way `mascot-full.png`/`mascot-square.png`
 themselves arrived — not something achievable by editing code.
+
+## 2026-10-05 update: iOS App Store submission prep + a content tweak
+
+- [x] **Piano-buying lesson simplified**: "where to find one" now
+      mentions only Facebook Marketplace (Craigslist/OfferUp/thrift
+      stores removed), with the school/church suggestion reframed as
+      "borrow access to one" so it doesn't read redundant against a
+      single-marketplace mention.
+- [x] **iOS App Store icon regenerated for real** — the asset catalog's
+      `AppIcon-512@2x.png` was still the generic Capacitor placeholder
+      (a plain blue "X" logo), never replaced since the item-12
+      scaffolding. Now a real 1024x1024 icon cropped from
+      `assets/mascot-square.png` (tightened further than the raw square
+      to cut excess empty margin, so it reads clearly at home-screen
+      size), no alpha channel, no pre-applied corner rounding. Confirmed
+      Apple's current icon spec for this Capacitor/Xcode version only
+      needs this one "universal" 1024x1024 entry — Xcode 14+ generates
+      every other size automatically; there is no longer a long list of
+      individual sizes to fill in by hand.
+- [x] **Launch screen rebranded** — `Splash.imageset` was also still the
+      generic Capacitor default (plain white, tiny blue logo). Replaced
+      with the site's pastel background color and the mascot centered,
+      generated with PIL from the same source image.
+- [x] **Real Privacy Policy published**: `privacy.html`, a real static
+      page (not a raw markdown file) styled with the site's own CSS,
+      linked from both the site footer and the in-app About page.
+      Every claim cross-checked against actual app behavior: camera
+      (Camera Overlay only, live/never recorded), microphone
+      (calibration + Ear Check, live/never recorded), `basic-pitch`
+      transcription (on-device, vendored, never uploaded), localStorage
+      contents (progress/streaks/badges/saved songs, never transmitted),
+      and — caught and fixed while verifying this — the **iTunes Search
+      API album-art lookup (item 25) is a real network request that a
+      stale "zero third-party network requests" claim in
+      `THIRD_PARTY_NOTICES.md` didn't disclose**; fixed that file too so
+      both documents now honestly describe the one real external call
+      the app makes.
+- [x] **App Store Connect listing drafted**: `ios/APP_STORE_LISTING.md`
+      — name, subtitle options (one over the 30-char limit in Sid's own
+      draft phrasing, flagged with compliant alternatives), promotional
+      text, full description, keywords, support/marketing/privacy URLs,
+      category, and a full age-rating question-by-question table with
+      reasoning (every category "None"/"No," should land on 4+).
+- [x] **Bundle identifier and version confirmed sane**: already
+      `com.haydenkeys.app` / marketing version 1.0 / build 1 from the
+      item-12 scaffolding — flagged in the checklist for Sid to confirm
+      before registering, not silently assumed correct.
+- [x] **Final numbered submission checklist**: `ios/SUBMISSION_CHECKLIST.md`
+      — exactly what's done vs. what Sid needs to do himself in Xcode/
+      App Store Connect (sign with his own account, take real
+      screenshots, paste in the drafted listing copy and privacy URL,
+      answer export compliance with the standard "no custom encryption"
+      answer, archive, submit).
+- [x] Re-verified `npx cap sync ios` runs clean after all icon/splash
+      changes.
+
+### Honestly, what's still not done (and genuinely can't be, from here)
+
+- The actual build/sign/archive/submit steps need Xcode running
+  interactively with Sid's own Apple Developer account — stated plainly
+  in the checklist, not glossed over.
+- Real device/simulator screenshots for the App Store listing weren't
+  (and couldn't be) captured from this environment — that's listed as
+  step 6 in `ios/SUBMISSION_CHECKLIST.md` for Sid to do himself.
+- The Privacy Policy URL (`https://haydenkeys.com/privacy.html`) will
+  only actually resolve once the site is deployed with this change —
+  GitHub Pages deployment is still blocked on the one-time manual
+  enablement step documented earlier in this file.
