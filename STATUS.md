@@ -25,6 +25,11 @@ specific gaps, not vague follow-ups:
   highlighted** on the keyboard — reuse `midiToName()` (already in
   `js/keyboard.js`) to add a visible label near/on the highlighted
   key(s) during playback.
+- **Add an "Easy mode" toggle for uploaded-song playback** that
+  clusters/quantizes detected notes into simplified chord-level blocks,
+  since even after the item 44 threshold fix, full-detail
+  transcriptions still look intimidating for simple songs — keep the
+  detailed view as the default, add Easy as an opt-in simplification.
 - **Stripe Payment Link not yet wired into the Support button** —
   still a placeholder (`data-stripe-link-pending="true"` in the
   `index.html` footer, item 43). Needs Sid to create the actual link in
