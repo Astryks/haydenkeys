@@ -3,11 +3,13 @@ import { initPracticeTab } from "./practice.js";
 import { initSavedTab } from "./saved.js";
 import { initLessonsTab } from "./lessons-ui.js";
 import { initHowItWorksTab } from "./how-it-works.js";
+import { checkBadges } from "./badges.js";
 
 const TABS = ["discover", "practice", "saved", "lessons", "how"];
 const panels = {};
 let savedApi = null;
 let discoverApi = null;
+let lessonsApi = null;
 
 function showTab(name) {
   TABS.forEach((t) => {
@@ -20,6 +22,12 @@ function showTab(name) {
   // Saved) — refresh it every time the tab is shown so lock status is
   // never stale.
   if (name === "discover" && discoverApi) discoverApi.refresh();
+  if (name === "lessons" && lessonsApi) lessonsApi.refresh();
+  // Badges can be earned from actions on any tab (completing a song in
+  // Saved, unlocking a tier in Discover, finishing a lesson) — re-check
+  // on every switch so a freshly-earned badge shows up promptly next
+  // time the Lessons map (where badges are displayed) is viewed.
+  checkBadges();
 }
 
 function init() {
@@ -44,7 +52,7 @@ function init() {
       showTab("practice");
     },
   });
-  initLessonsTab(panels.lessons);
+  lessonsApi = initLessonsTab(panels.lessons);
   initHowItWorksTab(panels.how);
 
   showTab("lessons");

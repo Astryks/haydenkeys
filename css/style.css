@@ -197,6 +197,19 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 /* Lessons */
 .hk-lesson-map { display: flex; flex-direction: column; gap: 10px; padding: 16px 0; }
 .hk-streak { font-size: 1rem; margin-bottom: 8px; }
+
+.hk-daily-goal { margin-bottom: 14px; }
+.hk-daily-goal-label { font-size: 0.85rem; color: var(--hk-text-dim); margin-bottom: 4px; }
+.hk-daily-goal-bar { height: 8px; border-radius: 999px; background: var(--hk-border); overflow: hidden; }
+.hk-daily-goal-fill { height: 100%; background: linear-gradient(90deg, var(--hk-accent), var(--hk-accent-2)); transition: width 0.3s; }
+
+.hk-badges-strip { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.hk-badge-chip {
+  font-size: 0.72rem; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--hk-border);
+  background: var(--hk-panel); color: var(--hk-text-dim); cursor: help;
+}
+.hk-badge-chip-earned { border-color: var(--hk-accent-2); color: var(--hk-text); background: rgba(217, 103, 143, 0.1); }
+.hk-badge-chip-locked { opacity: 0.55; }
 .hk-lesson-node {
   display: flex; gap: 14px; align-items: center; text-align: left;
   background: var(--hk-panel); border: 1px solid var(--hk-border); border-radius: 10px;

@@ -8,7 +8,11 @@ const KEYS = {
   LESSON_PROGRESS: "hk_lesson_progress",
   STREAK: "hk_streak",
   CALIBRATION: "hk_calibration",
+  DAILY_GOAL: "hk_daily_goal",
+  BADGES: "hk_badges",
 };
+
+const DAILY_GOAL_TARGET = 1; // complete 1 lesson or 1 song per day to meet the daily goal
 
 function safeGet(key, fallback) {
   try {
@@ -38,6 +42,7 @@ function markSongStatus(title, status) {
   const saved = getSavedSongs();
   saved[title] = { status, updatedAt: Date.now() };
   safeSet(KEYS.SAVED_SONGS, saved);
+  if (status === "completed") recordDailyProgress();
 }
 
 function removeSavedSong(title) {
@@ -56,7 +61,7 @@ function markLessonComplete(lessonId) {
   const progress = getLessonProgress();
   progress[lessonId] = { completed: true, completedAt: Date.now() };
   safeSet(KEYS.LESSON_PROGRESS, progress);
-  bumpStreak();
+  recordDailyProgress();
 }
 
 function isLessonComplete(lessonId) {
@@ -81,6 +86,52 @@ function bumpStreak() {
   return next;
 }
 
+// --- Daily goal (real Duolingo-style pacing, not just the streak) ------
+//
+// The streak only means something if it's tied to actually doing
+// something each day, not just opening the app — so completing a
+// lesson or a song increments *today's* progress count, and only once
+// that reaches DAILY_GOAL_TARGET does the streak itself advance
+// (bumpStreak already dedupes within a day, so calling it multiple
+// times after the goal is met on the same day is harmless).
+
+function getDailyGoal() {
+  const today = new Date().toISOString().slice(0, 10);
+  const stored = safeGet(KEYS.DAILY_GOAL, { date: today, count: 0 });
+  if (stored.date !== today) return { date: today, count: 0, target: DAILY_GOAL_TARGET, metToday: false };
+  return { ...stored, target: DAILY_GOAL_TARGET, metToday: stored.count >= DAILY_GOAL_TARGET };
+}
+
+function recordDailyProgress() {
+  const today = new Date().toISOString().slice(0, 10);
+  const current = getDailyGoal();
+  const count = current.date === today ? current.count + 1 : 1;
+  safeSet(KEYS.DAILY_GOAL, { date: today, count });
+  if (count >= DAILY_GOAL_TARGET) bumpStreak();
+  return { date: today, count, target: DAILY_GOAL_TARGET, metToday: count >= DAILY_GOAL_TARGET };
+}
+
+// --- Badges/achievements ------------------------------------------------
+// Earned badges are a plain { [badgeId]: { earnedAt } } map. The badge
+// *definitions* and unlock-check logic live in badges.js (which needs
+// SONGS/LESSONS data storage.js deliberately doesn't depend on, to keep
+// this file a pure, dependency-free localStorage layer) — this is just
+// the persistence half.
+
+function getEarnedBadges() {
+  return safeGet(KEYS.BADGES, {});
+}
+
+// Returns true if this badge was newly earned just now (false if it was
+// already earned before, so callers can tell "new!" from "still has it").
+function markBadgeEarned(id) {
+  const badges = getEarnedBadges();
+  if (badges[id]) return false;
+  badges[id] = { earnedAt: Date.now() };
+  safeSet(KEYS.BADGES, badges);
+  return true;
+}
+
 // --- Calibration ---------------------------------------------------------
 
 function getCalibration() {
@@ -101,4 +152,8 @@ export {
   getStreak,
   getCalibration,
   saveCalibration,
+  getDailyGoal,
+  recordDailyProgress,
+  getEarnedBadges,
+  markBadgeEarned,
 };

@@ -16,7 +16,8 @@ import {
   LESSONS,
 } from "./lessons-data.js";
 import { SONGS, ONE_FIVE_SIX_FOUR_SONGS } from "./songs-data.js";
-import { isLessonComplete, markLessonComplete, getStreak } from "./storage.js";
+import { isLessonComplete, markLessonComplete, getStreak, getDailyGoal } from "./storage.js";
+import { checkBadges } from "./badges.js";
 import {
   MAJOR_SCALES,
   MINOR_SCALES,
@@ -75,6 +76,27 @@ function renderStaffSvg(melody, upToIndex, { keySignatureSharps = [] } = {}) {
   return `<svg viewBox="0 0 ${lineWidth + 20} 140" class="hk-staff">${lines}${sharpMarks}${notes}</svg>`;
 }
 
+function badgesStripHtml() {
+  const { all, earned } = checkBadges();
+  return `
+    <div class="hk-badges-strip">
+      ${all.map((b) => {
+        const has = Boolean(earned[b.id]);
+        return `<span class="hk-badge-chip ${has ? "hk-badge-chip-earned" : "hk-badge-chip-locked"}" title="${b.desc}">${b.icon} ${b.title}</span>`;
+      }).join("")}
+    </div>`;
+}
+
+function dailyGoalHtml() {
+  const goal = getDailyGoal();
+  const pct = Math.min(100, Math.round((goal.count / goal.target) * 100));
+  return `
+    <div class="hk-daily-goal">
+      <div class="hk-daily-goal-label">Today's goal: ${goal.count}/${goal.target} lesson${goal.target === 1 ? "" : "s"} or song${goal.target === 1 ? "" : "s"} ${goal.metToday ? "— done! ✓" : ""}</div>
+      <div class="hk-daily-goal-bar"><div class="hk-daily-goal-fill" style="width:${pct}%"></div></div>
+    </div>`;
+}
+
 function lessonMapHtml() {
   const streak = getStreak();
   const rows = LESSONS.map((lesson, i) => {
@@ -96,6 +118,8 @@ function lessonMapHtml() {
   return `
     <div class="hk-lesson-map">
       <div class="hk-streak">🔥 ${streak.count}-day streak</div>
+      ${dailyGoalHtml()}
+      ${badgesStripHtml()}
       ${rows}
     </div>`;
 }
@@ -1346,6 +1370,16 @@ function initLessonsTab(root) {
   }
 
   startNextLesson();
+
+  // Exposed so the tab router can refresh the streak/daily-goal/badges
+  // display when returning to this tab — but only if the user is
+  // currently sitting on the map (checking a badge chip's title
+  // shouldn't yank someone back out of an in-progress lesson).
+  return {
+    refresh() {
+      if (root.querySelector(".hk-lesson-map")) showMap();
+    },
+  };
 }
 
 export { initLessonsTab };
