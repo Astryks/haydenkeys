@@ -134,20 +134,25 @@ function toast(text, { big = false } = {}) {
 }
 
 function confetti() {
+  // Tiny musical notes drifting down from the sky, each swaying as it falls.
   if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const host = document.createElement("div");
-  host.className = "hk-confetti";
-  const colors = ["#a7d8f0", "#f4b8d0", "#8a63d2", "#3fb363", "#e8b84b"];
-  for (let i = 0; i < 60; i++) {
-    const p = document.createElement("i");
-    p.style.left = `${Math.random() * 100}%`;
-    p.style.background = colors[i % colors.length];
-    p.style.animationDelay = `${Math.random() * 0.4}s`;
-    p.style.transform = `rotate(${Math.random() * 360}deg)`;
-    host.appendChild(p);
+  host.className = "hk-notefall";
+  host.setAttribute("aria-hidden", "true");
+  const glyphs = ["♪", "♫", "♩", "♬"];
+  const colors = ["#4a9bc9", "#d9678f", "#8a63d2", "#3fb363", "#e8b84b"];
+  for (let i = 0; i < 46; i++) {
+    const n = document.createElement("span");
+    n.textContent = glyphs[i % glyphs.length];
+    n.style.left = `${Math.random() * 100}%`;
+    n.style.color = colors[i % colors.length];
+    n.style.fontSize = `${14 + Math.random() * 18}px`;
+    n.style.animationDuration = `${2.4 + Math.random() * 1.8}s, ${0.9 + Math.random() * 0.8}s`;
+    n.style.animationDelay = `${Math.random() * 1.2}s, 0s`;
+    host.appendChild(n);
   }
   document.body.appendChild(host);
-  setTimeout(() => host.remove(), 2600);
+  setTimeout(() => host.remove(), 5200);
 }
 
 window.addEventListener("hk-xp", (e) => {
