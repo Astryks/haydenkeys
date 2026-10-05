@@ -16,74 +16,75 @@
 
   <rect x="0" y="0" width="1024" height="1024" rx="190" fill="url(#bgGrad)" />
 
-  <!-- fluffy fat legs/feet -->
-  <ellipse cx="400" cy="850" rx="120" ry="58" fill="#2f2f38" />
-  <ellipse cx="636" cy="850" rx="120" ry="58" fill="#2f2f38" />
-  <!-- little fluff tufts on the feet -->
-  <circle cx="330" cy="818" r="22" fill="#2f2f38" />
-  <circle cx="470" cy="818" r="22" fill="#2f2f38" />
-  <circle cx="566" cy="818" r="22" fill="#2f2f38" />
-  <circle cx="706" cy="818" r="22" fill="#2f2f38" />
+  <!-- legs, fat and fluffy, sitting -->
+  <ellipse cx="420" cy="860" rx="120" ry="56" fill="#2f2f38" />
+  <ellipse cx="640" cy="860" rx="120" ry="56" fill="#2f2f38" />
 
-  <!-- extra-round, extra-fat fluffy body -->
+  <!-- piano-key "bamboo" stick, held low in the resting paw -->
+  <g transform="rotate(-6 700 640)">
+    <rect x="672" y="470" width="52" height="340" rx="10" fill="url(#keyStickGrad)" />
+    <rect x="672" y="540" width="52" height="14" fill="#2f2f38" />
+    <rect x="672" y="620" width="52" height="14" fill="#2f2f38" />
+    <rect x="672" y="700" width="52" height="14" fill="#2f2f38" />
+    <circle cx="698" cy="448" r="20" fill="url(#keyStickGrad)" />
+  </g>
+
+  <!-- fat round fluffy body -->
   <ellipse cx="500" cy="660" rx="255" ry="225" fill="url(#bodyGrad)" />
-  <!-- fluff texture tufts around the body edge -->
   <g fill="#ffffff">
     <circle cx="270" cy="560" r="26" /><circle cx="250" cy="640" r="24" /><circle cx="258" cy="720" r="22" />
-    <circle cx="730" cy="560" r="26" /><circle cx="750" cy="640" r="24" /><circle cx="742" cy="720" r="22" />
     <circle cx="340" cy="860" r="20" /><circle cx="660" cy="860" r="20" />
   </g>
 
-  <!-- the "bamboo stick" - vertical piano-key strip -->
-  <g transform="rotate(-8 712 560)">
-    <rect x="684" y="300" width="56" height="520" rx="10" fill="url(#keyStickGrad)" />
-    <rect x="684" y="380" width="56" height="16" fill="#2f2f38" />
-    <rect x="684" y="470" width="56" height="16" fill="#2f2f38" />
-    <rect x="684" y="560" width="56" height="16" fill="#2f2f38" />
-    <rect x="684" y="650" width="56" height="16" fill="#2f2f38" />
-    <circle cx="712" cy="270" r="22" fill="url(#keyStickGrad)" />
-    <rect x="728" y="180" width="10" height="100" fill="url(#keyStickGrad)" />
-    <path d="M 738 180 C 772 184 784 210 764 232 C 756 216 744 206 730 202 Z" fill="url(#keyStickGrad)" />
-  </g>
+  <!-- resting arm holding the stick -->
+  <ellipse cx="662" cy="700" rx="50" ry="68" fill="#2f2f38" transform="rotate(30 662 700)" />
+  <circle cx="700" cy="748" r="34" fill="#2f2f38" />
 
-  <!-- fluffy black arms -->
-  <ellipse cx="652" cy="540" rx="52" ry="70" fill="#2f2f38" transform="rotate(25 652 540)" />
-  <ellipse cx="624" cy="710" rx="52" ry="70" fill="#2f2f38" transform="rotate(35 624 710)" />
-  <circle cx="690" cy="580" r="36" fill="#2f2f38" />
-  <circle cx="660" cy="748" r="36" fill="#2f2f38" />
+  <!-- RAISED cheering arm with open paw, waving up and out -->
+  <ellipse cx="270" cy="480" rx="56" ry="90" fill="#2f2f38" transform="rotate(-35 270 480)" />
+  <!-- open paw/hand, fingers spread like a wave -->
+  <circle cx="190" cy="340" r="52" fill="#2f2f38" />
+  <circle cx="150" cy="300" r="20" fill="#2f2f38" />
+  <circle cx="186" cy="278" r="20" fill="#2f2f38" />
+  <circle cx="222" cy="286" r="20" fill="#2f2f38" />
+  <circle cx="250" cy="312" r="18" fill="#2f2f38" />
+  <!-- paw pad details -->
+  <circle cx="184" cy="348" r="14" fill="#55555f" />
+  <circle cx="160" cy="330" r="9" fill="#55555f" />
+  <circle cx="196" cy="316" r="9" fill="#55555f" />
 
-  <!-- extra-round, fluffy head -->
-  <ellipse cx="460" cy="420" rx="215" ry="195" fill="url(#bodyGrad)" />
-  <!-- fluff tufts around the head/cheeks -->
+  <!-- fat fluffy head, tilted up joyfully toward the raised paw -->
+  <ellipse cx="490" cy="420" rx="215" ry="195" fill="url(#bodyGrad)" transform="rotate(-6 490 420)" />
   <g fill="#ffffff">
-    <circle cx="268" cy="400" r="22" /><circle cx="252" cy="470" r="20" />
-    <circle cx="652" cy="394" r="22" /><circle cx="668" cy="464" r="20" />
+    <circle cx="298" cy="400" r="22" /><circle cx="282" cy="470" r="20" />
   </g>
 
   <!-- big round fluffy ears -->
-  <circle cx="320" cy="270" r="74" fill="#2f2f38" />
-  <circle cx="600" cy="262" r="74" fill="#2f2f38" />
-  <circle cx="320" cy="270" r="30" fill="#45454f" />
-  <circle cx="600" cy="262" r="30" fill="#45454f" />
+  <circle cx="352" cy="266" r="76" fill="#2f2f38" />
+  <circle cx="628" cy="258" r="76" fill="#2f2f38" />
+  <circle cx="352" cy="266" r="32" fill="#45454f" />
+  <circle cx="628" cy="258" r="32" fill="#45454f" />
 
-  <!-- panda eye patches, extra large and round for a softer cute look -->
-  <ellipse cx="380" cy="430" rx="68" ry="80" fill="#2f2f38" transform="rotate(-10 380 430)" />
-  <ellipse cx="538" cy="426" rx="68" ry="80" fill="#2f2f38" transform="rotate(10 538 426)" />
+  <!-- panda eye patches -->
+  <ellipse cx="408" cy="420" rx="66" ry="78" fill="#2f2f38" transform="rotate(-10 408 420)" />
+  <ellipse cx="562" cy="414" rx="66" ry="78" fill="#2f2f38" transform="rotate(10 562 414)" />
 
-  <!-- BIG sparkly eyes -->
-  <circle cx="392" cy="434" r="36" fill="#ffffff" />
-  <circle cx="548" cy="430" r="36" fill="#ffffff" />
-  <circle cx="400" cy="440" r="20" fill="#2f2f38" />
-  <circle cx="556" cy="436" r="20" fill="#2f2f38" />
-  <circle cx="408" cy="430" r="7" fill="#ffffff" />
-  <circle cx="564" cy="426" r="7" fill="#ffffff" />
-  <circle cx="390" cy="450" r="4" fill="#ffffff" />
-  <circle cx="546" cy="446" r="4" fill="#ffffff" />
+  <!-- big joyful eyes, slightly squinted-happy from the open smile -->
+  <circle cx="420" cy="424" r="34" fill="#ffffff" />
+  <circle cx="570" cy="418" r="34" fill="#ffffff" />
+  <circle cx="428" cy="432" r="18" fill="#2f2f38" />
+  <circle cx="578" cy="426" r="18" fill="#2f2f38" />
+  <circle cx="436" cy="422" r="6" fill="#ffffff" />
+  <circle cx="586" cy="416" r="6" fill="#ffffff" />
 
   <!-- rosy cheeks -->
-  <circle cx="352" cy="488" r="26" fill="#f6b8c6" opacity="0.75" />
-  <circle cx="566" cy="484" r="26" fill="#f6b8c6" opacity="0.75" />
+  <circle cx="382" cy="478" r="26" fill="#f6b8c6" opacity="0.75" />
+  <circle cx="590" cy="470" r="26" fill="#f6b8c6" opacity="0.75" />
 
-  <!-- small nose only - no mouth/lips, kept blank per request -->
-  <ellipse cx="462" cy="480" rx="24" ry="17" fill="#2f2f38" />
+  <!-- nose -->
+  <ellipse cx="492" cy="468" rx="24" ry="17" fill="#2f2f38" />
+
+  <!-- OPEN JOYFUL MOUTH - the big update from the reference photo -->
+  <path d="M 444 492 Q 492 598 540 492 Q 540 558 492 570 Q 444 558 444 492 Z" fill="#2f2f38" />
+  <path d="M 462 514 Q 492 558 522 514 Q 518 542 492 548 Q 466 542 462 514 Z" fill="#e78fa0" />
 </svg>
