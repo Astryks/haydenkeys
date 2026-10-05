@@ -28,59 +28,36 @@ Alternatives that also fit: `Piano Lessons That Stick` (24),
 ## Promotional text (max 170 characters, editable anytime without a new review)
 
 ```
-100+ free lessons teach you real songs fast — numbers first, letters
-second. No ads, no account, no subscription. Your progress stays on
-your device.
+Learn real songs fast — numbers first, falling notes, a Middle C tuner and a daily review. 180+ songs, 140+ lessons. No ads, no account, no subscription.
 ```
 
-## Description (max 4000 characters)
+## Description (max 4000 characters) — as entered in App Store Connect, 2026-10-06
 
 ```
-Hayden Keys teaches piano the way guitar apps teach chords — numbers
-and shapes first, letter names second, real songs from day one.
+Hayden Keys teaches piano the way guitar apps teach chords — numbers and shapes first, letter names second, real songs from day one.
 
 WHY IT'S DIFFERENT
 
-Most piano apps start with sheet music and scales. Hayden Keys starts
-with the four-chord pattern behind more pop songs than any other,
-teaches it as "the 1, the 5, the 6, the 4" (not just letter names),
-and gets you playing real, recognizable songs within your first few
-lessons — not weeks of pure theory.
+Most piano apps start with sheet music and scales. Hayden Keys starts with the four-chord pattern behind more pop songs than any other, teaches it as "the 1, the 5, the 6, the 4", and gets you playing real, recognizable songs within your first few lessons. Notes fall onto the keys as colored blocks, so you always know exactly what to press.
 
 WHAT'S INCLUDED, FREE
 
-- A large, numbers-first lesson curriculum that grows from your first
-  4 chords into scales, two-hand technique, 7th chords, jazz
-  comping, and classical repertoire (Beethoven, Pachelbel, and more)
-- A library of 100+ real songs, each with independently verified
-  chords — never guessed, never scraped from a single site's chart
-- Three ways to practice: a falling-note visual guide, an ear-training
-  mode that listens through your microphone, and a camera mode that
-  overlays the next note onto a live view of your real keyboard
-- Upload your own recording and the app figures out the notes, right
-  on your device — nothing ever uploaded to a server
-- A computer-keyboard-playable virtual piano for practicing without a
-  physical keyboard nearby
-- Real gamification: streaks, daily goals, and earned badges
+- 140+ lessons, from finding Middle C on any size keyboard to scales, two hands, 7th chords, jazz, reading sheet music, and classical pieces by Bach and Beethoven
+- 180+ real songs — pop, rock, jazz standards, classical, and optional songs in 10 other languages — with chords checked against multiple sources
+- Wait mode: the music waits until you play the right notes. A harder "play in time" mode scores your timing
+- A Middle C sound check that turns green when your piano plays the right note, like a guitar tuner
+- Hands-separately practice and looping for the tricky bars
+- Upload your own recording: the app figures out the notes and plays them back with you, or shows simple chords in Easy mode — all on your device
+- A 2-minute daily review that brings back what you're about to forget
+- XP, levels, daily quests, streaks, stars and badges
 
 HONEST, BY DESIGN
 
-Every song's chords are labeled "chords verified" or "needs
-verification" right in the app — we never present a guess as fact.
-Classical pieces use only independently-documented musical facts, never
-a specific modern edition's copyrighted engraving. There's no YouTube
-or streaming-audio import (that would violate those platforms' terms of
-service), and no song lyrics anywhere in the app.
+Every song's chords are labeled "verified" or "needs verification" — we never present a guess as fact. There are no song lyrics and no streaming-audio import.
 
 NO ACCOUNT, NO ADS, NO COST
 
-Hayden Keys runs entirely on your device. There's no sign-up, no
-subscription, no ads, and no data collection — your progress is saved
-locally and never leaves your device. See our Privacy Policy for the
-full, plain-language detail.
-
-Whether you've never touched a piano or you're brushing up on real
-technique, Hayden Keys gets you playing songs you actually know, fast.
+Hayden Keys runs entirely on your device. No sign-up, no subscription, no ads, and no data collection — your progress is saved on your device and never leaves it.
 ```
 
 ## Keywords (max 100 characters, comma-separated, no spaces after commas)

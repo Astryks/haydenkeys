@@ -4,10 +4,13 @@ import fs from "fs";
 const BASE = "http://localhost:8743/";
 const OUT = process.argv[2] || "/private/tmp/claude-501/shots/out";
 fs.mkdirSync(OUT, { recursive: true });
-const DEVICES = [
+const ALL_DEVICES = [
   { name: "iphone-6.9", width: 956, height: 440, dpr: 3 },
+  { name: "iphone-6.5", width: 896, height: 414, dpr: 3 },
   { name: "ipad-13", width: 1376, height: 1032, dpr: 2 },
 ];
+const only = process.argv[3];
+const DEVICES = only ? ALL_DEVICES.filter((d) => d.name === only) : ALL_DEVICES;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const browser = await puppeteer.launch({
