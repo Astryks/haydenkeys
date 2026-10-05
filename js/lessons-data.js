@@ -168,6 +168,12 @@ const THEORY_LESSONS = [
     description: "Rearranging a chord's notes for smoother, more professional-sounding transitions.",
   },
   {
+    id: "lesson-touch",
+    title: "Touch matters, not just which keys",
+    subtitle: "Dynamics, rubato, and legato",
+    description: "How HARD and HOW you press a key changes the music just as much as which key — using 'Make You Feel My Love' as the example.",
+  },
+  {
     id: "lesson-8",
     title: "A touch of jazz",
     subtitle: "Seventh chords",

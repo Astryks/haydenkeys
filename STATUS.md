@@ -1365,3 +1365,52 @@ Honest scope note: the drum toggle only exists in Practice's Follow
 Along mode (the one Sid screenshotted) — Ear Check and Camera Overlay
 modes, and the curated lesson screens' own chord-teaching playback,
 were not wired up with a beat layer this pass.
+
+## 2026-10-05 update: new lesson — touch, dynamics, rubato, legato (item 46)
+
+- [x] **New lesson added**: `lesson-touch` ("Touch matters, not just
+      which keys"), inserted into `THEORY_LESSONS` in `js/lessons-data.js`
+      right after Lesson 7 (inversions) and before Lesson 8 (7th
+      chords) — Lesson 7 itself was already a different, full topic, so
+      this is a new lesson slotted in rather than crammed into an
+      existing one. Display position/roadmap numbering is purely
+      array-index-based in this codebase (confirmed by reading
+      `timelineHtml()`), so inserting anywhere in the array is safe and
+      doesn't require renumbering any other lesson's literal `id`.
+- [x] **Covers velocity, rubato, and legato**, each introduced casually
+      with a plain-English translation first (e.g. "rubato... literally
+      means 'robbed time'... slowing down slightly right at a moment
+      that matters"), same pattern as how "1-5-6-4" was introduced, not
+      dense jargon. Added one extra short tip (accenting beat 1 of a
+      progression) per the "1-2 more if they fit" suggestion, without
+      overloading the lesson.
+- [x] **"Make You Feel My Love" (Adele) used as the worked example**,
+      confirmed still in the library before writing the lesson. Claims
+      kept deliberately general and defensible (soft verses building to
+      a more intense emotional peak, legato phrasing, slight rubato) —
+      explicitly NOT inventing bar-by-bar dynamic markings for one
+      specific recording nobody here has transcribed; the lesson says
+      this limitation out loud rather than presenting invented specifics
+      as fact.
+- [x] **Real Back support added**, same lightweight history-stack
+      pattern as the shared "Master: X" template (item 42) — verified
+      live: Next -> Next (now on the rubato step) -> Back correctly
+      restored the velocity step's exact original content.
+- [x] **Lesson count/numbering double-checked, not assumed correct**:
+      `TOTAL_LESSON_COUNT` went from 101 to 103, not 101 to 102 as a
+      naive single-insertion guess might assume — verified why: the
+      second +1 is "Master: Someday" now being auto-generated, because
+      item 44 upgraded Someday's `confidence` from `needs-verification`
+      to `confirmed` with real parseable chords (auto-generated
+      song-mastery lessons are explicitly filtered to
+      `confidence === "confirmed"` songs only). Confirmed zero duplicate
+      lesson IDs in the final `LESSONS` array. Verified live: roadmap
+      shows "37 of 103 done" with `lesson-touch` correctly positioned
+      right after "The jazz trick"/"Train your ear" style early lessons
+      and before the Lesson 8 song-mastery lessons.
+
+Verified live in a real browser: the lesson's full intro -> velocity ->
+rubato -> legato -> worked example -> done flow reads naturally, Back
+genuinely restores previous step content, roadmap numbering/count is
+internally consistent. Zero new console errors beyond the known
+sandbox-only service-worker noise.

@@ -223,6 +223,7 @@ function initLessonsTab(root) {
       "lesson-5": runLesson5,
       "lesson-6": runLesson6,
       "lesson-7": runLesson7,
+      "lesson-touch": runLessonTouch,
       "lesson-8": runLesson8,
       "lesson-9": runLesson9,
       "lesson-10": runLesson10,
@@ -1523,6 +1524,102 @@ function initLessonsTab(root) {
              borrow chords from outside the key for effect) — but it explains most of what you're hearing.</p>`);
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
         controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Lesson "touch": dynamics, rubato, legato (item 46) --------------
+  // HOW a key is pressed, not just which key — kept general/defensible
+  // (soft-to-intense contrast, legato phrasing, slight tempo flexibility)
+  // rather than inventing bar-by-bar dynamic markings for a specific
+  // commercial recording nobody here has actually transcribed.
+  function runLessonTouch() {
+    const { content, controls } = lessonShell("Touch matters, not just which keys");
+    const touchSong = SONGS.find((s) => s.title === "Make You Feel My Love");
+    let step = "intro";
+    const history = [];
+    function goForward(next) {
+      history.push(step);
+      step = next;
+      renderStep();
+    }
+    function goBack() {
+      if (!history.length) return;
+      step = history.pop();
+      renderStep();
+    }
+
+    function renderStep() {
+      if (step === "intro") {
+        content.innerHTML = mascotSay(`
+          <h3>Pause — let's see if touch matters as much as the keys themselves.</h3>
+          <p>Everything so far has been about <strong>which</strong> keys to press. This lesson is about
+             <strong>how</strong> you press them — pressing the exact same chord two different ways can make
+             it sound like two completely different moments in a song.</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Let's go</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => goForward("velocity"));
+      } else if (step === "velocity") {
+        content.innerHTML = mascotSay(`
+          <h3>1. Velocity — how HARD you press.</h3>
+          <p>Press a key harder and it plays <strong>louder and more intense</strong>. Press it softer and it's
+             <strong>gentler, more intimate</strong>. Real pianists use this on purpose: a quiet, soft touch for
+             a hushed verse, then pressing harder to match a big emotional chorus.</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Next</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => goForward("rubato"));
+      } else if (step === "rubato") {
+        content.innerHTML = mascotSay(`
+          <h3>2. Rubato — bending the timing on purpose.</h3>
+          <p><strong>Rubato</strong> is just a fancy Italian word (it literally means "robbed time") for a
+             simple idea: slowing down slightly right at a moment that matters, or letting a note "linger" a
+             touch longer than written, for emotional emphasis. You'll hear this constantly in slow ballads —
+             the tempo isn't perfectly robotic, it breathes.</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Next</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => goForward("legato"));
+      } else if (step === "legato") {
+        content.innerHTML = mascotSay(`
+          <h3>3. Legato — connecting the notes.</h3>
+          <p><strong>Legato</strong> means holding/connecting notes smoothly into each other, rather than
+             playing them short and detached (that detached style is called "staccato" — the opposite). For
+             slow, romantic songs, legato is what makes a chord progression sound like it's flowing, not
+             choppy.</p>
+          <p class="hk-honest-note">One more small trick while we're here: try pressing the very first beat
+             of a chord progression a touch harder than the rest — it gives the ear a clear sense of "here's
+             where the pattern restarts," the same way a drummer accents beat 1.</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">See it in a real song</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => goForward("example"));
+      } else if (step === "example") {
+        content.innerHTML = mascotSay(`
+          <h3>Worked example: "${touchSong ? touchSong.title : "Make You Feel My Love"}" — ${touchSong ? touchSong.artist : "Adele"}</h3>
+          <p>This is a slow piano ballad with real soft-to-intense contrast: quieter, more restrained verses
+             building toward a more intense, emotional peak later in the song. It's also a great candidate for
+             <strong>legato</strong> phrasing — holding each chord smoothly into the next — and a little
+             <strong>rubato</strong>, easing the tempo slightly at the most emotional phrases rather than
+             keeping strict, robotic timing.</p>
+          <p class="hk-honest-note">We're keeping this general on purpose: "softer verses, more intense peak,
+             legato, slight rubato" are real, defensible things about how a song like this is usually played —
+             not specific bar-by-bar dynamic markings from a transcription of one particular recording.</p>`,
+          "assets/mascot-poses/dreaming-notes.png");
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Got it</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => goForward("done"));
+      } else {
+        markLessonComplete("lesson-touch");
+        content.innerHTML = mascotSay(`
+          <h3>Lesson complete.</h3>
+          <p>Next time you play a chord you already know, try it two ways on purpose — soft and held
+             (legato), then firmer and a touch rushed — and notice how different the exact same notes can
+             feel.</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+      if (history.length > 0) {
+        const backBtn = document.createElement("button");
+        backBtn.type = "button";
+        backBtn.className = "hk-btn hk-btn-lesson-back";
+        backBtn.id = "hk-back";
+        backBtn.textContent = "Back";
+        backBtn.addEventListener("click", goBack);
+        controls.insertBefore(backBtn, controls.firstChild);
       }
     }
     renderStep();
