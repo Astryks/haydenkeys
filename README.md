@@ -309,6 +309,59 @@ future push** — the blocker is specifically first-time enablement, not
 the ongoing mechanism. Live URL once enabled:
 `https://astryks.github.io/haydenkeys/`.
 
+## iOS app (Capacitor) — scaffolded, ready for Xcode, not built/submitted from here
+
+Capacitor wraps this exact static site as-is for a native iOS app — no
+rewrite, same HTML/CSS/JS. What's real and already done:
+
+- `package.json` + `capacitor.config.json` (`appId: com.haydenkeys.app`,
+  `webDir: www`) — `www/` holds symlinks to the real site files
+  (`index.html`, `css/`, `js/`, `manifest.webmanifest`, `sw.js`), so
+  there's one source of truth, not a duplicated copy to keep in sync.
+- `npx cap add ios` has already been run — `ios/App/App.xcodeproj` is a
+  real, committed Xcode project (small, ~336 KB; no CocoaPods needed —
+  this Capacitor/plugin version resolves dependencies via Swift Package
+  Manager, confirmed by its generated `Package.swift`).
+- `@capacitor/camera` is installed (the one official Capacitor plugin
+  relevant here). Camera Overlay and Ear Check's microphone use plain
+  web `getUserMedia`, not a native plugin API — Capacitor's WKWebView
+  supports `getUserMedia` natively (iOS 14.3+) once the right Info.plist
+  usage-description keys are present, which is the actual fix needed,
+  not a plugin rewrite.
+- `ios/App/App/Info.plist` has real `NSCameraUsageDescription` and
+  `NSMicrophoneUsageDescription` entries explaining honestly what each
+  is used for (Camera Overlay's projected key guide; calibration/Ear
+  Check's pitch listening) and that nothing is recorded or uploaded.
+- `npm run cap:sync` (`npx cap sync`) runs clean — verified directly in
+  this pass, confirmed it re-copies `www/` into
+  `ios/App/App/public` and regenerates `Package.swift` with no errors.
+
+**What genuinely cannot be done from here, and why:** actually building,
+code-signing, archiving, and submitting the app needs Xcode running
+interactively on a Mac with Sid's own Apple Developer signing
+certificate and Apple ID logged in — that's a local, interactive,
+credentialed process, not something a background coding session can do.
+
+**Exact next steps for Sid:**
+1. `npm install` once (installs the Capacitor CLI/packages — small,
+   ~29 MB in `node_modules/`, already gitignored).
+2. `npx cap open ios` (or open `ios/App/App.xcodeproj` directly) — opens
+   the real project in Xcode.
+3. In Xcode: select the `App` target → **Signing & Capabilities** → pick
+   your own Apple Developer team/signing certificate (this is the one
+   step that genuinely requires your own account and can't be scripted).
+4. Pick a simulator or your connected iPhone → **Run** to verify it
+   launches and the site loads inside the native shell, including
+   testing Camera Overlay/Ear Check's permission prompts for real on a
+   device (a simulator has no real camera, but does have a (fake)
+   microphone — test the actual camera prompt on a real device).
+5. When ready: **Product → Archive**, then use the Organizer window's
+   **Distribute App** flow to upload to App Store Connect, fill in the
+   store listing, and submit for review — all standard Xcode/App Store
+   Connect steps from here, nothing app-specific left to figure out.
+6. Any time the web app's files change, run `npx cap sync` again before
+   rebuilding in Xcode, so the native copy picks up the latest site.
+
 ## Verification
 
 No backend to test against, so verification meant serving the site
