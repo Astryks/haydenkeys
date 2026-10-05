@@ -5,17 +5,17 @@
 // per-hand highlight coloring) every other tab already uses — no
 // second parallel piano-rendering or audio system.
 //
-// Key mapping (per Sid's exact spec): the home row is one hand's full
-// range, the top letter row is the other hand's full range — mirroring
-// the same left/right-hand convention and coloring already used by the
-// falling-note highway and every two-hand lesson (keyboard.js's
-// highlightHands()), not just "more keys, more range."
-//   Home row  A S D F G H J K L ; '   (11 keys) -> LEFT hand,  C3-A#3
-//   Top row   Q W E R T Y U I O P [ ] (12 keys) -> RIGHT hand, C4-B4
+// Key mapping — redesigned in item 50 (the original home/top-row split
+// ran out of mapped keys mid-chord on a real laptop; see
+// computer-keys.js's own comment for the full reasoning): QWERTY row
+// is the left hand's full range, ASDF row is the right hand's full
+// range, mirroring the same left/right-hand convention and coloring
+// already used by the falling-note highway and every two-hand lesson
+// (keyboard.js's highlightHands()).
+//   QWERTY  Q W E R T Y U I O P (10 keys) -> LEFT hand,  C4-A4
+//   ASDF    A S D F G H J K L   (9 keys)  -> RIGHT hand, A#4-F#5
 // Left hand gets the lower range, right hand the higher range — the
-// same register convention real two-hand piano playing uses, and the
-// top physical row maps to the higher pitch range, a natural visual
-// correspondence (higher row = higher pitch).
+// same register convention real two-hand piano playing uses.
 //
 // Item 42: the mapping/listener itself now lives in computer-keys.js,
 // a shared module, so lesson/chord screens can reuse the exact same
@@ -37,8 +37,8 @@ function initMidiTab(root) {
         </div>
       </div>
       <p class="hk-midi-instructions">
-        <span class="hk-hand-left-label">Home row (A S D F G H J K L ; ')</span> is your left hand's range.
-        <span class="hk-hand-right-label">Top row (Q W E R T Y U I O P [ ])</span> is your right hand's range.
+        <span class="hk-hand-left-label">QWERTY row (Q W E R T Y U I O P)</span> is your left hand's range.
+        <span class="hk-hand-right-label">ASDF row (A S D F G H J K L)</span> is your right hand's range.
         No physical keyboard? Just tap the keys below directly.
       </p>
       <div id="hk-midi-keyboard" class="hk-keyboard-wrap"></div>

@@ -8,22 +8,40 @@
 // place that owns "what key plays what note," per Sid's instruction
 // not to duplicate that logic in two places.
 //
-// Key mapping (unchanged from item 28's spec): the home row is one
-// hand's full range, the top letter row is the other hand's full
-// range — the same left/right-hand convention and coloring already
-// used by the falling-note highway and every two-hand lesson
-// (keyboard.js's highlightHands()).
-//   Home row  A S D F G H J K L ; '   (11 keys) -> LEFT hand,  C3-A#3
-//   Top row   Q W E R T Y U I O P [ ] (12 keys) -> RIGHT hand, C4-B4
+// Key mapping — REDESIGNED in item 50 after a real reported bug: the
+// original mapping (home row -> LEFT, C3-A#3; top row -> RIGHT,
+// C4-B4) ran out of keys mid-progression on a real laptop. Lesson 1's
+// full G-D-Em-C progression spans MIDI 60 (C4) through 74 (D5) — 15
+// consecutive semitones — but the old RIGHT_KEYS only reached MIDI 71
+// (B4), so the chord tops (C5/D5 in the G chord) had no key mapped to
+// them at all. Not a one-off: any chord progression spanning much more
+// than an octave would hit the same wall.
+//
+// New mapping: QWERTY row -> LEFT hand (lower register), ASDF row ->
+// RIGHT hand (upper register), both still left-to-right = low-to-high
+// pitch (intuitive, unchanged reasoning) but swapped from the original
+// home/top assignment. Picked ASDF (not ZXCV) for the right hand
+// specifically because it's the touch-typing "home row" — the row your
+// fingers already rest on without looking, which matters more for the
+// hand doing most of the chord-finding work. Picked QWERTY (not the
+// number row) for the left hand so both rows sit directly adjacent on
+// the keyboard, reinforcing the low-register/high-register split
+// visually as well as physically.
+//   QWERTY  Q W E R T Y U I O P   (10 keys) -> LEFT hand,  C4-A4  (60-69)
+//   ASDF    A S D F G H J K L     (9 keys)  -> RIGHT hand, A#4-F#5 (70-78)
+// Combined range is MIDI 60-78 (19 semitones, 2.5 lower than one octave
+// to a sixth above the second) — verified this fully covers Lesson 1's
+// G-D-Em-C progression (every note in G/D/Em/C triads falls in 60-74)
+// with headroom to spare, not just barely.
 
 import { playTone } from "./keyboard.js";
 
-const LEFT_KEYS = ["a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'"];
-const RIGHT_KEYS = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]"];
-const LEFT_BASE_MIDI = 48; // C3
-const RIGHT_BASE_MIDI = 60; // C4
+const LEFT_KEYS = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"];
+const RIGHT_KEYS = ["a", "s", "d", "f", "g", "h", "j", "k", "l"];
+const LEFT_BASE_MIDI = 60; // C4
+const RIGHT_BASE_MIDI = 70; // A#4
 const MIN_MIDI = LEFT_BASE_MIDI;
-const MAX_MIDI = RIGHT_BASE_MIDI + RIGHT_KEYS.length - 1; // B4
+const MAX_MIDI = RIGHT_BASE_MIDI + RIGHT_KEYS.length - 1; // F#5
 
 function keyToMidi(key) {
   const li = LEFT_KEYS.indexOf(key);

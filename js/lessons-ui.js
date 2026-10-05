@@ -950,7 +950,11 @@ function initLessonsTab(root) {
   // to be the template other lessons eventually follow, not a one-off.
   function runLesson1() {
     const { content, keyboardWrap, controls } = lessonShell("Your first 4 chords: 1-5-6-4");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    // Item 50: widened from 55-79 to 41-79 so the "fingers" step's
+    // left-hand mirror position (down to F3/MIDI 41) actually renders
+    // on this lesson's keyboard instead of silently falling outside
+    // its range.
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 41, endMidi: 79 });
     // Item 42: same computer-keyboard mapping as the standalone MIDI tab
     // (item 28), reused via the shared module — not a second mapping.
     // Touch/mouse tapping already works here for free (keyboard.js's
@@ -1000,7 +1004,8 @@ function initLessonsTab(root) {
     // anyone without a real piano/keyboard handy and not touching a
     // touchscreen either.
     const KEYBOARD_HINT = `<p class="hk-keyboard-hint">No piano handy? Tap the keys above, or on a laptop:
-      home row (A S D F G H J K L ; ') and top row (Q W E R T Y U I O P [ ]) play too.</p>`;
+      the QWERTY row (Q W E R T Y U I O P) is your left hand, the ASDF row (A S D F G H J K L) is your right
+      hand — together they cover this whole progression.</p>`;
 
     // Finding your starting key itself now has its own earlier lesson
     // ("Get Started" — see runGetStarted below); this lesson opens with
@@ -1063,15 +1068,55 @@ function initLessonsTab(root) {
               return `<span class="hk-chord-preview-pill">${c.number}<span class="hk-chord-preview-letter">${c.letter}</span></span>`;
             }).join("")}
           </div>
-          <p><strong>Let's start with G.</strong></p>`, "assets/mascot-poses/maestro-conducting.png");
-        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Let's start with G</button>`;
+          <p><strong>Let's learn how.</strong></p>`, "assets/mascot-poses/maestro-conducting.png");
+        // Item 50: this button used to say "Let's start with G" — but
+        // the very next screen was the generic "what's a chord"
+        // explainer, not G itself. That mismatch is exactly the
+        // jump/non-sequitur Sid reported ("a step says let's learn G,
+        // the next step jumps to slow down..."). Fixed by keeping this
+        // transition's promise generic; the step that actually leads
+        // into G (below) is the one that now says "G" in its button.
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Okay, show me how</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => goForward({ step: "slowdown" }));
       } else if (step === "slowdown") {
         content.innerHTML = mascotSay(`
           <h3>Okay — let's slow down and actually learn this.</h3>
           <p>A <strong>chord</strong> just means pressing a few keys at once, together, so they ring out as
-             one sound. That's the whole concept. Let's find the first one on your actual keyboard.</p>`);
-        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Let's go</button>`;
+             one sound. That's the whole concept. One more quick thing before we press anything — where do
+             your fingers actually go?</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Show me</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => goForward({ step: "fingers" }));
+      } else if (step === "fingers") {
+        // Item 50: "where do my other fingers go?" — never explained
+        // before. Standard beginner five-finger position: thumb = 1 on
+        // both hands, fingers rest on the next 4 consecutive white keys
+        // going outward from the thumb. Right hand's thumb sits on the
+        // Middle C just taught in Get Started; left hand mirrors the
+        // same shape downward so both thumbs meet near the middle.
+        const RIGHT_FINGERS = [{ midi: 60, finger: 1 }, { midi: 62, finger: 2 }, { midi: 64, finger: 3 }, { midi: 65, finger: 4 }, { midi: 67, finger: 5 }];
+        const LEFT_FINGERS = [{ midi: 48, finger: 1 }, { midi: 47, finger: 2 }, { midi: 45, finger: 3 }, { midi: 43, finger: 4 }, { midi: 41, finger: 5 }];
+        kb.clearHighlights();
+        kb.highlightHands({
+          left: LEFT_FINGERS.map((f) => f.midi),
+          right: RIGHT_FINGERS.map((f) => f.midi),
+        });
+        [...RIGHT_FINGERS, ...LEFT_FINGERS].forEach(({ midi, finger }) => {
+          const el = kb.getKeyElement(midi);
+          if (!el) return;
+          const badge = document.createElement("div");
+          badge.className = "hk-finger-badge";
+          badge.textContent = finger;
+          el.appendChild(badge);
+        });
+        content.innerHTML = mascotSay(`
+          <h3>Thumb = finger 1, on both hands.</h3>
+          <p>Rest your <strong>right thumb on Middle C</strong> — your other right-hand fingers naturally land
+             on the next 4 white keys going up: <strong>C(1) D(2) E(3) F(4) G(5)</strong>.</p>
+          <p>Your <strong>left hand mirrors it</strong>, going down from the C an octave below: <strong>C(1)
+             B(2) A(3) G(4) F(5)</strong>. Both thumbs rest near the middle.</p>
+          <p class="hk-honest-note">That's it for now — just a natural resting position, not a rule you have
+             to force. We'll come back to real fingering later in the course.</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Got it — find our first chord</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => goForward({ step: "find-g" }));
       } else if (step === "find-g") {
         const gChord = LESSON1_CHORDS.G;
@@ -1105,6 +1150,11 @@ function initLessonsTab(root) {
                of ${chord.notes.length} individual keys, <strong>named ${noteNames.join(", ")}</strong>: press all
                ${chord.notes.length} together and that's the ${chord.letter} chord.</p>
             <p>${CHORD_ANCHOR[key]}</p>
+            ${teachIdx === 0 ? `<p class="hk-honest-note">Quick heads-up: the big <strong>1</strong> next to G
+               here is a totally different "number" from the 5 we counted earlier to physically find G on the
+               keyboard. That counting was about location (5 white keys from Middle C). This 1-5-6-4 numbering
+               is about position in the SONG — G is always "1" because it's this song's home base (its key),
+               no matter where it physically sits on your keyboard. Don't mix the two up.</p>` : ""}
             <p><strong>Press all ${chord.notes.length} lit-up keys now.</strong> Then tap Next.</p>
             <div class="hk-tuner-mount"></div>`)}
           ${KEYBOARD_HINT}`;

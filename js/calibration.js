@@ -22,21 +22,29 @@ function initCalibration(root, { onComplete } = {}) {
       <div class="hk-calibration">
         <h3>Step 1 of 2 — find Middle C by ear</h3>
         <div id="hk-cal-keyboard-step1" class="hk-keyboard-wrap"></div>
-        <p>On a real piano or keyboard, find the <strong>white key just left of the two black keys
-           nearest the middle</strong> of your instrument — that's Middle C (highlighted above), no
-           matter how big or small your keyboard is or where it starts.</p>
+        <p>Every piano/keyboard repeats the same pattern of black keys, over and over: a group of
+           <strong>2 black keys</strong>, then a group of <strong>3 black keys</strong>, then back to 2, and so
+           on — <strong>this repeats no matter how big or small your keyboard is</strong>. Find the group of 2
+           black keys closest to the middle of your instrument (highlighted above, next to the C) — Middle C
+           is the <strong>white key immediately to its left</strong> (also highlighted above).</p>
+        <p class="hk-honest-note">On a real piano, that's usually close to dead-center. On a small 25-key
+           keyboard, there might only be one group of 2 black keys total — that one is it.</p>
         <button class="hk-btn" id="hk-play-ref">Play reference tone (Middle C)</button>
         <button class="hk-btn hk-btn-primary" id="hk-start-listen">Start listening &amp; play your key</button>
         <p id="hk-cal-status" class="hk-cal-status"></p>
       </div>`;
 
-    // Same renderKeyboard + highlightChord component/styling used
-    // everywhere else (e.g. Lesson 1's "this is the 1/G") — reused
-    // directly, not a new visual language just for this screen. Shown
-    // before the text explanation so the learner sees exactly which key
-    // is meant instead of reading a description and guessing.
+    // Item 50: show the actual physical landmark, not just describe it
+    // in text — the group of 2 black keys (C#/D#, MIDI 61 and 63)
+    // highlighted right alongside Middle C (60) itself, so the learner
+    // sees exactly which black-key pair to look for on their own
+    // instrument instead of reading a description and guessing. Same
+    // renderKeyboard + highlightChord component/styling used everywhere
+    // else (e.g. Lesson 1's "this is the 1/G") — reused directly.
     const kb = renderKeyboard(root.querySelector("#hk-cal-keyboard-step1"), { startMidi: 48, endMidi: 72 });
-    kb.highlightChord([REFERENCE_MIDI], { number: "Middle", letter: "C", rootMidi: REFERENCE_MIDI });
+    kb.highlightChord([REFERENCE_MIDI, REFERENCE_MIDI + 1, REFERENCE_MIDI + 3], {
+      number: "Middle", letter: "C", rootMidi: REFERENCE_MIDI,
+    });
 
     root.querySelector("#hk-play-ref").addEventListener("click", () => playTone(REFERENCE_MIDI, { duration: 1.2, gain: 0.2 }));
 

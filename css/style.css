@@ -272,6 +272,17 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-badge-hand { font-size: 1.1rem; font-weight: bold; color: #1a2a33; }
 .hk-key-badge-left .hk-badge-letter { color: #7a2e49; }
 
+/* Item 50: finger-number badges for the "where do my fingers go" step —
+   a separate small element from .hk-key-badge (which highlightHands()
+   already placed on just the thumb key), so every one of the 5 keys
+   per hand gets its own number without fighting over the same badge. */
+.hk-finger-badge {
+  position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+  width: 20px; height: 20px; border-radius: 50%; background: #1a2a33; color: #fff;
+  font-size: 0.75rem; font-weight: bold; display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+
 /* MIDI tab: computer-keyboard-playable virtual piano (item 28) */
 .hk-midi { padding: 16px 0 40px; }
 .hk-midi-instructions { margin: 10px 0 16px; font-size: 0.9rem; }

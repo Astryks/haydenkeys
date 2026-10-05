@@ -1652,3 +1652,77 @@ titles/artists, Play clip triggers real chord audio with zero console
 errors, Reveal chords displays the correct real chord data for the
 selected song. Zero new console errors beyond the known sandbox-only
 service-worker noise.
+
+## 2026-10-05 update: four real first-lesson usability bugs, from Sid actually using the app (item 50)
+
+- [x] **Computer-keyboard mapping redesigned** (`js/computer-keys.js`):
+      the real bug was that the old RIGHT_KEYS (top row, 12 keys,
+      MIDI 60-71) didn't reach high enough for Lesson 1's own G chord
+      (which needs D5/MIDI 74) — a real, reproducible "ran out of keys
+      mid-chord" bug, not a vague complaint. Redesigned to QWERTY row
+      -> LEFT hand (10 keys, MIDI 60-69/C4-A4) and ASDF row -> RIGHT
+      hand (9 keys, MIDI 70-78/A#4-F#5), chosen so ASDF (the real
+      touch-typing home row) handles the hand doing more chord-finding
+      work. Verified live: every note in the G-D-Em-C progression
+      (MIDI 60-74) now falls inside the combined 60-78 range, and
+      pressing the actual mapped keys for the G chord (i/s/g) correctly
+      highlighted all 3 notes with the right hand coloring.
+- [x] **Real step-ordering bug fixed, not just reworded**: the teaser
+      step's closing button literally said "Let's start with G" but
+      clicking it led to the generic "what's a chord" explainer, not G
+      — exactly the jump Sid reported. Fixed by keeping the teaser's
+      promise generic ("Okay, show me how") and moving the "let's find
+      G" framing to the button that actually leads into the find-G
+      step.
+- [x] **Middle C landmark rebuilt to be genuinely self-contained and
+      physical**, not just described in text: Get Started's calibration
+      screen (`js/calibration.js`) now highlights the actual 2-black-key
+      landmark (MIDI 61 and 63) on the keyboard alongside Middle C
+      itself, not just Middle C alone — so the learner sees exactly
+      which black-key pair to look for, the same way the text describes
+      it. Verified live via screenshot: the C key and both adjacent
+      black keys are all visibly highlighted together.
+- [x] **Finger placement taught for the first time**: a new "fingers"
+      step inserted into Lesson 1 between the chord explainer and
+      finding G, teaching the standard five-finger position (thumb = 1
+      on both hands, right hand C(1)-D(2)-E(3)-F(4)-G(5) ascending, left
+      hand mirrored descending from the octave below) with real
+      per-key finger-number badges on both hands shown simultaneously.
+      Lesson 1's keyboard range widened from 55-79 to 41-79 so the
+      left-hand mirror position (down to F3) actually renders instead
+      of silently falling outside the keyboard's range.
+- [x] **Re-read the whole Get Started -> Lesson 1 sequence end to end
+      as a first-time user**, per Sid's explicit instruction, to catch
+      anything beyond the 4 named bugs — the finger-placement and
+      step-ordering fixes above both came from that full re-read, not
+      just the literal bullet points.
+
+Verified live in a real browser, start to finish: Get Started's Middle
+C landmark is now visually findable from the instructions alone; the
+teaser -> slowdown -> fingers -> find-G -> teach sequence reads
+logically with no promise/payoff mismatch; the computer-keyboard
+mapping was proven (not just reasoned about) to cover the entire
+G-D-Em-C progression using real simulated key presses. Zero new console
+errors beyond the known sandbox-only service-worker noise.
+
+## 2026-10-05 update: distinguish scale-degree numbers from keyboard-location counting (item 51)
+
+- [x] **Real pedagogical conflation fixed**: Sid caught that "G=1" (its
+      scale degree, counted from the song's key/tonic) and "count 5
+      white keys to find G" (a physical keyboard-location count from
+      Middle C) use overlapping digits for two genuinely unrelated
+      concepts, with nothing in the lesson ever distinguishing them.
+      Added a one-time clarification in Lesson 1's `runLesson1()`,
+      shown only the first time a scale-degree number appears right
+      after physical counting was just used (G's teach step,
+      `teachIdx === 0`) — explicitly contrasting "that counting was
+      about location... this numbering is about position in the SONG."
+      Verified live: renders exactly once on chord 1 (G), confirmed via
+      a second check that it does NOT repeat on chord 2 (D), so it
+      clarifies without bloating the lesson.
+
+Verified live in a real browser: the clarification text appears
+clearly on G's teach screen immediately after both numbers ("5 white
+keys" and the big "1") have been shown, reads naturally in the
+mascot's casual voice, and does not repeat on later chords. Zero new
+console errors beyond the known sandbox-only service-worker noise.
