@@ -2145,3 +2145,9 @@ the existing 🥁 Beat.
   - The native app sets `AVAudioSession` to `.playback`, so it's audible with the ringer switch on silent.
   - The web app sets `navigator.audioSession.type = "playback"`.
   - The first touch unlocks Web Audio, so the first key press makes a sound.
+
+## 2026-10-06 — falling-note celebrations, photos and videos in fun facts
+- **Celebration:** finishing a lesson now drops tiny musical notes (♪ ♫ ♩ ♬) from the sky instead of confetti.
+- **Photos:** 11 "Did you know?" facts show a photo of the person. They're freely licensed Wikimedia Commons images bundled in `assets/people/`, with author and licence under each photo and in THIRD_PARTY_NOTICES.
+- **Videos:** 4 facts have click-to-load videos from official channels (Steinway & Sons, Deutsche Grammophon, Neuma Records). On the web they play from youtube-nocookie.com; in the iOS app they open in YouTube. The privacy policy is updated to match.
+- **iOS:** build 2 (portrait, text size, zoom, sound) is on TestFlight. These latest changes need build 3 before submitting.

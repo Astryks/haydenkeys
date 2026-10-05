@@ -903,3 +903,14 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-notefall span { position: absolute; top: -40px; font-weight: bold; text-shadow: 0 1px 2px rgba(0,0,0,0.15); animation-name: hk-note-fall, hk-note-sway; animation-timing-function: ease-in, ease-in-out; animation-iteration-count: 1, infinite; animation-direction: normal, alternate; animation-fill-mode: forwards, none; }
 @keyframes hk-note-fall { 0% { top: -40px; opacity: 0; } 10% { opacity: 1; } 85% { opacity: 1; } 100% { top: 105%; opacity: 0; } }
 @keyframes hk-note-sway { from { transform: translateX(-14px) rotate(-12deg); } to { transform: translateX(14px) rotate(12deg); } }
+
+/* People photos and click-to-load videos */
+.hk-people { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0 4px; }
+.hk-person { margin: 0; width: 140px; }
+.hk-person img { width: 140px; height: 140px; object-fit: cover; object-position: 50% 25%; border-radius: 12px; border: 1px solid var(--hk-border); display: block; background: var(--hk-bg-2); }
+.hk-person figcaption { font-size: 0.78rem; margin-top: 4px; line-height: 1.3; }
+.hk-person figcaption span { display: block; color: var(--hk-text-dim); font-size: 0.68rem; }
+.hk-video { margin: 10px 0 4px; display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+.hk-video-frame { position: relative; width: min(480px, 100%); aspect-ratio: 16 / 9; }
+.hk-video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: 10px; }
+.hk-video .hk-note { font-size: 0.8rem; color: var(--hk-text-dim); }

@@ -49,3 +49,25 @@ term, nothing personal, no user data. This is a real third-party network
 request, disclosed here and in the Privacy Policy, not hidden behind the
 "zero network requests" claim above (which still correctly describes the
 audio-transcription feature specifically).
+
+## Photos of people
+
+Freely licensed images from Wikimedia Commons, resized to small WebP portraits (that resizing is the only change), and credited in the app under each photo.
+
+| Person | Author | Licence | Source |
+|---|---|---|---|
+| Ludwig van Beethoven | Joseph Karl Stieler | Public domain | https://commons.wikimedia.org/wiki/File:Joseph_Karl_Stieler%27s_Beethoven_mit_dem_Manuskript_der_Missa_solemnis.jpg |
+| Frédéric Chopin | Louis-Auguste Bisson | Public domain | https://commons.wikimedia.org/wiki/File:Frederic_Chopin_photo.jpeg |
+| Bartolomeo Cristofori | Unknown author | Public domain | https://commons.wikimedia.org/wiki/File:BartolomeoCristofori.jpg |
+| Elton John | Raph_PH | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:EltonDocBFILFF101024_(4_of_17)_(cropped).jpg |
+| Sébastien Érard | H. Pottin | Public domain | https://commons.wikimedia.org/wiki/File:S%C3%A9bastien_%C3%89rard.jpg |
+| Glenn Gould | Richard Avedon | Public domain | https://commons.wikimedia.org/wiki/File:Glenn_Gould_1961_(cropped).jpg |
+| Herbie Hancock | Library of Congress Life | CC0 | https://commons.wikimedia.org/wiki/File:Herbie_Hancock_2023.jpg |
+| John Cage | Rob Bogaerts for Anefo | CC0 | https://commons.wikimedia.org/wiki/File:John_Cage_(1988).jpg |
+| Franz Liszt | Herman Biow | Public domain | https://commons.wikimedia.org/wiki/File:Franz_Liszt_by_Herman_Biow-_1843.png |
+| Wolfgang Amadeus Mozart | Johann Nepomuk della Croce | Public domain | https://commons.wikimedia.org/wiki/File:The_Mozart_Family_-_Wolfgang_Amadeus_Mozart_headshot.jpg |
+| Nina Simone | Gerrit de Bruin | CC BY 4.0 | https://commons.wikimedia.org/wiki/File:Nina_Simone_-1969.jpg |
+
+## Videos
+
+Some fun facts link to YouTube videos from official channels (Steinway & Sons, Deutsche Grammophon, Neuma Records). They're embedded click-to-load from youtube-nocookie.com, not redistributed.
