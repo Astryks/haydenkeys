@@ -362,22 +362,72 @@ function initPracticeTab(root, { initialSong } = {}) {
   }
 
   // --- Upload-your-own-audio transcription (basic-pitch, Apache-2.0) ---
+  // basic-pitch requires mono audio at exactly 22050 Hz. decodeAudioData
+  // gives back whatever sample rate the source file/container actually
+  // used (commonly 44100/48000 Hz, and stereo) — e.g. a real bug caught
+  // in testing: uploading fortnite.mp4 decoded fine (decodeAudioData
+  // already pulls the audio track out of a video container on its own)
+  // but then failed inside basic-pitch with "Input audio buffer is not
+  // at correct sample rate! Is 48000. Should be 22050." This resamples
+  // AND downmixes to mono via an OfflineAudioContext rendered at the
+  // target rate — a standard technique, no new dependency. Connecting a
+  // multi-channel source to a 1-channel destination downmixes
+  // automatically per the Web Audio spec's channel-interpretation rules
+  // (equal-power sum of channels), which is the normal mono-summing
+  // approach.
+  async function resampleToMono22050(audioBuffer) {
+    const targetRate = 22050;
+    if (audioBuffer.sampleRate === targetRate && audioBuffer.numberOfChannels === 1) {
+      return audioBuffer; // already in the right format, nothing to do
+    }
+    const length = Math.ceil(audioBuffer.duration * targetRate);
+    const offlineCtx = new OfflineAudioContext(1, length, targetRate);
+    const source = offlineCtx.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(offlineCtx.destination);
+    source.start(0);
+    return offlineCtx.startRendering();
+  }
+
   async function handleUpload(e) {
     const file = e.target.files[0];
     if (!file) return;
     const statusEl = root.querySelector("#hk-upload-status");
-    statusEl.textContent = "Loading transcription model (first use downloads ~a few MB, cached after)...";
+
+    // Decode first (format/sample-rate issues are unrelated to network
+    // access, and reported with their own distinct message).
+    let audioBuffer;
     try {
+      statusEl.textContent = "Decoding audio...";
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const arrayBuffer = await file.arrayBuffer();
-      const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+      const decoded = await audioCtx.decodeAudioData(arrayBuffer);
+      statusEl.textContent = `Resampling from ${decoded.sampleRate} Hz / ${decoded.numberOfChannels}ch to 22050 Hz mono...`;
+      audioBuffer = await resampleToMono22050(decoded);
+    } catch (err) {
+      statusEl.textContent = `Couldn't decode this file: ${err.message}. Try a standard mp3, wav, or mp4/mov file.`;
+      console.error(err);
+      return;
+    }
 
-      const { BasicPitch, outputToNotesPoly, addPitchBendsToNoteEvents, noteFramesToTime } =
-        await import("https://esm.sh/@spotify/basic-pitch@1.0.1?bundle");
-      const basicPitch = new BasicPitch(
-        "https://unpkg.com/@spotify/basic-pitch@1.0.1/model/model.json"
-      );
+    // Separately: loading the model needs the network (it's fetched
+    // from a CDN, never bundled/vendored — see THIRD_PARTY_NOTICES.md).
+    // A failure here is a genuinely different problem (no internet)
+    // from a decode/format problem, and is reported as such rather than
+    // one bundled, confusing message.
+    let BasicPitch, outputToNotesPoly, addPitchBendsToNoteEvents, noteFramesToTime, basicPitch;
+    try {
+      statusEl.textContent = "Loading transcription model from CDN (first use downloads ~a few MB, cached after)...";
+      ({ BasicPitch, outputToNotesPoly, addPitchBendsToNoteEvents, noteFramesToTime } =
+        await import("https://esm.sh/@spotify/basic-pitch@1.0.1?bundle"));
+      basicPitch = new BasicPitch("https://unpkg.com/@spotify/basic-pitch@1.0.1/model/model.json");
+    } catch (err) {
+      statusEl.textContent = `Couldn't reach the transcription model (${err.message}). This feature needs network access to fetch basic-pitch from its CDN the first time — check your connection and try again.`;
+      console.error(err);
+      return;
+    }
 
+    try {
       const frames = [];
       const onsets = [];
       const contours = [];
@@ -399,7 +449,7 @@ function initPracticeTab(root, { initialSong } = {}) {
       statusEl.textContent = `Done — detected ${notes.length} notes. (Playback of transcribed notes is a Phase 2 item; this confirms transcription itself works.)`;
       console.log("Hayden Keys: basic-pitch transcription result", notes);
     } catch (err) {
-      statusEl.textContent = `Transcription failed in this browser/environment: ${err.message}. This feature needs network access to fetch the model and a browser with WebGL/TensorFlow.js support.`;
+      statusEl.textContent = `Transcription failed: ${err.message}.`;
       console.error(err);
     }
   }
