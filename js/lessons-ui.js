@@ -297,11 +297,37 @@ function initLessonsTab(root) {
   // The panda mascot narrates the simplified, numbers-first copy
   // throughout the lesson flow (items 22/23) — a small consistent avatar
   // next to whatever it's "saying," Duolingo-owl-style.
-  function mascotSay(html) {
+  // `pose` picks which hand-drawn panda illustration narrates this
+  // moment (item 35) — defaults to the standard face (ordinary
+  // step-by-step teaching), but specific call sites pass one of the
+  // extracted assets/mascot-poses/*.png files for a matching mood
+  // (classical repertoire, jazz, a level-up celebration, an idle/empty
+  // state), so the mascot isn't visually identical on every screen. The
+  // primary brand mark (header/favicon/app icon) intentionally stays
+  // fixed on the main piano pose — only these narrator moments vary.
+  function mascotSay(html, pose = "assets/mascot-face.png") {
     return `<div class="hk-mascot-row">
-      <img src="assets/mascot-face.png" alt="" class="hk-mascot-avatar" />
+      <img src="${pose}" alt="" class="hk-mascot-avatar" />
       <div class="hk-mascot-bubble">${html}</div>
     </div>`;
+  }
+
+  // A small, stable-per-song pool of fun poses for the many "Master this
+  // song" lessons, so dozens of song screens aren't all the identical
+  // static face — picked deterministically from the song title (so the
+  // same song always shows the same pose) rather than re-randomized.
+  const SONG_POSE_POOL = [
+    "assets/mascot-poses/grand-piano.png",
+    "assets/mascot-poses/harp.png",
+    "assets/mascot-poses/trombone.png",
+    "assets/mascot-poses/violin-dozing.png",
+    "assets/mascot-poses/metronome.png",
+    "assets/mascot-poses/maestro-flute.png",
+  ];
+  function poseForSong(title) {
+    let hash = 0;
+    for (let i = 0; i < title.length; i++) hash = (hash * 31 + title.charCodeAt(i)) >>> 0;
+    return SONG_POSE_POOL[hash % SONG_POSE_POOL.length];
   }
 
   // ----- Step 1: Get yourself a piano (info card, no keyboard needed) ---
@@ -375,7 +401,7 @@ function initLessonsTab(root) {
         content.innerHTML = mascotSay(`
           ${intermediateUnlock ? "<h3>Intermediate unlocked!</h3><p>You've completed enough Beginner songs to get here for real.</p>" : `<h3>${song.title}</h3>`}
           <p>${intermediateUnlock ? `"${song.title}" by ${song.artist}` : `By ${song.artist}`}. Real, verified chords: <strong>${song.chords.join(" - ")}</strong>.</p>
-          <p>Let's press them one at a time, together.</p>`);
+          <p>Let's press them one at a time, together.</p>`, intermediateUnlock ? "assets/mascot-poses/maestro-conducting.png" : poseForSong(song.title));
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Start</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step = "play"; idx = 0; renderStep(); });
       } else if (step === "play") {
@@ -405,7 +431,8 @@ function initLessonsTab(root) {
           <h3>You just played "${song.title}" start to finish!</h3>
           ${newlyEarned.length
             ? `<p>You also just unlocked: ${newlyEarned.map((b) => `${b.icon} ${b.title}`).join(", ")}.</p>`
-            : `<p>More real songs are waiting for you in the lesson timeline.</p>`}`);
+            : `<p>More real songs are waiting for you in the lesson timeline.</p>`}`,
+          newlyEarned.length ? "assets/mascot-poses/maestro-conducting.png" : poseForSong(song.title));
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
@@ -573,13 +600,13 @@ function initLessonsTab(root) {
         content.innerHTML = mascotSay(`
           <h3>Here's a fun trick real jazz musicians use.</h3>
           <p>Left hand loops the G-D-Em-C chords you already know. Right hand plays ANY of a few
-             "safe" notes, in any order, any rhythm — it'll sound good no matter what.</p>`);
+             "safe" notes, in any order, any rhythm — it'll sound good no matter what.</p>`, "assets/mascot-poses/maestro-flute.png");
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Try noodling</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step = 1; renderStep(); });
       } else {
         content.innerHTML = `
           ${mascotSay(`<p>The left hand is looping the chords. Tap any of the <strong>outlined</strong> keys —
-             there's no wrong note here.</p>`)}
+             there's no wrong note here.</p>`, "assets/mascot-poses/maestro-flute.png")}
           <p class="hk-honest-note">Just a preview — when you've noodled a bit, mark it complete.</p>`;
         // Playback controls (item 31): this is a real continuous loop
         // playing through time, so it gets the same pause/resume parity
@@ -715,7 +742,7 @@ function initLessonsTab(root) {
                   only its first two chords are confidently sourced for this app — the rest of the tune's
                   harmony needs more research, so we're not guessing at it.</p>
                <p><strong>Press and hold ${symbol}.</strong></p>`
-            : `<p><strong>Press and hold ${symbol}.</strong></p>`)}`;
+            : `<p><strong>Press and hold ${symbol}.</strong></p>`, "assets/mascot-poses/trombone.png")}`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Next chord</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { idx++; renderStep(); });
       } else {
@@ -723,7 +750,7 @@ function initLessonsTab(root) {
         kb.clearHighlights();
         content.innerHTML = mascotSay(`<h3>That's a real taste of jazz ballad harmony.</h3>
           <p>Just 2 chords of a much richer tune — an early preview of where the Jazz comping bonus lesson
-             (later in the arc) goes much deeper.</p>`);
+             (later in the arc) goes much deeper.</p>`, "assets/mascot-poses/trombone.png");
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
@@ -752,7 +779,7 @@ function initLessonsTab(root) {
                   you'll hear it in countless other jazz tunes and film scores once you know to listen
                   for it. One note moves down by a half-step each chord: C, B, Bb, A.</p>
                <p><strong>Press and hold ${symbol}.</strong></p>`
-            : `<p><strong>Press and hold ${symbol}.</strong></p>`)}`;
+            : `<p><strong>Press and hold ${symbol}.</strong></p>`, "assets/mascot-poses/harp.png")}`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Next chord</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { idx++; renderStep(); });
       } else {
@@ -760,7 +787,7 @@ function initLessonsTab(root) {
         markSongStatus(song.title, "completed");
         kb.clearHighlights();
         content.innerHTML = mascotSay(`<h3>That descending line is real jazz vocabulary.</h3>
-          <p>Keep an ear out for it — once you've heard it once, you'll start noticing it everywhere.</p>`);
+          <p>Keep an ear out for it — once you've heard it once, you'll start noticing it everywhere.</p>`, "assets/mascot-poses/harp.png");
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
@@ -782,7 +809,7 @@ function initLessonsTab(root) {
         content.innerHTML = mascotSay(`
           <h3>An early preview: a real piece by a legend.</h3>
           <p>Beethoven's "Für Elise" (1810) — one of the most famous nine notes in piano repertoire.
-             The full capstone two-hand treatment is still ahead in the arc; this is just a taste.</p>`);
+             The full capstone two-hand treatment is still ahead in the arc; this is just a taste.</p>`, "assets/mascot-poses/composer.png");
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Play it</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step = 1; renderStep(); });
       } else if (step <= FUR_ELISE_OPENING.rightHand.length) {
@@ -801,7 +828,7 @@ function initLessonsTab(root) {
         markLessonComplete("lesson-beethoven");
         kb.clearHighlights();
         content.innerHTML = mascotSay(`<h3>That's the most famous nine notes in piano repertoire.</h3>
-          <p>The full piece gets considerably harder from here — a real taste, not the whole piece.</p>`);
+          <p>The full piece gets considerably harder from here — a real taste, not the whole piece.</p>`, "assets/mascot-poses/composer.png");
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
@@ -841,7 +868,7 @@ function initLessonsTab(root) {
                   opening gesture. The full catalog entry (still "attempt not complete") is in the
                   repertoire list on the Bonus: Advanced repertoire lesson.</p>
                <p><strong>Press the E chord.</strong></p>`
-            : `<p><strong>Press the E chord again.</strong></p>`)}`;
+            : `<p><strong>Press the E chord again.</strong></p>`, "assets/mascot-poses/music-stand.png")}`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Next hit</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { hits++; renderStep(); });
       } else {
@@ -849,7 +876,7 @@ function initLessonsTab(root) {
         kb.clearHighlights();
         content.innerHTML = mascotSay(`<h3>That's the honest attempt.</h3>
           <p>A real, scoped-down fragment — not a fabricated "simplified Spring." The full piece stays a
-             verified catalog entry until it can be simplified responsibly.</p>`);
+             verified catalog entry until it can be simplified responsibly.</p>`, "assets/mascot-poses/music-stand.png");
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
@@ -875,7 +902,7 @@ function initLessonsTab(root) {
          Independent sources confirm the piece's key, structure, and character, but not a specific,
          confidently-verified opening note sequence we'd be comfortable teaching as "the real thing" —
          rather than guess at the melody, this stays a real, verified catalog entry, same as several
-         other pieces in the Bonus: Advanced repertoire lesson.</p>`);
+         other pieces in the Bonus: Advanced repertoire lesson.</p>`, "assets/mascot-poses/mozart-scores.png");
     controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
     controls.querySelector("#hk-done").addEventListener("click", () => {
       markLessonComplete("lesson-chopin");
@@ -1016,7 +1043,8 @@ function initLessonsTab(root) {
               ? `<h3>You unlocked a level!</h3>
                  <div class="hk-levelup-badge">${earned.icon} <strong>${earned.title}</strong></div>
                  <p>${earned.desc}</p>`
-              : `<h3>Lesson complete.</h3><p>Nice work going through Lesson 1 again.</p>`)}
+              : `<h3>Lesson complete.</h3><p>Nice work going through Lesson 1 again.</p>`,
+              earned ? "assets/mascot-poses/maestro-conducting.png" : "assets/mascot-face.png")}
             <p>Out of the ${SONGS.length} songs in this app's library, <strong>${ONE_FIVE_SIX_FOUR_SONGS.length}</strong> use this
                same four-chord family (${exact.length} the exact same loop, ${variant.length} the same 4 chords in a
                different order). The rest use other — often minor-key or more complex — patterns, which is exactly
@@ -1124,7 +1152,7 @@ function initLessonsTab(root) {
           ${mascotSay(`<h3>Traditional notation: an optional, deeper layer</h3>
           <p>Everything so far used numbers and letters. Professional sheet music uses a 5-line <strong>staff</strong> instead —
              each vertical position is a different note. You don't need this to play along in this app, but it's worth knowing.</p>
-          <p>Here's "Ode to Joy" (Beethoven, 1824 — public domain), one note at a time:</p>`)}
+          <p>Here's "Ode to Joy" (Beethoven, 1824 — public domain), one note at a time:</p>`, "assets/mascot-poses/music-stand.png")}
           <div id="hk-staff-wrap">${renderStaffSvg(ODE_TO_JOY_MELODY, -1)}</div>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Start</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => {
@@ -2028,13 +2056,13 @@ function initLessonsTab(root) {
              fits</strong> reasonably well over a diatonic progression in the same key, because every note in it
              is either a chord tone or a safe passing tone. No deep jazz theory required to sound musical.</p>
           <p>Left hand (pink) will loop a ii-V-I in C major (Dm7-G7-Cmaj7 — the exact 7th chords from Days
-             26-28). The right hand's "safe notes" (light blue outline) are the C major pentatonic scale: C, D, E, G, A.</p>`);
+             26-28). The right hand's "safe notes" (light blue outline) are the C major pentatonic scale: C, D, E, G, A.</p>`, "assets/mascot-poses/trombone.png");
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Start noodling</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step = 1; renderStep(); });
       } else {
         content.innerHTML = `
           ${mascotSay(`<p>The left hand is looping the progression. Click anywhere in the <strong>highlighted (outlined)</strong>
-             keys with your mouse/finger to improvise — there's no wrong note here.</p>`)}
+             keys with your mouse/finger to improvise — there's no wrong note here.</p>`, "assets/mascot-poses/trombone.png")}
           <p id="hk-jazz-timer">Time spent noodling: 0s</p>
           <p class="hk-honest-note">This lesson isn't quiz-scored — when you've had enough, just mark it complete.</p>`;
         // Playback controls (item 31): a real continuous backing loop

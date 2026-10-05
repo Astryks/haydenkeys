@@ -14,11 +14,19 @@ function initSavedTab(root, { onOpenSong } = {}) {
         <h2>Your progress</h2>
         <section>
           <h3>Lessons completed (${completedLessons.length}/${LESSONS.length})</h3>
-          ${completedLessons.length ? `<ul>${completedLessons.map((l) => `<li>${l.title}</li>`).join("")}</ul>` : "<p class='hk-empty'>None yet — head to the Lessons tab.</p>"}
+          ${completedLessons.length
+            ? `<ul>${completedLessons.map((l) => `<li>${l.title}</li>`).join("")}</ul>`
+            : `<div class="hk-empty-state">
+                 <img src="assets/mascot-poses/dreaming-notes.png" alt="" class="hk-empty-mascot" />
+                 <p class="hk-empty">None yet — head to the Lessons tab.</p>
+               </div>`}
         </section>
         <section>
           <h3>Songs (${entries.length})</h3>
-          ${entries.length ? "" : "<p class='hk-empty'>Nothing saved yet — start a song from the Discover tab.</p>"}
+          ${entries.length ? "" : `<div class="hk-empty-state">
+                 <img src="assets/mascot-poses/dreaming-notes.png" alt="" class="hk-empty-mascot" />
+                 <p class="hk-empty">Nothing saved yet — start a song from the Discover tab.</p>
+               </div>`}
           <div class="hk-saved-list" id="hk-saved-list"></div>
         </section>
       </div>`;

@@ -116,6 +116,7 @@ function initPracticeTab(root, { initialSong } = {}) {
         </div>
         <p class="hk-mode-desc">${modeDescription()}</p>
         <div class="hk-speed-picker" id="hk-speed-picker">
+          <img src="assets/mascot-poses/metronome.png" alt="" class="hk-speed-mascot" />
           <span class="hk-speed-label">Speed:</span>
           ${SPEEDS.map((s) => `<button class="hk-speed-btn ${s === playbackSpeed ? "hk-speed-active" : ""}" data-speed="${s}">${s}×${s === 1 ? " (normal)" : s === 0.5 ? " (slow)" : ""}</button>`).join("")}
         </div>

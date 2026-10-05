@@ -420,6 +420,8 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 /* Saved */
 .hk-saved section { margin-bottom: 24px; }
 .hk-empty { color: var(--hk-text-dim); }
+.hk-empty-state { display: flex; align-items: center; gap: 12px; }
+.hk-empty-mascot { width: 56px; height: 56px; object-fit: cover; border-radius: 10px; flex: 0 0 auto; }
 .hk-saved-row {
   display: flex; justify-content: space-between; align-items: center; gap: 10px;
   background: var(--hk-panel); border-radius: 8px; padding: 10px 14px; margin-bottom: 8px;
@@ -567,6 +569,7 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 
 /* Playback speed control */
 .hk-speed-picker { display: flex; align-items: center; gap: 6px; margin: 4px 0 10px; flex-wrap: wrap; }
+.hk-speed-mascot { width: 32px; height: 32px; object-fit: cover; border-radius: 8px; margin-right: 2px; }
 .hk-speed-label { color: var(--hk-text-dim); font-size: 0.82rem; margin-right: 2px; }
 .hk-speed-btn {
   background: var(--hk-panel); color: var(--hk-text-dim); border: 1px solid var(--hk-border);

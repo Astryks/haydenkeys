@@ -738,3 +738,45 @@ themselves arrived — not something achievable by editing code.
   only actually resolve once the site is deployed with this change —
   GitHub Pages deployment is still blocked on the one-time manual
   enablement step documented earlier in this file.
+
+## 2026-10-05 update: varied mascot poses across the app
+
+- [x] **12 distinct poses extracted** from Sid's irregular contact sheet
+      (`assets/mascot-poses/source-sheet.png`, his own art, same
+      provenance as the main mascot) into their own cropped files under
+      `assets/mascot-poses/`: `composer`, `dreaming-notes`,
+      `maestro-conducting`, `maestro-flute`, `grand-piano`, `harp`,
+      `trombone`, `violin-dozing`, `metronome`, `mozart-scores`,
+      `music-stand`, `sheet-music-pile`. Cropped by eye against the
+      actual cell boundaries (the grid isn't uniform — the grand-piano
+      panel spans two rows' worth of height), iterated twice to trim
+      caption-label bleed-through at the bottom of several crops.
+- [x] **Primary brand mark stays fixed**: header, favicon, and app icon
+      still only ever use `mascot-square.png`/`mascot-full.png` —
+      intentionally not randomized, per the explicit instruction to keep
+      the recognizable brand mark consistent.
+- [x] **Contextual variety wired into specific moments**, not random
+      everywhere: `mascotSay()` (`js/lessons-ui.js`) now takes an
+      optional `pose` argument — classical showcase lessons (Beethoven,
+      Vivaldi, Chopin) use `composer`/`music-stand`/`mozart-scores`;
+      jazz lessons (Almost Blue, My Funny Valentine, both jazz-comping
+      lessons) use `trombone`/`harp`/`maestro-flute`; genuine level-up/
+      badge-earned moments (Lesson 1's finale, any "Master this song"
+      lesson that newly earns a badge, the "Intermediate unlocked"
+      showcase) use `maestro-conducting`; the Saved tab's two empty
+      states use `dreaming-notes`; Practice's speed-control row gets a
+      small `metronome` icon next to the "Speed:" label.
+- [x] **Deterministic rotation for the ~60 "Master this song" lessons**:
+      rather than one static face on every one of dozens of song
+      screens, each song's title is hashed to pick one of 6 poses
+      (`grand-piano`/`harp`/`trombone`/`violin-dozing`/`metronome`/
+      `maestro-flute`) — the same song always shows the same pose (not
+      re-randomized on every visit), but different songs genuinely show
+      different poses. Verified directly: "No Woman No Cry" and "With or
+      Without You" render two different poses back to back.
+- [x] Verified in a real browser: header/favicon unchanged across every
+      tab switch; Almost Blue shows trombone; the Saved tab's empty
+      states show the sleeping pose; Practice's speed picker shows the
+      metronome; zero console errors beyond the known sandbox-only
+      service-worker noise; all 12 new pose assets confirmed loading
+      with 200 OK via the network request log (no broken images).
