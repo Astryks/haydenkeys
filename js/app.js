@@ -7,6 +7,7 @@ import { initHowItWorksTab } from "./how-it-works.js";
 const TABS = ["discover", "practice", "saved", "lessons", "how"];
 const panels = {};
 let savedApi = null;
+let discoverApi = null;
 
 function showTab(name) {
   TABS.forEach((t) => {
@@ -14,6 +15,11 @@ function showTab(name) {
     document.querySelector(`[data-tab="${t}"]`).classList.toggle("hk-tab-active", t === name);
   });
   if (name === "saved" && savedApi) savedApi.refresh();
+  // Discover's tier-gating (locked/unlocked Intermediate/Advanced songs)
+  // depends on completion state that can change elsewhere (Practice,
+  // Saved) — refresh it every time the tab is shown so lock status is
+  // never stale.
+  if (name === "discover" && discoverApi) discoverApi.refresh();
 }
 
 function init() {
@@ -25,7 +31,7 @@ function init() {
     btn.addEventListener("click", () => showTab(btn.dataset.tab));
   });
 
-  initDiscoverTab(panels.discover, {
+  discoverApi = initDiscoverTab(panels.discover, {
     onStartSong: (song) => {
       initPracticeTab(panels.practice, { initialSong: song });
       showTab("practice");

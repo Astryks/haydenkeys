@@ -1,6 +1,9 @@
-import { SONGS } from "./songs-data.js";
+import { SONGS, getDifficulty } from "./songs-data.js";
 import { markSongStatus, getSavedSongs } from "./storage.js";
 import { transcribeFile } from "./transcribe.js";
+
+const TIER_ORDER = ["Beginner", "Intermediate", "Advanced"];
+const UNLOCK_THRESHOLD = 5; // complete 5 songs in a tier to unlock the next
 
 function confidenceBadge(song) {
   return song.confidence === "confirmed"
@@ -14,14 +17,57 @@ function matchBadge(song) {
   return "";
 }
 
+function difficultyBadge(difficulty) {
+  const cls = { Beginner: "hk-badge-beginner", Intermediate: "hk-badge-intermediate", Advanced: "hk-badge-advanced-tier" }[difficulty];
+  return `<span class="hk-badge ${cls}">${difficulty}</span>`;
+}
+
+// Counts how many songs of a given difficulty the user has marked
+// "completed" (localStorage-backed, the same mechanism lesson
+// completion already uses) — the real gating signal, not a guess.
+function countCompleted(difficulty) {
+  const saved = getSavedSongs();
+  return SONGS.filter((s) => saved[s.title]?.status === "completed" && getDifficulty(s) === difficulty).length;
+}
+
+// Tier gating: Beginner is always unlocked. Intermediate unlocks after
+// 5 completed Beginner songs; Advanced after 5 completed Intermediate
+// songs. Gating is per-TIER only — once a tier is unlocked, every song
+// in it is freely reachable in any order (no song-by-song sequencing).
+function tierUnlockStatus(difficulty) {
+  if (difficulty === "Beginner") return { unlocked: true };
+  if (difficulty === "Intermediate") {
+    const have = countCompleted("Beginner");
+    return { unlocked: have >= UNLOCK_THRESHOLD, have, need: UNLOCK_THRESHOLD, priorTier: "Beginner" };
+  }
+  const have = countCompleted("Intermediate");
+  return { unlocked: have >= UNLOCK_THRESHOLD, have, need: UNLOCK_THRESHOLD, priorTier: "Intermediate" };
+}
+
 function songCard(song, onStart) {
   const saved = getSavedSongs()[song.title];
+  const difficulty = getDifficulty(song);
+  const lock = tierUnlockStatus(difficulty);
   const div = document.createElement("div");
-  div.className = "hk-song-card" + (song.advanced ? " hk-song-card-advanced" : "");
+  div.className = "hk-song-card" + (song.advanced ? " hk-song-card-advanced" : "") + (!lock.unlocked ? " hk-song-card-locked" : "");
+
+  if (!lock.unlocked) {
+    div.innerHTML = `
+      <div class="hk-song-card-top">
+        <h3>${song.title}</h3>
+        ${difficultyBadge(difficulty)}
+      </div>
+      <p class="hk-song-artist">${song.artist} &middot; ${song.genre}</p>
+      <p class="hk-lock-message">&#128274; Complete ${lock.need - lock.have} more ${lock.priorTier} song${lock.need - lock.have === 1 ? "" : "s"}
+         (${lock.have}/${lock.need} so far) to unlock ${difficulty} songs like this one.</p>`;
+    return div;
+  }
+
   div.innerHTML = `
     <div class="hk-song-card-top">
       <h3>${song.title}</h3>
       ${song.advanced ? `<span class="hk-badge hk-badge-advanced" title="Not part of the beginner curriculum">Advanced / bonus</span>` : ""}
+      ${difficultyBadge(difficulty)}
       ${confidenceBadge(song)}
     </div>
     <p class="hk-song-artist">${song.artist} &middot; ${song.genre}</p>
@@ -48,7 +94,19 @@ function initDiscoverTab(root, { onStartSong } = {}) {
           <option value="">All genres</option>
           ${genres.map((g) => `<option value="${g}">${g}</option>`).join("")}
         </select>
+        <select id="hk-tier-filter">
+          <option value="">All levels</option>
+          ${TIER_ORDER.map((t) => `<option value="${t}">${t}</option>`).join("")}
+        </select>
       </div>
+      <p class="hk-tier-progress">
+        ${TIER_ORDER.map((t) => {
+          const lock = tierUnlockStatus(t);
+          return lock.unlocked
+            ? `<span class="hk-tier-status hk-tier-unlocked">${t} unlocked</span>`
+            : `<span class="hk-tier-status">${t}: ${lock.have}/${lock.need} ${lock.priorTier} songs completed</span>`;
+        }).join(" &middot; ")}
+      </p>
       <div class="hk-upload-banner">
         <h3>Upload any song and learn it with Hayden Keys!</h3>
         <input type="file" id="hk-discover-upload" accept="audio/*,video/*" />
@@ -68,6 +126,7 @@ function initDiscoverTab(root, { onStartSong } = {}) {
   const grid = root.querySelector("#hk-song-grid");
   const searchInput = root.querySelector("#hk-search");
   const genreSelect = root.querySelector("#hk-genre-filter");
+  const tierSelect = root.querySelector("#hk-tier-filter");
 
   root.querySelector("#hk-discover-upload").addEventListener("change", async (e) => {
     const file = e.target.files[0];
@@ -87,9 +146,17 @@ function initDiscoverTab(root, { onStartSong } = {}) {
   function render() {
     const query = searchInput.value.trim().toLowerCase();
     const genre = genreSelect.value;
+    const tier = tierSelect.value;
     grid.innerHTML = "";
+    root.querySelector(".hk-tier-progress").innerHTML = TIER_ORDER.map((t) => {
+      const lock = tierUnlockStatus(t);
+      return lock.unlocked
+        ? `<span class="hk-tier-status hk-tier-unlocked">${t} unlocked</span>`
+        : `<span class="hk-tier-status">${t}: ${lock.have}/${lock.need} ${lock.priorTier} songs completed</span>`;
+    }).join(" &middot; ");
     SONGS
       .filter((s) => (!genre || s.genre === genre))
+      .filter((s) => (!tier || getDifficulty(s) === tier))
       .filter((s) => !query || s.title.toLowerCase().includes(query) || s.artist.toLowerCase().includes(query))
       .sort((a, b) => a.popularityRank - b.popularityRank)
       .forEach((song) => grid.appendChild(songCard(song, onStartSong || (() => {}))));
@@ -97,7 +164,10 @@ function initDiscoverTab(root, { onStartSong } = {}) {
 
   searchInput.addEventListener("input", render);
   genreSelect.addEventListener("change", render);
+  tierSelect.addEventListener("change", render);
   render();
+
+  return { refresh: render };
 }
 
 export { initDiscoverTab };

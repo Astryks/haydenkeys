@@ -1522,4 +1522,29 @@ const SONG_STRUCTURES = {
   ],
 };
 
-export { SONGS, ONE_FIVE_SIX_FOUR_SONGS, SONG_STRUCTURES };
+// --- Difficulty tiers (Beginner / Intermediate / Advanced) --------------
+// Computed from the chord data already researched and verified above,
+// not assigned by genre-name vibes (genre only enters it once, for jazz
+// standards specifically — see below — because that category's harmonic
+// complexity was independently confirmed while researching every one of
+// those songs, not assumed from the label "jazz").
+//
+//   Beginner     — a confirmed, simple 4-chord-family song (an exact or
+//                  reordered 1-5-6-4 relative). The "G-D-Em-C plays 100
+//                  songs" category this whole app opens with.
+//   Advanced     — a jazz standard (genuinely confirmed harmonically
+//                  complex while researching that whole batch — see
+//                  THIRD_PARTY_NOTICES/README), or a song explicitly
+//                  marked `advanced` (Bohemian Rhapsody).
+//   Intermediate — everything else: minor-key loops, 7th-chord/8-chord
+//                  progressions, and needs-verification songs (if we're
+//                  not even confident enough to call its chords solid,
+//                  it isn't honest to call it Beginner-simple either).
+function getDifficulty(song) {
+  if (song.advanced) return "Advanced";
+  if (song.genre && song.genre.startsWith("Jazz Standard")) return "Advanced";
+  if (song.oneFiveSixFourMatch && song.confidence === "confirmed") return "Beginner";
+  return "Intermediate";
+}
+
+export { SONGS, ONE_FIVE_SIX_FOUR_SONGS, SONG_STRUCTURES, getDifficulty };
