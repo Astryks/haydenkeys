@@ -1,0 +1,41 @@
+<svg viewBox="280 170 470 370" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cropped head-only version of mascot.svg, for use as a small
+       recurring "narrator" avatar inside lesson screens (same gradients,
+       same artwork, just the face instead of the full body — see
+       assets/mascot.svg for the source of truth and commit history). -->
+  <defs>
+    <linearGradient id="furGradFace" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e8c9a0" />
+      <stop offset="100%" stop-color="#d9af7e" />
+    </linearGradient>
+    <linearGradient id="bellyGradFace" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fbeede" />
+      <stop offset="100%" stop-color="#f3dec0" />
+    </linearGradient>
+  </defs>
+
+  <!-- ears -->
+  <ellipse cx="370" cy="250" rx="55" ry="85" fill="url(#furGradFace)" transform="rotate(-18 370 250)" />
+  <ellipse cx="654" cy="250" rx="55" ry="85" fill="url(#furGradFace)" transform="rotate(18 654 250)" />
+  <ellipse cx="372" cy="258" rx="28" ry="50" fill="#f6c9c9" transform="rotate(-18 372 258)" />
+  <ellipse cx="652" cy="258" rx="28" ry="50" fill="#f6c9c9" transform="rotate(18 652 258)" />
+
+  <!-- head -->
+  <ellipse cx="512" cy="400" rx="195" ry="175" fill="url(#furGradFace)" />
+  <!-- cream face patch -->
+  <ellipse cx="512" cy="440" rx="130" ry="110" fill="url(#bellyGradFace)" />
+
+  <!-- big friendly eyes -->
+  <circle cx="450" cy="400" r="34" fill="#2a2a3a" />
+  <circle cx="574" cy="400" r="34" fill="#2a2a3a" />
+  <circle cx="460" cy="390" r="10" fill="#ffffff" />
+  <circle cx="584" cy="390" r="10" fill="#ffffff" />
+  <!-- rosy cheeks -->
+  <circle cx="410" cy="455" r="26" fill="#f6b8c6" opacity="0.7" />
+  <circle cx="614" cy="455" r="26" fill="#f6b8c6" opacity="0.7" />
+
+  <!-- snout + nose -->
+  <ellipse cx="512" cy="470" rx="58" ry="42" fill="#f3dec0" />
+  <ellipse cx="512" cy="460" rx="24" ry="18" fill="#c97b8a" />
+  <path d="M 480 495 Q 512 515 544 495" stroke="#9a5a68" stroke-width="6" fill="none" stroke-linecap="round" />
+</svg>

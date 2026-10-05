@@ -241,3 +241,110 @@ it earlier in the project) wherever that was practical in the time
 available, with network-request logs, localStorage inspection, direct
 unit tests of timing/pitch math, and the live production site itself
 all used as real evidence — not just reading the source code back.
+
+## 2026-10-05 update: Lesson 1 redesign, mascot, piano-buying intro, ~100 real lessons
+
+Prompted by Sid's direct feedback on a screenshot of the old Lesson 1
+("chord 2 of 4" showing two highlighted keys with zero explanation of
+why) — this pass rebuilt the whole first-run experience end to end.
+
+- [x] **Lesson 1 rewritten** (`js/lessons-ui.js`, `runLesson1`) to fix
+      the actual reported confusion: every chord screen now spells out
+      *all* of its notes by name ("It's 3 keys, all lit up below: G, B,
+      D") instead of silently highlighting multiple keys. New flow:
+      teach each chord one at a time -> quiz (play all 4 in order) ->
+      "let's play a real song" (Shallow — Lady Gaga/Bradley Cooper,
+      chosen because its verified chords are *literally* G-D-Em-C with
+      no capo/alternate-version caveat, unlike 5 other candidates) ->
+      rapid-fire montage through the other 26 confirmed library songs
+      using the same pattern -> a "next lesson: get a friend and sing
+      along" teaser -> a genuine level-up screen that calls the real
+      `checkBadges()` API and only shows "you unlocked a level!" when a
+      badge was *actually* newly earned.
+- [x] **Calibration moved out of Lesson 1 and into its own lesson**
+      ("Get Started") per later direct feedback, so the numbering reads
+      Step 1 (piano-buying intro) -> Lesson "Get Started" (audio
+      pitch-match calibration) -> "Your first 4 chords." `lesson-1`'s
+      id and saved progress/badge wiring are untouched; only its
+      position in the on-screen list shifted.
+- [x] **"Get yourself a piano" intro card** (`runPianoIntro`) — real,
+      researched advice (where to find a cheap/free keyboard, what to
+      check before taking one home, weighted vs. unweighted explained
+      plainly, honest budget expectations, a real caution about free
+      acoustic pianos), shown before any interactive content.
+- [x] **Wallaby mascot** (`assets/mascot.svg`, drawn and committed
+      separately by Sid) replaces the key logo as the header/favicon/
+      PWA icon everywhere — PNG icons regenerated at all 5 sizes
+      directly from the new SVG (via `sips`, the only SVG-capable
+      rasterizer available in this environment; no `rsvg-convert`/
+      `inkscape`/`imagemagick` installed). A cropped head-only variant
+      (`assets/mascot-face.svg`) is used as a small recurring narrator
+      avatar (`mascotSay()` helper) next to the simplified lesson copy
+      throughout Lesson 1, part of "Get Started," and every "Master
+      this song" lesson — not full Duolingo-owl animation, but a
+      consistent illustrated presence, as asked. `assets/logo.svg` is
+      kept in the repo as a secondary mark, just no longer referenced
+      as the primary logo.
+- [x] **Copy simplified** in Lesson 1 and the start of Lesson 2 —
+      shorter sentences, one instruction per screen, "chord" explained
+      in one plain sentence on first use instead of assumed knowledge,
+      "diminished" reframed as "sounds unstable" with the technical term
+      offered but not required.
+- [x] **~100 real lessons via song-mastery lessons woven into the
+      theory arc**, not placeholders: every confirmed-chord song whose
+      chord chart the existing chord-symbol parser (`js/chord-utils.js`,
+      already used by Practice/Camera Overlay) can actually parse
+      becomes its own lightweight "Master: [Song]" lesson
+      (`runMasterSongLesson` in `lessons-ui.js`), inserted right after
+      the theory that unlocks it: 10 Beginner-tier song lessons after
+      Lesson 1, 17 more after Lesson 6 (once minor-key songs are fair
+      game), 31 Intermediate-tier lessons after the 7th-chords arc
+      (Lesson 30), 6 Advanced-tier lessons after the jazz/classical
+      bonus content (Lesson 37). Honest final count: **102 lessons**
+      (2 pre-lessons + 37 theory + 63 song-mastery), every single one
+      real and clickable — nothing padded to hit a round number.
+      "Bohemian Rhapsody" is deliberately excluded from song-mastery
+      lessons because its own chord data literally says "varies
+      dramatically by section," which the parser correctly can't turn
+      into playable chords — that's the one confirmed-chord song that
+      didn't make the cut, and it's excluded for an honest reason, not
+      an oversight.
+- [x] **Right-side lesson roadmap/timeline** (`timelineHtml()` /
+      `.hk-roadmap*` CSS) — persistent sidebar showing all 102 real
+      lessons, numbered, clickable (subject to the same linear
+      lock-until-previous-done gating the main map already used),
+      scrollable. Completed lessons fill in a deliberate **purple**
+      accent (`--hk-purple`), distinct from the site's blue/pink base
+      theme from item 17 — verified live by completing a lesson and
+      watching its roadmap node flip from grey to purple without a
+      page reload, using real `localStorage` state, not a mockup.
+      Caught and fixed a real bug during verification: the sidebar's
+      CSS class was originally named `.hk-timeline`, which collided
+      with an unrelated pre-existing `.hk-timeline` class used by the
+      Practice tab's draggable-playhead feature (`height: 50px;
+      overflow: hidden`) and silently clipped the whole sidebar list to
+      a sliver. Renamed to `.hk-roadmap*` to resolve it.
+- [x] **Badge thresholds made dynamic** (`js/badges.js`) — "Halfway
+      There" and "Curriculum Complete" now compute against the real,
+      current `LESSONS.length` (102) instead of a hardcoded "37."
+
+### Honestly, what's simplified/not done in this pass
+
+- The chord-symbol-to-notes parser used for "Master this song" lessons
+  intentionally folds extensions beyond a plain triad/7th (9ths,
+  altered 5ths, 6/9 chords) into their nearest simple quality — e.g. a
+  song charted as "G7b9" plays as a plain G7 shape. This teaches a
+  beginner-playable chord, not a full jazz voicing; it's the same
+  parser already used elsewhere in the app, not a new simplification
+  invented for this feature.
+- "Master this song" lessons teach the chord loop only (press each
+  chord in sequence once) — they do not use the full verse/chorus/
+  bridge `SONG_STRUCTURES` data (only 12 songs have that) or the
+  falling-note highway. A genuinely deeper per-song lesson using full
+  structure data for more songs remains real future work.
+- The kid-friendly "one clear instruction, zero assumed context" bar
+  was applied by review to Lesson 1, "Get Started," and the piano-buying
+  card specifically; it was not re-applied line-by-line across all 37
+  pre-existing theory lessons (Lessons 2-37) in this pass — those still
+  use the copy style from earlier audits, which is numbers-first but not
+  rewritten to this stricter bar.

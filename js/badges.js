@@ -35,8 +35,8 @@ const BADGE_DEFS = [
   { id: "intermediate-unlocked", title: "Leveling Up", icon: "⬆️", desc: "Unlock Intermediate songs (5 Beginner songs completed).", check: () => countCompletedByDifficulty("Beginner") >= 5 },
   { id: "advanced-unlocked", title: "Going Pro", icon: "🚀", desc: "Unlock Advanced songs (5 Intermediate songs completed).", check: () => countCompletedByDifficulty("Intermediate") >= 5 },
   { id: "first-advanced-song", title: "Jazz Hands", icon: "🎷", desc: "Complete your first Advanced song.", check: anyCompletedAdvancedSong },
-  { id: "halfway-curriculum", title: "Halfway There", icon: "📈", desc: "Complete at least 18 of the 37 lessons.", check: () => LESSONS.filter((l) => isLessonComplete(l.id)).length >= 18 },
-  { id: "curriculum-complete", title: "Curriculum Complete", icon: "🎓", desc: "Finish all 37 lessons.", check: () => LESSONS.every((l) => isLessonComplete(l.id)) },
+  { id: "halfway-curriculum", title: "Halfway There", icon: "📈", desc: `Complete at least half of the ${LESSONS.length} lessons.`, check: () => LESSONS.filter((l) => isLessonComplete(l.id)).length >= Math.ceil(LESSONS.length / 2) },
+  { id: "curriculum-complete", title: "Curriculum Complete", icon: "🎓", desc: `Finish all ${LESSONS.length} lessons.`, check: () => LESSONS.every((l) => isLessonComplete(l.id)) },
 ];
 
 // Re-checks every badge definition against current real state, persists

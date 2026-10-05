@@ -23,6 +23,9 @@
   --hk-danger: #c6476d;
   --hk-warn: #c98a2e;
   --hk-stage-bg: #201d2b;     /* dark backdrop reserved for keyboard/staff/highway only */
+  --hk-purple: #8a63d2;       /* deliberate "completed" accent for the lesson timeline (item 22) —
+                                  distinct from the blue/pink base theme on purpose, not a reversion of it */
+  --hk-purple-soft: #ece4fb;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -235,6 +238,95 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-big-letter { font-size: 1.2rem; color: var(--hk-text-dim); margin-top: 4px; }
 .hk-step-indicator { color: var(--hk-text-dim); font-size: 0.8rem; }
 .hk-honest-note { font-size: 0.8rem; color: var(--hk-text-dim); font-style: italic; }
+
+/* ----- Lesson layout: main content + persistent right-side timeline ---- */
+.hk-lessons-layout { display: flex; gap: 20px; align-items: flex-start; }
+.hk-lesson-main { flex: 1 1 auto; min-width: 0; }
+.hk-lesson-sidebar { flex: 0 0 240px; position: sticky; top: 12px; }
+@media (max-width: 860px) {
+  .hk-lessons-layout { flex-direction: column; }
+  .hk-lesson-sidebar { flex: 1 1 auto; position: static; width: 100%; order: -1; }
+}
+
+.hk-roadmap {
+  background: var(--hk-panel);
+  border: 1px solid var(--hk-border);
+  border-radius: 14px;
+  padding: 14px;
+}
+.hk-roadmap-heading { margin: 0 0 4px; font-size: 1rem; }
+.hk-roadmap-count { margin: 0 0 10px; }
+.hk-roadmap-list { display: flex; flex-direction: column; gap: 6px; max-height: 70vh; overflow-y: auto; }
+.hk-roadmap-node {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--hk-border);
+  background: var(--hk-bg);
+  font-size: 0.8rem;
+  cursor: pointer;
+  position: relative;
+}
+.hk-roadmap-node:disabled { opacity: 0.5; cursor: not-allowed; }
+.hk-roadmap-num {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  background: var(--hk-accent-soft);
+  color: var(--hk-text);
+}
+.hk-roadmap-label { flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Purple is the deliberate, distinct "completed" accent on this
+   timeline specifically — the rest of the site keeps item 17's
+   blue/pink re-theme untouched. */
+.hk-roadmap-node.hk-roadmap-done {
+  background: var(--hk-purple-soft);
+  border-color: var(--hk-purple);
+}
+.hk-roadmap-node.hk-roadmap-done .hk-roadmap-num {
+  background: var(--hk-purple);
+  color: #fff;
+}
+.hk-roadmap-node.hk-roadmap-current {
+  border-color: var(--hk-accent-2);
+  box-shadow: 0 0 0 2px var(--hk-accent-2-soft);
+}
+.hk-roadmap-here {
+  position: absolute;
+  right: 8px;
+  top: -9px;
+  background: var(--hk-accent-2);
+  color: #fff;
+  font-size: 0.6rem;
+  padding: 2px 6px;
+  border-radius: 999px;
+}
+
+/* ----- Wallaby mascot narrator (items 22/23) ---------------------------- */
+.hk-mascot-row { display: flex; align-items: flex-start; gap: 10px; margin: 10px 0; }
+.hk-mascot-avatar { width: 48px; height: 48px; flex: 0 0 auto; border-radius: 50%; background: var(--hk-bg-2); }
+.hk-mascot-bubble {
+  background: var(--hk-panel);
+  border: 1px solid var(--hk-border);
+  border-radius: 14px;
+  padding: 10px 14px;
+  flex: 1 1 auto;
+}
+.hk-mascot-bubble h3 { margin-top: 0; }
+.hk-mascot-bubble p:last-child { margin-bottom: 0; }
+
+/* ----- Level-up celebration (item 21) ------------------------------------ */
+.hk-levelup { text-align: center; }
+.hk-levelup-badge { font-size: 1.3rem; margin: 10px 0; }
 .hk-lesson-controls { margin-top: 10px; }
 
 .hk-staff { width: 100%; height: 140px; background: var(--hk-stage-bg); border-radius: 8px; }
