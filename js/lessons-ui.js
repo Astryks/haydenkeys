@@ -261,7 +261,7 @@ function initLessonsTab(root) {
     };
   }
 
-  // The wallaby mascot narrates the simplified, numbers-first copy
+  // The panda mascot narrates the simplified, numbers-first copy
   // throughout the lesson flow (items 22/23) — a small consistent avatar
   // next to whatever it's "saying," Duolingo-owl-style.
   function mascotSay(html) {

@@ -272,13 +272,15 @@ why) — this pass rebuilt the whole first-run experience end to end.
       check before taking one home, weighted vs. unweighted explained
       plainly, honest budget expectations, a real caution about free
       acoustic pianos), shown before any interactive content.
-- [x] **Wallaby mascot** (`assets/mascot.svg`, drawn and committed
-      separately by Sid) replaces the key logo as the header/favicon/
+- [x] **Mascot** (`assets/mascot.svg`, drawn and committed separately by
+      Sid — originally a wallaby, then swapped to a panda, same file
+      path both times) replaces the key logo as the header/favicon/
       PWA icon everywhere — PNG icons regenerated at all 5 sizes
-      directly from the new SVG (via `sips`, the only SVG-capable
-      rasterizer available in this environment; no `rsvg-convert`/
-      `inkscape`/`imagemagick` installed). A cropped head-only variant
-      (`assets/mascot-face.svg`) is used as a small recurring narrator
+      directly from the new SVG each time it changed (via `sips`, the
+      only SVG-capable rasterizer available in this environment; no
+      `rsvg-convert`/`inkscape`/`imagemagick` installed). A cropped
+      head-only variant (`assets/mascot-face.svg`, kept in sync by hand
+      with the full artwork) is used as a small recurring narrator
       avatar (`mascotSay()` helper) next to the simplified lesson copy
       throughout Lesson 1, part of "Get Started," and every "Master
       this song" lesson — not full Duolingo-owl animation, but a
