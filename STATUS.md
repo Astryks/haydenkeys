@@ -1252,3 +1252,67 @@ error; `npx cap sync ios` output shows a clean sync with no warnings;
 `ios/App/App/public/reference.html` and `privacy.html` confirmed
 present after the fix. Zero new console errors beyond the known
 sandbox-only service-worker noise.
+
+## 2026-10-05 update: song-card display bug, upload tile, and upload playback fixes (item 44)
+
+- [x] **Real display bug found and fixed**: a handful of songs stored a
+      prose caveat ("insufficient agreement for a simple chart — see
+      notes") as a literal entry in their `chords` array, meant for the
+      notes field, not a chord chip — so Discover's cards rendered that
+      whole sentence as if it were the chord list (the exact bug in
+      Sid's screenshot of Still D.R.E./Someday). Fixed generally in
+      `js/discover.js` with a `chordsDisplay()` helper that filters out
+      any placeholder/prose string before joining, falling back to a
+      plain "Chords: still being verified — see details" when nothing
+      real is left — fixes this for all 13 affected songs, not just the
+      two screenshotted.
+- [x] **"Someday" (Michael Learns to Rock) re-researched and fixed for
+      real**: the earlier "insufficient data" tag was from a search that
+      returned other same-titled songs instead. Found real chord/tab
+      data this pass — Bm-G-D-A repeating, Em later — cross-checked
+      across two independent tab sources (Ultimate Guitar, Chordu), now
+      `confidence: "confirmed"` with real chords in `js/songs-data.js`.
+- [x] **"Still D.R.E." re-checked, genuinely stays disputed**: fresh
+      research found the same real disagreement as before (A minor vs.
+      C major vs. G major readings) — several "how to play on piano"
+      results sharing identical text turned out to be the same article
+      mirrored across different domains, not independent corroboration.
+      Notes updated to explain this explicitly rather than picking an
+      answer arbitrarily; still honestly `needs-verification`.
+- [x] **"+ Upload any song" tile added** at the end of Discover's song
+      grid, styled to match the existing cards (dashed border, "+"),
+      clicking it scrolls to and focuses the existing upload banner —
+      verified live.
+- [x] **Upload playback rebuilt** (`renderTranscribedPlayback()`, now
+      shared from `js/transcribe.js` and used by both Discover's and
+      Practice's upload flows, replacing two near-duplicate "Play it +
+      one highlighted key" implementations): now renders the same
+      falling-notes highway (`note-highway.js`) the curated lesson/
+      song-mastery flow uses, plus a real 0.5x/0.75x/1x speed picker
+      (same values and re-scheduling approach as Practice's Follow
+      Along). Verified live with a synthetic 2-note test clip (built
+      in-browser via a MediaStream-free WAV blob + DataTransfer, since
+      this environment can't drive a native file-picker dialog):
+      detected exactly 2 notes, highway rendered two falling blocks,
+      speed buttons switch and stay highlighted correctly.
+- [x] **The real cause of "6233 notes for one song" investigated and
+      fixed, not just styled around**: `transcribe.js` was calling
+      basic-pitch's `outputToNotesPoly` with `onsetThresh`/`frameThresh`
+      loosened to 0.25/0.25 — the library's own real defaults (read
+      directly from its vendored source) are 0.5/0.3. The looser
+      thresholds make the detector far more sensitive to noise/harmonic
+      blips. Reverted to the library's real defaults, and added a
+      `cleanupNotes()` post-filter that merges same-pitch notes
+      separated by <30ms gaps (a known wobble artifact) and drops
+      anything still shorter than 60ms. Logged both raw and
+      post-cleanup counts to the console for anyone who wants to
+      sanity-check the real reduction on an actual recording.
+
+Verified live: Someday's card shows real chords and the "Start
+learning" button (the existing song-detail/lesson entry point, reused
+rather than inventing a new one); Still D.R.E.'s card shows the honest
+fallback message instead of a broken sentence; the upload tile renders
+and correctly scrolls/focuses the upload banner; a synthetic test
+upload produced a clean 2-note falling-notes playback with working
+speed controls. Zero new console errors beyond the known sandbox-only
+service-worker noise.

@@ -6,7 +6,7 @@ import { getCalibration } from "./storage.js";
 import { startLivePitchDetection } from "./pitch.js";
 import { initCameraOverlay } from "./camera-overlay.js";
 import { renderNoteHighway, stepsToHighwayNotes } from "./note-highway.js";
-import { transcribeFile } from "./transcribe.js";
+import { transcribeFile, renderTranscribedPlayback } from "./transcribe.js";
 
 const BASE_CHORD_DURATION_SEC = 1.6; // duration per chord at 1x (normal) speed
 const SPEEDS = [0.5, 0.75, 1];
@@ -483,40 +483,16 @@ function initPracticeTab(root, { initialSong } = {}) {
       const notes = await transcribeFile(file, (text) => {
         statusEl.textContent = text;
       });
+      // Item 44: shared falling-notes highway + speed control
+      // (renderTranscribedPlayback, transcribe.js) replaces the old
+      // bare "Play it + one highlighted key" view — same function
+      // Discover's upload flow calls, not a second implementation.
       statusEl.textContent = `Done — detected ${notes.length} notes.`;
-      playbackEl.innerHTML = `
-        <button class="hk-btn hk-btn-primary" id="hk-play-upload">Play it</button>
-        <p class="hk-honest-note">This plays back exactly what was detected — turning it into a full
-           playable lesson (with chords, structure, etc.) is still a Phase 2 item.</p>
-        <div id="hk-upload-kb" class="hk-keyboard-wrap"></div>`;
-      playbackEl.querySelector("#hk-play-upload").addEventListener("click", () => {
-        playTranscribedNotes(notes, playbackEl.querySelector("#hk-upload-kb"));
-      });
+      renderTranscribedPlayback(playbackEl, notes);
     } catch (err) {
       statusEl.textContent = err.message;
       console.error(err);
     }
-  }
-
-  // Same reasoning/implementation as Discover's identical upload flow
-  // (js/discover.js) — reuses the existing keyboard-highlight/synth
-  // playback, not a second parallel audio path.
-  function playTranscribedNotes(notes, container) {
-    if (!notes.length) return;
-    const midiValues = notes.map((n) => n.pitchMidi);
-    const upKb = renderKeyboard(container, {
-      startMidi: Math.max(21, Math.min(...midiValues) - 3),
-      endMidi: Math.min(108, Math.max(...midiValues) + 3),
-    });
-    const sorted = [...notes].sort((a, b) => a.startTimeSeconds - b.startTimeSeconds);
-    sorted.forEach((note) => {
-      setTimeout(() => {
-        upKb.highlightChord([note.pitchMidi], { rootMidi: note.pitchMidi });
-        playTone(note.pitchMidi, { duration: Math.max(0.15, note.durationSeconds) });
-      }, note.startTimeSeconds * 1000);
-    });
-    const totalMs = (sorted[sorted.length - 1].startTimeSeconds + sorted[sorted.length - 1].durationSeconds + 0.3) * 1000;
-    setTimeout(() => upKb.clearHighlights(), totalMs);
   }
 
   render();

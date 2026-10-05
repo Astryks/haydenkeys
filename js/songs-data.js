@@ -1362,7 +1362,7 @@ const SONGS = [
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "Sources genuinely disagree on the key itself (A minor vs. C major vs. G major readings all appear, each implying a different chord set) — the source material itself flags this conflict rather than resolving it, so it's reported here honestly rather than picking one.",
+      "Item 44 re-check: still genuinely disputed after fresh research. Several 'how to play on piano' results sharing identical text (syndicated/mirrored across different domains, not independent) converge on A minor (all-white-keys), but other distinct sources describe a C major I-V-vi-IV reading or a G-major-bass intro instead — real disagreement between actually-different sources, not resolved by finding more mirrors of the same article. Reported honestly rather than picking one arbitrarily.",
   },
   {
     title: "25 Minutes",
@@ -1381,13 +1381,13 @@ const SONGS = [
     artist: "Michael Learns to Rock",
     genre: "Pop Rock",
     popularityRank: 102,
-    key: "needs verification",
-    chords: ["insufficient data — see notes"],
-    degreeSequence: "needs verification",
-    confidence: "needs-verification",
+    key: "D major",
+    chords: ["Bm", "G", "D", "A", "Em"],
+    degreeSequence: "vi - IV - I - V repeating through the intro/verse, ii (Em) appears later",
+    confidence: "confirmed",
     oneFiveSixFourMatch: false,
     notes:
-      "No reliable source with real chord/key detail for this specific song was found (searches returned other Michael Learns to Rock songs and an unrelated same-titled song by a different artist instead) — flagged rather than guessed.",
+      "Item 44 re-verification: real chord/tab data found this pass (the song-titled 'Michael Learns to Rock' and not the unrelated same-titled songs by other artists that an earlier search had returned instead) — Bm-G-D-A repeating, with Em appearing later in the progression, cross-checked across two independent tab sources (Ultimate Guitar, Chordu). Not the same 4-chord family as Lesson 1 (starts on vi, not I).",
   },
   {
     // Item 39: independently researched and cross-checked across

@@ -1,7 +1,6 @@
 import { SONGS, getDifficulty } from "./songs-data.js";
 import { markSongStatus, getSavedSongs } from "./storage.js";
-import { transcribeFile } from "./transcribe.js";
-import { renderKeyboard, playTone } from "./keyboard.js";
+import { transcribeFile, renderTranscribedPlayback } from "./transcribe.js";
 
 const TIER_ORDER = ["Beginner", "Intermediate", "Advanced"];
 const UNLOCK_THRESHOLD = 5; // complete 5 songs in a tier to unlock the next
@@ -89,6 +88,22 @@ function hydrateArt(div, song) {
   });
 }
 
+// Item 44: a real display bug Sid caught via screenshot — a handful of
+// songs store a prose caveat ("insufficient agreement for a simple
+// chart — see notes") as a literal entry in their `chords` array
+// (meant for the detail notes, not a chord chip), so the card rendered
+// that whole sentence as if it were a chord. Filter those out here
+// rather than ever joining prose into the chord list; if a song has
+// zero real chords left after filtering, say so plainly instead of
+// showing nothing or a broken fragment.
+function realChords(song) {
+  return song.chords.filter((c) => !/insufficient|see notes/i.test(c));
+}
+function chordsDisplay(song) {
+  const real = realChords(song);
+  return real.length ? real.join(" · ") : "Chords: still being verified — see details";
+}
+
 function songCard(song, onStart) {
   const saved = getSavedSongs()[song.title];
   const difficulty = getDifficulty(song);
@@ -99,7 +114,7 @@ function songCard(song, onStart) {
   // Chords shown right under the title on every card (even locked ones)
   // so the chord family is visible while browsing, not hidden behind a
   // click into the song's own detail state.
-  const chordsLine = `<p class="hk-song-chords-glance">${song.chords.join(" · ")}</p>`;
+  const chordsLine = `<p class="hk-song-chords-glance">${chordsDisplay(song)}</p>`;
 
   if (!lock.unlocked) {
     div.innerHTML = `
@@ -130,7 +145,7 @@ function songCard(song, onStart) {
       ${chordsLine}
       <p class="hk-song-artist">${song.artist} &middot; ${song.genre}</p>
       <p class="hk-song-key">Key: ${song.key}</p>
-      <p class="hk-song-chords">${song.chords.join(" · ")} <span class="hk-song-degrees">(${song.degreeSequence})</span> ${matchBadge(song)}</p>
+      <p class="hk-song-chords">${chordsDisplay(song)} <span class="hk-song-degrees">(${song.degreeSequence})</span> ${matchBadge(song)}</p>
       <p class="hk-song-notes">${song.notes}</p>
       <button class="hk-btn hk-btn-small" data-start="${song.title}">
         ${saved ? `Saved (${saved.status})` : "Start learning"}
@@ -201,50 +216,17 @@ function initDiscoverTab(root, { onStartSong } = {}) {
       const notes = await transcribeFile(file, (text) => {
         statusEl.textContent = text;
       });
-      // Honesty fix (item 27): this used to tell the user to "head to the
-      // Practice tab," but the transcribed notes were never actually
-      // passed anywhere — Practice has no idea an upload happened, so
-      // that was a real dead end, not a crash. Real, immediate next step
-      // instead: a "Play it" button right here, reusing the exact same
-      // keyboard-highlight/synth playback (keyboard.js's renderKeyboard +
-      // playTone) every other part of the app already uses — no second
-      // parallel audio path.
+      // Item 44: replaces the old bare "Play it + one highlighted key"
+      // view with the real falling-notes highway + speed control the
+      // curated lesson flow uses (renderTranscribedPlayback, shared
+      // from transcribe.js — not a second visualizer built here).
       statusEl.textContent = `Done — detected ${notes.length} notes.`;
-      playbackEl.innerHTML = `
-        <button class="hk-btn hk-btn-primary" id="hk-discover-play-upload">Play it</button>
-        <p class="hk-honest-note">This plays back exactly what was detected — turning it into a full
-           playable lesson (with chords, structure, etc.) is still a Phase 2 item.</p>
-        <div id="hk-discover-upload-kb" class="hk-keyboard-wrap"></div>`;
-      playbackEl.querySelector("#hk-discover-play-upload").addEventListener("click", () => {
-        playTranscribedNotes(notes, playbackEl.querySelector("#hk-discover-upload-kb"));
-      });
+      renderTranscribedPlayback(playbackEl, notes);
     } catch (err) {
       statusEl.textContent = err.message;
       console.error(err);
     }
   });
-
-  // Schedules real audio playback + visual key highlighting for a
-  // basic-pitch note list, using the same on-screen keyboard component
-  // and Web Audio synth (keyboard.js) used everywhere else in the app —
-  // not a second, parallel playback implementation.
-  function playTranscribedNotes(notes, container) {
-    if (!notes.length) return;
-    const midiValues = notes.map((n) => n.pitchMidi);
-    const kb = renderKeyboard(container, {
-      startMidi: Math.max(21, Math.min(...midiValues) - 3),
-      endMidi: Math.min(108, Math.max(...midiValues) + 3),
-    });
-    const sorted = [...notes].sort((a, b) => a.startTimeSeconds - b.startTimeSeconds);
-    sorted.forEach((note) => {
-      setTimeout(() => {
-        kb.highlightChord([note.pitchMidi], { rootMidi: note.pitchMidi });
-        playTone(note.pitchMidi, { duration: Math.max(0.15, note.durationSeconds) });
-      }, note.startTimeSeconds * 1000);
-    });
-    const totalMs = (sorted[sorted.length - 1].startTimeSeconds + sorted[sorted.length - 1].durationSeconds + 0.3) * 1000;
-    setTimeout(() => kb.clearHighlights(), totalMs);
-  }
 
   function render() {
     const query = searchInput.value.trim().toLowerCase();
@@ -263,6 +245,27 @@ function initDiscoverTab(root, { onStartSong } = {}) {
       .filter((s) => !query || s.title.toLowerCase().includes(query) || s.artist.toLowerCase().includes(query))
       .sort((a, b) => a.popularityRank - b.popularityRank)
       .forEach((song) => grid.appendChild(songCard(song, onStartSong || (() => {}))));
+    // Item 44: a tile at the end of the grid pointing back up to the
+    // existing "Upload any song" banner — makes upload discoverable
+    // from inside the browsing flow, not just its own separate section.
+    grid.appendChild(uploadTile());
+  }
+
+  function uploadTile() {
+    const div = document.createElement("div");
+    div.className = "hk-song-card hk-song-card-upload";
+    div.innerHTML = `
+      <div class="hk-song-card-upload-inner">
+        <div class="hk-song-card-upload-plus">+</div>
+        <p>Upload any song</p>
+      </div>`;
+    div.addEventListener("click", () => {
+      const banner = root.querySelector(".hk-upload-banner-top");
+      if (banner) banner.scrollIntoView({ behavior: "smooth", block: "start" });
+      const fileInput = root.querySelector("#hk-discover-upload");
+      if (fileInput) fileInput.focus();
+    });
+    return div;
   }
 
   searchInput.addEventListener("input", render);
