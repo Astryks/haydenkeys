@@ -1,0 +1,89 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fdf6fa" />
+      <stop offset="100%" stop-color="#eef7fb" />
+    </linearGradient>
+    <linearGradient id="furGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e8c9a0" />
+      <stop offset="100%" stop-color="#d9af7e" />
+    </linearGradient>
+    <linearGradient id="bellyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fbeede" />
+      <stop offset="100%" stop-color="#f3dec0" />
+    </linearGradient>
+    <linearGradient id="pianoGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a7d8f0" />
+      <stop offset="100%" stop-color="#f4b8d0" />
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1024" height="1024" rx="190" fill="url(#bgGrad)" />
+
+  <!-- tail, resting on the ground behind -->
+  <path d="M 700 760 Q 860 740 840 560 Q 830 480 770 470 Q 820 560 760 680 Q 740 730 700 760 Z" fill="url(#furGrad)" />
+
+  <!-- big wallaby feet -->
+  <ellipse cx="420" cy="860" rx="95" ry="46" fill="url(#furGrad)" />
+  <ellipse cx="620" cy="860" rx="95" ry="46" fill="url(#furGrad)" />
+
+  <!-- legs -->
+  <path d="M 380 720 Q 360 800 400 850 L 470 850 Q 460 770 460 710 Z" fill="url(#furGrad)" />
+  <path d="M 660 720 Q 680 800 640 850 L 570 850 Q 580 770 580 710 Z" fill="url(#furGrad)" />
+
+  <!-- fat round body -->
+  <ellipse cx="512" cy="620" rx="230" ry="210" fill="url(#furGrad)" />
+  <!-- cream belly -->
+  <ellipse cx="512" cy="660" rx="150" ry="150" fill="url(#bellyGrad)" />
+
+  <!-- small arms, hands resting near piano -->
+  <ellipse cx="330" cy="660" rx="42" ry="60" fill="url(#furGrad)" transform="rotate(-20 330 660)" />
+  <ellipse cx="694" cy="660" rx="42" ry="60" fill="url(#furGrad)" transform="rotate(20 694 660)" />
+  <circle cx="300" cy="715" r="28" fill="url(#furGrad)" />
+  <circle cx="724" cy="715" r="28" fill="url(#furGrad)" />
+
+  <!-- head -->
+  <ellipse cx="512" cy="400" rx="195" ry="175" fill="url(#furGrad)" />
+  <!-- cream face patch -->
+  <ellipse cx="512" cy="440" rx="130" ry="110" fill="url(#bellyGrad)" />
+
+  <!-- ears -->
+  <ellipse cx="370" cy="250" rx="55" ry="85" fill="url(#furGrad)" transform="rotate(-18 370 250)" />
+  <ellipse cx="654" cy="250" rx="55" ry="85" fill="url(#furGrad)" transform="rotate(18 654 250)" />
+  <ellipse cx="372" cy="258" rx="28" ry="50" fill="#f6c9c9" transform="rotate(-18 372 258)" />
+  <ellipse cx="652" cy="258" rx="28" ry="50" fill="#f6c9c9" transform="rotate(18 652 258)" />
+
+  <!-- big friendly eyes -->
+  <circle cx="450" cy="400" r="34" fill="#2a2a3a" />
+  <circle cx="574" cy="400" r="34" fill="#2a2a3a" />
+  <circle cx="460" cy="390" r="10" fill="#ffffff" />
+  <circle cx="584" cy="390" r="10" fill="#ffffff" />
+  <!-- rosy cheeks -->
+  <circle cx="410" cy="455" r="26" fill="#f6b8c6" opacity="0.7" />
+  <circle cx="614" cy="455" r="26" fill="#f6b8c6" opacity="0.7" />
+
+  <!-- snout + nose -->
+  <ellipse cx="512" cy="470" rx="58" ry="42" fill="#f3dec0" />
+  <ellipse cx="512" cy="460" rx="24" ry="18" fill="#c97b8a" />
+  <path d="M 480 495 Q 512 515 544 495" stroke="#9a5a68" stroke-width="6" fill="none" stroke-linecap="round" />
+
+  <!-- little piano in front -->
+  <g>
+    <rect x="300" y="760" width="424" height="110" rx="14" fill="url(#pianoGrad)" />
+    <rect x="316" y="774" width="392" height="56" rx="4" fill="#2a2a3a" />
+    <!-- white keys -->
+    <rect x="320" y="774" width="48" height="56" fill="#fdf6fa" />
+    <rect x="372" y="774" width="48" height="56" fill="#fdf6fa" />
+    <rect x="424" y="774" width="48" height="56" fill="#fdf6fa" />
+    <rect x="476" y="774" width="48" height="56" fill="#fdf6fa" />
+    <rect x="528" y="774" width="48" height="56" fill="#fdf6fa" />
+    <rect x="580" y="774" width="48" height="56" fill="#fdf6fa" />
+    <rect x="632" y="774" width="48" height="56" fill="#fdf6fa" />
+    <!-- black keys -->
+    <rect x="356" y="774" width="22" height="34" fill="#2a2a3a" />
+    <rect x="408" y="774" width="22" height="34" fill="#2a2a3a" />
+    <rect x="512" y="774" width="22" height="34" fill="#2a2a3a" />
+    <rect x="564" y="774" width="22" height="34" fill="#2a2a3a" />
+    <rect x="616" y="774" width="22" height="34" fill="#2a2a3a" />
+  </g>
+</svg>
