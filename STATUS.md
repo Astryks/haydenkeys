@@ -1079,3 +1079,39 @@ noise.
       requests 200 OK; only console message is the single known
       sandbox-only "unknown error... fetching the script" service-worker
       noise already documented in earlier audits — no new errors.
+
+## 2026-10-05 update: Lesson 1's opening hook rewritten to be concrete (item 41)
+
+- [x] **Old abstract, cycling "proof" teaser replaced** with a single
+      concrete hook screen: "Did you know 4 chords play over 100 songs?
+      From 'Love Story' by Taylor Swift to '[X]' by [artist] — same 4
+      chords, every time," followed by an explicit, non-jargon-dump
+      explanation of why numbers are taught before letters ("the same
+      numbers work in any key"), then the actual 4 chords shown as
+      number+letter pills (1 G, 5 D, 6 Em, 4 C) right up front, ending in
+      "Let's start with G."
+- [x] **Sid's suggested second example song, "Careless Whisper" (George
+      Michael), checked before use and found NOT to fit** — its real,
+      sourced chords are Dm–Gm7–Bb–Am (i–iv–VI–v in D minor), a
+      genuinely different progression, not the I-V-vi-IV / G-D-Em-C
+      family. Rather than use an inaccurate example in the single most
+      important hook line in the app, swapped in "Let It Be" (The
+      Beatles) — already in the library as a `confidence: "confirmed"`,
+      `oneFiveSixFourMatch: "exact"` match (C-G-Am-F, sources directly
+      naming it I-V-vi-IV).
+- [x] **Montage pool adjusted** to exclude both named hook songs (Love
+      Story, Let It Be) in addition to the featured Shallow walkthrough,
+      so nothing repeats twice in one lesson; montage-intro's callback
+      line updated to reference the two songs actually named in the new
+      hook instead of the old 3-song cycling "proof."
+- [x] Sid again wrote "G A C D" out of habit for the chord names — kept
+      the real, correct G-D-Em-C throughout, same correction applied
+      every other time this has come up.
+
+Verified live in a real browser from a freshly cleared localStorage:
+the new hook screen renders both named songs and all 4 chord pills
+correctly, "Let's start with G" correctly advances into the unchanged
+slowdown → find-G → teach flow. `node --check js/lessons-ui.js` passes.
+Montage pool size confirmed at 24 (27 total 1-5-6-4 matches minus the 3
+now named/played earlier in the lesson). Zero new console errors beyond
+the known sandbox-only service-worker noise.

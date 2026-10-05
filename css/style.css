@@ -325,6 +325,16 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-step-indicator { color: var(--hk-text-dim); font-size: 0.8rem; }
 .hk-honest-note { font-size: 0.8rem; color: var(--hk-text-dim); font-style: italic; }
 
+/* Item 41: small chord-preview pills for the Lesson 1 opening hook —
+   shows all 4 chords (number + letter) at a glance, before teaching. */
+.hk-chord-preview-row { display: flex; gap: 10px; margin: 10px 0; flex-wrap: wrap; }
+.hk-chord-preview-pill {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  width: 56px; height: 56px; border-radius: 12px; background: var(--hk-accent);
+  color: #fff; font-weight: bold; font-size: 1.3rem; line-height: 1;
+}
+.hk-chord-preview-letter { font-size: 0.7rem; font-weight: normal; margin-top: 2px; opacity: 0.9; }
+
 /* ----- Lesson layout: main content + persistent right-side timeline ---- */
 .hk-lessons-layout { display: flex; gap: 20px; align-items: flex-start; }
 .hk-lesson-main { flex: 1 1 auto; min-width: 0; }

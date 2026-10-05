@@ -927,12 +927,20 @@ function initLessonsTab(root) {
     // different key" with a capo caveat) — Shallow is the cleanest match
     // in the library (confirmed, no capo/alternate-version note).
     const FEATURED_SONG = SONGS.find((s) => s.title === "Shallow");
-    const montageSongs = ONE_FIVE_SIX_FOUR_SONGS.filter((s) => s.title !== FEATURED_SONG.title);
-    // The opening teaser (item 40) shows a quick taste of 3 OTHER real
-    // songs — distinct from Shallow (the full walkthrough) and kept out
-    // of the later montage pool so nothing repeats twice in one lesson.
-    const TEASER_SONGS = montageSongs.slice(0, 3);
-    const montageSongsAfterTeaser = montageSongs.slice(3);
+    // The opening hook (item 41) names two instantly-recognizable songs
+    // directly in its headline — both independently verified as a true
+    // G-D-Em-C / I-V-vi-IV match (not "same family, different key" or a
+    // capo caveat). Sid's first suggestion, "Careless Whisper" by George
+    // Michael, was checked and does NOT fit: its real chords are
+    // Dm-Gm7-Bb-Am (i-iv-VI-v in D minor), a different progression
+    // entirely — so "Let It Be" (The Beatles) is used instead, which the
+    // library already has as an exact, confirmed match.
+    const HOOK_SONG_1 = SONGS.find((s) => s.title === "Love Story");
+    const HOOK_SONG_2 = SONGS.find((s) => s.title === "Let It Be");
+    const montageSongs = ONE_FIVE_SIX_FOUR_SONGS.filter(
+      (s) => s.title !== FEATURED_SONG.title && s.title !== HOOK_SONG_1.title && s.title !== HOOK_SONG_2.title
+    );
+    const montageSongsAfterTeaser = montageSongs;
 
     // Item 38/40: anchor every early chord to the one landmark already
     // established in "Get Started" (Middle C), the same equipment-
@@ -955,24 +963,31 @@ function initLessonsTab(root) {
     // Finding your starting key itself now has its own earlier lesson
     // ("Get Started" — see runGetStarted below); this lesson opens with
     // a hook/teaser instead of jumping straight into teaching (item 40).
+    // Item 41: the hook is now one concrete, instantly-recognizable
+    // screen (two real named songs + the actual 4 chords shown up
+    // front) instead of cycling through abstract "proof" cards.
     let step = "teaser";
-    let teaserIdx = 0;
     let teachIdx = 0;
     let songIdx = 0;
     let montageIdx = 0;
 
     function renderStep() {
       if (step === "teaser") {
-        const s = TEASER_SONGS[teaserIdx];
         content.innerHTML = mascotSay(`
-          <h3>You can play 100 songs with just 4 chords.</h3>
-          <p>Here they are. Here's proof: <strong>"${s.title}"</strong> by ${s.artist} uses this exact same
-             4-chord pattern (${s.degreeSequence}).</p>`, "assets/mascot-poses/maestro-conducting.png");
-        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">${teaserIdx < TEASER_SONGS.length - 1 ? "Next proof" : "Okay, show me how"}</button>`;
-        controls.querySelector("#hk-next").addEventListener("click", () => {
-          if (teaserIdx < TEASER_SONGS.length - 1) { teaserIdx++; renderStep(); }
-          else { step = "slowdown"; renderStep(); }
-        });
+          <h3>Did you know 4 chords play over 100 songs?</h3>
+          <p>From <strong>"${HOOK_SONG_1.title}"</strong> by ${HOOK_SONG_1.artist} to
+             <strong>"${HOOK_SONG_2.title}"</strong> by ${HOOK_SONG_2.artist} — same 4 chords, every time.</p>
+          <p>These chords are usually called by letters, but we'll learn them with <strong>numbers first</strong>
+             — it's easier, because the same numbers work in any key. These are the chords:</p>
+          <div class="hk-chord-preview-row">
+            ${LESSON1_SEQUENCE.map((k) => {
+              const c = LESSON1_CHORDS[k];
+              return `<span class="hk-chord-preview-pill">${c.number}<span class="hk-chord-preview-letter">${c.letter}</span></span>`;
+            }).join("")}
+          </div>
+          <p><strong>Let's start with G.</strong></p>`, "assets/mascot-poses/maestro-conducting.png");
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Let's start with G</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step = "slowdown"; renderStep(); });
       } else if (step === "slowdown") {
         content.innerHTML = mascotSay(`
           <h3>Okay — let's slow down and actually learn this.</h3>
@@ -1070,7 +1085,7 @@ function initLessonsTab(root) {
       } else if (step === "montage-intro") {
         kb.clearHighlights();
         content.innerHTML = mascotSay(`
-          <h3>Remember the proof from the very start? Here's the rest of it.</h3>
+          <h3>Remember "${HOOK_SONG_1.title}" and "${HOOK_SONG_2.title}" from the very start? Here's even more proof.</h3>
           <p>Same four chords, same order — here's a quick run through ${montageSongsAfterTeaser.length} more real
              songs in the library that use this exact pattern. Just tap through, next song, next song.</p>`);
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Go</button>`;
