@@ -584,6 +584,9 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-quiz-feedback-correct { color: #2e8f5e; }
 .hk-quiz-feedback-wrong { color: var(--hk-danger); }
 
+/* Item 53: fun pedal bonus lesson */
+.hk-pedal-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0; }
+
 /* Camera overlay */
 .hk-camera-panel { margin-top: 10px; }
 .hk-camera-note { font-size: 0.82rem; color: var(--hk-text-dim); }

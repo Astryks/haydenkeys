@@ -22,6 +22,11 @@ function initCalibration(root, { onComplete } = {}) {
       <div class="hk-calibration">
         <h3>Step 1 of 2 — find Middle C by ear</h3>
         <div id="hk-cal-keyboard-step1" class="hk-keyboard-wrap"></div>
+        <p>Quick basics first: the <strong>white keys</strong> are the main notes — just the musical alphabet,
+           A through G, repeating up and down the whole keyboard. The <strong>black keys</strong> are the notes
+           "in between" two white keys. They're raised up and bunched into groups of 2 and 3 specifically so
+           your fingers (and eyes) can feel/see a repeating landmark instead of a featureless wall of identical
+           keys — which is exactly the pattern we're about to use to find Middle C.</p>
         <p>Every piano/keyboard repeats the same pattern of black keys, over and over: a group of
            <strong>2 black keys</strong>, then a group of <strong>3 black keys</strong>, then back to 2, and so
            on — <strong>this repeats no matter how big or small your keyboard is</strong>. Find the group of 2

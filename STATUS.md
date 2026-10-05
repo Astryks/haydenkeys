@@ -1758,3 +1758,44 @@ the "let's slow down" chord-definition screen, Back/Next both work,
 and the sequence correctly continues into the existing fingers/find-G
 flow afterward. Zero new console errors beyond the known sandbox-only
 service-worker noise.
+
+## 2026-10-05 update: white/black key basics + a fun pedal bonus lesson (item 53)
+
+- [x] **White/black key explanation added to Get Started**, right
+      before the black-key-group landmark teaching (same screen, same
+      spirit as the item 50 Middle-C/finger fixes) — checked first
+      whether this had ever been plainly taught: it hadn't, the app
+      used "white key"/"black keys" constantly without ever defining
+      them. Kept simple: white keys = the musical alphabet (A-G,
+      repeating), black keys = the notes "in between," explicitly tied
+      to WHY they're grouped in 2s/3s (so the repeating landmark is
+      visible/feelable) rather than teaching sharp/flat naming rules.
+      The visual is the real piano-key rendering already shown above
+      the text (keyboard.js's existing white/black key layout) — no
+      extra highlighting needed since the shapes/colors are already
+      genuinely distinct.
+- [x] **New fun bonus lesson added**: `lesson-pedals` ("Pedals! (just
+      for fun)"), appended to the end of the Intermediate tier right
+      after the chord-recognition quiz (item 47), landing before
+      Advanced content begins, same placement pattern. Explicitly
+      framed as "just for fun," not rigorous, not gating anything —
+      completing it is a normal lesson-complete call like any other,
+      no special test/pass-fail mechanic.
+- [x] **Real, audible before/after**: explains the sustain pedal (holds
+      notes ringing after fingers lift) as the one most people touch,
+      briefly mentions soft/sostenuto pedals without dwelling on them.
+      "Without pedal" plays a 4-note arpeggio with short, non-overlapping
+      note durations (0.21s each); "with pedal" plays the exact same
+      notes with long, overlapping durations (1.225s each) — genuinely
+      different audio, not a fake toggle, reusing `keyboard.js`'s shared
+      `playTone()` (which also means it automatically benefits from item
+      45's sampled-piano upgrade once that's loaded, no extra wiring
+      needed). Honestly labeled as "not a real pedal simulation" rather
+      than overclaiming physical accuracy.
+
+Verified live in a real browser: the white/black-key explanation
+renders clearly on Get Started before the landmark teaching; the pedal
+lesson lands correctly in the roadmap at the end of Intermediate;
+clicking both "Without the pedal" and "With the pedal" triggers
+playback with zero console errors beyond the known sandbox-only
+service-worker noise.

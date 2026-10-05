@@ -372,6 +372,16 @@ intermediateRemainingLessons.push({
   subtitle: "An ear-training checkpoint",
   description: "Pausing the usual read-and-watch flow to test recognition by ear instead, using chords you've already learned.",
 });
+// Item 53: a fun, low-stakes aside — not a graded checkpoint like the
+// quiz above, just a quick "listen to this" break. Appended right
+// after it so it still lands at the end of Intermediate, before
+// Advanced content begins.
+intermediateRemainingLessons.push({
+  id: "lesson-pedals",
+  title: "Pedals! (just for fun)",
+  subtitle: "The sustain pedal, heard side by side",
+  description: "A quick, just-for-fun listen: the same short phrase, once without the sustain pedal and once with it, so you can actually hear what it does.",
+});
 const advancedSongLessons = ADVANCED_SONGS.filter((s) => !consumedTitles.has(s.title)).map((s) => masterSongLesson(s));
 
 const theoryById = Object.fromEntries(THEORY_LESSONS.map((l) => [l.id, l]));

@@ -265,6 +265,7 @@ function initLessonsTab(root) {
       "lesson-vivaldi": runVivaldiAttempt,
       "lesson-chopin": runChopinShowcase,
       "lesson-chordquiz": runChordQuizLesson,
+      "lesson-pedals": runPedalFunLesson,
     };
     // "Master this song" lessons (item 22's path toward ~100 real
     // lessons) are generated from real song data rather than hand-listed
@@ -1803,6 +1804,63 @@ function initLessonsTab(root) {
       }
     }
     renderStep();
+  }
+
+  // ----- Fun bonus: piano pedals, heard side by side (item 53) -----------
+  // Explicitly "just for fun," not rigorous — no real pedal physics,
+  // just a clear audible before/after using playTone's existing
+  // duration/overlap control: "without pedal" = short, non-overlapping
+  // notes (choppy); "with pedal" = the same notes held long enough to
+  // overlap and ring together. Reuses keyboard.js's shared playTone
+  // (which automatically benefits from item 45's sampled-piano upgrade
+  // if it's loaded) — no new audio path.
+  function runPedalFunLesson() {
+    const { content, keyboardWrap, controls } = lessonShell("Pedals! (just for fun)");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    const PHRASE = [60, 64, 67, 72]; // C-E-G-C, a simple arpeggio
+    const NOTE_GAP_SEC = 0.35;
+
+    function playPhrase(withPedal) {
+      kb.clearHighlights();
+      PHRASE.forEach((midi, i) => {
+        const delay = i * NOTE_GAP_SEC;
+        setTimeout(() => {
+          kb.highlightChord([midi], { rootMidi: midi });
+          // Without the pedal: each note is cut short before the next
+          // one starts (detached, "staccato"). With the pedal: each
+          // note is held well past when the next one starts, so they
+          // overlap and blend/ring together — the actual audible
+          // effect of "holding notes after you lift your fingers."
+          playTone(midi, { duration: withPedal ? NOTE_GAP_SEC * 3.5 : NOTE_GAP_SEC * 0.6 });
+        }, delay * 1000);
+      });
+      const totalMs = (PHRASE.length * NOTE_GAP_SEC + (withPedal ? NOTE_GAP_SEC * 3.5 : 0.5)) * 1000;
+      setTimeout(() => kb.clearHighlights(), totalMs);
+    }
+
+    content.innerHTML = mascotSay(`
+      <h3>Quick fun one: what does the pedal actually do?</h3>
+      <p>The big pedal under a piano (the <strong>sustain</strong> or "damper" pedal) holds notes ringing even
+         after you lift your fingers off the keys — instead of stopping dead the moment you let go. It's the
+         one pedal almost everyone actually uses.</p>
+      <p class="hk-honest-note">Two other pedals exist on most pianos — a <strong>soft pedal</strong> (quieter,
+         gentler tone) and a <strong>sostenuto pedal</strong> (sustains only the notes already held when you
+         press it) — but sustain is the one worth hearing right now.</p>
+      <p>Same 4 notes, twice. Listen for the difference:</p>
+      <div class="hk-pedal-buttons">
+        <button class="hk-btn" id="hk-pedal-off">&#9658; Without the pedal</button>
+        <button class="hk-btn hk-btn-primary" id="hk-pedal-on">&#9658; With the pedal</button>
+      </div>
+      <p class="hk-honest-note">(Not a real pedal simulation — just the notes held short vs. held long enough
+         to overlap, which is the actual audible effect.)</p>`,
+      "assets/mascot-poses/grand-piano.png");
+    controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Fun, got it — back to lessons</button>`;
+    content.querySelector("#hk-pedal-off").addEventListener("click", () => playPhrase(false));
+    content.querySelector("#hk-pedal-on").addEventListener("click", () => playPhrase(true));
+    controls.querySelector("#hk-done").addEventListener("click", () => {
+      markLessonComplete("lesson-pedals");
+      showMap();
+    });
   }
 
   // ----- Lesson 7: inversions --------------------------------------------
