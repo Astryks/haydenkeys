@@ -165,7 +165,15 @@ app's `reference.html`/`privacy.html`) needs its own explicit symlink
 added, or it silently 404s inside the native app specifically while
 working fine on the web. Remember to add that symlink proactively for
 every new top-level page in a new project, not just when someone
-reports the native app is broken.
+reports the native app is broken. **Orientation decision (item 55)**:
+this app ended up locked to landscape-only on iOS (both iPhone and
+iPad) because a piano keyboard genuinely needs horizontal width to be
+usable — a guitar app will face the exact same question with fretboard
+diagrams/chord shapes, which are also naturally wide. Worth deciding
+this deliberately early rather than retrofitting it, including the web
+fallback this project landed on (a CSS-only "rotate your phone" prompt
+for portrait-shaped phone viewports, since the web can't force
+orientation the way the native wrapper can).
 
 **9. Mascot/illustration approach — partially reusable.**
 The "zero AI-generated art, Sid's own original hand-drawn illustration,
@@ -1801,6 +1809,12 @@ playback with zero console errors beyond the known sandbox-only
 service-worker noise.
 
 ## 2026-10-05 update: keep both iOS orientations, make the keyboard actually usable in portrait (item 54)
+
+**Superseded by item 55 below**: Sid's final call reversed this —
+the app is now locked to landscape-only everywhere, and the portrait
+scroll workaround this section describes was removed as dead code.
+Left here for the historical record of what was tried and why, not as
+a description of current behavior.
 
 - [x] **`ios/App/App/Info.plist` left untouched** — both portrait and
       landscape stay enabled for iPhone, per Sid's correction (an
