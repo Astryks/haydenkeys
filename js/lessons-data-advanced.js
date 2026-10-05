@@ -135,6 +135,26 @@ const CANON_IN_D = {
   ],
 };
 
+// --- Bonus: jazz comping & improvisation ----------------------------------
+// A real, correct jazz technique, scoped for beginners: left hand plays
+// the chord progression ("comping"); right hand improvises using the
+// major pentatonic scale, which — a genuinely well-known beginner's
+// trick, not oversimplified — "always fits" reasonably well over a
+// diatonic ii-V-I in the same key, because every pentatonic note is a
+// chord tone or a safe passing tone against all three chords. This is
+// explicitly NOT quiz-scored (there's no "correct" improvisation) —
+// the Lesson UI's completion criteria is time spent experimenting, not
+// matching an exact sequence.
+const JAZZ_COMPING = {
+  key: "C major",
+  progression: [
+    { label: "Dm7", roman: "ii7", notes: [62, 65, 69, 72] },
+    { label: "G7", roman: "V7", notes: [67, 71, 74, 77] },
+    { label: "Cmaj7", roman: "Imaj7", notes: [60, 64, 67, 71] },
+  ],
+  pentatonicNotes: [60, 62, 64, 67, 69, 72], // C major pentatonic: C D E G A C
+};
+
 export {
   MAJOR_SCALES,
   MINOR_SCALES,
@@ -142,4 +162,5 @@ export {
   SEVENTH_CHORDS,
   LESSON1_WITH_SEVENTHS,
   CANON_IN_D,
+  JAZZ_COMPING,
 };

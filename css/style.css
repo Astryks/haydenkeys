@@ -146,6 +146,18 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-badge-number { font-size: 1.3rem; font-weight: bold; color: #241c40; }
 .hk-badge-letter { font-size: 0.7rem; color: #4a3f80; }
 
+/* Per-hand coloring — cohesive with the existing palette, not literal
+   Synthesia blue/green: right hand uses the app's core purple accent
+   (already the "lead" highlight color everywhere else), left hand uses
+   the warm amber already used for streaks/warnings, so the two read as
+   genuinely distinct at a glance without introducing new hues. */
+.hk-key-hand-right.hk-key-white { background: #b9a6ff; }
+.hk-key-hand-right.hk-key-black { background: var(--hk-accent); }
+.hk-key-hand-left.hk-key-white { background: #f0d9a6; }
+.hk-key-hand-left.hk-key-black { background: var(--hk-warn); }
+.hk-badge-hand { font-size: 1.1rem; font-weight: bold; color: #241c40; }
+.hk-key-badge-left .hk-badge-letter { color: #6b5219; }
+
 /* Lessons */
 .hk-lesson-map { display: flex; flex-direction: column; gap: 10px; padding: 16px 0; }
 .hk-streak { font-size: 1rem; margin-bottom: 8px; }

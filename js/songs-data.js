@@ -996,6 +996,162 @@ const SONGS = [
     notes:
       "Added as a clearly-labeled advanced/bonus entry, not part of the beginner curriculum — Sid's own instinct going in was correct, this is genuinely not a simple beginner song. It moves through at least four different keys across a ballad intro, an operatic section with diminished/augmented chords and rapid changes, and a hard-rock section. For what it's worth, the ballad intro alone (commonly cited as C-G-Am-F) is literally Lesson 1's exact I-V-vi-IV shape — a fun 'you already know the first 20 seconds' fact — but the rest of the song is well beyond this app's beginner scope, and no simplified version is presented here to avoid misrepresenting its real difficulty.",
   },
+
+  // --- Jazz standards, added for the Day 26-30+ "richer harmony" / jazz ---
+  // comping-and-improv lesson. Sourced from a cited list (jazz educator
+  // Mark Rapp's top-10, via South Carolina Public Radio) plus two of
+  // Sid's own specific requests (My Funny Valentine — already on the
+  // cited list; Almost Blue — not on it, researched separately). Jazz
+  // standards are, honestly, harder to pin to one simple chart than pop
+  // songs — most published "changes" vary by recording/arranger, and
+  // several of these are explicitly documented as harmonically complex
+  // even by jazz-education sources. Where that's the case, confidence is
+  // marked needs-verification with the real reason, exactly like
+  // Bohemian Rhapsody and the pop-song entries above — no fake
+  // simplified chart invented just to mark something "done."
+  {
+    title: "Autumn Leaves",
+    artist: "Joseph Kosma (jazz standard)",
+    genre: "Jazz Standard",
+    popularityRank: 74,
+    key: "G minor (also commonly played in E minor or C minor)",
+    chords: ["Am7b5", "D7", "Gm7", "Cmaj7"],
+    degreeSequence: "ii7b5 - V7 - i - IV (relative-major turnaround)",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Sources themselves disagree on which key is 'the' home key (G minor vs E minor vs C minor readings all appear), reflecting that this tune is genuinely played in whichever key suits the singer/soloist. The ii-V-i-IV snippet above is a commonly cited fragment, not a full confident chart.",
+  },
+  {
+    title: "All the Things You Are",
+    artist: "Jerome Kern (jazz standard)",
+    genre: "Jazz Standard",
+    popularityRank: 75,
+    key: "Ab major (opening section; modulates extensively)",
+    chords: ["Fm7", "Bbm7", "Eb7", "Abmaj7"],
+    degreeSequence: "vi - ii - V - I (opening 4 bars only)",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "The opening vi-ii-V-I in Ab is well corroborated, but the full 36-bar form is explicitly documented as moving through a circle-of-fifths modulation to multiple keys with an unusual AA2BA3 structure — genuinely too harmonically complex to reduce to one chart here.",
+  },
+  {
+    title: "Blue Bossa",
+    artist: "Kenny Dorham (jazz standard)",
+    genre: "Jazz Standard",
+    popularityRank: 76,
+    key: "C minor (modulates to Db for 4 bars)",
+    chords: ["Cm7", "Fm7", "Dm7b5", "G7b9"],
+    degreeSequence: "i - iv - ii7b5 - V7b9 (first 8 of 16 bars)",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes:
+      "One of the most consistently-documented jazz standards for beginners — a classic minor ii-V-i, 75% in C minor with a clearly-documented 4-bar modulation to Db in the middle. A real, approachable entry point into jazz minor harmony.",
+  },
+  {
+    title: "There Will Never Be Another You",
+    artist: "Harry Warren (jazz standard)",
+    genre: "Jazz Standard",
+    popularityRank: 77,
+    key: "Eb major",
+    chords: ["insufficient agreement for a simple chart — see notes"],
+    degreeSequence: "needs verification",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Key (Eb major) is solid, but sources explicitly describe secondary dominants, a 'backdoor' bVII7 progression, and a tritone substitution in the final four bars — genuinely advanced jazz harmony, not simplified here to avoid misrepresenting it.",
+  },
+  {
+    title: "Misty",
+    artist: "Erroll Garner (jazz standard)",
+    genre: "Jazz Standard",
+    popularityRank: 78,
+    key: "Eb major",
+    chords: ["Ebmaj7", "insufficient agreement beyond bar 1 — see notes"],
+    degreeSequence: "I (bar 1); ii-V to IV (bars 2-3); backdoor bVII7 (bar 4)",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Key is solid and well documented, and the bar-1 tonic chord is simple enough — but bars 2 onward include a backdoor ii-V borrowed from the parallel minor, which is real, interesting harmony but too specific to commit to one simplified chart here.",
+  },
+  {
+    title: "Take the A Train",
+    artist: "Billy Strayhorn (jazz standard)",
+    genre: "Jazz Standard",
+    popularityRank: 79,
+    key: "C major",
+    chords: ["C6", "D7b5", "Dm7", "G7"],
+    degreeSequence: "I - II7(b5) - ii7 - V7 (opening A section)",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes:
+      "A well-documented, specific opening progression — the classic 'tonic to V7/V, then resolve home via ii-V' trick that gives the tune its distinctive sound. Full tune (AABA, 32 bars) has more harmonic movement in the B section not covered here.",
+  },
+  {
+    title: "So What",
+    artist: "Miles Davis (Kind of Blue)",
+    genre: "Jazz Standard / Modal Jazz",
+    popularityRank: 80,
+    key: "D Dorian (modal, not a conventional major/minor key)",
+    chords: ["Dm7", "Ebm7"],
+    degreeSequence: "D Dorian for 16 bars, up a half-step to Eb Dorian for 8 bars, back to D Dorian for 8 (32-bar AABA, only 2 chords total)",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes:
+      "One of the most famous and simplest-harmonically jazz standards ever recorded — foundational to modal jazz specifically because it reduces an entire 32-bar form to two chords. An excellent, well-documented entry point for the pentatonic-improvisation lesson.",
+  },
+  {
+    title: "Stella by Starlight",
+    artist: "Victor Young (jazz standard)",
+    genre: "Jazz Standard",
+    popularityRank: 81,
+    key: "Bb major (also commonly played in G major)",
+    chords: ["insufficient agreement for a simple chart — see notes"],
+    degreeSequence: "needs verification",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Sources explicitly describe this tune's harmony as 'not very straightforward,' with non-diatonic chords and minor ii-V progressions that don't resolve conventionally — and note that the commonly-played changes today have evolved significantly from the original film score through later recordings by Miles Davis, Bill Evans, and others. Too genuinely disputed for one confident beginner chart.",
+  },
+  {
+    title: "Blue Monk",
+    artist: "Thelonious Monk",
+    genre: "Jazz Standard / Blues",
+    popularityRank: 82,
+    key: "Bb major (12-bar blues form)",
+    chords: ["Bb7", "Eb7", "Bb7", "Bb7", "Eb7", "Eb7", "Bb7", "Bb7", "F7", "Eb7", "Bb7", "F7"],
+    degreeSequence: "Standard quick-change 12-bar blues: I-IV-I-I-IV-IV-I-I-V-IV-I-V",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes:
+      "The 12-bar blues FORM in Bb is well documented and confirmed. The chords shown are the standard generic 12-bar-blues changes, not Monk's own famously idiosyncratic chord substitutions and voicings on his recordings — those are real but not captured in this simplified beginner version, flagged honestly rather than presented as Monk's exact harmony.",
+  },
+  {
+    title: "My Funny Valentine",
+    artist: "Rodgers & Hart (jazz standard)",
+    genre: "Jazz Standard",
+    popularityRank: 83,
+    key: "C minor",
+    chords: ["Cm", "CmMaj7", "Cm7", "Cm6"],
+    degreeSequence: "i - i(maj7) - i7 - i6 (the 'minor line cliché' — a descending chromatic line C-B-Bb-A)",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes:
+      "The opening 4-chord 'minor line cliché' is extremely well documented (it's commonly nicknamed the 'My Funny Valentine progression' specifically because of this tune) and a genuinely useful piece of jazz vocabulary on its own. The tune's full 36-bar form has more disputed harmonic variation between recordings, not covered here.",
+  },
+  {
+    title: "Almost Blue",
+    artist: "Elvis Costello (famously covered by Chet Baker)",
+    genre: "Jazz Standard / Ballad",
+    popularityRank: 84,
+    key: "D minor (with a descending A minor pattern)",
+    chords: ["Am", "Dm9", "insufficient independent corroboration beyond the intro — see notes"],
+    degreeSequence: "needs verification",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Only one real source with specific chord detail was found (Am-Dm9-E+ for the intro, with a ii-V-i in A minor recurring through the tune) — not independently cross-confirmed by a second source with matching specificity, so flagged rather than presented as solid, per this project's two-source standard.",
+  },
 ];
 
 // Precomputed, honestly-reported summary for the Lesson 1 payoff screen.

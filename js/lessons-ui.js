@@ -24,6 +24,7 @@ import {
   SEVENTH_CHORDS,
   LESSON1_WITH_SEVENTHS,
   CANON_IN_D,
+  JAZZ_COMPING,
 } from "./lessons-data-advanced.js";
 
 // --- Shared staff-notation rendering (used by Lessons 3, 9, 10) -------
@@ -142,6 +143,7 @@ function initLessonsTab(root) {
       "lesson-33": runLesson33,
       "lesson-34": runLesson34,
       "lesson-35": runLesson35,
+      "lesson-36": runLesson36,
     };
     (runners[id] || showMap)();
   }
@@ -870,12 +872,12 @@ function initLessonsTab(root) {
     function renderStep() {
       if (step < pattern.leftHand.length) {
         const midi = pattern.leftHand[step];
-        kb.highlightChord([...pattern.rightHandChord, midi], { number: "LH", letter: `beat ${step + 1}`, rootMidi: midi });
+        kb.highlightHands({ left: [midi], right: pattern.rightHandChord, leftLabel: `beat ${step + 1}` });
         content.innerHTML = `
           <p class="hk-step-indicator">Beat ${step + 1} of ${pattern.leftHand.length}</p>
           <p>${pattern.description}</p>
-          <p>Left hand plays this bass note while the right hand holds the chord (both highlighted together —
-             this app doesn't yet distinguish hands visually on the keyboard, a real current limitation).</p>`;
+          <p>Left hand (amber) plays this bass note, down in its own lower register, while the right hand
+             (purple) holds the chord, higher up — each hand's real position and color are shown separately.</p>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next beat</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
         playChord([...pattern.rightHandChord, midi], { duration: 0.6 });
@@ -926,8 +928,8 @@ function initLessonsTab(root) {
     function renderStep() {
       if (step < pattern.leftHand.length) {
         const midi = pattern.leftHand[step];
-        kb.highlightChord([...pattern.rightHandChord, midi], { rootMidi: midi });
-        content.innerHTML = `<p class="hk-step-indicator">Beat ${step + 1} of ${pattern.leftHand.length}</p><p>Combining Alberti bass (left hand) with a held chord (right hand) — real two-hand coordination.</p>`;
+        kb.highlightHands({ left: [midi], right: pattern.rightHandChord });
+        content.innerHTML = `<p class="hk-step-indicator">Beat ${step + 1} of ${pattern.leftHand.length}</p><p>Combining Alberti bass (left hand, amber) with a held chord (right hand, purple) — real two-hand coordination, each hand's actual register shown separately.</p>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next beat</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
         playChord([...pattern.rightHandChord, midi], { duration: 0.6 });
@@ -953,8 +955,8 @@ function initLessonsTab(root) {
         const key = LESSON1_SEQUENCE[step];
         const chord = LESSON1_CHORDS[key];
         const bass = chord.root - 12;
-        kb.highlightChord([...chord.notes, bass], { number: chord.number, letter: chord.letter, rootMidi: bass });
-        content.innerHTML = `<p class="hk-step-indicator">Chord ${step + 1} of 4</p><p>${chord.number} (${chord.letter}) — right-hand chord over a left-hand root, an octave down.</p>`;
+        kb.highlightHands({ left: [bass], right: chord.notes, leftLabel: chord.number, rightLabel: chord.letter });
+        content.innerHTML = `<p class="hk-step-indicator">Chord ${step + 1} of 4</p><p>${chord.number} (${chord.letter}) — right-hand chord (purple) over a left-hand root (amber), a full octave down.</p>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
         playChord([...chord.notes, bass], { duration: 0.8 });
@@ -1123,8 +1125,8 @@ function initLessonsTab(root) {
     function renderStep() {
       if (step < CANON_IN_D.chords.length) {
         const c = CANON_IN_D.chords[step];
-        kb.highlightChord([...c.notes, c.bass], { letter: c.label, rootMidi: c.bass });
-        content.innerHTML = `<p class="hk-step-indicator">${step + 1} of 8</p><p>${c.label} over its bass note — both hands' notes highlighted together.</p>`;
+        kb.highlightHands({ left: [c.bass], right: c.notes, rightLabel: c.label });
+        content.innerHTML = `<p class="hk-step-indicator">${step + 1} of 8</p><p>${c.label} (purple, right hand) over its bass note (amber, left hand).</p>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
         playChord([...c.notes, c.bass], { duration: 0.8 });
@@ -1150,7 +1152,7 @@ function initLessonsTab(root) {
     function renderStep() {
       if (step < steps.length) {
         const c = steps[step];
-        kb.highlightChord([...c.notes, c.bass], { letter: c.label, rootMidi: c.bass });
+        kb.highlightHands({ left: [c.bass], right: c.notes, rightLabel: c.label });
         content.innerHTML = `<p class="hk-step-indicator">${step + 1} of 2</p><p>${c.label}${step === 1 ? " — swapping in a 7th chord for one more color, the same trick from Day 26-30" : " (the plain version, for comparison)"}.</p>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
@@ -1174,7 +1176,7 @@ function initLessonsTab(root) {
     function renderStep() {
       if (step < CANON_IN_D.chords.length) {
         const c = CANON_IN_D.chords[step];
-        kb.highlightChord([...c.notes, c.bass], { number: c.roman, letter: c.label, rootMidi: c.bass });
+        kb.highlightHands({ left: [c.bass], right: c.notes, leftLabel: c.roman, rightLabel: c.label });
         content.innerHTML = `<p class="hk-step-indicator">${step + 1} of 8</p><div class="hk-big-degree">${c.roman}<span class="hk-big-letter">${c.label}</span></div>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
@@ -1200,6 +1202,77 @@ function initLessonsTab(root) {
         controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
+    renderStep();
+  }
+
+  // ----- Bonus: jazz comping & improvisation -------------------------------
+  // Deliberately NOT quiz-scored — there's no "correct" improvisation.
+  // Completion criteria is time spent experimenting, not matching an
+  // exact sequence, per the real pedagogy this lesson is teaching.
+  function runLesson36() {
+    const { content, keyboardWrap, controls } = lessonShell("Bonus: Jazz comping & improv");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 45, endMidi: 79 });
+    let step = 0; // 0 = explain, 1 = free-play
+    let compIndex = 0;
+    let compInterval = null;
+    let secondsElapsed = 0;
+    let timerInterval = null;
+
+    function renderStep() {
+      if (step === 0) {
+        content.innerHTML = `
+          <h3>Left hand comps, right hand improvises.</h3>
+          <p>This is a real jazz technique: the left hand plays the chord progression (called "comping" —
+             short for accompanying) while the right hand improvises a melody over it.</p>
+          <p>The beginner's trick that makes this actually work: the <strong>major pentatonic scale always
+             fits</strong> reasonably well over a diatonic progression in the same key, because every note in it
+             is either a chord tone or a safe passing tone. No deep jazz theory required to sound musical.</p>
+          <p>Left hand (amber) will loop a ii-V-I in C major (Dm7-G7-Cmaj7 — the exact 7th chords from Days
+             26-28). The right hand's "safe notes" (purple outline) are the C major pentatonic scale: C, D, E, G, A.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Start noodling</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step = 1; renderStep(); });
+      } else {
+        content.innerHTML = `
+          <p>The left hand is looping the progression. Click anywhere in the <strong>highlighted (outlined)</strong>
+             keys with your mouse/finger to improvise — there's no wrong note here.</p>
+          <p id="hk-jazz-timer">Time spent noodling: 0s</p>
+          <p class="hk-honest-note">This lesson isn't quiz-scored — when you've had enough, just mark it complete.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Mark lesson complete</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", finish);
+
+        kb.clearHighlights();
+        JAZZ_COMPING.pentatonicNotes.forEach((midi) => {
+          const el = kb.getKeyElement(midi);
+          if (el) el.classList.add("hk-key-selectable");
+        });
+
+        compInterval = setInterval(() => {
+          const chord = JAZZ_COMPING.progression[compIndex % JAZZ_COMPING.progression.length];
+          playChord(chord.notes.map((n) => n - 12), { duration: 1.3 });
+          compIndex++;
+        }, 1400);
+        timerInterval = setInterval(() => {
+          secondsElapsed++;
+          const el = document.getElementById("hk-jazz-timer");
+          if (el) el.textContent = `Time spent noodling: ${secondsElapsed}s`;
+        }, 1000);
+      }
+    }
+
+    function finish() {
+      if (compInterval) clearInterval(compInterval);
+      if (timerInterval) clearInterval(timerInterval);
+      markLessonComplete("lesson-36");
+      kb.clearHighlights();
+      kb.onKeyPress(() => {});
+      content.innerHTML = `
+        <h3>Lesson complete.</h3>
+        <p>That trick — major pentatonic over a diatonic progression — works in any key: find the 1, 2, 3, 5,
+           and 6 of whatever key you're in, and you have a safe improvising palette.</p>`;
+      controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-back">Back to lessons</button>`;
+      controls.querySelector("#hk-back").addEventListener("click", showMap);
+    }
+
     renderStep();
   }
 

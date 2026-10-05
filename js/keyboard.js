@@ -112,7 +112,7 @@ function renderKeyboard(container, { startMidi = 60, endMidi = 84 } = {}) {
 
   function clearHighlights() {
     keyElements.forEach((el) => {
-      el.classList.remove("hk-key-highlight");
+      el.classList.remove("hk-key-highlight", "hk-key-hand-left", "hk-key-hand-right");
       const badge = el.querySelector(".hk-key-badge");
       if (badge) badge.remove();
     });
@@ -135,6 +135,40 @@ function renderKeyboard(container, { startMidi = 60, endMidi = 84 } = {}) {
     });
   }
 
+  // Highlights two independent note sets by hand, each at its own real
+  // absolute octave/position on the keyboard — e.g. a left-hand bass
+  // note down in a low octave and a right-hand chord an octave or more
+  // away render with genuine spatial distance between them (the
+  // keyboard always spans real piano key widths across its MIDI range,
+  // never compressed), with a distinct color per hand so register
+  // separation is visible at a glance, not just implied by which notes
+  // happen to be highlighted. Each note also gets a small "L"/"R" tag.
+  function highlightHands({ left = [], right = [], leftLabel, rightLabel } = {}) {
+    clearHighlights();
+    left.forEach((midi, i) => {
+      const el = keyElements.get(midi);
+      if (!el) return;
+      el.classList.add("hk-key-hand-left");
+      if (i === 0) {
+        const badge = document.createElement("div");
+        badge.className = "hk-key-badge hk-key-badge-left";
+        badge.innerHTML = `<span class="hk-badge-hand">L</span><span class="hk-badge-letter">${leftLabel ?? ""}</span>`;
+        el.appendChild(badge);
+      }
+    });
+    right.forEach((midi, i) => {
+      const el = keyElements.get(midi);
+      if (!el) return;
+      el.classList.add("hk-key-hand-right");
+      if (i === 0) {
+        const badge = document.createElement("div");
+        badge.className = "hk-key-badge hk-key-badge-right";
+        badge.innerHTML = `<span class="hk-badge-hand">R</span><span class="hk-badge-letter">${rightLabel ?? ""}</span>`;
+        el.appendChild(badge);
+      }
+    });
+  }
+
   function onKeyPress(cb) {
     pressHandler = cb;
   }
@@ -143,7 +177,7 @@ function renderKeyboard(container, { startMidi = 60, endMidi = 84 } = {}) {
     return keyElements.get(midi);
   }
 
-  return { clearHighlights, highlightChord, onKeyPress, getKeyElement, keyElements };
+  return { clearHighlights, highlightChord, highlightHands, onKeyPress, getKeyElement, keyElements };
 }
 
 export { renderKeyboard, playTone, playChord, midiToName, isBlackKey, freqFromMidi, getAudioContext };
