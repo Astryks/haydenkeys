@@ -410,6 +410,16 @@ insertAfter(theoryRest, "lesson-25", [
     description: "The practice habits behind fast, even playing — slow practice, a metronome ladder, relaxed hands, rhythms and chunking — plus a five-finger speed drill.",
   },
 ]);
+// Item 59: intermediate wait mode (right after the speed lesson), and
+// the advanced sheet-music / practice-tools block after Bach's Prelude.
+insertAfter(theoryRest, "lesson-technique", [
+  {
+    id: "lesson-waitmode",
+    title: "Wait mode: the music waits for you",
+    subtitle: "Play along at your own pace",
+    description: "The falling blocks stop at the keys until you play the right notes — with on-screen keys, your laptop, a MIDI keyboard, or the microphone.",
+  },
+]);
 insertAfter(theoryRest, "lesson-37", [
   {
     id: "lesson-beethoven-form",
@@ -422,6 +432,42 @@ insertAfter(theoryRest, "lesson-37", [
     title: "Bach: Prelude in C major",
     subtitle: "A classic every pianist learns",
     description: "The first 8 bars of J.S. Bach's Prelude in C (Well-Tempered Clavier, Book I, 1722) — one broken-chord pattern, a new chord every bar.",
+  },
+  {
+    id: "lesson-sheet",
+    title: "Reading sheet music",
+    subtitle: "The grand staff, step by step",
+    description: "Treble and bass clefs, the line and space notes, Middle C, rhythm and time signatures, sharps and key signatures, chords — then a note-reading quiz.",
+  },
+  {
+    id: "lesson-sheet-ode",
+    title: "Sheet music: Ode to Joy",
+    subtitle: "Your first piece from real notation",
+    description: "Beethoven's famous theme with both hands, read from the grand staff — wait mode first, then in time.",
+  },
+  {
+    id: "lesson-sheet-minuet",
+    title: "Sheet music: Minuet in G",
+    subtitle: "3/4 time and a key signature",
+    description: "The first 8 bars of the right hand, in 3/4 with one sharp — eighth notes and a waltz-like count.",
+  },
+  {
+    id: "lesson-sheet-bach",
+    title: "Sheet music: Bach's Prelude in C",
+    subtitle: "Two hands, sixteenth notes",
+    description: "Bars 1-4 of the Prelude from the grand staff: held left-hand notes under steady right-hand sixteenths.",
+  },
+  {
+    id: "lesson-handsloop",
+    title: "Hands separately & looping",
+    subtitle: "How pianists learn hard pieces",
+    description: "Practice one hand while the app plays the other, loop just the bars that trip you up, slow them down, then put both hands back together.",
+  },
+  {
+    id: "lesson-timed",
+    title: "Play in time: no waiting",
+    subtitle: "The harder mode, scored",
+    description: "The blocks don't wait and the key hints are off: hit each note on time, from the sheet music, for a score.",
   },
 ]);
 

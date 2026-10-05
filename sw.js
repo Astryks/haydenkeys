@@ -6,7 +6,7 @@
 // bundled in these same JS files, so no separate data-fetching to
 // worry about). Bump CACHE_NAME on every
 // deploy that changes shell files so old caches are dropped on activate.
-const CACHE_NAME = "hayden-keys-v4";
+const CACHE_NAME = "hayden-keys-v5";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -21,9 +21,11 @@ const APP_SHELL = [
   "./js/camera-overlay.js",
   "./js/chord-utils.js",
   "./js/computer-keys.js",
+  "./js/daily-review.js",
   "./js/discover.js",
   "./js/drums.js",
   "./js/how-it-works.js",
+  "./js/input-hub.js",
   "./js/keyboard.js",
   "./js/lessons-data-advanced.js",
   "./js/lessons-data.js",
@@ -32,9 +34,12 @@ const APP_SHELL = [
   "./js/note-highway.js",
   "./js/piano-sample.js",
   "./js/pitch.js",
+  "./js/play-engine.js",
   "./js/practice.js",
   "./js/saved.js",
+  "./js/sheet-data.js",
   "./js/songs-data.js",
+  "./js/staff.js",
   "./js/storage.js",
   "./js/transcribe.js",
   "./assets/icons/icon-16.png",

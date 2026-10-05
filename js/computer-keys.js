@@ -34,6 +34,7 @@
 // Shift/Caps Lock and non-US keyboard layouts all map the same way.
 
 import { playTone } from "./keyboard.js";
+import { emitNoteOn } from "./input-hub.js";
 
 const PIANO_MIN = 21; // A0
 const PIANO_MAX = 108; // C8
@@ -273,6 +274,7 @@ function ensureListenersInstalled() {
     (mapped.hand === "left" ? heldLeft : heldRight).add(mapped.midi);
     playTone(mapped.midi, { duration: 0.6 });
     refreshHighlight(target.kb);
+    emitNoteOn(mapped.midi, "laptop");
   });
   document.addEventListener("keyup", (e) => {
     // Release exactly what this key pressed, even if the octave changed

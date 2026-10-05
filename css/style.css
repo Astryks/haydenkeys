@@ -446,6 +446,15 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-tuner-needle.hk-tuner-in-tune { background: #3fb363; }
 .hk-tuner-needle.hk-tuner-off { background: var(--hk-accent-2); }
 .hk-tuner-readout { font-size: 0.82rem; color: var(--hk-text-dim); text-align: center; margin: 0; }
+/* Item 58: target note, scale labels, "hearing" readout, and the green
+   matched state (the whole widget lights up, like a guitar tuner). */
+.hk-tuner-display { padding: 10px 14px; border-radius: 12px; border: 2px solid transparent; transition: background 0.2s, border-color 0.2s; }
+.hk-tuner-target { font-size: 1rem; }
+.hk-tuner-scale { display: flex; justify-content: space-between; width: 150px; font-size: 0.62rem; color: var(--hk-text-dim); }
+.hk-tuner-heard { font-size: 0.85rem; font-weight: 600; margin: 0; min-height: 1.2em; }
+.hk-tuner-matched .hk-tuner-display { background: #e3f6e9; border-color: #3fb363; }
+.hk-tuner-matched .hk-tuner-dial { border-color: #3fb363; background: #f2fbf5; }
+.hk-tuner-matched .hk-tuner-readout { color: #217a3d; font-weight: bold; font-size: 0.95rem; }
 
 /* ----- Lesson layout: main content + persistent right-side timeline ---- */
 .hk-lessons-layout { display: flex; gap: 20px; align-items: flex-start; }
@@ -805,3 +814,42 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-size-table th, .hk-size-table td { border: 1px solid var(--hk-border); padding: 4px 10px; text-align: left; }
 .hk-size-table th { background: var(--hk-bg-2); }
 
+/* Item 59: live feedback on a key press (wait mode / review). */
+.hk-key-right { box-shadow: inset 0 0 0 3px #3fb363 !important; }
+.hk-key-wrong { box-shadow: inset 0 0 0 3px var(--hk-danger) !important; animation: hk-shake 0.25s; }
+@keyframes hk-shake { 25% { transform: translateX(-2px); } 75% { transform: translateX(2px); } }
+/* Grand staff */
+.hk-staff-scroll { overflow-x: auto; background: #fff; border-radius: 10px; border: 1px solid var(--hk-border); margin: 8px 0; }
+.hk-grand-staff { display: block; max-width: none; }
+.hk-st-line { stroke: #2a2a3a; stroke-width: 1; }
+.hk-st-bar { stroke: #2a2a3a; stroke-width: 1.2; }
+.hk-st-final { stroke-width: 3; }
+.hk-st-clef { fill: #2a2a3a; font-family: "Bravura", "Apple Symbols", "Segoe UI Symbol", "Noto Music", serif; }
+.hk-st-treble { font-size: 46px; }
+.hk-st-bass { font-size: 32px; }
+.hk-st-time { font: bold 19px Georgia, serif; fill: #2a2a3a; }
+.hk-st-acc { font: 15px "Apple Symbols", "Segoe UI Symbol", serif; fill: #2a2a3a; }
+.hk-st-barnum { font-size: 9px; fill: var(--hk-text-dim); }
+.hk-st-head { fill: #2a2a3a; stroke: #2a2a3a; stroke-width: 1.2; }
+.hk-st-head.hk-st-hollow { fill: #fff; }
+.hk-st-stem, .hk-st-flag { stroke: #2a2a3a; stroke-width: 1.6; fill: none; }
+.hk-st-dot { fill: #2a2a3a; }
+.hk-st-now { fill: var(--hk-accent); stroke: var(--hk-accent); }
+.hk-st-head.hk-st-hollow.hk-st-now { fill: var(--hk-accent-soft); }
+.hk-st-done { fill: #9aa3ad; stroke: #9aa3ad; }
+.hk-st-head.hk-st-hollow.hk-st-done { fill: #fff; }
+.hk-st-dim { opacity: 0.35; }
+/* Practice-player controls */
+.hk-pp-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 6px 0; }
+.hk-pp-score { font-weight: 600; margin: 6px 0; }
+.hk-input-status { font-size: 0.8rem; color: var(--hk-text-dim); }
+.hk-st-label { font-size: 10px; font-weight: bold; fill: var(--hk-accent-2); text-anchor: middle; }
+
+/* Item 59: daily review */
+.hk-review-banner {
+  display: block; margin: 0 0 8px; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-weight: 600;
+  background: var(--hk-purple-soft); border: 1px solid var(--hk-purple); color: var(--hk-text);
+}
+.hk-review-head { display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 6px; }
+.hk-review-prompt { font-size: 1.15rem; margin: 0; }
+.hk-lesson-map > .hk-btn[data-lesson="daily-review"] { margin: 6px 0 10px; }

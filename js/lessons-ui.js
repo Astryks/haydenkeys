@@ -4,6 +4,11 @@ import { initCalibration } from "./calibration.js";
 import { chordSymbolToMidi } from "./chord-utils.js";
 import { createTunerWidget } from "./pitch.js";
 import { registerComputerKeyboardTarget } from "./computer-keys.js";
+import { createPracticePlayer } from "./play-engine.js";
+import { renderGrandStaff } from "./staff.js";
+import { onNoteOn, midiSupported, enableMidi, connectedMidiNames, enableMic, disableMic, micOn } from "./input-hub.js";
+import { runDailyReviewSession, reviewDoneToday } from "./daily-review.js";
+import { ODE_TO_JOY, ODE_MELODY_ONLY, MINUET_IN_G, BACH_PRELUDE_SHEET, BACH_PRELUDE_8, LESSON1_CHORD_DRILL } from "./sheet-data.js";
 import {
   LESSON1_CHORDS,
   LESSON1_SEQUENCE,
@@ -106,7 +111,7 @@ function dailyGoalHtml() {
   const pct = Math.min(100, Math.round((goal.count / goal.target) * 100));
   return `
     <div class="hk-daily-goal">
-      <div class="hk-daily-goal-label">Today's goal: ${goal.count}/${goal.target} lesson${goal.target === 1 ? "" : "s"} or song${goal.target === 1 ? "" : "s"} ${goal.metToday ? "— done! ✓" : ""}</div>
+      <div class="hk-daily-goal-label">Today's goal: ${goal.count}/${goal.target} lesson${goal.target === 1 ? "" : "s"}, song${goal.target === 1 ? "" : "s"} or review${goal.target === 1 ? "" : "s"} ${goal.metToday ? "— done! ✓" : ""}</div>
       <div class="hk-daily-goal-bar"><div class="hk-daily-goal-fill" style="width:${pct}%"></div></div>
     </div>`;
 }
@@ -154,6 +159,7 @@ function lessonMapHtml() {
       <h2 class="hk-lessons-title">100 Lessons to Learn Any Song — START HERE.</h2>
       <p class="hk-honest-note">${lessonCountLabel()} — real and clickable, nothing padded.</p>
       <div class="hk-streak">🔥 ${streak.count}-day streak</div>
+      <button class="hk-btn ${reviewDoneToday() ? "" : "hk-btn-primary"}" data-lesson="daily-review">🧠 2-minute daily review${reviewDoneToday() ? " — done today ✓" : ""}</button>
       ${dailyGoalHtml()}
       ${badgesStripHtml()}
       ${rows}
@@ -238,6 +244,8 @@ function withStepBack(render, { controls, kb, getState, setState, onBack }) {
   }
   return wrapped;
 }
+
+const DAILY_REVIEW_TITLE = "Daily review";
 
 function initLessonsTab(root) {
   // Persistent two-column layout: lesson content on the left, the
@@ -336,6 +344,14 @@ function initLessonsTab(root) {
       "lesson-chordquiz": runChordQuizLesson,
       "lesson-pedals": runPedalFunLesson,
       "lesson-technique": runTechniqueLesson,
+      "lesson-waitmode": runWaitModeLesson,
+      "lesson-sheet": runSheetMusicLesson,
+      "lesson-sheet-ode": () => runSheetSongLesson("lesson-sheet-ode", ODE_TO_JOY, { hands: true }),
+      "lesson-sheet-minuet": () => runSheetSongLesson("lesson-sheet-minuet", MINUET_IN_G, { hands: false }),
+      "lesson-sheet-bach": () => runSheetSongLesson("lesson-sheet-bach", BACH_PRELUDE_SHEET, { hands: true }),
+      "lesson-handsloop": runHandsLoopLesson,
+      "lesson-timed": runTimedLesson,
+      "daily-review": runDailyReview,
       "lesson-beethoven-form": runBeethovenFormLesson,
       "lesson-bach-prelude": runBachPreludeLesson,
     };
@@ -359,6 +375,8 @@ function initLessonsTab(root) {
     main.innerHTML = `
       <div class="hk-lesson-player">
         <button class="hk-lesson-exit" id="hk-lesson-exit">&larr; Lessons</button>
+        ${!reviewDoneToday() && isLessonComplete("lesson-1") && title !== DAILY_REVIEW_TITLE
+          ? `<button class="hk-review-banner" id="hk-review-banner">🧠 Your 2-minute daily review is ready</button>` : ""}
         <h2>${title}</h2>
         <div class="hk-lesson-content" id="hk-lesson-content"></div>
         <div id="hk-lesson-highway" class="hk-lesson-highway hk-hidden"></div>
@@ -366,6 +384,7 @@ function initLessonsTab(root) {
         <div class="hk-lesson-controls" id="hk-lesson-controls"></div>
       </div>`;
     main.querySelector("#hk-lesson-exit").addEventListener("click", showMap);
+    main.querySelector("#hk-review-banner")?.addEventListener("click", () => startLesson("daily-review"));
     return {
       content: main.querySelector("#hk-lesson-content"),
       keyboardWrap: main.querySelector("#hk-lesson-keyboard"),
@@ -473,6 +492,23 @@ function initLessonsTab(root) {
         midis.forEach((midi) => events.push({ midi, start: i * barSec, dur: barSec * 0.92, hand: "right" }));
       });
       return kb.playTimeline(events, { onDone });
+    };
+    // Item 59: hands the highway and raw highlight functions to an
+    // external driver (play-engine.js), with the drop animation off.
+    kb.takeOver = () => {
+      kb.stopPlayAlong();
+      if (dropRaf) cancelAnimationFrame(dropRaf);
+      along = { external: true };
+      return {
+        render: (t, notes) => highway.render(t, notes),
+        hands: (h) => origHands(h),
+        clear: () => origClear(),
+        release: () => {
+          if (along && along.external) along = null;
+          origClear();
+          highway.render(0, []);
+        },
+      };
     };
     kb.stopPlayAlong = () => {
       if (!along) return;
@@ -597,7 +633,8 @@ function initLessonsTab(root) {
       <div id="hk-getstarted-cal"></div>`;
     controls.innerHTML = `<button class="hk-btn" id="hk-skip-cal">Skip — I already know where Middle C is</button>`;
     controls.querySelector("#hk-skip-cal").addEventListener("click", finish);
-    const calibration = initCalibration(content.querySelector("#hk-getstarted-cal"), { onComplete: finish });
+    // Get Started has its own Skip button below, so no second one inside.
+    const calibration = initCalibration(content.querySelector("#hk-getstarted-cal"), { onComplete: finish, showSkip: false });
     onLessonExit(() => calibration.destroy());
 
     function finish() {
@@ -3250,6 +3287,403 @@ function initLessonsTab(root) {
     }
     renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (st) => ({ step } = st) });
     renderStep();
+  }
+
+  // ===== Item 59: wait mode, sheet music, hands/looping, daily review =====
+
+  // Input sources row: on-screen + laptop keys always work; a MIDI
+  // keyboard (Chromium browsers) and the mic (single notes) are opt-in.
+  function inputSourcesHtml({ allowMic }) {
+    return `<div class="hk-pp-row">
+      <span class="hk-speed-label">Play with:</span>
+      <span class="hk-input-status">on-screen keys · laptop keys</span>
+      ${midiSupported() ? `<button class="hk-btn hk-btn-small" data-input="midi">🎹 Connect MIDI keyboard</button>`
+        : `<span class="hk-input-status">(MIDI keyboards: use Chrome or Edge on a computer)</span>`}
+      ${allowMic ? `<button class="hk-btn hk-btn-small" data-input="mic">🎤 ${micOn() ? "Mic on" : "Use microphone"}</button>` : ""}
+      <span class="hk-input-status" id="hk-input-msg"></span>
+    </div>`;
+  }
+  function wireInputSources(scope) {
+    const msg = scope.querySelector("#hk-input-msg");
+    scope.querySelector('[data-input="midi"]')?.addEventListener("click", async (e) => {
+      const status = await enableMidi();
+      const names = connectedMidiNames();
+      msg.textContent = status === "ready"
+        ? (names.length ? `Connected: ${names.join(", ")}` : "MIDI is on — plug in / switch on your keyboard.")
+        : status === "denied" ? "MIDI access was blocked by the browser." : "This browser doesn't support MIDI keyboards.";
+      if (status === "ready") e.target.textContent = "🎹 MIDI on";
+    });
+    scope.querySelector('[data-input="mic"]')?.addEventListener("click", async (e) => {
+      if (micOn()) {
+        disableMic();
+        e.target.textContent = "🎤 Use microphone";
+        msg.textContent = "";
+        return;
+      }
+      try {
+        await enableMic();
+        onLessonExit(disableMic); // never leave the mic on after the lesson
+        e.target.textContent = "🎤 Mic on";
+        msg.textContent = "Listening — one note at a time works best (the mic can't separate chords).";
+      } catch (err) {
+        msg.textContent = `Microphone unavailable (${err.message}).`;
+      }
+    });
+  }
+
+  // A full practice panel: input sources, mode / hands / loop / speed
+  // controls, optional sheet music that follows along, and a result.
+  function mountPracticePanel(container, kb, piece, {
+    modes = ["wait"], hands = false, loop = false, allowMic = false, staff = false, hints = true, onResult,
+  } = {}) {
+    let player = null;
+    let opts = { mode: modes[0], hands: "both", from: 0, to: piece.bars - 1, loopOn: false, speed: 1, hints };
+    const barOptions = (sel) => Array.from({ length: piece.bars }, (_, i) => `<option value="${i}" ${i === sel ? "selected" : ""}>${i + 1}</option>`).join("");
+    container.innerHTML = `
+      ${inputSourcesHtml({ allowMic })}
+      ${modes.length > 1 ? `<div class="hk-pp-row"><span class="hk-speed-label">Mode:</span>
+        ${modes.map((m) => `<button class="hk-speed-btn ${m === opts.mode ? "hk-speed-active" : ""}" data-pmode="${m}">${m === "wait" ? "⏸ Wait for me" : "⏱ Play in time (scored)"}</button>`).join("")}</div>` : ""}
+      ${hands ? `<div class="hk-pp-row"><span class="hk-speed-label">Hands:</span>
+        ${["both", "left", "right"].map((h) => `<button class="hk-speed-btn ${h === "both" ? "hk-speed-active" : ""}" data-phand="${h}">${h === "both" ? "Both" : h === "left" ? "Left only (app plays right)" : "Right only (app plays left)"}</button>`).join("")}</div>` : ""}
+      ${loop ? `<div class="hk-pp-row"><span class="hk-speed-label">Bars:</span>
+        <select data-pfrom>${barOptions(0)}</select> to <select data-pto>${barOptions(piece.bars - 1)}</select>
+        <label class="hk-input-status"><input type="checkbox" data-ploop /> Loop these bars</label></div>` : ""}
+      <div class="hk-pp-row"><span class="hk-speed-label">Speed:</span>
+        ${[0.5, 0.75, 1].map((sp) => `<button class="hk-speed-btn ${sp === 1 ? "hk-speed-active" : ""}" data-pspeed="${sp}">${Math.round(sp * 100)}%</button>`).join("")}
+        <button class="hk-btn hk-btn-primary" data-pstart>▶ Start</button>
+      </div>
+      ${staff ? `<div class="hk-staff-scroll" data-pstaff></div>` : ""}
+      <p class="hk-pp-score" data-pscore></p>`;
+    wireInputSources(container);
+    const staffEl = container.querySelector("[data-pstaff]");
+    const scoreEl = container.querySelector("[data-pscore]");
+    const startBtn = container.querySelector("[data-pstart]");
+    function drawStaff(state) {
+      if (!staffEl) return;
+      const per = 4;
+      const lo = loop ? opts.from : 0;
+      const bar = state ? state.bar : lo;
+      const sysFrom = Math.max(0, Math.min(piece.bars - per, Math.floor(bar / per) * per));
+      staffEl.innerHTML = renderGrandStaff(piece, {
+        fromBar: sysFrom,
+        toBar: Math.min(piece.bars, sysFrom + per),
+        current: state ? state.current : new Set(),
+        done: state ? state.done : new Set(),
+        dimHand: opts.hands === "both" ? null : opts.hands === "left" ? "right" : "left",
+      });
+    }
+    drawStaff(null);
+    function stop() {
+      if (player) player.stop();
+      player = null;
+      startBtn.textContent = "▶ Start";
+    }
+    function start() {
+      stop();
+      scoreEl.textContent = opts.mode === "wait" ? "Play the lit keys as the blocks land — the music waits for you." : "Hit each note as its block lands. Ready…";
+      const from = Number(opts.from);
+      const to = Math.max(from + 1, Number(opts.to) + 1);
+      const useLoop = loop && (opts.loopOn || from > 0 || to < piece.bars);
+      player = createPracticePlayer({
+        kb,
+        piece,
+        mode: opts.mode,
+        hands: opts.hands,
+        loop: useLoop ? [from, to] : null,
+        speed: opts.speed,
+        showKeyHints: opts.hints,
+        onStep: (st) => {
+          drawStaff(st);
+          if (opts.loopOn && st.stats.loops) scoreEl.textContent = `Loop ${st.stats.loops + 1} — keep going, or Stop when it feels easy.`;
+        },
+        onFinish: (r) => {
+          startBtn.textContent = "▶ Again";
+          player = null;
+          scoreEl.textContent = opts.mode === "wait"
+            ? `Done! ${r.right} right, ${r.wrong} wrong key${r.wrong === 1 ? "" : "s"} — ${r.cleanSteps} of ${r.steps} played first try (${r.accuracy}% accuracy).`
+            : `Score: ${r.hits} of ${r.hits + r.misses} notes on time (${r.accuracy}%).${r.timing.length ? ` On average you were ${Math.abs(r.avgTimingMs)}ms ${r.avgTimingMs > 0 ? "late" : "early"}.` : ""}${r.wrong ? ` ${r.wrong} extra/wrong key${r.wrong === 1 ? "" : "s"}.` : ""}`;
+          if (onResult) onResult(r, opts);
+        },
+      });
+      player.start();
+      startBtn.textContent = "■ Stop";
+    }
+    startBtn.addEventListener("click", () => (player ? stop() : start()));
+    const pick = (attr, key, conv = (v) => v) => container.querySelectorAll(`[${attr}]`).forEach((b) => b.addEventListener("click", () => {
+      opts[key] = conv(b.getAttribute(attr));
+      container.querySelectorAll(`[${attr}]`).forEach((x) => x.classList.toggle("hk-speed-active", x === b));
+      if (player) start();
+      drawStaff(null);
+    }));
+    pick("data-pmode", "mode");
+    pick("data-phand", "hands");
+    pick("data-pspeed", "speed", Number);
+    container.querySelector("[data-pfrom]")?.addEventListener("change", (e) => { opts.from = Number(e.target.value); if (opts.to < opts.from) opts.to = opts.from; drawStaff(null); });
+    container.querySelector("[data-pto]")?.addEventListener("change", (e) => { opts.to = Number(e.target.value); drawStaff(null); });
+    container.querySelector("[data-ploop]")?.addEventListener("change", (e) => { opts.loopOn = e.target.checked; });
+    onLessonExit(stop);
+    return { stop };
+  }
+
+  // Simple multi-page lesson shell for the new lessons: pages are
+  // functions that fill `content` (and may mount panels); Back works.
+  function runPagedLesson(lessonId, title, range, pages, doneHtml) {
+    const { content, keyboardWrap, controls } = lessonShell(title);
+    const kb = lessonKeyboard(keyboardWrap, range);
+    registerComputerKeyboardTarget(kb, keyboardWrap);
+    let step = 0;
+    let panel = null;
+    function renderStep() {
+      if (panel) panel.stop();
+      panel = null;
+      if (kb.stopPlayAlong) kb.stopPlayAlong();
+      kb.clearHighlights();
+      if (step < pages.length) {
+        content.innerHTML = `<p class="hk-step-indicator">${step + 1} of ${pages.length}</p><div data-page></div>`;
+        panel = pages[step](content.querySelector("[data-page]"), kb) || null;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">${step === pages.length - 1 ? "Finish" : "Next"}</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+      } else {
+        markLessonComplete(lessonId);
+        content.innerHTML = doneHtml;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (st) => ({ step } = st) });
+    renderStep();
+  }
+
+  // ----- Intermediate: wait mode ---------------------------------------------
+  function runWaitModeLesson() {
+    runPagedLesson("lesson-waitmode", "Wait mode: the music waits for you", { startMidi: 48, endMidi: 79 }, [
+      (el) => {
+        el.innerHTML = mascotSay(`<h3>Play along — at your own pace.</h3>
+          <p>In <strong>wait mode</strong> the blocks fall as usual, but when they reach the keys they
+             <strong>stop and wait</strong> until you press the right ones. Right keys flash green, wrong keys flash
+             red, and the music carries on the moment you get it.</p>
+          <p>Play on the on-screen keys, your laptop keyboard, or — best of all — a real keyboard: plug a
+             <strong>MIDI keyboard</strong> into a computer (Chrome or Edge), or use the <strong>microphone</strong>
+             for single notes on any piano.</p>`, "assets/mascot-poses/metronome.png");
+      },
+      (el, kb) => {
+        el.innerHTML = mascotSay(`<h3>1. A melody: Ode to Joy</h3>
+          <p>Right hand, one note at a time — the same tune you met earlier, now with its real rhythm. This one works
+             with the microphone too.</p>`) + `<div data-panel></div>`;
+        return mountPracticePanel(el.querySelector("[data-panel]"), kb, ODE_MELODY_ONLY, { allowMic: true });
+      },
+      (el, kb) => {
+        el.innerHTML = mascotSay(`<h3>2. Chords: G - D - Em - C</h3>
+          <p>Your first four chords. Press all three lit keys of each chord (one at a time is fine — it waits until
+             all three are down). On the microphone, chords won't register reliably, so use the keys or MIDI here.</p>`) + `<div data-panel></div>`;
+        return mountPracticePanel(el.querySelector("[data-panel]"), kb, LESSON1_CHORD_DRILL, {});
+      },
+    ], mascotSay(`<h3>Lesson complete.</h3><p>Wait mode is the best way to learn a new piece: no pressure, no rushing.
+       In the advanced section, a harder mode won't wait for you.</p>`, "assets/mascot-poses/maestro-conducting.png"));
+  }
+
+  // ----- Advanced: play in time (harder wait mode) -------------------------
+  function runTimedLesson() {
+    runPagedLesson("lesson-timed", "Play in time: no waiting", { startMidi: 41, endMidi: 84 }, [
+      (el) => {
+        el.innerHTML = mascotSay(`<h3>The harder mode: the music doesn't wait.</h3>
+          <p>Now the blocks keep falling. Each note counts if you press it within a quarter of a second of when it
+             lands; otherwise it's a miss. You get a score and whether you tend to play early or late.</p>
+          <p>To make it a real test, the <strong>key hints are off</strong> — only the falling blocks (and, for
+             these pieces, the sheet music) tell you what's next.</p>
+          <p class="hk-honest-note">Learn a piece in wait mode first, then come here. Start at 50% speed and aim
+             for 90%+ before speeding up — the metronome-ladder idea from "Building speed".</p>`, "assets/mascot-poses/metronome.png");
+      },
+      (el, kb) => {
+        el.innerHTML = mascotSay(`<h3>Ode to Joy — both hands, in time</h3>`) + `<div data-panel></div>`;
+        return mountPracticePanel(el.querySelector("[data-panel]"), kb, ODE_TO_JOY, { modes: ["timed", "wait"], hands: true, staff: true, hints: false });
+      },
+      (el, kb) => {
+        el.innerHTML = mascotSay(`<h3>Bach's Prelude, bars 1-4 — in time</h3>
+          <p>Steady sixteenths: try 50% first. Evenness matters more than speed.</p>`) + `<div data-panel></div>`;
+        return mountPracticePanel(el.querySelector("[data-panel]"), kb, BACH_PRELUDE_SHEET, { modes: ["timed", "wait"], hands: true, staff: true, hints: false });
+      },
+    ], mascotSay(`<h3>Lesson complete.</h3><p>Playing in time, without hints, from the music — that's real performance practice.</p>`,
+      "assets/mascot-poses/maestro-conducting.png"));
+  }
+
+  // ----- Advanced: reading sheet music -------------------------------------
+  function miniPiece(notes, hand, title = "") {
+    return { title, beatsPerBar: notes.length, beatUnit: 4, bars: 1, keySig: [], events: notes.map((m, i) => ({ midi: m, start: i, dur: 1, hand })) };
+  }
+  function staffBox(piece, opts = {}) {
+    return `<div class="hk-staff-scroll">${renderGrandStaff(piece, { showTime: false, ...opts })}</div>`;
+  }
+  const letterOf = (m) => midiToName(m).replace(/-?\d+$/, "");
+
+  function runSheetMusicLesson() {
+    const NOTE_QUIZ = [
+      ...[60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77, 79].map((m) => ({ midi: m, hand: "right" })),
+      ...[43, 45, 47, 48, 50, 52, 53, 55, 57, 59].map((m) => ({ midi: m, hand: "left" })),
+    ];
+    runPagedLesson("lesson-sheet", "Reading sheet music", { startMidi: 41, endMidi: 81 }, [
+      (el) => {
+        el.innerHTML = mascotSay(`<h3>Sheet music is a map of the keyboard.</h3>
+          <p>Music is written on a <strong>staff</strong>: 5 lines and the 4 spaces between them. Each line and each
+             space is one white key. <strong>Higher on the staff = higher on the keyboard</strong> (further right), and
+             each step up — line to space to line — is the next letter: C, D, E, F, G, A, B, then C again.</p>
+          <p>Piano music uses <strong>two staffs</strong> joined together (the "grand staff"): the top one is mostly for
+             your <strong>right hand</strong>, the bottom one for your <strong>left hand</strong>.</p>`, "assets/mascot-poses/sheet-music-pile.png")
+          + staffBox(miniPiece([60, 62, 64, 65, 67, 69, 71, 72], "right"), { labels: letterOf });
+      },
+      (el) => {
+        el.innerHTML = mascotSay(`<h3>The treble clef (top staff)</h3>
+          <p>The curly <strong>treble clef</strong> 𝄞 is also called the <strong>G clef</strong>: its curl wraps around
+             the 2nd line from the bottom, and that line is <strong>G</strong> (the G just above Middle C).</p>
+          <p>The 5 lines, bottom to top: <strong>E G B D F</strong> — "<em>Every Good Boy Does Fine</em>".
+             The 4 spaces spell <strong>F A C E</strong> — "FACE".</p>`)
+          + staffBox(miniPiece([64, 67, 71, 74, 77], "right"), { labels: letterOf })
+          + staffBox(miniPiece([65, 69, 72, 76], "right"), { labels: letterOf });
+      },
+      (el) => {
+        el.innerHTML = mascotSay(`<h3>The bass clef (bottom staff)</h3>
+          <p>The <strong>bass clef</strong> 𝄢 is also called the <strong>F clef</strong>: its two dots sit either side of
+             the 2nd line from the top, and that line is <strong>F</strong> (the F below Middle C).</p>
+          <p>The 5 lines, bottom to top: <strong>G B D F A</strong> — "<em>Good Boys Do Fine Always</em>".
+             The 4 spaces: <strong>A C E G</strong> — "<em>All Cows Eat Grass</em>".</p>`)
+          + staffBox(miniPiece([43, 47, 50, 53, 57], "left"), { labels: letterOf })
+          + staffBox(miniPiece([45, 48, 52, 55], "left"), { labels: letterOf });
+      },
+      (el, kb) => {
+        kb.highlightChord([60], { number: "C", letter: "middle", rootMidi: 60 });
+        el.innerHTML = mascotSay(`<h3>Middle C joins them.</h3>
+          <p><strong>Middle C</strong> sits on its own little line — a <strong>ledger line</strong> — exactly between the
+             two staffs: just below the treble staff, or just above the bass staff. Same key either way. Ledger lines
+             are how music goes higher or lower than the 5 lines.</p>
+          <p>Three landmarks make reading fast: <strong>treble G</strong> (the clef's curl), <strong>bass F</strong>
+             (between the clef's dots), and <strong>Middle C</strong>. Find the nearest landmark, then count steps.</p>`)
+          + staffBox({ title: "Middle C", beatsPerBar: 2, beatUnit: 4, bars: 1, keySig: [], events: [{ midi: 60, start: 0, dur: 1, hand: "right" }, { midi: 60, start: 1, dur: 1, hand: "left" }] }, { labels: () => "C" });
+      },
+      (el) => {
+        el.innerHTML = mascotSay(`<h3>Rhythm: how long each note lasts.</h3>
+          <ul>
+            <li><strong>Whole note</strong> (hollow, no stem) — 4 beats</li>
+            <li><strong>Half note</strong> (hollow, with a stem) — 2 beats</li>
+            <li><strong>Quarter note</strong> (filled, with a stem) — 1 beat</li>
+            <li><strong>Eighth note</strong> (filled, stem + 1 flag) — ½ beat; <strong>sixteenth</strong> (2 flags) — ¼ beat.
+                (Printed music often joins these with beams instead of flags.)</li>
+            <li>A <strong>dot</strong> after a note adds half its length: a dotted half = 3 beats.</li>
+            <li><strong>Rests</strong> are the same lengths, but silent.</li>
+          </ul>
+          <p>The <strong>time signature</strong> at the start: the top number is how many beats are in each bar (the
+             sections between bar lines); the bottom number says which note gets one beat (4 = a quarter note).
+             <strong>4/4</strong> = four quarter-note beats per bar; <strong>3/4</strong> = three, like a waltz.</p>
+          <p class="hk-honest-note">Tip: before playing a new piece, tap or clap its rhythm while counting "1, 2, 3,
+             4" — rhythm first, then the notes.</p>`)
+          + staffBox({ title: "Note values", beatsPerBar: 4, beatUnit: 4, bars: 4, keySig: [], events: [
+              { midi: 67, start: 0, dur: 4, hand: "right" },
+              { midi: 67, start: 4, dur: 2, hand: "right" }, { midi: 67, start: 6, dur: 2, hand: "right" },
+              ...[8, 9, 10, 11].map((t) => ({ midi: 67, start: t, dur: 1, hand: "right" })),
+              ...[12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5].map((t) => ({ midi: 67, start: t, dur: 0.5, hand: "right" })),
+            ] }, { showTime: true });
+      },
+      (el) => {
+        el.innerHTML = mascotSay(`<h3>Sharps, flats, key signatures — and chords.</h3>
+          <p>A <strong>♯ sharp</strong> before a note means the key just to its right (often black); a
+             <strong>♭ flat</strong>, the key just to its left; a <strong>♮ natural</strong> cancels them. A
+             <strong>key signature</strong> (sharps or flats right after the clef) applies to every note with that
+             letter — e.g. one ♯ on the F line means every F is F♯, as in the key of G.</p>
+          <p>Notes <strong>stacked</strong> on one stem are played <strong>together</strong> — that's a chord. Read them
+             bottom to top. Notes on line-line-line (or space-space-space) are a skip apart — the shape of a triad:</p>`)
+          + staffBox({ title: "Chords", beatsPerBar: 4, beatUnit: 4, bars: 1, keySig: [], events: [
+              ...[67, 71, 74].map((m) => ({ midi: m, start: 0, dur: 2, hand: "right" })),
+              ...[60, 64, 67].map((m) => ({ midi: m, start: 2, dur: 2, hand: "right" })),
+            ] }, { labels: letterOf });
+      },
+      (el, kb) => {
+        let i = 0;
+        let right = 0;
+        const order = NOTE_QUIZ.map((x) => [Math.random(), x]).sort((a, b) => a[0] - b[0]).map((x) => x[1]).slice(0, 10);
+        let unsub = null;
+        function show() {
+          if (unsub) unsub();
+          if (i >= order.length) {
+            el.innerHTML = mascotSay(`<h3>${right} of ${order.length} first try.</h3><p>${right >= 8 ? "You're reading music!" : "Reading gets fast with practice — the daily review will keep quizzing you on these."}</p>`);
+            return;
+          }
+          const n = order[i];
+          el.innerHTML = mascotSay(`<h3>Note-reading quiz: ${i + 1} of ${order.length}</h3>
+            <p>Play this note — the <strong>exact</strong> key (watch which staff, and use the landmarks).</p>`)
+            + staffBox(miniPiece([n.midi], n.hand)) + `<p class="hk-quiz-feedback" data-fb></p>`;
+          const fb = el.querySelector("[data-fb]");
+          let first = true;
+          unsub = onNoteOn((midi) => {
+            if (midi === n.midi) {
+              if (first) right++;
+              fb.textContent = `Yes — ${letterOf(midi)}.`;
+              fb.className = "hk-quiz-feedback hk-quiz-feedback-correct";
+              unsub();
+              unsub = null;
+              i++;
+              setTimeout(show, 700);
+            } else {
+              first = false;
+              fb.textContent = midi % 12 === n.midi % 12 ? "Right letter, wrong octave." : `That's ${letterOf(midi)} — try again.`;
+              fb.className = "hk-quiz-feedback hk-quiz-feedback-wrong";
+            }
+          });
+        }
+        show();
+        return { stop: () => unsub && unsub() };
+      },
+    ], mascotSay(`<h3>Lesson complete — you can read music.</h3>
+      <p>Next: real pieces from real sheet music, with the falling blocks as backup.</p>`, "assets/mascot-poses/sheet-music-pile.png"));
+  }
+
+  // ----- Advanced: play songs from the sheet music -------------------------
+  function runSheetSongLesson(lessonId, piece, { hands }) {
+    runPagedLesson(lessonId, `Sheet music: ${piece.title}`, { startMidi: piece.id === "minuet" ? 55 : 41, endMidi: piece.id === "minuet" ? 84 : 81 }, [
+      (el, kb) => {
+        el.innerHTML = mascotSay(`<h3>${piece.title} — ${piece.composer}</h3>
+          <p>Read along on the sheet music: the notes you're on light up <strong style="color:var(--hk-accent)">blue</strong>,
+             finished ones turn grey. The falling blocks show the same notes, as a backup. It's in
+             <strong>${piece.beatsPerBar}/${piece.beatUnit}</strong>${piece.keySig.length ? " with one sharp (F♯) in the key signature" : ""}.</p>
+          <p class="hk-honest-note">Try first with your eyes on the music, not the blocks. Wait mode first; then
+             "Play in time" when it's easy.</p>`, "assets/mascot-poses/sheet-music-pile.png") + `<div data-panel></div>`;
+        return mountPracticePanel(el.querySelector("[data-panel]"), kb, piece, { modes: ["wait", "timed"], hands, staff: true });
+      },
+    ], mascotSay(`<h3>Lesson complete.</h3><p>You played ${piece.title} from real sheet music.</p>`, "assets/mascot-poses/maestro-conducting.png"));
+  }
+
+  // ----- Advanced: hands separately + looping ------------------------------
+  function runHandsLoopLesson() {
+    runPagedLesson("lesson-handsloop", "Hands separately & looping", { startMidi: 41, endMidi: 84 }, [
+      (el) => {
+        el.innerHTML = mascotSay(`<h3>How pianists learn hard pieces.</h3>
+          <ol>
+            <li><strong>Hands separately first.</strong> Learn the right hand alone, then the left — here the app plays
+                the other hand for you (faded blocks), so you still hear the whole piece.</li>
+            <li><strong>Loop the hard bars.</strong> Don't restart from the top every time: pick the 1-2 bars that
+                trip you up and repeat just those.</li>
+            <li><strong>Slow down for them.</strong> 50-75% speed, then build back up.</li>
+            <li><strong>Then hands together</strong>, still looping, still slow at first.</li>
+          </ol>`, "assets/mascot-poses/metronome.png");
+      },
+      (el, kb) => {
+        el.innerHTML = mascotSay(`<h3>Bach, Prelude in C — bars 1-8</h3>
+          <p>Try: <strong>Left only</strong>, bars 5-6, loop on, 75%. Then Right only. Then Both.</p>`) + `<div data-panel></div>`;
+        return mountPracticePanel(el.querySelector("[data-panel]"), kb, BACH_PRELUDE_8, { modes: ["wait", "timed"], hands: true, loop: true, staff: true });
+      },
+      (el, kb) => {
+        el.innerHTML = mascotSay(`<h3>Ode to Joy — both hands</h3>
+          <p>Loop bars 3-4 (the dotted rhythm) with both hands until it's even.</p>`) + `<div data-panel></div>`;
+        return mountPracticePanel(el.querySelector("[data-panel]"), kb, ODE_TO_JOY, { modes: ["wait", "timed"], hands: true, loop: true, staff: true });
+      },
+    ], mascotSay(`<h3>Lesson complete.</h3><p>Separate hands, loop the hard part, slow it down, then put it back together —
+       use this on every piece you learn from now on.</p>`, "assets/mascot-poses/maestro-conducting.png"));
+  }
+
+  // ----- Daily review (not a numbered lesson) -------------------------------
+  function runDailyReview() {
+    const { content, keyboardWrap, controls } = lessonShell(DAILY_REVIEW_TITLE);
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 41, endMidi: 81 });
+    registerComputerKeyboardTarget(kb, keyboardWrap);
+    runDailyReviewSession({ content, controls, kb, mascotSay, onExit: showMap, onLessonExit });
   }
 
   function ordinal(n) {

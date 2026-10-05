@@ -97,7 +97,9 @@ function renderNoteHighway(container, keyLayout, { lookaheadSec = 2.2, hitLineFr
       const blockHeight = Math.max(6, bottomY - topY);
 
       ctx.fillStyle = note.hand === "left" ? colors.left : colors.right;
-      ctx.globalAlpha = note.time <= now ? 1 : 0.85;
+      // Item 59: "ghost" notes (the hand the app is playing for you in
+      // hands-separately practice) are drawn faded.
+      ctx.globalAlpha = note.ghost ? 0.3 : note.time <= now ? 1 : 0.85;
       ctx.fillRect(x + 1, topY, Math.max(2, blockWidth - 2), blockHeight);
       ctx.globalAlpha = 1;
     });

@@ -4,6 +4,7 @@
 // synthesized tone, and reports which MIDI note was pressed.
 
 import { loadSampledPiano, getSampledPianoIfReady } from "./piano-sample.js";
+import { emitNoteOn } from "./input-hub.js";
 
 const NOTE_NAMES = [
   "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
@@ -135,6 +136,7 @@ function renderKeyboard(container, { startMidi = 60, endMidi = 84, markMiddleC =
     target.classList.add("hk-key-pressed");
     playTone(midi, { duration: 0.5 });
     if (pressHandler) pressHandler(midi);
+    emitNoteOn(midi, "screen");
   });
   container.addEventListener("pointerup", (e) => {
     const target = e.target.closest(".hk-key");

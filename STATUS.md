@@ -2083,3 +2083,29 @@ the existing 🥁 Beat.
   motifs); "Bach: Prelude in C major" (WTC I, 1722 — bars 1-8 note-for-note, each bar playable in time).
   Catalog adds Bach's Prelude, Moonlight (1801) and Pathétique (1799) first movements.
 
+## 2026-10-05 update: Middle C tuner, wait mode, sheet music, hands/looping, daily review (items 58-59)
+
+- **Middle C sound match (Get Started).** The shared tuner widget (pitch.js) now works like a guitar tuner for
+  "did I find the right key": a needle shows flat/sharp, the whole meter turns green once the target note holds
+  steady (~0.35s, within ±40 cents so a slightly out-of-tune acoustic still counts), and wrong notes say how many
+  keys away and which way, including octave mix-ups. Verified with generated tones (D4 → "2 keys too high — move
+  LEFT"; C5 → "1 octave too high"; slightly flat C4 → green, auto-advance).
+- **Input hub** (`input-hub.js`): on-screen taps, laptop keys, Web MIDI keyboards (Chromium only — not Safari/iOS)
+  and the mic (single notes) all feed one note-on stream.
+- **Practice engine** (`play-engine.js`): wait mode (blocks stop until you play the right notes; right/wrong keys
+  flash), timed mode (±0.25s hit window, score + early/late), hands separately (the other hand is played for you,
+  faded), bar-range looping, speed. Verified: wait mode 30/30 + 1 deliberate wrong key counted; timed 39/39 when
+  every note is on time, 30/39 with the left hand skipped; left-hand-only loop of Bach bars 5-6 asked for exactly
+  C+E then C+D and looped.
+- **Grand-staff renderer** (`staff.js`): clefs, key/time signatures, heads, stems, flags, dots, ties, ledger lines,
+  accidentals; current notes blue, finished grey. **Sheet data** (`sheet-data.js`) with real rhythm: Ode to Joy (RH
+  melody + LH roots), Minuet in G RH bars 1-8 (3/4, F#), Bach Prelude bars 1-4 / 1-8.
+- **New lessons:** Intermediate "Wait mode: the music waits for you" (Ode melody, mic-friendly; G-D-Em-C chords).
+  Advanced: "Reading sheet music" (staff, treble E-G-B-D-F / F-A-C-E, bass G-B-D-F-A / A-C-E-G, Middle C ledger,
+  landmarks, note values, time signatures, sharps/flats/key signatures, chords, 10-note reading quiz); "Sheet music:
+  Ode to Joy / Minuet in G / Bach's Prelude"; "Hands separately & looping"; "Play in time: no waiting" (timed,
+  no key hints — the harder mode).
+- **2-minute daily review** (`daily-review.js`): items only from completed lessons (chords, finding notes, staff
+  notes, chords by ear), Leitner spacing (1/2/4/7/14/30 days; misses come back the same day), counts toward the
+  daily goal. Reachable from the lesson map and a banner on every lesson screen until done for the day.
+

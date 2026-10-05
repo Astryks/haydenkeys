@@ -1,4 +1,4 @@
-import { startLivePitchDetection, midiFromFreq } from "./pitch.js";
+import { createTunerWidget } from "./pitch.js";
 import { renderKeyboard, playTone } from "./keyboard.js";
 import { saveCalibration, getCalibration } from "./storage.js";
 
@@ -13,10 +13,8 @@ const REFERENCE_FREQ = 261.63;
 //     camera overlay (explicitly out of scope this release, see
 //     README): user taps two keys on our own virtual keyboard to
 //     confirm octave range instead of a camera-detected physical one.
-function initCalibration(root, { onComplete } = {}) {
-  let stopListening = null;
-  let listening = false;
-  let destroyed = false;
+function initCalibration(root, { onComplete, showSkip = true } = {}) {
+  let tuner = null;
   let heardIt = false;
   let audioConfirmedMidi = null;
 
@@ -50,9 +48,14 @@ function initCalibration(root, { onComplete } = {}) {
            of C is <strong>C#</strong> ("C sharp"); the same key, seen as just left of D, is <strong>D♭</strong>
            ("D flat"). Every 12 keys (white and black together) the pattern repeats one <strong>octave</strong>
            higher — so there's a C every 8 white keys.</p>
-        <button class="hk-btn" id="hk-play-ref">Play reference tone (Middle C)</button>
-        <button class="hk-btn hk-btn-primary" id="hk-start-listen">Start listening &amp; play your key</button>
+        <h3>Check it by ear — like tuning a guitar</h3>
+        <p>Tap <strong>Start listening</strong>, then press the key you think is Middle C on your real piano and
+           hold it. The meter turns <strong>green</strong> when it hears Middle C. Wrong key? It tells you how many
+           keys to move, and which way.</p>
+        <button class="hk-btn" id="hk-play-ref">&#9658; Hear Middle C first</button>
+        <div id="hk-cal-tuner"></div>
         <p id="hk-cal-status" class="hk-cal-status"></p>
+        ${showSkip ? `<button class="hk-btn hk-btn-small" id="hk-skip">Skip the sound check</button>` : ""}
       </div>`;
 
     // Item 50: show the actual physical landmark, not just describe it
@@ -64,54 +67,38 @@ function initCalibration(root, { onComplete } = {}) {
     // else (e.g. Lesson 1's "this is the 1/G") — reused directly.
     const kb = renderKeyboard(root.querySelector("#hk-cal-keyboard-step1"), { startMidi: 48, endMidi: 72 });
     kb.highlightChord([REFERENCE_MIDI, REFERENCE_MIDI + 1, REFERENCE_MIDI + 3], {
-      number: "Middle", letter: "C", rootMidi: REFERENCE_MIDI,
+      number: "C", letter: "middle", rootMidi: REFERENCE_MIDI,
     });
 
     root.querySelector("#hk-play-ref").addEventListener("click", () => playTone(REFERENCE_MIDI, { duration: 1.2, gain: 0.2 }));
 
-    root.querySelector("#hk-start-listen").addEventListener("click", async () => {
-      // Item 56: a second tap used to open a second mic stream and leak
-      // the first one (the iOS mic indicator stayed on).
-      if (listening) return;
-      listening = true;
-      const statusEl = root.querySelector("#hk-cal-status");
-      statusEl.textContent = "Listening... play the key you found.";
-      try {
-        const stop = await startLivePitchDetection((result) => {
-          if (!result) return;
-          const diff = result.noteMidi - REFERENCE_MIDI;
-          if (Math.abs(diff) <= 0 && Math.abs(result.cents) < 40) {
-            statusEl.textContent = `Got it — that's Middle C (${result.freq.toFixed(1)} Hz). Nice.`;
-            audioConfirmedMidi = result.noteMidi;
-            finishListening();
-          } else if (Math.abs(diff) === 12) {
-            statusEl.textContent = `Close — that sounds like an octave ${diff > 0 ? "high" : "low"}. Try the ${diff > 0 ? "next C down" : "next C up"}.`;
-          } else if (Math.abs(result.cents) >= 40) {
-            statusEl.textContent = `Detecting a pitch near there but out of tune — keep trying.`;
-          } else {
-            statusEl.textContent = `Heard a note, but not quite Middle C yet. Keep trying.`;
-          }
-        });
-        if (destroyed || heardIt) stop();
-        else stopListening = stop;
-      } catch (err) {
-        listening = false;
-        statusEl.textContent = `Microphone access failed (${err.message}). You can skip audio calibration and continue.`;
-        root.insertAdjacentHTML(
-          "beforeend",
-          `<button class="hk-btn" id="hk-skip">Skip audio calibration</button>`
-        );
-        root.querySelector("#hk-skip").addEventListener("click", () => renderStepTwo());
-      }
+    // Item 58: the shared tuner widget (pitch.js) — needle, "how many
+    // keys away", and a green matched state — instead of a text-only
+    // status line. Turning green IS the confirmation.
+    tuner = createTunerWidget(root.querySelector("#hk-cal-tuner"), REFERENCE_MIDI, {
+      label: "🎤 Start listening",
+      targetName: "Middle C (C4)",
+      onMatch: (result) => {
+        audioConfirmedMidi = result.noteMidi;
+        root.querySelector("#hk-cal-status").textContent = "Found it! Moving on…";
+        finishListening();
+      },
+    });
+    root.querySelector("#hk-skip")?.addEventListener("click", () => {
+      if (tuner) tuner.stop();
+      renderStepTwo();
     });
   }
 
   function finishListening() {
     if (heardIt) return;
     heardIt = true;
-    if (stopListening) stopListening();
-    stopListening = null;
-    setTimeout(renderStepTwo, 900);
+    // Leave the green "✓ That's Middle C" on screen for a moment, then move on.
+    setTimeout(() => {
+      if (tuner) tuner.stop();
+      tuner = null;
+      if (root.isConnected) renderStepTwo();
+    }, 1400);
   }
 
   function renderStepTwo() {
@@ -145,9 +132,8 @@ function initCalibration(root, { onComplete } = {}) {
   // without finishing — release the mic when they do.
   return {
     destroy() {
-      destroyed = true;
-      if (stopListening) stopListening();
-      stopListening = null;
+      if (tuner) tuner.stop();
+      tuner = null;
     },
   };
 }

@@ -142,83 +142,128 @@ async function startLivePitchDetection(onPitch, { fftSize = 2048 } = {}) {
 // Calls onMatch() once when the target is heard in tune (not
 // repeatedly), but keeps listening so the user can see the needle
 // settle — they close it themselves via the Stop button.
-function createTunerWidget(container, targetMidi, { label = "Tune this note" } = {}) {
+//
+// Item 58: works like a guitar tuner, but for "did I find the right
+// key?" — a piano player can't retune their instrument, so the goal is
+// the right KEY, not perfect cents. The whole widget turns GREEN once
+// the target note is heard steadily (in tune within ±40 cents — wide
+// enough for an older acoustic piano that's a little out of tune — for
+// about a third of a second, so a passing blip can't trigger it). The
+// needle still shows flat/sharp, and wrong notes say exactly how many
+// keys away and which way to move. `onMatch` fires once on the first
+// green. `autoStart` starts listening immediately (the caller's own
+// button tap counts as the user gesture).
+const NOTE_LABELS = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+function tunerNoteName(midi) {
+  return `${NOTE_LABELS[((midi % 12) + 12) % 12]}${Math.floor(midi / 12) - 1}`;
+}
+
+function createTunerWidget(container, targetMidi, { label = "Tune this note", onMatch, autoStart = false, targetName } = {}) {
   let stopListening = null;
   let matched = false;
+  let inTuneSince = null;
+  const HOLD_MS = 350;
+  const RIGHT_KEY_CENTS = 40;
+  const name = targetName || tunerNoteName(targetMidi);
 
   container.innerHTML = `
     <div class="hk-tuner">
       <button class="hk-btn hk-tuner-toggle" type="button">${label}</button>
       <div class="hk-tuner-display" style="display:none">
+        <div class="hk-tuner-target">Play <strong>${name}</strong></div>
         <div class="hk-tuner-dial">
           <div class="hk-tuner-needle"></div>
           <div class="hk-tuner-center-mark"></div>
         </div>
+        <div class="hk-tuner-scale"><span>flat</span><span>in tune</span><span>sharp</span></div>
+        <p class="hk-tuner-heard">&nbsp;</p>
         <p class="hk-tuner-readout">Listening...</p>
       </div>
     </div>`;
 
+  const root = container.querySelector(".hk-tuner");
   const toggleBtn = container.querySelector(".hk-tuner-toggle");
   const display = container.querySelector(".hk-tuner-display");
   const needle = container.querySelector(".hk-tuner-needle");
   const readout = container.querySelector(".hk-tuner-readout");
+  const heard = container.querySelector(".hk-tuner-heard");
 
   async function start() {
     matched = false;
+    inTuneSince = null;
+    root.classList.remove("hk-tuner-matched");
     display.style.display = "flex";
-    toggleBtn.textContent = "Stop tuning";
-    readout.textContent = "Listening — play the note on your real piano.";
+    toggleBtn.textContent = "Stop listening";
+    readout.textContent = `Listening — play ${name} on your real piano.`;
     needle.style.transform = "translateX(-50%) rotate(0deg)";
     needle.className = "hk-tuner-needle";
     try {
-      stopListening = await startLivePitchDetection((result) => {
-        // Item 56: the lesson step this tuner lived on was replaced (Next,
-        // Back, or leaving the lesson) while it was still listening —
-        // release the mic instead of keeping it open off-screen.
+      const stop = await startLivePitchDetection((result) => {
+        // The step this tuner lived on was replaced (Next, Back, or
+        // leaving the lesson) while it was still listening — release
+        // the mic instead of keeping it open off-screen.
         if (!container.isConnected) {
-          stop();
+          stopNow();
           return;
         }
         if (!result) {
-          readout.textContent = "Listening — play the note on your real piano.";
+          inTuneSince = null;
+          if (!matched) {
+            heard.innerHTML = "&nbsp;";
+            readout.textContent = `Listening — play ${name} on your real piano.`;
+          }
           return;
         }
         const diffSemitones = result.midi - targetMidi;
-        // Clamp the needle's visual swing to +/- 1 semitone (100 cents)
-        // either side of the target, same range a real tuner app shows.
+        // Needle swings ±1 semitone (100 cents) either side, like a tuner.
         const clampedCents = Math.max(-100, Math.min(100, diffSemitones * 100));
-        const angle = (clampedCents / 100) * 45; // +/- 45 degrees
-        needle.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+        needle.style.transform = `translateX(-50%) rotate(${(clampedCents / 100) * 45}deg)`;
+        heard.textContent = `Hearing: ${tunerNoteName(result.noteMidi)}`;
 
-        const inTune = result.noteMidi === targetMidi && Math.abs(result.cents) < 15;
-        const closeOctaveOff = Math.abs(diffSemitones) >= 11 && Math.abs(diffSemitones) <= 13;
-        if (inTune) {
+        const rightKey = result.noteMidi === targetMidi && Math.abs(result.cents) < RIGHT_KEY_CENTS;
+        const keysAway = result.noteMidi - targetMidi;
+        if (rightKey) {
           needle.className = "hk-tuner-needle hk-tuner-in-tune";
-          readout.textContent = `In tune — ${result.freq.toFixed(1)} Hz. Nice.`;
-          if (!matched) {
+          if (inTuneSince === null) inTuneSince = performance.now();
+          if (performance.now() - inTuneSince >= HOLD_MS && !matched) {
             matched = true;
+            root.classList.add("hk-tuner-matched");
+            readout.textContent = `✓ That's ${name}! (${result.freq.toFixed(1)} Hz)`;
+            if (onMatch) onMatch(result);
+          } else if (!matched) {
+            readout.textContent = "That's it — hold it…";
           }
-        } else if (closeOctaveOff) {
-          needle.className = "hk-tuner-needle hk-tuner-off";
-          readout.textContent = `Close, but that's an octave ${diffSemitones > 0 ? "too high" : "too low"}.`;
-        } else if (diffSemitones > 0) {
-          needle.className = "hk-tuner-needle hk-tuner-off";
-          readout.textContent = `Sharp — a bit higher than this note. Try a key to the left.`;
-        } else if (diffSemitones < 0) {
-          needle.className = "hk-tuner-needle hk-tuner-off";
-          readout.textContent = `Flat — a bit lower than this note. Try a key to the right.`;
+          return;
+        }
+        inTuneSince = null;
+        if (matched) return; // stay green; the needle keeps moving for info
+        needle.className = "hk-tuner-needle hk-tuner-off";
+        if (Math.abs(keysAway) === 12 || Math.abs(keysAway) === 24) {
+          readout.textContent = `Right letter, wrong octave — that's ${Math.abs(keysAway) / 12} octave${Math.abs(keysAway) === 24 ? "s" : ""} too ${keysAway > 0 ? "high. Try the same key further LEFT" : "low. Try the same key further RIGHT"}.`;
+        } else if (keysAway !== 0) {
+          const n = Math.abs(keysAway);
+          readout.textContent = `${n} key${n === 1 ? "" : "s"} too ${keysAway > 0 ? "high — move LEFT" : "low — move RIGHT"} (counting black keys too).`;
+        } else {
+          readout.textContent = `Right key, a little ${result.cents > 0 ? "sharp" : "flat"} — keep holding it.`;
         }
       });
+      if (!toggleBtn.isConnected || !display.isConnected) stop();
+      else stopListening = stop;
     } catch (err) {
       readout.textContent = `Microphone access failed (${err.message}).`;
+      toggleBtn.textContent = label;
     }
   }
 
-  function stop() {
+  function stopNow() {
     if (stopListening) {
       stopListening();
       stopListening = null;
     }
+  }
+
+  function stop() {
+    stopNow();
     display.style.display = "none";
     toggleBtn.textContent = label;
   }
@@ -227,6 +272,7 @@ function createTunerWidget(container, targetMidi, { label = "Tune this note" } =
     if (stopListening) stop();
     else start();
   });
+  if (autoStart) start();
 
   return {
     stop,
