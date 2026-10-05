@@ -16,3 +16,6 @@ ios/.build/
 
 # macOS
 .DS_Store
+
+# Built by scripts/build-www.sh for Capacitor (real copies of the site)
+www/

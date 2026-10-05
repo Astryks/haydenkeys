@@ -1,10 +1,11 @@
 {
   "name": "haydenkeys",
   "version": "1.0.0",
-  "description": "Hayden Keys — a free, gamified, Duolingo-style piano learning web app. Pure static site, no build step for the web itself; this package.json exists only to scaffold the Capacitor iOS wrapper project for later native App Store submission.",
+  "description": "Hayden Keys \u2014 a free, gamified, Duolingo-style piano learning web app. Pure static site, no build step for the web itself; this package.json exists only to scaffold the Capacitor iOS wrapper project for later native App Store submission.",
   "private": true,
   "scripts": {
-    "cap:sync": "cap sync",
+    "build:www": "sh scripts/build-www.sh",
+    "cap:sync": "sh scripts/build-www.sh && cap sync ios",
     "cap:open:ios": "cap open ios"
   },
   "repository": {

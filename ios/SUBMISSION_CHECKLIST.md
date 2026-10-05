@@ -102,10 +102,17 @@ Sid still needs to do himself.
         Not verified here: running it — this Mac has no iOS Simulator
         runtime installed, so step 5 below is still the first real launch.
 
+- [x] **Item 61 — blank-app bug fixed before the first upload.** `www/` (what Capacitor bundles) was a
+      folder of symlinks (`js -> ../js` etc.); Capacitor copied them verbatim and inside the app they
+      pointed at nothing — the native app would have opened to a blank screen. Found by unzipping the first
+      signed IPA (6 MB, no site files in it). `www/` is now built from real copies by
+      `scripts/build-www.sh` (`npm run cap:sync`); the fixed IPA is 34 MB with 295 real files, 0 symlinks.
+      (The item-43 note above about symlinks "appearing in public/" was wrong: they appeared as broken links.)
+
 ## What Sid needs to do himself, in order
 
 1. **Install dependencies and copy the web app in**: `npm install`, then
-   `npx cap sync ios`, in the repo root. Both are required on a fresh
+   `npm run cap:sync` (NOT plain `npx cap sync` — see item 61 below), in the repo root. Both are required on a fresh
    clone: the Xcode project resolves Capacitor from `node_modules/`, and
    the app's web files (`ios/App/App/public/`) are gitignored and only
    created by `cap sync` — skip it and the app launches to a blank
