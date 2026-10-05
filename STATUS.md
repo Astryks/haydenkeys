@@ -1,5 +1,44 @@
 # Status
 
+## TODO — not yet done (handoff for a future session)
+
+Session paused here to conserve credits mid-task. These are real,
+specific gaps, not vague follow-ups:
+
+- **Back-button navigation not yet swept across the ~37 individual
+  Lesson 2-37 functions** (`runLesson2()` through `runLesson37()` in
+  `js/lessons-ui.js`). Only Lesson 1 and the shared `masterSongLesson()`/
+  `runLessonTouch()`/`runChordQuizLesson()` templates have real Back
+  support (item 50). Investigation already confirmed all ~24 remaining
+  functions consistently use a numeric `let step = 0` counter with a
+  `renderStep()` function driven purely by that counter — so a
+  straightforward `step > 0 ? step-- : noop` Back button should work
+  safely for the simple numeric ones; a few larger functions (6, 36, 37)
+  may need closer reading before assuming the same pattern applies
+  cleanly. No code was written for this yet — only the audit above.
+- **No scrubber/seek bar on the uploaded-song playback view**
+  (`renderTranscribedPlayback()` in `js/transcribe.js`) — can't rewind
+  or fast-forward, only fixed-speed playback from the start. Needs to
+  reuse the existing `currentTime()`/`pausedAt` position tracking that
+  already drives the falling-notes highway.
+- **Uploaded-song playback doesn't label which note name is currently
+  highlighted** on the keyboard — reuse `midiToName()` (already in
+  `js/keyboard.js`) to add a visible label near/on the highlighted
+  key(s) during playback.
+- **Stripe Payment Link not yet wired into the Support button** —
+  still a placeholder (`data-stripe-link-pending="true"` in the
+  `index.html` footer, item 43). Needs Sid to create the actual link in
+  his own Stripe dashboard first; swap the `href` in once he has it.
+- **Final iOS build/code-sign/App Store submit step is still Sid's own
+  action** (needs his Apple Developer account, can't be scripted from
+  here) — everything buildable around it (icons, launch screen,
+  listing copy, submission checklist, `Info.plist` orientation lock)
+  is already done; see `ios/SUBMISSION_CHECKLIST.md`.
+- **"Jaxx Guitar" (guitar version) and "Westbrooks" (fitness app) are
+  logged as future apps, not started.** See the "Playbook for future
+  instrument apps" section below for what's directly reusable for Jaxx
+  Guitar specifically.
+
 Living progress log for Hayden Keys, in the same spirit as the sibling
 Dawsons project's own STATUS.md — what's actually done vs. planned,
 re-verified for real rather than assumed from memory. Last updated
