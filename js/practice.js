@@ -36,15 +36,40 @@ function getSongSteps(song) {
   const structure = SONG_STRUCTURES[song.title];
   if (structure) {
     const steps = [];
+    // Item 57: each chord gets its real share of the section's length
+    // (`bars` / number of chords — e.g. 4 chords over an 8-bar verse =
+    // 2 bars each). This used to give every chord the same length, so
+    // a section's timing only matched the song when bars = chords.
     structure.forEach((section) => {
-      section.chords.filter(isReal).forEach((chord) => steps.push({ chord, section: section.section }));
+      const real = section.chords.filter(isReal);
+      const len = section.bars && real.length ? section.bars / real.length : 1;
+      real.forEach((chord) => steps.push({ chord, section: section.section, len }));
     });
-    if (steps.length) return { steps, loops: false };
+    if (steps.length) return withTiming({ steps, loops: false });
   }
-  const steps = song.chords.filter(isReal).map((c) => ({ chord: c, section: null }));
+  const steps = song.chords.filter(isReal).map((c) => ({ chord: c, section: null, len: 1 }));
   // Nothing playable at all: one harmless C step so the tab still
   // renders, with the song's own notes explaining the gap.
-  return { steps: steps.length ? steps : [{ chord: "C", section: null }], loops: true, noRealChords: !steps.length };
+  return withTiming({ steps: steps.length ? steps : [{ chord: "C", section: null, len: 1 }], loops: true, noRealChords: !steps.length });
+}
+
+// Cumulative start of each step, in bars, plus the total length.
+function withTiming(meta) {
+  let acc = 0;
+  meta.starts = meta.steps.map((st) => {
+    const at = acc;
+    acc += st.len;
+    return at;
+  });
+  meta.totalBars = acc;
+  return meta;
+}
+
+// Index of the step sounding at `bars` into the song.
+function stepIndexAtBars(meta, bars) {
+  let i = 0;
+  while (i + 1 < meta.starts.length && meta.starts[i + 1] <= bars + 1e-9) i++;
+  return i;
 }
 
 // Item 56: Practice used to be re-initialised (initPracticeTab) every
@@ -80,6 +105,13 @@ function initPracticeTab(root, { initialSong } = {}) {
   // default rule and same clock.
   let bassOn = false;
   let lastBassSlot = -1;
+  // Item 57: the default practice tempo is the same for every song (one
+  // bar = BASE_CHORD_DURATION_SEC at 1x) — this app has no verified
+  // per-song BPM data, and says so. Tap tempo lets you match the real
+  // recording: tap 4+ times on the beat, and one bar becomes 4 of those
+  // beats.
+  let tappedBpm = null;
+  let tapTimes = [];
 
   // Ear Check mode state
   let stopListening = null;
@@ -133,7 +165,7 @@ function initPracticeTab(root, { initialSong } = {}) {
   }
 
   function totalDuration() {
-    return songMeta.steps.length * chordDuration();
+    return songMeta.totalBars * chordDuration();
   }
 
   function currentTime() {
@@ -169,6 +201,10 @@ function initPracticeTab(root, { initialSong } = {}) {
                   title="A simple kick/snare/hi-hat beat under playback, roughly matched to the tempo">
             🥁 Beat: ${drumsOn ? "On" : "Off"}
           </button>
+          <button class="hk-btn hk-btn-small" id="hk-tap-tempo"
+                  title="Tap along with the real recording (4+ taps, one per beat) to practice at its actual tempo">
+            👆 Tap tempo${tappedBpm ? ` (♩ = ${tappedBpm})` : ""}
+          </button>
           <button class="hk-btn hk-btn-small hk-drums-toggle ${bassOn ? "hk-drums-on" : ""}" id="hk-bass-toggle"
                   title="A simple bass line: each chord's root note, low, on beats 1 and 3">
             🎸 Bass: ${bassOn ? "On" : "Off"}
@@ -180,7 +216,7 @@ function initPracticeTab(root, { initialSong } = {}) {
         <div class="hk-timeline" id="hk-timeline">
           <div class="hk-timeline-track"></div>
           <div class="hk-timeline-cursor" id="hk-timeline-cursor"></div>
-          ${songMeta.steps.map((s, i) => `<div class="hk-timeline-chord" style="left:${(i / songMeta.steps.length) * 100}%; width:${100 / songMeta.steps.length}%">${s.chord}</div>`).join("")}
+          ${songMeta.steps.map((s, i) => `<div class="hk-timeline-chord" style="left:${(songMeta.starts[i] / songMeta.totalBars) * 100}%; width:${(s.len / songMeta.totalBars) * 100}%">${s.chord}</div>`).join("")}
         </div>
         <div class="hk-practice-controls" id="hk-practice-controls"></div>
         <div id="hk-ear-status" class="hk-cal-status"></div>
@@ -232,7 +268,30 @@ function initPracticeTab(root, { initialSong } = {}) {
       });
     });
     root.querySelectorAll("[data-speed]").forEach((btn) => {
-      btn.addEventListener("click", () => setSpeed(Number(btn.dataset.speed)));
+      btn.addEventListener("click", () => {
+        tappedBpm = null;
+        tapTimes = [];
+        const tap = root.querySelector("#hk-tap-tempo");
+        if (tap) tap.textContent = "👆 Tap tempo";
+        setSpeed(Number(btn.dataset.speed));
+      });
+    });
+    root.querySelector("#hk-tap-tempo").addEventListener("click", () => {
+      const now = performance.now();
+      if (tapTimes.length && now - tapTimes[tapTimes.length - 1] > 2000) tapTimes = [];
+      tapTimes.push(now);
+      tapTimes = tapTimes.slice(-8);
+      const btn = root.querySelector("#hk-tap-tempo");
+      if (tapTimes.length < 4) {
+        btn.textContent = `👆 Tap tempo (${4 - tapTimes.length} more…)`;
+        return;
+      }
+      const gaps = tapTimes.slice(1).map((t, i) => t - tapTimes[i]);
+      const beatSec = gaps.reduce((a, b) => a + b, 0) / gaps.length / 1000;
+      tappedBpm = Math.round(60 / beatSec);
+      const speed = Math.min(2.5, Math.max(0.25, BASE_CHORD_DURATION_SEC / (4 * beatSec)));
+      setSpeed(speed);
+      btn.textContent = `👆 Tap tempo (♩ = ${tappedBpm})`;
     });
     root.querySelector("#hk-bass-toggle").addEventListener("click", () => {
       bassOn = !bassOn;
@@ -262,7 +321,7 @@ function initPracticeTab(root, { initialSong } = {}) {
   }
 
   function modeDescription() {
-    if (mode === "follow") return "Notes fall down the highway toward the hit line above each key, timed so they arrive exactly when you should play them — plus the keyboard highlights each chord as it plays. Pink = left hand, light blue = right hand. No microphone needed.";
+    if (mode === "follow") return "Notes fall down the highway toward the hit line above each key, timed so they arrive exactly when you should play them — plus the keyboard highlights each chord as it plays. Pink = left hand, light blue = right hand. No microphone needed. The default speed is a comfortable practice tempo, the same for every song (one chord box = one bar) — use Tap tempo to match the real recording.";
     if (mode === "ear") return "Play each chord's root note on your real piano — the mic listens via the same pitch tracker used for calibration and advances when you get it right.";
     return "Point your camera at your real keyboard. After a quick two-tap calibration, the next key to press is highlighted right on the video.";
   }
@@ -342,8 +401,7 @@ function initPracticeTab(root, { initialSong } = {}) {
     const track = root.querySelector("#hk-timeline");
     const rect = track.getBoundingClientRect();
     const fraction = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
-    const rawIndex = Math.floor(fraction * songMeta.steps.length);
-    return Math.max(0, Math.min(songMeta.steps.length - 1, rawIndex));
+    return stepIndexAtBars(songMeta, Math.min(fraction, 0.9999) * songMeta.totalBars);
   }
 
   // Moves actual playback position to the start of the given chord-step
@@ -351,7 +409,7 @@ function initPracticeTab(root, { initialSong } = {}) {
   // (timeline cursor, keyboard hand-highlight, active section pill, and
   // the Follow Along falling-note highway).
   function seekToStep(stepIndex) {
-    pausedAt = stepIndex * chordDuration();
+    pausedAt = songMeta.starts[stepIndex] * chordDuration();
     playStartedAt = performance.now();
     ended = false;
     lastChordIndex = stepIndex;
@@ -483,7 +541,7 @@ function initPracticeTab(root, { initialSong } = {}) {
         playBeat(getAudioContext(), beatSlot, getAudioContext().currentTime);
       }
     }
-    const chordIndex = Math.min(songMeta.steps.length - 1, Math.floor(loopedT / chordDuration()));
+    const chordIndex = stepIndexAtBars(songMeta, loopedT / chordDuration());
     if (bassOn && mode === "follow" && playing) {
       const beatLenSec = chordDuration() / 4;
       const beatSlot = Math.floor(t / beatLenSec);
@@ -503,7 +561,7 @@ function initPracticeTab(root, { initialSong } = {}) {
       const midiNotes = chordSymbolToMidi(step.chord);
       if (kb && midiNotes.length) {
         kb.highlightHands({ left: [midiNotes[0] - 12], right: midiNotes, rightLabel: step.chord });
-        playChord(midiNotes, { duration: chordDuration() * 0.9 });
+        playChord(midiNotes, { duration: chordDuration() * step.len * 0.9 });
       }
       highlightActiveSection(step.section);
     }
@@ -546,7 +604,7 @@ function initPracticeTab(root, { initialSong } = {}) {
           statusEl.classList.add("hk-ear-correct");
           earMatchLocked = true;
           earCheckIndex++;
-          pausedAt = earCheckIndex * chordDuration();
+          pausedAt = (songMeta.starts[earCheckIndex] ?? songMeta.totalBars) * chordDuration();
           updateCursor();
           if (earCheckIndex >= songMeta.steps.length) {
             statusEl.textContent = songMeta.loops
@@ -618,7 +676,7 @@ function initPracticeTab(root, { initialSong } = {}) {
     const midiNotes = chordSymbolToMidi(step.chord);
     if (kb && midiNotes.length) kb.highlightChord(midiNotes, { letter: step.chord, rootMidi: midiNotes[0] });
     highlightActiveSection(step.section);
-    pausedAt = cameraStepIndex * chordDuration();
+    pausedAt = songMeta.starts[cameraStepIndex] * chordDuration();
     updateCursor();
   }
   function stopCameraMode() {

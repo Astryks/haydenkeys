@@ -2054,3 +2054,32 @@ the existing 🥁 Beat.
   chord lessons (reordering would re-lock progress for existing users) — suggest moving "Major or minor?"
   right after Lesson 1.
 
+## 2026-10-05 update: falling blocks everywhere, real chord Easy mode, song data audit, new advanced lessons (item 58)
+
+- **Falling-notes bug fixed (affected Practice, uploads, everything).** `note-highway.js` computed each block's
+  top/bottom the wrong way round, so every note — however long — was drawn as a 6px sliver. Blocks are now as
+  tall as the note is long.
+- **"Tetris" blocks in every lesson.** `lessonKeyboard()` adds a short highway above every lesson keyboard;
+  whenever a lesson lights keys, matching blocks drop onto them. Song lessons get "▶ Play along (falling
+  blocks)", a timed run-through with sound; new lessons use the same `playTimeline()`.
+- **Uploads: three listening modes** — 🎵 Original song / 🎹 Piano only (recording muted) / 🎵+🎹 Piano + song.
+- **Easy mode = real chords.** Recognizes the major/minor triad in each 2-beat window (24-triad template
+  match, bass-root bonus, song-key tie-break for root+fifth moments) and shows it as a beginner shape: left-hand
+  root + right-hand triad near Middle C, with the chord name. Tested: G-D-Em-C and an arpeggiated A-F#m-D-E clip
+  recognized exactly; melody-over-chords 7/8; Fortnight → only B major's six chords (B C#m D#m E F# G#m).
+- **Song data audit** (scripted: every song's chords re-derived against its stated key and number pattern):
+  fixed Shake It Off (ii-IV-I, was "vi-IV-I"), One Dance (i-III-iv, was "v"), Don't Stop Believin' (all 8 loop
+  chords), As It Was (teaching key G, not C), Love Story's final chorus (E-B-C#m-A — the A was missing),
+  I'm Yours' full structure (was written in capo-4 G shapes under a "B major" label; transposed to B).
+- **Timing.** Practice now gives each chord its real share of its section (`bars` / chords — e.g. 2 bars each in
+  an 8-bar, 4-chord verse); it used to give every chord one equal slot. The default tempo is labelled honestly as
+  a practice tempo (no verified per-song BPM data exists here); new 👆 Tap tempo matches a recording's real speed.
+- **Curriculum:** Lesson 1 renamed "The 4 chords to play 100 songs"; "Major or minor?" moved to right after it;
+  a finished lesson is never shown locked (so reordering can't re-lock progress); Middle C guide by keyboard size
+  (88: 4th C from the left; 76/61/49: 3rd; 37/25: usually 2nd, octave buttons may shift it).
+- **New lessons:** "Building speed: fast, relaxed fingers" (after Day 25: slow practice + metronome ladder,
+  relaxed hand, rhythms/bursts, a five-finger drill at ♩ 60-120, daily routine, Hanon 1873 / Czerny Op. 299);
+  "Beethoven: harmony vs. form" (Für Elise's i-V pull and G# leading tone, its A-B-A-C-A rondo, sonata form,
+  motifs); "Bach: Prelude in C major" (WTC I, 1722 — bars 1-8 note-for-note, each bar playable in time).
+  Catalog adds Bach's Prelude, Moonlight (1801) and Pathétique (1799) first movements.
+

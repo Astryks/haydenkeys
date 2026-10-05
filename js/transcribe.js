@@ -163,60 +163,84 @@ async function transcribeFile(file, onStatus = () => {}) {
   }
 }
 
-// Item 56: "Easy mode" for uploaded-song playback. Even after item 44's
-// cleanup, a full-detail transcription of a simple song can still be
-// dozens of overlapping notes a second — technically accurate, but
-// intimidating to a beginner. This groups onsets into fixed time
-// windows and keeps at most `maxNotes` per window (one per pitch class,
-// preferring whichever sounded longest — the notes the ear actually
-// hears as "the chord"), then merges a block into the one before it
-// when it adds no new pitch classes (an arpeggiated/broken chord, or
-// the same chord re-struck) so it reads as one held chord. Lowest note of each block is the left hand, the rest
-// the right — the same bass-under-chord convention the lessons use.
-// Opt-in only; the detailed view stays the default.
-function simplifyToBlocks(highwayNotes, { windowSec = 1, maxNotes = 4 } = {}) {
-  const buckets = new Map();
-  highwayNotes.forEach((n) => {
-    const b = Math.floor(n.time / windowSec);
-    if (!buckets.has(b)) buckets.set(b, []);
-    buckets.get(b).push(n);
-  });
-  const blocks = [...buckets.keys()].sort((a, b) => a - b).map((b) => {
-    const inWindow = buckets.get(b);
-    const byPitchClass = new Map();
-    inWindow.forEach((n) => {
-      const pc = n.midi % 12;
-      const cur = byPitchClass.get(pc);
-      if (!cur || n.duration > cur.duration) byPitchClass.set(pc, n);
-    });
-    const midis = [...byPitchClass.values()]
-      .sort((x, y) => y.duration - x.duration)
-      .slice(0, maxNotes)
-      .map((n) => n.midi)
-      .sort((x, y) => x - y);
-    // Block starts at its first real onset, not the grid line, so Easy
-    // mode never shifts a chord earlier than it was actually played.
-    return { time: Math.min(...inWindow.map((n) => n.time)), midis, end: Math.max(...inWindow.map((n) => n.time + n.duration)) };
-  });
-  const merged = [];
-  blocks.forEach((blk) => {
-    const prev = merged[merged.length - 1];
-    // Nothing new versus the block right before it (every pitch class
-    // already in that chord, any octave) → extend that block instead,
-    // keeping its voicing.
-    const prevPcs = prev ? new Set(prev.midis.map((x) => x % 12)) : null;
-    if (prev && blk.midis.every((x) => prevPcs.has(x % 12)) && blk.time - prev.end <= windowSec) {
-      prev.end = Math.max(prev.end, blk.end, blk.time + windowSec);
-      return;
+// Item 57: "Easy mode" = the song's CHORDS, as simple shapes you can
+// actually play. (Item 56's version only thinned the raw notes out,
+// which still left awkward 4-note clusters spread over the keyboard.)
+// For each time window, every detected note adds its overlap time to
+// its pitch class (bass notes count extra — they usually spell the
+// root); each of the 24 major/minor triads is scored by how much of
+// that weight its 3 notes cover minus a penalty for weight outside it,
+// with a small bonus when the bass note is the chord's root. The
+// winner is drawn as a beginner shape: left hand = the root below
+// Middle C, right hand = the root-position triad in the octave around
+// Middle C. Back-to-back windows with the same chord merge into one
+// held block. A best guess from the recording — labelled as such.
+// Spellings as most chord charts write them (Eb/Ab/Bb majors, C#m/F#m/G#m minors).
+const MAJOR_NAMES = ["C", "Db", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
+const MINOR_NAMES = ["Cm", "C#m", "Dm", "D#m", "Em", "Fm", "F#m", "Gm", "G#m", "Am", "Bbm", "Bm"];
+function chordName(pc, minor) {
+  return (minor ? MINOR_NAMES : MAJOR_NAMES)[pc];
+}
+
+// `keyProfile` = the whole song's pitch-class weights (0-1). When a
+// moment only has a root and fifth (no third — common in bass + power
+// chords), major and minor tie; the song's own key decides which third
+// it most likely is, instead of always picking major (which put
+// non-key chords like Ab major into a B-major song).
+function recognizeChord(weights, bassPc, keyProfile) {
+  const total = weights.reduce((a, b) => a + b, 0);
+  if (total < 0.05) return null;
+  let best = null;
+  for (let root = 0; root < 12; root++) {
+    for (const minor of [false, true]) {
+      const pcs = [root, (root + (minor ? 3 : 4)) % 12, (root + 7) % 12];
+      const inside = pcs.reduce((a, pc) => a + weights[pc], 0);
+      const third = (root + (minor ? 3 : 4)) % 12;
+      let score = inside - 0.5 * (total - inside) + (bassPc === root ? 0.15 * total : 0);
+      if (keyProfile) score += 0.1 * total * keyProfile[third];
+      // The chord must actually contain its root and third or fifth.
+      if (weights[root] < 0.05 * total) score -= total;
+      if (!best || score > best.score) best = { root, minor, score };
     }
-    merged.push({ ...blk, end: Math.max(blk.end, blk.time + windowSec) });
-  });
+  }
+  return best;
+}
+
+function simplifyToChords(highwayNotes, { windowSec = 1, offsetSec = 0 } = {}) {
+  if (!highwayNotes.length) return [];
+  const end = Math.max(...highwayNotes.map((n) => n.time + n.duration));
+  const keyProfile = new Array(12).fill(0);
+  highwayNotes.forEach((n) => { keyProfile[n.midi % 12] += n.duration; });
+  const maxPc = Math.max(...keyProfile) || 1;
+  for (let i = 0; i < 12; i++) keyProfile[i] /= maxPc;
+  const blocks = [];
+  for (let t = Math.max(0, offsetSec % windowSec); t < end; t += windowSec) {
+    const w = new Array(12).fill(0);
+    let bass = null;
+    highwayNotes.forEach((n) => {
+      const ov = Math.min(t + windowSec, n.time + n.duration) - Math.max(t, n.time);
+      if (ov <= 0) return;
+      w[n.midi % 12] += ov * (n.midi < 52 ? 1.5 : 1);
+      if (n.midi < 55 && (!bass || n.midi < bass.midi || (n.midi === bass.midi && ov > bass.ov))) bass = { midi: n.midi, ov };
+    });
+    const chord = recognizeChord(w, bass ? bass.midi % 12 : null, keyProfile);
+    const prev = blocks[blocks.length - 1];
+    if (!chord) continue;
+    if (prev && prev.root === chord.root && prev.minor === chord.minor && Math.abs(prev.end - t) < 1e-6) {
+      prev.end = t + windowSec;
+      continue;
+    }
+    blocks.push({ root: chord.root, minor: chord.minor, start: t, end: t + windowSec });
+  }
   const out = [];
-  merged.forEach((blk, i) => {
-    const next = merged[i + 1];
-    const end = next ? Math.min(blk.end, next.time) : blk.end;
-    const duration = Math.max(0.15, end - blk.time);
-    blk.midis.forEach((midi, j) => out.push({ midi, time: blk.time, duration, hand: j === 0 && blk.midis.length > 1 ? "left" : "right" }));
+  blocks.forEach((b) => {
+    const label = chordName(b.root, b.minor);
+    let rh = 60 + b.root;
+    if (rh > 66) rh -= 12; // keep the right hand's root within F#3..F#4, around Middle C
+    const triad = [rh, rh + (b.minor ? 3 : 4), rh + 7];
+    const duration = Math.max(0.2, b.end - b.start - 0.05);
+    out.push({ midi: rh - 12, time: b.start, duration, hand: "left", chord: label });
+    triad.forEach((midi) => out.push({ midi, time: b.start, duration, hand: "right", chord: label }));
   });
   return out;
 }
@@ -289,8 +313,10 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
     return;
   }
   const midiValues = notes.map((n) => n.pitchMidi).sort((a, b) => a - b);
-  const minMidi = Math.max(21, midiValues[0] - 3);
-  const maxMidi = Math.min(108, midiValues[midiValues.length - 1] + 3);
+  // Item 57: wide enough for Easy mode's shapes (roots 42-54, triads up
+  // to 73) even when the recording itself sits higher or lower.
+  const minMidi = Math.max(21, Math.min(41, midiValues[0] - 3));
+  const maxMidi = Math.min(108, Math.max(74, midiValues[midiValues.length - 1] + 3));
   // Item 56: split hands at Middle C like real piano music, not at the
   // median note — on a full band recording most detected notes are bass,
   // so a median split painted half the bass line as "right hand". Falls
@@ -306,9 +332,14 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
       duration: Math.max(0.15, n.durationSeconds),
       hand: n.pitchMidi < handSplitMidi ? "left" : "right",
     }));
-  const easyNotes = simplifyToBlocks(detailedNotes);
+  const beatGuess = estimateBeat(detailedNotes);
+  // Easy chords change at most every 2 beats when the tempo is known
+  // (every second otherwise) — about as fast as a beginner can follow.
+  const easyNotes = simplifyToChords(detailedNotes, beatGuess
+    ? { windowSec: beatGuess.beatSec * 2, offsetSec: beatGuess.offsetSec }
+    : {});
   const SPEEDS = [0.5, 0.75, 1];
-  const beat = estimateBeat(detailedNotes);
+  const beat = beatGuess;
 
   // Item 56: the original recording, played in sync. Hearing the actual
   // song (vocals included) is what tells you where you are in it — the
@@ -325,8 +356,12 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
     originalEl.preservesPitch = true;
     originalEl.webkitPreservesPitch = true;
   }
-  let originalOn = Boolean(originalEl);
-  let pianoOn = !originalEl;
+  // Item 57: three ways to listen — the original recording on its own,
+  // piano only (the recording muted, just the detected notes on piano),
+  // or the piano laid over the recording.
+  let soundMode = originalEl ? "original" : "piano"; // "original" | "piano" | "both"
+  let originalOn = soundMode !== "piano";
+  let pianoOn = soundMode !== "original";
   let drumsOn = false;
   let lastBeatSlot = null;
 
@@ -345,13 +380,15 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
         ${SPEEDS.map((s) => `<button class="hk-speed-btn ${s === 1 ? "hk-speed-active" : ""}" data-speed="${s}">${s}×${s === 1 ? " (normal)" : s === 0.5 ? " (slow)" : ""}</button>`).join("")}
         <span class="hk-speed-label hk-upload-mode-label">View:</span>
         <button class="hk-speed-btn hk-speed-active" data-mode="detailed">Detailed</button>
-        <button class="hk-speed-btn" data-mode="easy" title="Groups notes into simple chord-sized blocks">Easy</button>
+        <button class="hk-speed-btn" data-mode="easy" title="The song's chords as simple, playable shapes">Easy (chords)</button>
         <button class="hk-btn hk-btn-primary" id="hk-upload-playpause">Play</button>
       </div>
       <div class="hk-speed-picker">
         <span class="hk-speed-label">Hear:</span>
-        ${originalEl ? `<button class="hk-speed-btn ${originalOn ? "hk-speed-active" : ""}" data-toggle="original" title="Your recording, in sync with the falling notes">🎵 Original recording</button>` : ""}
-        <button class="hk-speed-btn ${pianoOn ? "hk-speed-active" : ""}" data-toggle="piano" title="The detected notes, played on piano">🎹 Piano notes</button>
+        ${originalEl ? `
+          <button class="hk-speed-btn hk-speed-active" data-sound="original" title="Your recording, in sync with the falling notes">🎵 Original song</button>
+          <button class="hk-speed-btn" data-sound="piano" title="Mutes the recording — only the notes on piano">🎹 Piano only</button>
+          <button class="hk-speed-btn" data-sound="both" title="The notes on piano, on top of your recording">🎵+🎹 Piano + song</button>` : `<span class="hk-speed-label">🎹 Piano notes</span>`}
         ${beat ? `<button class="hk-speed-btn" data-toggle="drums" title="A simple beat at the song's estimated tempo">🥁 Beat (~${beat.bpm} BPM)</button>` : ""}
       </div>
       <div class="hk-upload-seek">
@@ -373,7 +410,7 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
 
   function updateSummary() {
     container.querySelector("#hk-upload-summary").textContent = highwayNotes === easyNotes
-      ? `Easy mode: ${detailedNotes.length} detected notes grouped into simpler chord-sized blocks (${easyNotes.length} notes). Switch back to Detailed for everything that was detected.`
+      ? `Easy mode: the song as ${new Set(easyNotes.map((n) => n.chord)).size} simple chords (${easyNotes.filter((n) => n.hand === "left").length} chord changes) — left hand plays the root, right hand the 3-note chord near Middle C. A best guess from the recording; switch to Detailed for every detected note.`
       : `Detected ${detailedNotes.length} notes. This plays back exactly what was detected — try Easy for a simpler view. Turning it into a full lesson (chords, structure, etc.) is still a Phase 2 item.`;
     seek.max = String(totalDuration);
     container.querySelector("#hk-upload-total").textContent = formatClock(totalDuration);
@@ -439,7 +476,10 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
           label.textContent = midiToName(midi);
           el.appendChild(label);
         });
-        nowEl.textContent = `Now playing: ${midis.map(midiToName).join(" · ")}`;
+        const chordLabel = active.find((n) => n.chord)?.chord;
+        nowEl.textContent = chordLabel
+          ? `Chord: ${chordLabel} — ${midis.map(midiToName).join(" · ")}`
+          : `Now playing: ${midis.map(midiToName).join(" · ")}`;
       } else {
         kb.clearHighlights();
         nowEl.innerHTML = "&nbsp;";
@@ -513,16 +553,22 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
       if (wasPlaying) play();
     });
   });
-  container.querySelectorAll("[data-toggle]").forEach((btn) => {
+  container.querySelectorAll("[data-sound]").forEach((btn) => {
     btn.addEventListener("click", () => {
       const wasPlaying = playing;
       if (playing) pause();
-      const which = btn.dataset.toggle;
-      if (which === "original") originalOn = !originalOn;
-      if (which === "piano") pianoOn = !pianoOn;
-      if (which === "drums") drumsOn = !drumsOn;
-      btn.classList.toggle("hk-speed-active", which === "original" ? originalOn : which === "piano" ? pianoOn : drumsOn);
+      soundMode = btn.dataset.sound;
+      originalOn = soundMode !== "piano";
+      pianoOn = soundMode !== "original";
+      container.querySelectorAll("[data-sound]").forEach((b) => b.classList.toggle("hk-speed-active", b === btn));
       if (wasPlaying) play();
+    });
+  });
+  container.querySelectorAll("[data-toggle]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      drumsOn = !drumsOn;
+      lastBeatSlot = null;
+      btn.classList.toggle("hk-speed-active", drumsOn);
     });
   });
   container.querySelectorAll("[data-mode]").forEach((btn) => {

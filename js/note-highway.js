@@ -81,8 +81,17 @@ function renderNoteHighway(container, keyLayout, { lookaheadSec = 2.2, hitLineFr
       // further away than the lookahead).
       if (endTime < now - 0.05 || note.time > now + lookaheadSec) return;
 
-      const topY = yForTime(note.time, now, hitLineY);
-      const bottomY = yForTime(endTime, now, hitLineY);
+      // Item 57 fix: a note's START is its LOWER edge (it reaches the hit
+      // line first) and its END is its upper edge. These were swapped,
+      // which made every height negative — so every note, however long,
+      // was drawn as a 6px sliver instead of a block. Blocks are now as
+      // tall as the note is long, and stop at the hit line (where the
+      // keys take over) once they're sounding.
+      const startY = yForTime(note.time, now, hitLineY);
+      const endY = yForTime(endTime, now, hitLineY);
+      const topY = Math.max(0, endY);
+      const bottomY = Math.min(hitLineY, startY);
+      if (bottomY <= 0) return;
       const x = (pos.xPct / 100) * w;
       const blockWidth = (pos.widthPct / 100) * w;
       const blockHeight = Math.max(6, bottomY - topY);
@@ -108,13 +117,18 @@ function renderNoteHighway(container, keyLayout, { lookaheadSec = 2.2, hitLineFr
 // reused everywhere, not a second one invented for this feature.
 function stepsToHighwayNotes(steps, chordDurationSec, midiForChord) {
   const notes = [];
-  steps.forEach((step, i) => {
-    const time = i * chordDurationSec;
+  let at = 0;
+  steps.forEach((step) => {
+    // Item 57: steps may carry their own length (`len`, in chord slots /
+    // bars); defaults to 1 so every existing caller is unchanged.
+    const len = step.len ?? 1;
+    const time = at * chordDurationSec;
+    at += len;
     const midiNotes = midiForChord(step.chord);
     if (!midiNotes.length) return;
     const root = midiNotes[0];
-    notes.push({ midi: root - 12, time, duration: chordDurationSec * 0.9, hand: "left" });
-    midiNotes.forEach((midi) => notes.push({ midi, time, duration: chordDurationSec * 0.9, hand: "right" }));
+    notes.push({ midi: root - 12, time, duration: chordDurationSec * len * 0.9, hand: "left" });
+    midiNotes.forEach((midi) => notes.push({ midi, time, duration: chordDurationSec * len * 0.9, hand: "right" }));
   });
   return notes;
 }

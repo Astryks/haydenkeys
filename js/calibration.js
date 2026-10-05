@@ -36,8 +36,16 @@ function initCalibration(root, { onComplete } = {}) {
            black keys closest to the middle of your instrument (highlighted above, next to the C) — Middle C
            is the <strong>white key immediately to its left</strong> (the lit-up white key above — the two
            lit black keys are just the landmark, not keys to press).</p>
-        <p class="hk-honest-note">On a real piano, that's usually close to dead-center. On a small keyboard
-           there may be only two groups of 2 black keys — pick the one nearer the middle.</p>
+        <p class="hk-honest-note">On a real piano, that's usually close to dead-center. Quick guide by size —
+           count the C's (the white key just left of each group of 2 black keys) from the LEFT end:</p>
+        <table class="hk-size-table">
+          <tr><th>Keys on your keyboard</th><th>Middle C is…</th></tr>
+          <tr><td>88 (full piano)</td><td>the 4th C from the left</td></tr>
+          <tr><td>76 or 61</td><td>the 3rd C from the left</td></tr>
+          <tr><td>49</td><td>the 3rd C from the left (the middle one)</td></tr>
+          <tr><td>37 or 25</td><td>usually the 2nd C — but small keyboards often have octave (+/−) buttons that move it</td></tr>
+        </table>
+        <p class="hk-honest-note">Not sure? That's what the listening check below is for — it tells you for certain.</p>
         <p class="hk-honest-note">Black keys are named after their white neighbours: the black key just right
            of C is <strong>C#</strong> ("C sharp"); the same key, seen as just left of D, is <strong>D♭</strong>
            ("D flat"). Every 12 keys (white and black together) the pattern repeats one <strong>octave</strong>

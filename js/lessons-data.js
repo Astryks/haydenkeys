@@ -122,7 +122,7 @@ const PRE_LESSONS = [
 const THEORY_LESSONS = [
   {
     id: "lesson-1",
-    title: "The 4 keys to play 100 songs",
+    title: "The 4 chords to play 100 songs",
     subtitle: "The 1-5-6-4 pattern",
     description:
       "The chord pattern behind more pop songs than any other. Learn it once, recognize it everywhere.",
@@ -390,13 +390,40 @@ const theoryById = Object.fromEntries(THEORY_LESSONS.map((l) => [l.id, l]));
 // else keeps its original relative order and content, just picking up
 // after the new front-loaded run. The "Intermediate unlocked" showcase
 // is unshifted onto the very front of this continuation.
+// Item 57: "Major or minor?" (lesson-2) moved up to right after Lesson 1,
+// so the major/minor idea is taught BEFORE the minor-key songs and the
+// "m" chords that follow, instead of a dozen lessons later.
 const theoryRest = [
   ...(intermediateUnlockLesson ? [intermediateUnlockLesson] : []),
-  ...THEORY_LESSONS.filter((l) => l.id !== "lesson-1" && l.id !== "lesson-11"),
+  ...THEORY_LESSONS.filter((l) => l.id !== "lesson-1" && l.id !== "lesson-2" && l.id !== "lesson-11"),
 ];
 insertAfter(theoryRest, "lesson-6", beginnerRemainingLessons);
 insertAfter(theoryRest, "lesson-30", intermediateRemainingLessons);
 insertAfter(theoryRest, "lesson-37", advancedSongLessons);
+
+// Item 57: intermediate technique + advanced repertoire/theory lessons.
+insertAfter(theoryRest, "lesson-25", [
+  {
+    id: "lesson-technique",
+    title: "Building speed: fast, relaxed fingers",
+    subtitle: "How pianists actually get faster",
+    description: "The practice habits behind fast, even playing — slow practice, a metronome ladder, relaxed hands, rhythms and chunking — plus a five-finger speed drill.",
+  },
+]);
+insertAfter(theoryRest, "lesson-37", [
+  {
+    id: "lesson-beethoven-form",
+    title: "Beethoven: harmony vs. form",
+    subtitle: "The chords vs. the blueprint",
+    description: "Harmony is which chords sound moment to moment; form is how the whole piece is built from sections. Für Elise's A minor/E major pull, its A-B-A-C-A rondo, and sonata form.",
+  },
+  {
+    id: "lesson-bach-prelude",
+    title: "Bach: Prelude in C major",
+    subtitle: "A classic every pianist learns",
+    description: "The first 8 bars of J.S. Bach's Prelude in C (Well-Tempered Clavier, Book I, 1722) — one broken-chord pattern, a new chord every bar.",
+  },
+]);
 
 // ===== Sid's exact repertoire placements (update to item 25) =====
 //
@@ -418,6 +445,7 @@ const SPECIAL_POSITIONS = {
 
 const numbered = [
   theoryById["lesson-1"],
+  theoryById["lesson-2"],
   ...NEW_FRONT_LESSONS,
   ...frontSongLessons78910,
   theoryById["lesson-11"],

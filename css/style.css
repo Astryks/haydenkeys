@@ -789,3 +789,19 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
    to Speed, off by default like every other optional add-on. */
 .hk-drums-toggle { margin-left: 4px; }
 .hk-drums-toggle.hk-drums-on { color: var(--hk-text); border-color: var(--hk-accent-2); background: rgba(217, 103, 143, 0.15); }
+
+/* Item 57: the short falling-blocks strip above every lesson keyboard. */
+.hk-lesson-highway.hk-highway-wrap { height: 90px; margin-top: 8px; }
+@media (max-height: 500px) and (orientation: landscape) {
+  .hk-lesson-highway.hk-highway-wrap { height: 60px; }
+}
+/* Item 57: form diagram (Beethoven lesson). */
+.hk-form-row { display: flex; gap: 6px; margin: 8px 0 12px; flex-wrap: wrap; }
+.hk-form-box { width: 44px; height: 44px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1rem; color: #1a2a33; }
+.hk-form-a { background: var(--hk-accent-soft); }
+.hk-form-b { background: var(--hk-accent-2-soft); }
+.hk-form-c { background: var(--hk-purple-soft); }
+.hk-size-table { border-collapse: collapse; margin: 6px 0 10px; font-size: 0.85rem; }
+.hk-size-table th, .hk-size-table td { border: 1px solid var(--hk-border); padding: 4px 10px; text-align: left; }
+.hk-size-table th { background: var(--hk-bg-2); }
+

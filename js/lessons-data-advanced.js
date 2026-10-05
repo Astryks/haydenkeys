@@ -182,6 +182,9 @@ const ADVANCED_REPERTOIRE = [
   { title: "Für Elise", composer: "Ludwig van Beethoven", year: 1810, key: "A minor", difficulty: "Accessible opening phrase, harder in its later sections. Built into a real interactive excerpt this pass — see Lesson 37.", built: true },
   { title: "Clair de Lune", composer: "Claude Debussy", year: 1905, key: "Db major", difficulty: "Intermediate-to-advanced; flowing, rubato-heavy texture that resists a simple beginner reduction. Catalog entry only.", built: false },
   { title: "Gymnopédie No. 1", composer: "Erik Satie", year: 1888, key: "D major", difficulty: "Genuinely one of the more accessible pieces on this list — slow, sparse, repetitive chords. A strong future-excerpt candidate.", built: false },
+  { title: "Prelude in C major, BWV 846", composer: "Johann Sebastian Bach", year: 1722, key: "C major", difficulty: "The opening of the Well-Tempered Clavier, Book I — one steady broken-chord pattern throughout, so it's an ideal first 'real' classical piece. First 8 bars built as an interactive lesson (Bach: Prelude in C major).", built: true },
+  { title: "Piano Sonata No. 14 \"Moonlight\", 1st movement", composer: "Ludwig van Beethoven", year: 1801, key: "C# minor", difficulty: "Slow and famous, but the steady triplet broken chords under a singing top melody take real hand control. The \"Moonlight\" nickname came from a critic, Ludwig Rellstab, after Beethoven's death. Catalog entry.", built: false },
+  { title: "Piano Sonata No. 8 \"Pathétique\", 1st movement", composer: "Ludwig van Beethoven", year: 1799, key: "C minor", difficulty: "Advanced: a slow, dramatic Grave introduction, then a fast movement in sonata form. A classic example of the form explained in \"Beethoven: harmony vs. form\". Catalog entry.", built: false },
   { title: "Canon in D", composer: "Johann Pachelbel", year: undefined, key: "D major", difficulty: "Already built as the Day 31-35 capstone — see Lessons 31-35, not repeated here.", built: true },
   { title: "Spring (\"La Primavera\"), from The Four Seasons", composer: "Antonio Vivaldi", year: 1725, key: "E major", difficulty: "Vivaldi's single most famous work — originally for violin and string orchestra, not piano, so any piano version is already an arrangement of the real composition's melodic material. Catalog entry only this pass; a real interactive excerpt would need its own careful simplification, not rushed here.", built: false },
 ];
@@ -197,7 +200,24 @@ const FUR_ELISE_OPENING = {
   leftHand: [45, 52, 57], // A2 E3 A3, held under the whole phrase
 };
 
+// Bach, Prelude in C major BWV 846 (1722), bars 1-8. Each bar is one
+// chord, broken the same way in both halves of the bar: the two lowest
+// notes once, then the top three notes twice (8 sixteenth notes per
+// half bar). Public domain; these are the piece's well-documented
+// notes, not any modern edition's fingering or layout.
+const BACH_PRELUDE_C = [
+  { chord: "C", notes: [60, 64, 67, 72, 76] }, // C4 E4 G4 C5 E5
+  { chord: "Dm7/C", notes: [60, 62, 69, 74, 77] }, // C4 D4 A4 D5 F5
+  { chord: "G7/B", notes: [59, 62, 67, 74, 77] }, // B3 D4 G4 D5 F5
+  { chord: "C", notes: [60, 64, 67, 72, 76] },
+  { chord: "Am/C", notes: [60, 64, 69, 76, 81] }, // C4 E4 A4 E5 A5
+  { chord: "D7/C", notes: [60, 62, 66, 69, 74] }, // C4 D4 F#4 A4 D5
+  { chord: "G/B", notes: [59, 62, 67, 74, 79] }, // B3 D4 G4 D5 G5
+  { chord: "Cmaj7/B", notes: [59, 60, 64, 67, 72] }, // B3 C4 E4 G4 C5
+];
+
 export {
+  BACH_PRELUDE_C,
   MAJOR_SCALES,
   MINOR_SCALES,
   TWO_HAND_PATTERNS,

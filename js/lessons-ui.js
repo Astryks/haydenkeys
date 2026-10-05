@@ -1,4 +1,5 @@
 import { renderKeyboard, playChord, playTone, midiToName } from "./keyboard.js";
+import { renderNoteHighway, stepsToHighwayNotes } from "./note-highway.js";
 import { initCalibration } from "./calibration.js";
 import { chordSymbolToMidi } from "./chord-utils.js";
 import { createTunerWidget } from "./pitch.js";
@@ -33,6 +34,7 @@ import {
   JAZZ_COMPING,
   ADVANCED_REPERTOIRE,
   FUR_ELISE_OPENING,
+  BACH_PRELUDE_C,
 } from "./lessons-data-advanced.js";
 
 // --- Shared staff-notation rendering (used by Lessons 3, 9, 10) -------
@@ -129,8 +131,11 @@ function lessonMapHtml() {
   const streak = getStreak();
   const rows = LESSONS.map((lesson, i) => {
     const prevId = LESSONS[i - 1]?.id;
-    const locked = prevId && !isLessonComplete(prevId);
     const done = isLessonComplete(lesson.id);
+    // Item 57: a lesson you've already finished is never locked, even if
+    // a lesson before it is new or was moved (lesson order can change
+    // between updates).
+    const locked = prevId && !isLessonComplete(prevId) && !done;
     const num = lessonDisplayNumber(lesson, i);
     return `
       <button class="hk-lesson-node ${locked ? "hk-locked" : ""} ${done ? "hk-done" : ""}"
@@ -164,8 +169,11 @@ function timelineHtml() {
   const nextId = LESSONS.find((l) => !isLessonComplete(l.id))?.id;
   const rows = LESSONS.map((lesson, i) => {
     const prevId = LESSONS[i - 1]?.id;
-    const locked = prevId && !isLessonComplete(prevId);
     const done = isLessonComplete(lesson.id);
+    // Item 57: a lesson you've already finished is never locked, even if
+    // a lesson before it is new or was moved (lesson order can change
+    // between updates).
+    const locked = prevId && !isLessonComplete(prevId) && !done;
     const current = lesson.id === nextId;
     const num = lessonDisplayNumber(lesson, i);
     return `
@@ -327,6 +335,9 @@ function initLessonsTab(root) {
       "lesson-chopin": runChopinShowcase,
       "lesson-chordquiz": runChordQuizLesson,
       "lesson-pedals": runPedalFunLesson,
+      "lesson-technique": runTechniqueLesson,
+      "lesson-beethoven-form": runBeethovenFormLesson,
+      "lesson-bach-prelude": runBachPreludeLesson,
     };
     // "Master this song" lessons (item 22's path toward ~100 real
     // lessons) are generated from real song data rather than hand-listed
@@ -350,6 +361,7 @@ function initLessonsTab(root) {
         <button class="hk-lesson-exit" id="hk-lesson-exit">&larr; Lessons</button>
         <h2>${title}</h2>
         <div class="hk-lesson-content" id="hk-lesson-content"></div>
+        <div id="hk-lesson-highway" class="hk-lesson-highway hk-hidden"></div>
         <div id="hk-lesson-keyboard" class="hk-keyboard-wrap"></div>
         <div class="hk-lesson-controls" id="hk-lesson-controls"></div>
       </div>`;
@@ -359,6 +371,147 @@ function initLessonsTab(root) {
       keyboardWrap: main.querySelector("#hk-lesson-keyboard"),
       controls: main.querySelector("#hk-lesson-controls"),
     };
+  }
+
+  // Item 57: the falling-blocks ("Tetris") view in every lesson, not
+  // just Practice. lessonKeyboard() is renderKeyboard() plus a short
+  // note highway above it: whenever a lesson lights up keys
+  // (highlightChord / highlightHands), matching blocks drop down and
+  // land on exactly those keys, in the same pink-left / blue-right
+  // colors — so every step reads the same way the falling-notes
+  // practice view does. playAlong() runs a whole chord sequence in time
+  // on the highway, for the song lessons.
+  function lessonKeyboard(wrap, opts) {
+    const kb = renderKeyboard(wrap, opts);
+    const highwayEl = main.querySelector("#hk-lesson-highway");
+    if (!highwayEl || wrap.id !== "hk-lesson-keyboard") return kb;
+    highwayEl.classList.remove("hk-hidden");
+    const LOOKAHEAD = 1.2;
+    const highway = renderNoteHighway(highwayEl, kb.keyLayout, { lookaheadSec: LOOKAHEAD, hitLineFrac: 0.97 });
+    let dropRaf = null;
+    let along = null;
+    // Blocks fall from the very top and land on the keys in ~0.5s.
+    const DROP_REAL_SEC = 0.5;
+    function drop(blocks) {
+      if (dropRaf) cancelAnimationFrame(dropRaf);
+      const notes = blocks.map((b) => ({ ...b, time: LOOKAHEAD, duration: 6 }));
+      const t0 = performance.now();
+      const frame = () => {
+        const p = Math.min(1, (performance.now() - t0) / 1000 / DROP_REAL_SEC);
+        highway.render(p * LOOKAHEAD, notes);
+        if (p < 1) dropRaf = requestAnimationFrame(frame);
+      };
+      frame();
+    }
+    const origChord = kb.highlightChord;
+    const origHands = kb.highlightHands;
+    const origClear = kb.clearHighlights;
+    kb.highlightChord = (notes, o) => {
+      origChord(notes, o);
+      if (!along) drop(notes.map((midi) => ({ midi, hand: "left" })));
+    };
+    kb.highlightHands = (h = {}) => {
+      origHands(h);
+      if (!along) drop([...(h.left || []).map((midi) => ({ midi, hand: "left" })), ...(h.right || []).map((midi) => ({ midi, hand: "right" }))]);
+    };
+    kb.clearHighlights = () => {
+      origClear();
+      if (!along) {
+        if (dropRaf) cancelAnimationFrame(dropRaf);
+        highway.render(0, []);
+      }
+    };
+    // Plays a timeline of notes — [{ midi, start, dur, hand }] in
+    // seconds — as falling blocks, with sound and live key highlights.
+    // Calls onDone when it finishes. Returns stop().
+    kb.playTimeline = (events, { lead = 1.0, onDone } = {}) => {
+      kb.stopPlayAlong();
+      const notes = events.map((e) => ({ midi: e.midi, time: e.start + lead, duration: e.dur, hand: e.hand || "right" }));
+      const total = Math.max(...notes.map((n) => n.time + n.duration)) + 0.2;
+      const t0 = performance.now();
+      // Notes are handed to the audio clock ~0.25s ahead (precise timing
+      // even in fast passages), but never further — so Stop is near-instant.
+      const SCHEDULE_AHEAD = 0.25;
+      let nextToSchedule = 0;
+      notes.sort((a, b) => a.time - b.time);
+      let lastKey = "";
+      along = { raf: null };
+      const frame = () => {
+        if (!along) return;
+        const t = (performance.now() - t0) / 1000;
+        while (nextToSchedule < notes.length && notes[nextToSchedule].time < t + SCHEDULE_AHEAD) {
+          const n = notes[nextToSchedule++];
+          if (n.time >= t - 0.05) playTone(n.midi, { duration: n.duration * 0.95, delay: Math.max(0, n.time - t) });
+        }
+        highway.render(t, notes);
+        const sounding = notes.filter((n) => t >= n.time && t < n.time + n.duration);
+        const key = sounding.map((n) => n.midi + n.hand).join();
+        if (key !== lastKey) {
+          lastKey = key;
+          if (sounding.length) {
+            origHands({ left: sounding.filter((n) => n.hand === "left").map((n) => n.midi), right: sounding.filter((n) => n.hand === "right").map((n) => n.midi) });
+          } else origClear();
+        }
+        if (t >= total || !wrap.isConnected) {
+          kb.stopPlayAlong();
+          if (onDone && wrap.isConnected) onDone();
+          return;
+        }
+        along.raf = requestAnimationFrame(frame);
+      };
+      frame();
+      return kb.stopPlayAlong;
+    };
+    // Chord symbols in time: left hand root + right hand chord, one
+    // chord per `barSec`.
+    kb.playAlong = (chords, { barSec = 2.4, onDone } = {}) => {
+      const events = [];
+      chords.forEach((chord, i) => {
+        const midis = chordSymbolToMidi(chord);
+        if (!midis.length) return;
+        events.push({ midi: midis[0] - 12, start: i * barSec, dur: barSec * 0.92, hand: "left" });
+        midis.forEach((midi) => events.push({ midi, start: i * barSec, dur: barSec * 0.92, hand: "right" }));
+      });
+      return kb.playTimeline(events, { onDone });
+    };
+    kb.stopPlayAlong = () => {
+      if (!along) return;
+      if (along.raf) cancelAnimationFrame(along.raf);
+      along = null;
+      origClear();
+      highway.render(0, []);
+    };
+    onLessonExit(() => kb.stopPlayAlong());
+    return kb;
+  }
+
+  // A "play it in time" button for song lessons: the chords fall as
+  // blocks onto the keys at a steady practice tempo (twice through),
+  // with sound. Toggles to Stop while running.
+  function addPlayAlongButton(controls, kb, chords, label = "▶ Play along (falling blocks)") {
+    if (!kb.playAlong || !chords || !chords.length) return;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "hk-btn";
+    btn.textContent = label.startsWith("▶") ? label : `▶ ${label}`;
+    let running = false;
+    btn.addEventListener("click", () => {
+      if (running) {
+        kb.stopPlayAlong();
+        running = false;
+        btn.textContent = label.startsWith("▶") ? label : `▶ ${label}`;
+        return;
+      }
+      running = true;
+      btn.textContent = "■ Stop";
+      kb.playAlong([...chords, ...chords], {
+        onDone: () => {
+          running = false;
+          btn.textContent = label.startsWith("▶") ? label : `▶ ${label}`;
+        },
+      });
+    });
+    controls.appendChild(btn);
   }
 
   // The panda mascot narrates the simplified, numbers-first copy
@@ -460,7 +613,7 @@ function initLessonsTab(root) {
   // version of the song.
   function runMasterSongLesson(song, lessonId, { intermediateUnlock = false } = {}) {
     const { content, keyboardWrap, controls } = lessonShell(`Master: ${song.title}`);
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
     let step = "intro";
     let idx = 0;
     // Item 42: real Back support for this shared template — used by
@@ -482,6 +635,7 @@ function initLessonsTab(root) {
     }
 
     function renderStep() {
+      if (kb.stopPlayAlong) kb.stopPlayAlong();
       if (step === "intro") {
         content.innerHTML = mascotSay(`
           ${intermediateUnlock ? "<h3>Intermediate unlocked!</h3><p>You've completed enough Beginner songs to get here for real.</p>" : `<h3>${song.title}</h3>`}
@@ -489,6 +643,7 @@ function initLessonsTab(root) {
           <p>Let's press them one at a time, together.</p>`, intermediateUnlock ? "assets/mascot-poses/maestro-conducting.png" : poseForSong(song.title));
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Start</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => goForward({ step: "play", idx: 0 }));
+        addPlayAlongButton(controls, kb, song.chords);
       } else if (step === "play") {
         const symbol = song.chords[idx];
         const notes = chordSymbolToMidi(symbol);
@@ -520,6 +675,7 @@ function initLessonsTab(root) {
           newlyEarned.length ? "assets/mascot-poses/maestro-conducting.png" : poseForSong(song.title));
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
         controls.querySelector("#hk-done").addEventListener("click", showMap);
+        addPlayAlongButton(controls, kb, song.chords, "Now play it in time");
       }
       if (history.length > 0) {
         const backBtn = document.createElement("button");
@@ -542,11 +698,12 @@ function initLessonsTab(root) {
   function runLastChristmas() {
     const song = SONGS.find((s) => s.title === "Last Christmas");
     const { content, keyboardWrap, controls } = lessonShell("Last Christmas");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
     let step = "intro";
     let idx = 0;
 
     function renderStep() {
+      if (kb.stopPlayAlong) kb.stopPlayAlong();
       if (step === "intro") {
         content.innerHTML = mascotSay(`
           <h3>Last Christmas — Wham!</h3>
@@ -559,6 +716,7 @@ function initLessonsTab(root) {
              Let's press them one at a time.</p>`);
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Start</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step = "play"; idx = 0; renderStep(); });
+        addPlayAlongButton(controls, kb, song.chords);
       } else if (step === "play") {
         const symbol = song.chords[idx];
         const notes = chordSymbolToMidi(symbol);
@@ -581,6 +739,7 @@ function initLessonsTab(root) {
              same pattern (and when it's genuinely different) is half the skill.</p>`);
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
         controls.querySelector("#hk-done").addEventListener("click", showMap);
+        addPlayAlongButton(controls, kb, song.chords, "Now play it in time");
       }
     }
     renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step, idx }), setState: (s) => ({ step, idx } = s) });
@@ -608,7 +767,7 @@ function initLessonsTab(root) {
 
     function playChosenSong(title) {
       const song = CHOOSE_SONGS.find((s) => s.title === title);
-      const kb = renderKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
+      const kb = lessonKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
       let idx = 0;
       function renderChord() {
         if (idx < song.chords.length) {
@@ -650,7 +809,7 @@ function initLessonsTab(root) {
     // outside the keyboard entirely, so highlightHands() silently never
     // rendered a right-hand note (getKeyElement(86) was undefined) —
     // looked like only the left hand ever lit up.
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 45, endMidi: 88 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 45, endMidi: 88 });
     let step = 0;
 
     function renderStep() {
@@ -693,7 +852,7 @@ function initLessonsTab(root) {
   // at the bonus Jazz comping lesson later in the arc.
   function runJazzPreview() {
     const { content, keyboardWrap, controls } = lessonShell("The jazz trick");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
     let step = 0;
     let compInterval = null;
     onLessonExit(() => { if (compInterval) clearInterval(compInterval); });
@@ -778,7 +937,7 @@ function initLessonsTab(root) {
   // canned chart we can't responsibly provide for that specific piece.
   function runEarTraining() {
     const { content, keyboardWrap, controls } = lessonShell("Train your ear");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
     let step = 0;
 
     function renderStep() {
@@ -853,7 +1012,7 @@ function initLessonsTab(root) {
   function runAlmostBluePreview() {
     const song = SONGS.find((s) => s.title === "Almost Blue");
     const { content, keyboardWrap, controls } = lessonShell("Almost Blue");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
     const introChords = ["Am", "Dm9"]; // the only two chords with solid independent sourcing
     let idx = 0;
 
@@ -892,7 +1051,7 @@ function initLessonsTab(root) {
   function runMyFunnyValentinePreview() {
     const song = SONGS.find((s) => s.title === "My Funny Valentine");
     const { content, keyboardWrap, controls } = lessonShell("My Funny Valentine");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
     let idx = 0;
 
     function renderStep() {
@@ -936,7 +1095,7 @@ function initLessonsTab(root) {
   // surfaced early as a taste per Sid's exact placement request.
   function runBeethovenShowcase() {
     const { content, keyboardWrap, controls } = lessonShell("Für Elise");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 40, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 40, endMidi: 79 });
     let step = 0;
 
     function renderStep() {
@@ -983,7 +1142,7 @@ function initLessonsTab(root) {
   // melody even begins. Real, scoped, honest — not the full theme.
   function runVivaldiAttempt() {
     const { content, keyboardWrap, controls } = lessonShell("Vivaldi's Spring (an attempt)");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
     const eMajor = chordSymbolToMidi("E");
     let hits = 0;
     const TOTAL_HITS = 4;
@@ -1061,7 +1220,7 @@ function initLessonsTab(root) {
     // left-hand mirror position (down to F3/MIDI 41) actually renders
     // on this lesson's keyboard instead of silently falling outside
     // its range.
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 41, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 41, endMidi: 79 });
     // Item 42: same computer-keyboard mapping as the standalone MIDI tab
     // (item 28), reused via the shared module — not a second mapping.
     // Touch/mouse tapping already works here for free (keyboard.js's
@@ -1385,9 +1544,10 @@ function initLessonsTab(root) {
         });
       } else if (step === "social") {
         content.innerHTML = mascotSay(`
-          <h3>Next lesson: get a friend and sing along.</h3>
-          <p>You've got these 4 chords down. The next step isn't more theory — it's playing a full song (verse,
-             chorus, the works) while someone else sings on top. Genuinely the most fun part of this whole thing.</p>`);
+          <h3>Coming up soon: get a friend and sing along.</h3>
+          <p>You've got these 4 chords down. Next, one quick idea — why some chords sound happy (major) and
+             some sound sad (minor) — and then it's full songs (verse, chorus, the works) while someone else sings
+             on top. Genuinely the most fun part of this whole thing.</p>`);
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Continue</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => goForward({ step: "levelup" }));
       } else {
@@ -1434,7 +1594,7 @@ function initLessonsTab(root) {
   // ----- Lesson 2: major/minor pattern --------------------------------
   function runLesson2() {
     const { content, keyboardWrap, controls } = lessonShell("Major or minor? It's a pattern");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 60, endMidi: 84 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 60, endMidi: 84 });
     let step = 0; // 0..6 walk degrees 1-7, 7 = explanation, 8 = quiz, 9 = done
 
     function renderStep() {
@@ -1518,7 +1678,7 @@ function initLessonsTab(root) {
   // ----- Lesson 3: staff notation (optional "go deeper" track) --------
   function runLesson3() {
     const { content, keyboardWrap, controls } = lessonShell("Go deeper: reading real notation");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
     let step = 0;
 
     function renderStep() {
@@ -1566,7 +1726,7 @@ function initLessonsTab(root) {
   // ----- Lesson 4: flip the order, 1-6-4-5 -----------------------------
   function runLesson4() {
     const { content, keyboardWrap, controls } = lessonShell("Flip the order: 1-6-4-5");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
     let step = 0; // 0..3 teach, 4 quiz, 5 payoff
 
     function renderStep() {
@@ -1627,7 +1787,7 @@ function initLessonsTab(root) {
   // ----- Lesson 5: the 2 chord ------------------------------------------
   function runLesson5() {
     const { content, keyboardWrap, controls } = lessonShell("A fifth chord: meet the 2");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
     let step = 0; // 0 teach, 1 quiz (press it), 2 payoff
 
     function renderStep() {
@@ -1670,7 +1830,7 @@ function initLessonsTab(root) {
   // ----- Lesson 6: minor keys have a pattern too -------------------------
   function runLesson6() {
     const { content, keyboardWrap, controls } = lessonShell("Minor keys have a pattern too");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 50, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 50, endMidi: 79 });
     let step = 0; // 0..6 walk degrees, 7 explain, 8 quiz, 9 done
 
     function renderStep() {
@@ -1944,7 +2104,7 @@ function initLessonsTab(root) {
   // if it's loaded) — no new audio path.
   function runPedalFunLesson() {
     const { content, keyboardWrap, controls } = lessonShell("Pedals! (just for fun)");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
     const PHRASE = [60, 64, 67, 72]; // C-E-G-C, a simple arpeggio
     const NOTE_GAP_SEC = 0.35;
 
@@ -1994,7 +2154,7 @@ function initLessonsTab(root) {
   // ----- Lesson 7: inversions --------------------------------------------
   function runLesson7() {
     const { content, keyboardWrap, controls } = lessonShell("Same chord, different shape: inversions");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
     let step = 0;
 
     function renderStep() {
@@ -2027,7 +2187,7 @@ function initLessonsTab(root) {
   // ----- Lesson 8: seventh chords -----------------------------------------
   function runLesson8() {
     const { content, keyboardWrap, controls } = lessonShell("A touch of jazz: seventh chords");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
     let step = 0;
 
     function renderStep() {
@@ -2063,7 +2223,7 @@ function initLessonsTab(root) {
   // ----- Lesson 9: key signatures -----------------------------------------
   function runLesson9() {
     const { content, keyboardWrap, controls } = lessonShell("Reading key signatures: one sharp = G");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
     let step = 0;
 
     function renderStep() {
@@ -2107,7 +2267,7 @@ function initLessonsTab(root) {
   // ----- Lesson 10: capstone — Minuet in G --------------------------------
   function runLesson10() {
     const { content, keyboardWrap, controls } = lessonShell("Day 10: Minuet in G");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
     let step = 0;
 
     function renderStep() {
@@ -2160,7 +2320,7 @@ function initLessonsTab(root) {
   // ----- Days 11-14: major scales (generic) ------------------------------
   function runMajorScaleLesson(scale) {
     const { content, keyboardWrap, controls } = lessonShell(`Day ${scale.day}: ${scale.key} major scale`);
-    const kb = renderKeyboard(keyboardWrap, { startMidi: scale.notes[0] - 5, endMidi: scale.notes[7] + 5 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: scale.notes[0] - 5, endMidi: scale.notes[7] + 5 });
     let step = 0; // 0..7 walk the scale, 8 = chord connection, 9 = quiz, 10 = done
 
     function renderStep() {
@@ -2214,7 +2374,7 @@ function initLessonsTab(root) {
   // ----- Day 15: scales review — the scale/chord connection, quizzed ----
   function runLesson15() {
     const { content, keyboardWrap, controls } = lessonShell("Day 15: Scales review");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
     const cMajor = MAJOR_SCALES[0];
     let step = 0;
 
@@ -2257,7 +2417,7 @@ function initLessonsTab(root) {
   // ----- Day 16: the natural minor scale pattern --------------------------
   function runLesson16() {
     const { content, keyboardWrap, controls } = lessonShell("Day 16: The minor scale pattern");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 52, endMidi: 72 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 52, endMidi: 72 });
     const aMinor = MINOR_SCALES[0];
     let step = 0;
 
@@ -2288,7 +2448,7 @@ function initLessonsTab(root) {
   // ----- Days 17-19: relative minor scales (generic) ----------------------
   function runMinorScaleLesson(scale) {
     const { content, keyboardWrap, controls } = lessonShell(`Day ${scale.day}: ${scale.key} minor scale`);
-    const kb = renderKeyboard(keyboardWrap, { startMidi: scale.notes[0] - 5, endMidi: scale.notes[7] + 5 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: scale.notes[0] - 5, endMidi: scale.notes[7] + 5 });
     let step = 0;
 
     function renderStep() {
@@ -2321,7 +2481,7 @@ function initLessonsTab(root) {
   // ----- Day 20: minor scales review / payoff -----------------------------
   function runLesson20() {
     const { content, keyboardWrap, controls } = lessonShell("Day 20: Minor scales review");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
     kb.clearHighlights();
     const minorKeySongs = SONGS.filter((s) => s.confidence === "confirmed" && /minor/i.test(s.key));
     content.innerHTML = `
@@ -2341,7 +2501,7 @@ function initLessonsTab(root) {
   // ----- Days 21-22: two-hand bass patterns (generic) ---------------------
   function runTwoHandLesson(lessonId, title, pattern) {
     const { content, keyboardWrap, controls } = lessonShell(title);
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 45, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 45, endMidi: 79 });
     let step = 0;
 
     function renderStep() {
@@ -2371,7 +2531,7 @@ function initLessonsTab(root) {
   // ----- Day 23: arpeggios -------------------------------------------------
   function runLesson23() {
     const { content, keyboardWrap, controls } = lessonShell("Day 23: Arpeggios");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
     const pattern = TWO_HAND_PATTERNS.arpeggio;
     let step = 0;
 
@@ -2398,7 +2558,7 @@ function initLessonsTab(root) {
   // ----- Day 24: two hands together ---------------------------------------
   function runLesson24() {
     const { content, keyboardWrap, controls } = lessonShell("Day 24: Two hands together");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 45, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 45, endMidi: 79 });
     const pattern = TWO_HAND_PATTERNS.albertiBass;
     let step = 0;
 
@@ -2425,7 +2585,7 @@ function initLessonsTab(root) {
   // ----- Day 25: two-hand payoff — apply to Lesson 1's progression --------
   function runLesson25() {
     const { content, keyboardWrap, controls } = lessonShell("Day 25: Two-hand review — your Lesson 1 song");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 45, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 45, endMidi: 79 });
     let step = 0;
 
     function renderStep() {
@@ -2453,7 +2613,7 @@ function initLessonsTab(root) {
   // ----- Days 26-28: seventh chords (generic) ------------------------------
   function runSeventhChordLesson(lessonId, chordInfo, label) {
     const { content, keyboardWrap, controls } = lessonShell(chordInfo.label);
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 84 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 55, endMidi: 84 });
     let step = 0; // 0 = triad, 1 = seventh, 2 = quiz, 3 = done
     const triad = chordInfo.notes.slice(0, 3);
     const seventhNote = chordInfo.notes[3];
@@ -2493,7 +2653,7 @@ function initLessonsTab(root) {
   // ----- Day 29: inversions with 7th chords --------------------------------
   function runLesson29() {
     const { content, keyboardWrap, controls } = lessonShell("Day 29: Inversions with 7th chords");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 84 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 55, endMidi: 84 });
     const steps = [
       { label: "Gmaj7 (root position)", notes: [67, 71, 74, 78] },
       { label: "Gmaj7 (1st inversion)", notes: [71, 74, 78, 79] },
@@ -2523,7 +2683,7 @@ function initLessonsTab(root) {
   // ----- Day 30: richer harmony payoff -------------------------------------
   function runLesson30() {
     const { content, keyboardWrap, controls } = lessonShell("Day 30: Your Lesson 1 song, re-voiced");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 84 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 55, endMidi: 84 });
     let step = 0;
 
     function renderStep() {
@@ -2549,7 +2709,7 @@ function initLessonsTab(root) {
   // ----- Days 31-35: capstone — Pachelbel's Canon in D ---------------------
   function runLesson31() {
     const { content, keyboardWrap, controls } = lessonShell("Day 31: Canon in D — the capstone progression");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 40, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 40, endMidi: 79 });
     let step = 0;
 
     function renderStep() {
@@ -2578,7 +2738,7 @@ function initLessonsTab(root) {
 
   function runLesson32() {
     const { content, keyboardWrap, controls } = lessonShell("Day 32: Canon's bass line");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 38, endMidi: 67 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 38, endMidi: 67 });
     let step = 0;
 
     function renderStep() {
@@ -2603,7 +2763,7 @@ function initLessonsTab(root) {
 
   function runLesson33() {
     const { content, keyboardWrap, controls } = lessonShell("Day 33: Canon's chords, over the bass");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 38, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 38, endMidi: 79 });
     let step = 0;
 
     function renderStep() {
@@ -2628,7 +2788,7 @@ function initLessonsTab(root) {
 
   function runLesson34() {
     const { content, keyboardWrap, controls } = lessonShell("Day 34: Canon, with richer color");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 38, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 38, endMidi: 79 });
     const plain = CANON_IN_D.chords[2]; // Bm
     const richer = { label: "Bm7", notes: [59, 62, 66, 69], bass: 47 };
     let step = 0;
@@ -2656,7 +2816,7 @@ function initLessonsTab(root) {
 
   function runLesson35() {
     const { content, keyboardWrap, controls } = lessonShell("Day 35: Full performance");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 38, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 38, endMidi: 79 });
     let step = 0;
 
     function renderStep() {
@@ -2698,7 +2858,7 @@ function initLessonsTab(root) {
   // exact sequence, per the real pedagogy this lesson is teaching.
   function runLesson36() {
     const { content, keyboardWrap, controls } = lessonShell("Bonus: Jazz comping & improv");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 45, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 45, endMidi: 79 });
     let step = 0; // 0 = explain, 1 = free-play
     let compIndex = 0;
     let compInterval = null;
@@ -2789,7 +2949,7 @@ function initLessonsTab(root) {
   // ----- Bonus: advanced repertoire (Für Elise excerpt + verified catalog) -
   function runLesson37() {
     const { content, keyboardWrap, controls } = lessonShell("Bonus: Advanced repertoire");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 40, endMidi: 79 });
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 40, endMidi: 79 });
     let step = 0; // 0 = intro/catalog, 1..9 = Für Elise notes, 10 = done
 
     function catalogHtml() {
@@ -2833,6 +2993,262 @@ function initLessonsTab(root) {
       }
     }
     renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (s) => ({ step } = s) });
+    renderStep();
+  }
+
+  // ----- Intermediate: building speed (item 57) ---------------------------
+  // Standard, widely taught practice method — nothing exotic: speed is a
+  // side-effect of accurate, relaxed repetition, raised gradually. The
+  // drill uses the falling blocks at four metronome tempos.
+  function runTechniqueLesson() {
+    const { content, keyboardWrap, controls } = lessonShell("Building speed: fast, relaxed fingers");
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    let step = 0;
+    const DRILL = [60, 62, 64, 65, 67, 65, 64, 62, 60]; // C D E F G F E D C — fingers 1 2 3 4 5 4 3 2 1
+    const FINGERS = [1, 2, 3, 4, 5, 4, 3, 2, 1];
+    function drillEvents(bpm) {
+      const eighth = 60 / bpm / 2;
+      const ev = [];
+      for (let rep = 0; rep < 2; rep++) {
+        DRILL.forEach((midi, i) => ev.push({ midi, start: (rep * DRILL.length + i) * eighth, dur: eighth * 0.9, hand: "right" }));
+      }
+      return ev;
+    }
+    const pages = [
+      () => mascotSay(`<h3>Fast fingers are relaxed fingers.</h3>
+        <p>Speed isn't something you force — it's what's left over when a passage is <strong>accurate</strong> and
+           your hand is <strong>relaxed</strong>, repeated until it's automatic. Every method below is about those two
+           things.</p>
+        <p class="hk-honest-note">If anything hurts — wrist, forearm, fingers — stop and rest. Pain is never part of
+           getting faster.</p>`, "assets/mascot-poses/metronome.png"),
+      () => mascotSay(`<h3>1. Slow first, then a metronome ladder.</h3>
+        <p>Play the passage <strong>slowly enough to get it right every time</strong> — right notes, right fingers,
+           even rhythm. Then use a metronome: once you can play it cleanly <strong>3 times in a row</strong>, nudge the
+           speed up a little (about 4-8 beats per minute) and repeat.</p>
+        <p>Playing fast with mistakes just practices the mistakes. Slow, correct repetition is what your fingers
+           remember.</p>`, "assets/mascot-poses/metronome.png"),
+      () => mascotSay(`<h3>2. A relaxed hand.</h3>
+        <ul>
+          <li><strong>Curved fingers</strong>, like holding a small ball — play on the fingertips.</li>
+          <li><strong>Stay close to the keys.</strong> Lifting fingers high wastes time; small movements are fast movements.</li>
+          <li><strong>Loose wrist and shoulders.</strong> Let the arm's weight help instead of pushing with tight fingers.</li>
+          <li><strong>Same fingering every time.</strong> Pick a fingering and keep it, so the motion can become automatic.</li>
+        </ul>`),
+      () => mascotSay(`<h3>3. Rhythms and "bursts."</h3>
+        <p><strong>Change the rhythm</strong> of a fast run while practicing: long-short, long-short, then short-long.
+           Each version makes different finger connections solid, so the even version gets easier.</p>
+        <p><strong>Practice in bursts:</strong> play just 3-5 notes as one quick motion, pause, then the next group.
+           Then join the groups. Your hand learns the run as a few big moves instead of many small ones.</p>
+        <p>And practice <strong>hands separately</strong> before hands together.</p>`),
+      () => mascotSay(`<h3>4. Try it: the five-finger drill.</h3>
+        <p>Right thumb on Middle C. Play <strong>C D E F G F E D C</strong> with fingers
+           <strong>${FINGERS.join(" ")}</strong>, following the falling blocks. Start at 60 and only move up a speed
+           once it feels even and easy.</p>
+        <div class="hk-pedal-buttons">
+          ${[60, 80, 100, 120].map((bpm) => `<button class="hk-btn" data-bpm="${bpm}">&#9658; ♩ = ${bpm}</button>`).join("")}
+        </div>`),
+      () => mascotSay(`<h3>5. A short daily routine.</h3>
+        <p>5-10 minutes before your songs:</p>
+        <ul>
+          <li>Five-finger patterns like the drill, both hands.</li>
+          <li>Scales and arpeggios in a few keys (you learned these on Days 11-23), hands separately, then together.</li>
+          <li>One hard bar from a song you're learning, slowly, with the metronome ladder.</li>
+        </ul>
+        <p>Short, focused, daily practice beats one long session a week — and rest matters: your brain keeps
+           consolidating new movements after you stop, including overnight.</p>
+        <p class="hk-honest-note">Want more? Two classic, public-domain exercise books pianists have used for over a
+           century: Hanon's <em>The Virtuoso Pianist</em> (1873) and Czerny's <em>School of Velocity</em>, Op. 299.</p>`),
+    ];
+    function renderStep() {
+      if (kb.stopPlayAlong) kb.stopPlayAlong();
+      if (step < pages.length) {
+        kb.clearHighlights();
+        content.innerHTML = `<p class="hk-step-indicator">${step + 1} of ${pages.length}</p>${pages[step]()}`;
+        if (step === 4) {
+          kb.highlightChord(DRILL.slice(0, 5), { letter: "C", rootMidi: 60 });
+          content.querySelectorAll("[data-bpm]").forEach((btn) => {
+            btn.addEventListener("click", () => kb.playTimeline(drillEvents(Number(btn.dataset.bpm))));
+          });
+        }
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">${step === pages.length - 1 ? "Finish" : "Next"}</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+      } else {
+        markLessonComplete("lesson-technique");
+        kb.clearHighlights();
+        content.innerHTML = mascotSay(`<h3>Lesson complete.</h3>
+          <p>Slow and correct, relaxed, a little faster each time. That's the whole secret — used by beginners and
+             concert pianists alike.</p>`, "assets/mascot-poses/metronome.png");
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (st) => ({ step } = st) });
+    renderStep();
+  }
+
+  // ----- Advanced: Beethoven, harmony vs. form (item 57) -----------------
+  function runBeethovenFormLesson() {
+    const { content, keyboardWrap, controls } = lessonShell("Beethoven: harmony vs. form");
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 45, endMidi: 81 });
+    let step = 0;
+    const A_MINOR = [57, 60, 64]; // A3 C4 E4
+    const E_MAJOR = [52, 56, 59]; // E3 G#3 B3
+    function hearPull() {
+      kb.playTimeline([
+        ...A_MINOR.map((midi) => ({ midi, start: 0, dur: 1.1, hand: "left" })),
+        ...E_MAJOR.map((midi) => ({ midi, start: 1.2, dur: 1.1, hand: "right" })),
+        ...A_MINOR.map((midi) => ({ midi, start: 2.4, dur: 1.6, hand: "left" })),
+      ], { lead: 0.6 });
+    }
+    function hearTheme() {
+      kb.playTimeline(FUR_ELISE_OPENING.rightHand.map((midi, i) => ({ midi, start: i * 0.28, dur: i === 8 ? 0.8 : 0.26, hand: "right" })), { lead: 0.6 });
+    }
+    const pages = [
+      () => mascotSay(`<h3>Two different things: harmony and form.</h3>
+        <p><strong>Harmony</strong> is what's happening <em>right now</em>: which chord is sounding under the melody,
+           and how each chord pulls toward the next.</p>
+        <p><strong>Form</strong> is the <em>blueprint of the whole piece</em>: which sections there are, in what order,
+           and when the main theme comes back.</p>
+        <p>Beethoven is famous for both — and seeing both makes his music much easier to learn and remember.</p>`,
+        "assets/mascot-poses/composer.png"),
+      () => mascotSay(`<h3>Harmony: Für Elise's home and its pull.</h3>
+        <p>Für Elise is in <strong>A minor</strong> — its home chord ("i") is <strong>A-C-E</strong>. Its main theme
+           keeps swinging between that home chord and <strong>E major</strong> (E-G#-B), the "V" chord, then back home.</p>
+        <p>That <strong>G#</strong> is the secret: it sits one half-step under A, so the ear hears it leaning back up
+           to A. That leaning — V wanting to go home to i — is the pull behind countless classical pieces.</p>
+        <div class="hk-pedal-buttons"><button class="hk-btn hk-btn-primary" id="hk-hear-pull">&#9658; Hear A minor → E → A minor</button></div>`,
+        "assets/mascot-poses/composer.png"),
+      () => mascotSay(`<h3>Form: Für Elise is a rondo — A B A C A.</h3>
+        <p>The famous theme (call it <strong>A</strong>) keeps coming back, with two different "episodes" in between:</p>
+        <div class="hk-form-row">
+          <span class="hk-form-box hk-form-a">A</span><span class="hk-form-box hk-form-b">B</span>
+          <span class="hk-form-box hk-form-a">A</span><span class="hk-form-box hk-form-c">C</span>
+          <span class="hk-form-box hk-form-a">A</span>
+        </div>
+        <p><strong>A</strong> — the E-D#-E-D# theme, in A minor. <strong>B</strong> — a brighter episode that starts in
+           F major. <strong>C</strong> — a stormier episode over a low, repeated A in the bass. Then A, one last time.</p>
+        <p>A form like this, where the main theme returns between contrasting sections, is called a
+           <strong>rondo</strong>. Learn A well and you've learned over half the piece.</p>
+        <div class="hk-pedal-buttons"><button class="hk-btn" id="hk-hear-theme">&#9658; Hear the A theme</button></div>`),
+      () => mascotSay(`<h3>The big one: sonata form.</h3>
+        <p>Many of Beethoven's sonata first movements — like the <em>Pathétique</em> Sonata's (C minor) — use
+           <strong>sonata form</strong>, in three parts:</p>
+        <ul>
+          <li><strong>Exposition</strong> — two contrasting themes. The first is in the home key; the second moves to a
+              different key (in a minor-key piece, usually its relative major).</li>
+          <li><strong>Development</strong> — the themes are broken into pieces and pushed through new keys. The most
+              restless, dramatic part.</li>
+          <li><strong>Recapitulation</strong> — both themes come back, now in the home key, so the piece ends where it
+              began. Often followed by a short ending, the <strong>coda</strong>.</li>
+        </ul>
+        <p>Harmony drives the form: leaving the home key creates tension, and coming back to it is the release.</p>`),
+      () => mascotSay(`<h3>Big buildings from tiny bricks.</h3>
+        <p>Beethoven loved building a whole movement from a tiny idea, a <strong>motif</strong>. The most famous is
+           the opening of his Fifth Symphony: short-short-short-<strong>long</strong>. In Für Elise, it's the little
+           E-D#-E-D# turn — every time you hear it, you know the A section is back.</p>
+        <p><strong>How this helps you play:</strong> learn and memorize a piece <em>section by section</em>; notice
+           when a theme returns (you already know it!); and spend extra slow practice on the sections that move
+           through new keys, because that's where the surprises are.</p>`),
+    ];
+    function renderStep() {
+      if (kb.stopPlayAlong) kb.stopPlayAlong();
+      if (step < pages.length) {
+        kb.clearHighlights();
+        content.innerHTML = `<p class="hk-step-indicator">${step + 1} of ${pages.length}</p>${pages[step]()}`;
+        content.querySelector("#hk-hear-pull")?.addEventListener("click", hearPull);
+        content.querySelector("#hk-hear-theme")?.addEventListener("click", hearTheme);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">${step === pages.length - 1 ? "Finish" : "Next"}</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+      } else {
+        markLessonComplete("lesson-beethoven-form");
+        kb.clearHighlights();
+        content.innerHTML = mascotSay(`<h3>Lesson complete.</h3>
+          <p>Harmony = the chords right now. Form = the blueprint. Next time you learn a piece, find its sections
+             first — it's like getting the map before the hike.</p>`, "assets/mascot-poses/composer.png");
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (st) => ({ step } = st) });
+    renderStep();
+  }
+
+  // ----- Advanced: Bach, Prelude in C major BWV 846 (item 57) -------------
+  function runBachPreludeLesson() {
+    const { content, keyboardWrap, controls } = lessonShell("Bach: Prelude in C major");
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 55, endMidi: 84 });
+    let step = 0; // 0 intro, 1..8 bars, 9 play all, 10 done
+    const SIXTEENTH = 0.2; // a comfortable practice tempo (♩ = 75)
+    // One bar: in each half, the two lowest notes (left hand, held)
+    // start the figure, then the top three notes go up twice.
+    function barEvents(bar, offset) {
+      const n = bar.notes;
+      const ev = [];
+      for (let half = 0; half < 2; half++) {
+        const h = offset + half * 8 * SIXTEENTH;
+        ev.push({ midi: n[0], start: h, dur: 8 * SIXTEENTH * 0.97, hand: "left" });
+        ev.push({ midi: n[1], start: h + SIXTEENTH, dur: 7 * SIXTEENTH * 0.97, hand: "left" });
+        [n[2], n[3], n[4], n[2], n[3], n[4]].forEach((midi, i) => ev.push({ midi, start: h + (2 + i) * SIXTEENTH, dur: SIXTEENTH * 0.95, hand: "right" }));
+      }
+      return ev;
+    }
+    function renderStep() {
+      if (kb.stopPlayAlong) kb.stopPlayAlong();
+      if (step === 0) {
+        kb.clearHighlights();
+        content.innerHTML = mascotSay(`
+          <h3>A piece nearly every pianist learns.</h3>
+          <p>Johann Sebastian Bach's <strong>Prelude in C major</strong> opens his <em>Well-Tempered Clavier, Book I</em>
+             (1722) — a set of 24 preludes and fugues, one in every major and minor key. It's public domain and
+             famously approachable: the whole prelude is <strong>one pattern</strong>, a broken chord, with a new chord
+             every bar.</p>
+          <p>In each bar: your <strong>left hand</strong> plays the two lowest notes and holds them (pink), and your
+             <strong>right hand</strong> plays the top three notes going up — twice (blue). Then the whole bar's
+             half repeats.</p>
+          <p>Let's learn the first 8 bars, one at a time. Watch how little each hand moves from bar to bar — that
+             smooth, step-by-step movement between chords is Bach's real art.</p>`, "assets/mascot-poses/mozart-scores.png");
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Bar 1</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step = 1; renderStep(); });
+      } else if (step <= BACH_PRELUDE_C.length) {
+        const bar = BACH_PRELUDE_C[step - 1];
+        kb.highlightHands({ left: bar.notes.slice(0, 2), right: bar.notes.slice(2), rightLabel: bar.chord });
+        content.innerHTML = `
+          <p class="hk-step-indicator">Bar ${step} of ${BACH_PRELUDE_C.length}</p>
+          <div class="hk-big-degree">${bar.chord}</div>
+          ${mascotSay(`<p>Notes, low to high: <strong>${bar.notes.map(noteLetter).join(" - ")}</strong>.
+             ${bar.chord.includes("/") ? `The "/${bar.chord.split("/")[1]}" means this chord has <strong>${bar.chord.split("/")[1]}</strong> as its lowest note instead of its root.` : ""}</p>
+             <p>Left hand: ${noteLetter(bar.notes[0])} and ${noteLetter(bar.notes[1])}. Right hand:
+             ${bar.notes.slice(2).map(noteLetter).join(" - ")}, twice. Tap ▶ to watch the blocks, then play along.</p>`)}`;
+        controls.innerHTML = `
+          <button class="hk-btn" id="hk-play-bar">&#9658; Play bar ${step}</button>
+          <button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">${step < BACH_PRELUDE_C.length ? `Bar ${step + 1}` : "Put it together"}</button>`;
+        controls.querySelector("#hk-play-bar").addEventListener("click", () => kb.playTimeline(barEvents(bar, 0)));
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+      } else if (step === BACH_PRELUDE_C.length + 1) {
+        kb.clearHighlights();
+        content.innerHTML = mascotSay(`<h3>All 8 bars, in time.</h3>
+          <p>${BACH_PRELUDE_C.map((b) => b.chord).join(" → ")}</p>
+          <p>Play along with the falling blocks — slowly is perfect. The full prelude is 35 bars, and keeps this same
+             pattern almost all the way through — only the last few bars change, for the ending.</p>`, "assets/mascot-poses/mozart-scores.png");
+        controls.innerHTML = `
+          <button class="hk-btn" id="hk-play-all">&#9658; Play bars 1-8</button>
+          <button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Finish</button>`;
+        controls.querySelector("#hk-play-all").addEventListener("click", () => {
+          kb.playTimeline(BACH_PRELUDE_C.flatMap((bar, i) => barEvents(bar, i * 16 * SIXTEENTH)));
+        });
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+      } else {
+        markLessonComplete("lesson-bach-prelude");
+        kb.clearHighlights();
+        content.innerHTML = mascotSay(`<h3>You've played real Bach.</h3>
+          <p>Eight bars of one of the most famous pieces ever written for keyboard. Keep going bar by bar with a
+             public-domain score (e.g. from IMSLP) — the pattern never changes, only the chords.</p>`,
+          "assets/mascot-poses/maestro-conducting.png");
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
+    renderStep = withStepBack(renderStep, { controls, kb, getState: () => ({ step }), setState: (st) => ({ step } = st) });
     renderStep();
   }
 
