@@ -554,3 +554,38 @@ rest of that page.
 - [x] Standalone-tab scope only this pass — not wired as an alternate
       input method inside Practice/Lessons (explicitly left as "your
       call" in the brief; the standalone tab works fully on its own).
+
+## 2026-10-05 update: visual Middle C + keyboard highlight color sweep
+
+- [x] **"Get Started" calibration now shows Middle C visually, not just
+      text** (`js/calibration.js`) — renders the same `renderKeyboard` +
+      `highlightChord` component used everywhere else (Lesson 1's "the
+      1/G," etc.), with Middle C highlighted right above the explanation
+      text instead of after it, so the learner sees exactly which key is
+      meant instead of reading a description and guessing. No new visual
+      language invented — same highlight mechanism reused directly.
+      Verified the audio pitch-match flow right after it still works
+      (confirmed the expected "Microphone access failed (Permission
+      denied)" graceful fallback in this sandbox, same as previously
+      documented).
+- [x] **Keyboard highlight color swept from blue to pastel pink**
+      (`.hk-key-highlight` in css/style.css) — this is the generic
+      single-note/chord highlight used in calibration, lessons, Practice,
+      and the MIDI tab; it's now pink so it can't be visually confused
+      with the deliberate two-hand right-hand blue coloring
+      (`.hk-key-hand-right`), which was explicitly left untouched. Also
+      updated the badge letter text color to match (dark pink instead of
+      dark blue). General UI blue elsewhere (buttons, informational
+      badges) was intentionally left alone — that's the established
+      item-17 pastel blue+pink dual-tone theme, not a stray accent.
+- [x] **Real bug caught and fixed while verifying the color sweep**: the
+      "Left hand vs. right hand" preview lesson's right-hand note
+      (`js/lessons-ui.js`, `runTwoHandPreview`) was computed as one
+      octave above the chord's top note — for the G chord, MIDI 86 — but
+      the keyboard was only rendered up to MIDI 79. `highlightHands()`
+      silently did nothing for a note outside the rendered range, so the
+      right hand's note never appeared at all (looked like only the left
+      hand ever lit up, no error thrown). Fixed by widening the
+      keyboard's range to MIDI 88. Verified visually: both hands now
+      show their real colors (pink left, blue right) with correct L/R
+      badges.

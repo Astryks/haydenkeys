@@ -21,13 +21,22 @@ function initCalibration(root, { onComplete } = {}) {
     root.innerHTML = `
       <div class="hk-calibration">
         <h3>Step 1 of 2 — find Middle C by ear</h3>
+        <div id="hk-cal-keyboard-step1" class="hk-keyboard-wrap"></div>
         <p>On a real piano or keyboard, find the <strong>white key just left of the two black keys
-           nearest the middle</strong> of your instrument — that's Middle C, no matter how big or
-           small your keyboard is or where it starts.</p>
+           nearest the middle</strong> of your instrument — that's Middle C (highlighted above), no
+           matter how big or small your keyboard is or where it starts.</p>
         <button class="hk-btn" id="hk-play-ref">Play reference tone (Middle C)</button>
         <button class="hk-btn hk-btn-primary" id="hk-start-listen">Start listening &amp; play your key</button>
         <p id="hk-cal-status" class="hk-cal-status"></p>
       </div>`;
+
+    // Same renderKeyboard + highlightChord component/styling used
+    // everywhere else (e.g. Lesson 1's "this is the 1/G") — reused
+    // directly, not a new visual language just for this screen. Shown
+    // before the text explanation so the learner sees exactly which key
+    // is meant instead of reading a description and guessing.
+    const kb = renderKeyboard(root.querySelector("#hk-cal-keyboard-step1"), { startMidi: 48, endMidi: 72 });
+    kb.highlightChord([REFERENCE_MIDI], { number: "Middle", letter: "C", rootMidi: REFERENCE_MIDI });
 
     root.querySelector("#hk-play-ref").addEventListener("click", () => playTone(REFERENCE_MIDI, { duration: 1.2, gain: 0.2 }));
 

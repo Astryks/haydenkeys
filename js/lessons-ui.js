@@ -515,7 +515,14 @@ function initLessonsTab(root) {
   // hand holds the chord root, right hand plays one simple note on top.
   function runTwoHandPreview() {
     const { content, keyboardWrap, controls } = lessonShell("Left hand vs. right hand");
-    const kb = renderKeyboard(keyboardWrap, { startMidi: 45, endMidi: 79 });
+    // endMidi goes up to 88 (not 79) so the right hand's note — one
+    // octave above the chord's own top note, up to G's 74+12=86 — is
+    // actually within the rendered range. Real bug caught while
+    // verifying item 30's color sweep: at endMidi 79, midi 86 fell
+    // outside the keyboard entirely, so highlightHands() silently never
+    // rendered a right-hand note (getKeyElement(86) was undefined) —
+    // looked like only the left hand ever lit up.
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 45, endMidi: 88 });
     let step = 0;
 
     function renderStep() {

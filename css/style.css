@@ -206,15 +206,20 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 }
 .hk-key-pressed.hk-key-white { background: #cfe3f0; }
 .hk-key-pressed.hk-key-black { background: #2e5a74; }
-.hk-key-highlight.hk-key-white { background: var(--hk-accent-soft); }
-.hk-key-highlight.hk-key-black { background: var(--hk-accent); }
+/* General single-note/chord highlight (item 30): pastel pink, not blue —
+   blue is reserved for the deliberate two-hand right-hand color-coding
+   system just below (.hk-key-hand-right), so a single highlighted note/
+   chord that isn't hand-specific (Middle C here, "the 1/G" in Lesson 1,
+   etc.) shouldn't visually read as "that's the right hand" by accident. */
+.hk-key-highlight.hk-key-white { background: var(--hk-accent-2-soft); }
+.hk-key-highlight.hk-key-black { background: var(--hk-accent-2); }
 .hk-key-selectable { outline: 1px dashed var(--hk-accent-2); outline-offset: -2px; }
 .hk-key-badge {
   position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
   display: flex; flex-direction: column; align-items: center; pointer-events: none;
 }
 .hk-badge-number { font-size: 1.3rem; font-weight: bold; color: #1a2a33; }
-.hk-badge-letter { font-size: 0.7rem; color: #1f4f66; }
+.hk-badge-letter { font-size: 0.7rem; color: #7a2e49; }
 
 /* Per-hand coloring — cohesive with the pastel theme's own two accent
    hues, not literal Synthesia blue/green: right hand uses the site's
