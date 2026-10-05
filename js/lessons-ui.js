@@ -264,6 +264,7 @@ function initLessonsTab(root) {
       "lesson-beethoven": runBeethovenShowcase,
       "lesson-vivaldi": runVivaldiAttempt,
       "lesson-chopin": runChopinShowcase,
+      "lesson-chordquiz": runChordQuizLesson,
     };
     // "Master this song" lessons (item 22's path toward ~100 real
     // lessons) are generated from real song data rather than hand-listed
@@ -1620,6 +1621,114 @@ function initLessonsTab(root) {
         backBtn.textContent = "Back";
         backBtn.addEventListener("click", goBack);
         controls.insertBefore(backBtn, controls.firstChild);
+      }
+    }
+    renderStep();
+  }
+
+  // ----- Chord-recognition ear-training quiz (item 47) -------------------
+  // End-of-Intermediate checkpoint: no new chords, just testing whether
+  // the ear recognizes what the eyes already learned to read. Reuses
+  // LESSON2_DEGREES' real chord data (already taught back in Lesson 2)
+  // rather than inventing a separate chord pool.
+  const QUIZ_CHORD_POOL = LESSON2_DEGREES.filter((d) => d.quality !== "diminished");
+
+  function runChordQuizLesson() {
+    const { content, controls } = lessonShell("Can you guess the chord?");
+    let step = "intro";
+    let round = 0;
+    const TOTAL_ROUNDS = 5;
+    let correctCount = 0;
+    let currentCorrect = null;
+    let currentOptions = [];
+    let answered = false;
+
+    function newRound() {
+      const correctIdx = Math.floor(Math.random() * QUIZ_CHORD_POOL.length);
+      currentCorrect = QUIZ_CHORD_POOL[correctIdx];
+      const distractorPool = QUIZ_CHORD_POOL.filter((_, i) => i !== correctIdx);
+      // Shuffle and take 3 distractors — "plausible" here just means
+      // "other real chords from the same already-taught set," a real
+      // ear-training challenge rather than a random unrelated guess.
+      const shuffled = [...distractorPool].sort(() => Math.random() - 0.5).slice(0, 3);
+      currentOptions = [currentCorrect, ...shuffled].sort(() => Math.random() - 0.5);
+      answered = false;
+    }
+
+    function playCurrentChord() {
+      playChord(currentCorrect.notes, { delay: 0.05 });
+    }
+
+    function renderStep() {
+      if (step === "intro") {
+        content.innerHTML = mascotSay(`
+          <h3>Pause — let's see if your ears know these chords as well as your eyes do.</h3>
+          <p>No new chords here. I'll play one you already know, you pick which one it was by ear — ${TOTAL_ROUNDS}
+             quick rounds.</p>`, "assets/mascot-poses/music-stand.png");
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Start</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => {
+          round = 0;
+          correctCount = 0;
+          newRound();
+          step = "quiz";
+          renderStep();
+        });
+      } else if (step === "quiz") {
+        content.innerHTML = `
+          <p class="hk-step-indicator">Question ${round + 1} of ${TOTAL_ROUNDS}</p>
+          ${mascotSay(`<p>Listen — which chord is this?</p>`)}
+          <button class="hk-btn" id="hk-quiz-replay">&#9658; Play it again</button>
+          <div class="hk-quiz-options">
+            ${currentOptions.map((o, i) => `<button class="hk-btn hk-quiz-option" data-opt="${i}">${o.letter}</button>`).join("")}
+          </div>
+          <p id="hk-quiz-feedback" class="hk-quiz-feedback"></p>`;
+        controls.innerHTML = "";
+        content.querySelector("#hk-quiz-replay").addEventListener("click", playCurrentChord);
+        content.querySelectorAll(".hk-quiz-option").forEach((btn, i) => {
+          btn.addEventListener("click", () => {
+            if (answered) return;
+            answered = true;
+            const picked = currentOptions[i];
+            const feedback = content.querySelector("#hk-quiz-feedback");
+            const isCorrect = picked.letter === currentCorrect.letter;
+            if (isCorrect) {
+              correctCount++;
+              btn.classList.add("hk-quiz-correct");
+              feedback.textContent = `Correct — that was ${currentCorrect.letter}.`;
+              feedback.className = "hk-quiz-feedback hk-quiz-feedback-correct";
+              playTone(currentCorrect.notes[0], { duration: 0.3 });
+            } else {
+              btn.classList.add("hk-quiz-wrong");
+              content.querySelectorAll(".hk-quiz-option").forEach((b2, j) => {
+                if (currentOptions[j].letter === currentCorrect.letter) b2.classList.add("hk-quiz-correct");
+              });
+              feedback.textContent = `Not quite — that was ${currentCorrect.letter}, not ${picked.letter}.`;
+              feedback.className = "hk-quiz-feedback hk-quiz-feedback-wrong";
+            }
+            controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">${round < TOTAL_ROUNDS - 1 ? "Next question" : "See results"}</button>`;
+            controls.querySelector("#hk-next").addEventListener("click", () => {
+              round++;
+              if (round < TOTAL_ROUNDS) {
+                newRound();
+                step = "quiz";
+              } else {
+                step = "done";
+              }
+              renderStep();
+            });
+          });
+        });
+        setTimeout(playCurrentChord, 300);
+      } else {
+        markLessonComplete("lesson-chordquiz");
+        content.innerHTML = mascotSay(`
+          <h3>${correctCount} of ${TOTAL_ROUNDS} by ear.</h3>
+          <p>${correctCount === TOTAL_ROUNDS
+            ? "Perfect score — your ears genuinely know these chords now, not just your eyes."
+            : "That's real ear training, not a pass/fail test — the more you do this, the faster you'll recognize chords without looking."}</p>`,
+          "assets/mascot-poses/maestro-conducting.png");
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
       }
     }
     renderStep();

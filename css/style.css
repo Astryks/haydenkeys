@@ -554,6 +554,15 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 
 .hk-ear-correct { color: var(--hk-accent-2) !important; font-weight: bold; }
 
+/* Item 47: chord-recognition ear-training quiz */
+.hk-quiz-options { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
+.hk-quiz-option { padding: 14px 20px; font-size: 1.1rem; font-weight: bold; min-width: 70px; }
+.hk-quiz-correct { background: rgba(46, 160, 110, 0.18) !important; border-color: #2e8f5e !important; color: #2e8f5e !important; }
+.hk-quiz-wrong { background: rgba(198, 71, 109, 0.15) !important; border-color: var(--hk-danger) !important; color: var(--hk-danger) !important; }
+.hk-quiz-feedback { font-weight: bold; margin-top: 6px; }
+.hk-quiz-feedback-correct { color: #2e8f5e; }
+.hk-quiz-feedback-wrong { color: var(--hk-danger); }
+
 /* Camera overlay */
 .hk-camera-panel { margin-top: 10px; }
 .hk-camera-note { font-size: 0.82rem; color: var(--hk-text-dim); }

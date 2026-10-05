@@ -1414,3 +1414,43 @@ rubato -> legato -> worked example -> done flow reads naturally, Back
 genuinely restores previous step content, roadmap numbering/count is
 internally consistent. Zero new console errors beyond the known
 sandbox-only service-worker noise.
+
+## 2026-10-05 update: "Can you guess the chord?" ear-training quiz (item 47)
+
+- [x] **New lesson `lesson-chordquiz` added at the real end of the
+      Intermediate tier**: appended to `intermediateRemainingLessons`
+      (not inserted arbitrarily), so `insertAfter(theoryRest,
+      "lesson-30", intermediateRemainingLessons)` places it immediately
+      after every Intermediate-tier song-mastery lesson and before
+      Lesson 31 (the Canon in D capstone arc) continues — verified live
+      by position: lands right after "Master: My Love Mine All Mine."
+- [x] **Reuses real already-taught chords only**: the quiz pool is
+      `LESSON2_DEGREES` (G, Am, Bm, C, D, Em — Lesson 2's real diatonic
+      data, filtering out the diminished vii), not new invented chords.
+      Distractors are 3 other real chords from that same pool, a
+      genuine same-key ear-training challenge rather than a random
+      unrelated guess.
+- [x] **5 rounds, real audio, real feedback**: each round plays the
+      chord via the existing `playChord()` (the same shared audio path
+      every other chord sound in the app uses), shows 4 multiple-choice
+      buttons, and a "Play it again" replay button. Verified live, both
+      directions: an incorrect guess shows the picked button in red,
+      the real answer in green, and "Not quite — that was X, not Y";
+      a correct guess shows green and "Correct — that was X" plus a
+      short confirmation tone. A results screen at the end shows the
+      real score ("1 of 5 by ear" in this test run) with encouraging,
+      non-judgmental framing either way.
+- [x] **Lesson numbering/tier boundary re-verified, not assumed safe**:
+      `TOTAL_LESSON_COUNT` is now 104 (up from 103 after item 46);
+      confirmed zero duplicate lesson IDs; confirmed via direct array
+      inspection that `lesson-chordquiz` sits between the last
+      Intermediate song lesson and `lesson-31`, matching "end of
+      Intermediate, before Advanced" — this app has had real
+      lesson-numbering bugs before (see the item 36 audit), so this was
+      checked directly rather than assumed from the code's intent.
+
+Verified live in a real browser: played through all 5 rounds (one
+deliberately wrong, one correct, confirming both feedback states
+render correctly), reached the results screen, roadmap showed "92 of
+104 done" with the quiz correctly positioned. Zero new console errors
+beyond the known sandbox-only service-worker noise.

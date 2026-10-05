@@ -361,6 +361,17 @@ const BEGINNER_REMAINING = BEGINNER_SONGS.filter((s) => !consumedTitles.has(s.ti
 const INTERMEDIATE_REMAINING = INTERMEDIATE_SONGS.filter((s) => !consumedTitles.has(s.title));
 const beginnerRemainingLessons = BEGINNER_REMAINING.map((s) => masterSongLesson(s));
 const intermediateRemainingLessons = INTERMEDIATE_REMAINING.map((s) => masterSongLesson(s));
+// Item 47: a quick ear-training checkpoint right at the end of the
+// Intermediate tier's song lessons, before Advanced-tier content
+// begins — appended last here so insertAfter(..., "lesson-30", ...)
+// below places it immediately after every other Intermediate song
+// lesson, not mixed in among them.
+intermediateRemainingLessons.push({
+  id: "lesson-chordquiz",
+  title: "Can you guess the chord?",
+  subtitle: "An ear-training checkpoint",
+  description: "Pausing the usual read-and-watch flow to test recognition by ear instead, using chords you've already learned.",
+});
 const advancedSongLessons = ADVANCED_SONGS.filter((s) => !consumedTitles.has(s.title)).map((s) => masterSongLesson(s));
 
 const theoryById = Object.fromEntries(THEORY_LESSONS.map((l) => [l.id, l]));
