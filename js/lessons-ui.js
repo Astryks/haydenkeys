@@ -1,6 +1,7 @@
 import { renderKeyboard, playChord, playTone, midiToName } from "./keyboard.js";
 import { initCalibration } from "./calibration.js";
 import { chordSymbolToMidi } from "./chord-utils.js";
+import { createTunerWidget } from "./pitch.js";
 import {
   LESSON1_CHORDS,
   LESSON1_SEQUENCE,
@@ -970,8 +971,17 @@ function initLessonsTab(root) {
     let teachIdx = 0;
     let songIdx = 0;
     let montageIdx = 0;
+    // Item 41: tracks the currently-mounted tuner widget (if any) so its
+    // mic stream is released before the next step's content replaces
+    // the DOM it's attached to — otherwise the mic would stay open.
+    let activeTuner = null;
+    function mountTuner(mountEl, targetMidi, opts) {
+      if (activeTuner) activeTuner.destroy();
+      activeTuner = createTunerWidget(mountEl, targetMidi, opts);
+    }
 
     function renderStep() {
+      if (activeTuner) { activeTuner.destroy(); activeTuner = null; }
       if (step === "teaser") {
         content.innerHTML = mascotSay(`
           <h3>Did you know 4 chords play over 100 songs?</h3>
@@ -1005,7 +1015,13 @@ function initLessonsTab(root) {
              right, including Middle C itself: <strong>C, D, E, F, G</strong>. That last one, G, is lit up
              below. This works the same way whether your keyboard has 25 keys or 88 — always count from
              Middle C, never from the edge.</p>
-          <p><strong>Press that G key now.</strong></p>`);
+          <p><strong>Press that G key now.</strong></p>
+          <div class="hk-tuner-mount"></div>`);
+        // Item 41: an optional, genuinely non-forced tuner-style match
+        // button — same mic pitch-detector as Get Started's Middle-C
+        // calibration and Practice's Ear Check, just made available
+        // right here too for anyone who wants extra confidence.
+        mountTuner(content.querySelector(".hk-tuner-mount"), gChord.root, { label: "Tune this note (optional)" });
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Got it</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step = "teach"; teachIdx = 0; renderStep(); });
       } else if (step === "teach") {
@@ -1021,7 +1037,11 @@ function initLessonsTab(root) {
                of ${chord.notes.length} individual keys, <strong>named ${noteNames.join(", ")}</strong>: press all
                ${chord.notes.length} together and that's the ${chord.letter} chord.</p>
             <p>${CHORD_ANCHOR[key]}</p>
-            <p><strong>Press all ${chord.notes.length} lit-up keys now.</strong> Then tap Next.</p>`)}`;
+            <p><strong>Press all ${chord.notes.length} lit-up keys now.</strong> Then tap Next.</p>
+            <div class="hk-tuner-mount"></div>`)}`;
+        mountTuner(content.querySelector(".hk-tuner-mount"), chord.root, {
+          label: `Tune this note (${chord.letter}'s root, optional)`,
+        });
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Next</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => {
           if (teachIdx < LESSON1_SEQUENCE.length - 1) { teachIdx++; renderStep(); }

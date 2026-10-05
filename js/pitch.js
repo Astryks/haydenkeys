@@ -123,9 +123,113 @@ async function startLivePitchDetection(onPitch, { fftSize = 2048 } = {}) {
   };
 }
 
+// --- Shared tuner-style "match this note" widget (item 41) ----------
+//
+// A real guitar-tuner-style UI (needle + flat/in-tune/sharp readout)
+// built on the exact same startLivePitchDetection() used by Get Started
+// calibration (item 29) and Practice's Ear Check (item 4/27) — not a
+// second pitch-detection implementation. Both calibration.js and
+// lessons-ui.js call this one function so there's a single place that
+// owns "what does tuning feedback look like."
+//
+// Renders a small, self-contained widget into `container`:
+//   [Tune this note button] -> on click: mic starts, needle + label
+//   appear and update live as the user plays, button becomes "Stop".
+// Calls onMatch() once when the target is heard in tune (not
+// repeatedly), but keeps listening so the user can see the needle
+// settle — they close it themselves via the Stop button.
+function createTunerWidget(container, targetMidi, { label = "Tune this note" } = {}) {
+  let stopListening = null;
+  let matched = false;
+
+  container.innerHTML = `
+    <div class="hk-tuner">
+      <button class="hk-btn hk-tuner-toggle" type="button">${label}</button>
+      <div class="hk-tuner-display" style="display:none">
+        <div class="hk-tuner-dial">
+          <div class="hk-tuner-needle"></div>
+          <div class="hk-tuner-center-mark"></div>
+        </div>
+        <p class="hk-tuner-readout">Listening...</p>
+      </div>
+    </div>`;
+
+  const toggleBtn = container.querySelector(".hk-tuner-toggle");
+  const display = container.querySelector(".hk-tuner-display");
+  const needle = container.querySelector(".hk-tuner-needle");
+  const readout = container.querySelector(".hk-tuner-readout");
+
+  async function start() {
+    matched = false;
+    display.style.display = "flex";
+    toggleBtn.textContent = "Stop tuning";
+    readout.textContent = "Listening — play the note on your real piano.";
+    needle.style.transform = "translateX(-50%) rotate(0deg)";
+    needle.className = "hk-tuner-needle";
+    try {
+      stopListening = await startLivePitchDetection((result) => {
+        if (!result) {
+          readout.textContent = "Listening — play the note on your real piano.";
+          return;
+        }
+        const diffSemitones = result.midi - targetMidi;
+        // Clamp the needle's visual swing to +/- 1 semitone (100 cents)
+        // either side of the target, same range a real tuner app shows.
+        const clampedCents = Math.max(-100, Math.min(100, diffSemitones * 100));
+        const angle = (clampedCents / 100) * 45; // +/- 45 degrees
+        needle.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+
+        const inTune = result.noteMidi === targetMidi && Math.abs(result.cents) < 15;
+        const closeOctaveOff = Math.abs(diffSemitones) >= 11 && Math.abs(diffSemitones) <= 13;
+        if (inTune) {
+          needle.className = "hk-tuner-needle hk-tuner-in-tune";
+          readout.textContent = `In tune — ${result.freq.toFixed(1)} Hz. Nice.`;
+          if (!matched) {
+            matched = true;
+          }
+        } else if (closeOctaveOff) {
+          needle.className = "hk-tuner-needle hk-tuner-off";
+          readout.textContent = `Close, but that's an octave ${diffSemitones > 0 ? "too high" : "too low"}.`;
+        } else if (diffSemitones > 0) {
+          needle.className = "hk-tuner-needle hk-tuner-off";
+          readout.textContent = `Sharp — a bit higher than this note. Try a key to the left.`;
+        } else if (diffSemitones < 0) {
+          needle.className = "hk-tuner-needle hk-tuner-off";
+          readout.textContent = `Flat — a bit lower than this note. Try a key to the right.`;
+        }
+      });
+    } catch (err) {
+      readout.textContent = `Microphone access failed (${err.message}).`;
+    }
+  }
+
+  function stop() {
+    if (stopListening) {
+      stopListening();
+      stopListening = null;
+    }
+    display.style.display = "none";
+    toggleBtn.textContent = label;
+  }
+
+  toggleBtn.addEventListener("click", () => {
+    if (stopListening) stop();
+    else start();
+  });
+
+  return {
+    stop,
+    destroy() {
+      stop();
+      container.innerHTML = "";
+    },
+  };
+}
+
 export {
   detectPitchInFrame,
   startLivePitchDetection,
   midiFromFreq,
   freqFromMidi,
+  createTunerWidget,
 };

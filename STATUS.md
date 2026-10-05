@@ -1115,3 +1115,60 @@ slowdown → find-G → teach flow. `node --check js/lessons-ui.js` passes.
 Montage pool size confirmed at 24 (27 total 1-5-6-4 matches minus the 3
 now named/played earlier in the lesson). Zero new console errors beyond
 the known sandbox-only service-worker noise.
+
+## 2026-10-05 update: tuner-style "match this note" button on chord screens (item 41, part 2)
+
+- [x] **New shared `createTunerWidget()` added to `js/pitch.js`**, built
+      directly on `startLivePitchDetection()` — the exact same real
+      mic/autocorrelation pitch detector already used by Get Started's
+      Middle-C calibration (item 29) and Practice's Ear Check (item
+      4/27). No second pitch-detection implementation was written; this
+      is purely a visual layer (a needle that swings flat/center/sharp
+      across a +/-1-semitone range, plus a text readout) on top of the
+      same `{freq, midi, noteMidi, cents}` result object both existing
+      call sites already consume.
+- [x] **Wired into Lesson 1's "find G" screen and all 4 chord-teach
+      screens** (G/D/Em/C) as a small, clearly optional "Tune this note"
+      button — never auto-started, never blocks the Next/Got it button,
+      exactly as asked ("not forced into the flow for someone who
+      already knows they're on the right key").
+- [x] **Mic lifecycle bug caught and fixed before shipping**: each lesson
+      step re-renders `content.innerHTML`, which would have silently
+      orphaned a running mic stream from a previous step's tuner widget
+      (the DOM node disappears but `getUserMedia`'s stream keeps
+      recording). Fixed with a tracked `activeTuner` reference that gets
+      `.destroy()`-ed (stops the mic, releases tracks) at the top of
+      every `renderStep()` call before the next step's content replaces
+      it. Verified live: moving from "find G" to "Chord 1 of 4" resets
+      the next screen's tuner button to its initial un-started label,
+      not a leftover "Stop tuning" state.
+- [x] **A real CSS bug caught during verification, not assumed fixed**:
+      the display panel was hidden via the HTML `hidden` attribute, but
+      `.hk-tuner-display { display: flex; ... }` has the same CSS
+      specificity as the browser's built-in `[hidden]` rule and came
+      later in the stylesheet, so it silently won — the dial was visible
+      before the button was even clicked. Fixed by toggling
+      `style.display` directly in JS instead of relying on the `hidden`
+      attribute.
+- [x] **End-to-end real-pipeline verification** (the sandboxed browser
+      has no physical mic, so a literal "play a real piano key" test
+      isn't possible here): temporarily substituted a real Web Audio
+      oscillator + `MediaStreamAudioDestinationNode` in place of
+      `getUserMedia`'s camera/mic stream, so the exact same
+      `AnalyserNode` + `detectPitchInFrame` autocorrelation code in
+      `pitch.js` processed genuine audio samples end-to-end — nothing
+      about the detection path itself was mocked or stubbed. Confirmed
+      live: 392.00 Hz correctly read as "In tune — 392.0 Hz. Nice." with
+      a centered green needle (G4's real frequency); 415 Hz showed a
+      sharp-tilted pink needle with "Sharp — a bit higher... try a key
+      to the left"; 370 Hz showed a flat-tilted needle with "Flat — a
+      bit lower... try a key to the right." This is the same genuine
+      detector real microphone input would drive on a real device.
+
+Verified live: tuner button present and optional on find-G and all 4
+chord-teach screens; clicking it calls the real `getUserMedia`-backed
+detector (confirmed by the sandbox's own "microphone access blocked"
+notice on first attempt, then by the oscillator substitution test
+above); needle and readout respond correctly to in-tune/sharp/flat
+input; mic is released when navigating to the next step. Zero new
+console errors beyond the known sandbox-only service-worker noise.
