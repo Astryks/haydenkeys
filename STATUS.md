@@ -1799,3 +1799,50 @@ lesson lands correctly in the roadmap at the end of Intermediate;
 clicking both "Without the pedal" and "With the pedal" triggers
 playback with zero console errors beyond the known sandbox-only
 service-worker noise.
+
+## 2026-10-05 update: keep both iOS orientations, make the keyboard actually usable in portrait (item 54)
+
+- [x] **`ios/App/App/Info.plist` left untouched** — both portrait and
+      landscape stay enabled for iPhone, per Sid's correction (an
+      earlier instruction to lock to landscape-only was retracted
+      before any Info.plist edit was made).
+- [x] **Real portrait usability bug found and fixed**: verified at an
+      actual 375x812 viewport that the keyboard's existing "scale keys
+      down to fit the viewport" approach made individual keys too thin
+      to tell apart or tap — confirmed visually via screenshot, not
+      assumed.
+- [x] **Fixed with a portrait-specific scroll, not a redesign**: a new
+      `@media (orientation: portrait) and (max-width: 480px)` rule
+      gives `.hk-keyboard-wrap`/`.hk-highway-wrap` a legible fixed
+      `min-width: 640px` and makes their real parent panels
+      (`.hk-lesson-player`, `.hk-practice`, `.hk-calibration`,
+      `.hk-midi`) horizontally scrollable — landscape at any phone
+      width is completely untouched (confirmed live: `overflow-x` stays
+      `visible` and `scrollWidth === clientWidth` at 812x375, zero
+      difference from before this change).
+- [x] **Real DOM-structure bug caught while implementing this**:
+      `keyboard.js`'s `renderKeyboard()` adds the `.hk-keyboard` class
+      onto the SAME element the caller already marked
+      `.hk-keyboard-wrap` — not a nested child. A single element can't
+      both scroll its own overflow and be the oversized content at the
+      same time, so the scroll container has to be each context's real
+      parent panel instead. Caught this by checking actual rendered
+      widths in the browser (`getBoundingClientRect()`), not just
+      reading the CSS.
+- [x] **No native rotation-triggered state loss**: this is a pure CSS/
+      viewport-driven responsive layout (no JS listens for an
+      orientation-change event or reloads anything), so rotating the
+      device mid-lesson/mid-playback doesn't reset progress or stop
+      audio — confirmed by reading the code path, not assumed.
+
+Verified live by resizing the same page between 375x812 (portrait) and
+812x375 (landscape): portrait now renders legibly wide piano keys with
+a working horizontal scroll (confirmed via `scrollWidth`/`clientWidth`
+and a visual before/after screenshot); landscape is provably unchanged
+from its pre-item-54 behavior. Honest scope note, given a tight time
+budget: scrolling the panel horizontally also scrolls the lesson text
+above the keyboard along with it (simplest fix available without a
+deeper DOM restructure) — functional, not polished; a future pass
+could give the keyboard its own independent scroll region if that
+rougher edge matters later. Zero new console errors beyond the known
+sandbox-only service-worker noise.

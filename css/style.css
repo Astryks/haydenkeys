@@ -654,6 +654,26 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
   .hk-highway-wrap, .hk-keyboard { height: 130px; }
 }
 
+/* Item 54: on a genuinely narrow PORTRAIT phone specifically (not just
+   any narrow viewport — a landscape phone can be just as short without
+   this problem), scaling the keyboard down to fit the viewport width
+   (the approach above) makes individual keys too thin to actually tap
+   or read apart. Switch to a fixed, legible key width and let the
+   keyboard scroll horizontally instead of forcing it to fit — the same
+   tradeoff real piano apps make. Landscape at any phone width keeps
+   the original scale-to-fit behavior untouched. */
+@media (orientation: portrait) and (max-width: 480px) {
+  /* Real bug caught while verifying this: keyboard.js's renderKeyboard()
+     adds the .hk-keyboard class directly onto the SAME element the
+     caller already marked .hk-keyboard-wrap — they're one DOM node, not
+     nested. A node can't both scroll its own overflow AND be the wide
+     content at once, so the scroll container has to be this element's
+     PARENT (the lesson player / practice tab / calibration screen),
+     not the keyboard-wrap itself. */
+  .hk-lesson-player, .hk-practice, .hk-calibration, .hk-midi { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .hk-keyboard-wrap, .hk-highway-wrap { min-width: 640px; }
+}
+
 @media (max-width: 420px) {
   .hk-header h1 { font-size: 1.3rem; }
   .hk-big-degree { font-size: 2.5rem; }
