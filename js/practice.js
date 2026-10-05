@@ -7,7 +7,8 @@ import { startLivePitchDetection } from "./pitch.js";
 import { initCameraOverlay } from "./camera-overlay.js";
 import { renderNoteHighway, stepsToHighwayNotes } from "./note-highway.js";
 
-const CHORD_DURATION_SEC = 1.6;
+const BASE_CHORD_DURATION_SEC = 1.6; // duration per chord at 1x (normal) speed
+const SPEEDS = [0.5, 0.75, 1];
 const MODES = ["follow", "ear", "camera"];
 const MODE_LABELS = {
   follow: "Follow Along",
@@ -45,13 +46,48 @@ function initPracticeTab(root, { initialSong } = {}) {
   let highwayNotes = [];
   let songMeta = getSongSteps(currentSong);
   let ended = false; // true once a non-looping structured song finishes
+  let playbackSpeed = 1;
 
   // Ear Check mode state
   let stopListening = null;
   let earCheckIndex = 0;
 
+  // The single tempo multiplier every piece of playback timing math
+  // derives from — chord-change timing, the falling-note highway's fall
+  // speed, and the draggable playhead's scrubbing all read this same
+  // value, so they can't disagree or drift out of sync with each other.
+  // 0.5x genuinely doubles each chord's on-screen duration (slower), not
+  // just a CSS animation slowed down independently of the real timing.
+  function chordDuration() {
+    return BASE_CHORD_DURATION_SEC / playbackSpeed;
+  }
+
+  // Changing speed preserves *which chord* is currently at the playhead
+  // (expressed as a fractional step position) rather than preserving the
+  // raw elapsed seconds — e.g. "3.2 chords in" stays "3.2 chords in"
+  // whether that's 5.12s at 1x or 10.24s at 0.5x. Every view that reads
+  // position (timeline cursor, keyboard highlight, falling-note highway)
+  // is re-derived from this same chordDuration(), so they can't drift
+  // apart from each other when speed changes.
+  function setSpeed(newSpeed) {
+    const stepFraction = pausedAt / chordDuration();
+    playbackSpeed = newSpeed;
+    pausedAt = stepFraction * chordDuration();
+    playStartedAt = performance.now();
+    highwayNotes = stepsToHighwayNotes(songMeta.steps, chordDuration(), chordSymbolToMidi);
+    root.querySelectorAll("[data-speed]").forEach((btn) => {
+      btn.classList.toggle("hk-speed-active", Number(btn.dataset.speed) === playbackSpeed);
+    });
+    updateCursor();
+    if (mode === "follow" && highway) {
+      const total = totalDuration();
+      const loopedT = songMeta.loops ? pausedAt % total : pausedAt;
+      highway.render(loopedT, highwayNotes);
+    }
+  }
+
   function totalDuration() {
-    return songMeta.steps.length * CHORD_DURATION_SEC;
+    return songMeta.steps.length * chordDuration();
   }
 
   function currentTime() {
@@ -78,6 +114,10 @@ function initPracticeTab(root, { initialSong } = {}) {
           ${MODES.map((m) => `<button class="hk-mode-btn ${m === mode ? "hk-mode-active" : ""}" data-mode="${m}">${MODE_LABELS[m]}</button>`).join("")}
         </div>
         <p class="hk-mode-desc">${modeDescription()}</p>
+        <div class="hk-speed-picker" id="hk-speed-picker">
+          <span class="hk-speed-label">Speed:</span>
+          ${SPEEDS.map((s) => `<button class="hk-speed-btn ${s === playbackSpeed ? "hk-speed-active" : ""}" data-speed="${s}">${s}×${s === 1 ? " (normal)" : s === 0.5 ? " (slow)" : ""}</button>`).join("")}
+        </div>
         <div id="hk-highway" class="hk-highway-slot ${mode === "follow" ? "" : "hk-hidden"}"></div>
         <div id="hk-practice-keyboard" class="hk-keyboard-wrap"></div>
         <div id="hk-sections" class="hk-sections"></div>
@@ -108,7 +148,7 @@ function initPracticeTab(root, { initialSong } = {}) {
     const highwayWrap = root.querySelector("#hk-highway");
     if (highway) highway.destroy();
     highway = renderNoteHighway(highwayWrap, kb.keyLayout);
-    highwayNotes = stepsToHighwayNotes(songMeta.steps, CHORD_DURATION_SEC, chordSymbolToMidi);
+    highwayNotes = stepsToHighwayNotes(songMeta.steps, chordDuration(), chordSymbolToMidi);
 
     root.querySelector("#hk-song-select").addEventListener("change", (e) => {
       stopAll();
@@ -121,6 +161,9 @@ function initPracticeTab(root, { initialSong } = {}) {
         mode = btn.dataset.mode;
         render();
       });
+    });
+    root.querySelectorAll("[data-speed]").forEach((btn) => {
+      btn.addEventListener("click", () => setSpeed(Number(btn.dataset.speed)));
     });
     root.querySelector("#hk-open-calibration").addEventListener("click", toggleCalibration);
     root.querySelector("#hk-timeline").addEventListener("pointerdown", onPlayheadDown);
@@ -218,7 +261,7 @@ function initPracticeTab(root, { initialSong } = {}) {
   // (timeline cursor, keyboard hand-highlight, active section pill, and
   // the Follow Along falling-note highway).
   function seekToStep(stepIndex) {
-    pausedAt = stepIndex * CHORD_DURATION_SEC;
+    pausedAt = stepIndex * chordDuration();
     playStartedAt = performance.now();
     ended = false;
     lastChordIndex = stepIndex;
@@ -323,14 +366,14 @@ function initPracticeTab(root, { initialSong } = {}) {
       return;
     }
     const loopedT = songMeta.loops ? t % total : t;
-    const chordIndex = Math.min(songMeta.steps.length - 1, Math.floor(loopedT / CHORD_DURATION_SEC));
+    const chordIndex = Math.min(songMeta.steps.length - 1, Math.floor(loopedT / chordDuration()));
     if (chordIndex !== lastChordIndex) {
       lastChordIndex = chordIndex;
       const step = songMeta.steps[chordIndex];
       const midiNotes = chordSymbolToMidi(step.chord);
       if (kb && midiNotes.length) {
         kb.highlightHands({ left: [midiNotes[0] - 12], right: midiNotes, rightLabel: step.chord });
-        playChord(midiNotes, { duration: CHORD_DURATION_SEC * 0.9 });
+        playChord(midiNotes, { duration: chordDuration() * 0.9 });
       }
       highlightActiveSection(step.section);
     }
@@ -366,7 +409,7 @@ function initPracticeTab(root, { initialSong } = {}) {
           statusEl.textContent = `Correct — that's ${step.chord}'s root note.`;
           statusEl.classList.add("hk-ear-correct");
           earCheckIndex++;
-          pausedAt = earCheckIndex * CHORD_DURATION_SEC;
+          pausedAt = earCheckIndex * chordDuration();
           updateCursor();
           if (earCheckIndex >= songMeta.steps.length) {
             statusEl.textContent = songMeta.loops

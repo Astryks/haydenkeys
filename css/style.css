@@ -341,3 +341,12 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-overtone-diagram { margin-top: 12px; }
 .hk-overtone-svg { width: 100%; max-width: 560px; height: auto; display: block; background: #0d0c14; border-radius: 8px; }
 .hk-overtone-label { fill: var(--hk-text-dim); font-size: 11px; }
+
+/* Playback speed control */
+.hk-speed-picker { display: flex; align-items: center; gap: 6px; margin: 4px 0 10px; flex-wrap: wrap; }
+.hk-speed-label { color: var(--hk-text-dim); font-size: 0.82rem; margin-right: 2px; }
+.hk-speed-btn {
+  background: var(--hk-panel); color: var(--hk-text-dim); border: 1px solid #3a3550;
+  padding: 6px 12px; border-radius: 999px; cursor: pointer; font-size: 0.8rem; min-height: 32px;
+}
+.hk-speed-active { color: var(--hk-text); border-color: var(--hk-accent); background: rgba(124, 92, 255, 0.15); }
