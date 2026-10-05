@@ -179,7 +179,7 @@ function initPracticeTab(root, { initialSong } = {}) {
   }
 
   function modeDescription() {
-    if (mode === "follow") return "Notes fall down the highway toward the hit line above each key, timed so they arrive exactly when you should play them — plus the keyboard highlights each chord as it plays. Amber = left hand, purple = right hand. No microphone needed.";
+    if (mode === "follow") return "Notes fall down the highway toward the hit line above each key, timed so they arrive exactly when you should play them — plus the keyboard highlights each chord as it plays. Pink = left hand, light blue = right hand. No microphone needed.";
     if (mode === "ear") return "Play each chord's root note on your real piano — the mic listens via the same pitch tracker used for calibration and advances when you get it right.";
     return "Point your camera at your real keyboard. After a quick two-tap calibration, the next key to press is highlighted right on the video.";
   }

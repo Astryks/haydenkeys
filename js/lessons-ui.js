@@ -879,8 +879,8 @@ function initLessonsTab(root) {
         content.innerHTML = `
           <p class="hk-step-indicator">Beat ${step + 1} of ${pattern.leftHand.length}</p>
           <p>${pattern.description}</p>
-          <p>Left hand (amber) plays this bass note, down in its own lower register, while the right hand
-             (purple) holds the chord, higher up — each hand's real position and color are shown separately.</p>`;
+          <p>Left hand (pink) plays this bass note, down in its own lower register, while the right hand
+             (light blue) holds the chord, higher up — each hand's real position and color are shown separately.</p>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next beat</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
         playChord([...pattern.rightHandChord, midi], { duration: 0.6 });
@@ -932,7 +932,7 @@ function initLessonsTab(root) {
       if (step < pattern.leftHand.length) {
         const midi = pattern.leftHand[step];
         kb.highlightHands({ left: [midi], right: pattern.rightHandChord });
-        content.innerHTML = `<p class="hk-step-indicator">Beat ${step + 1} of ${pattern.leftHand.length}</p><p>Combining Alberti bass (left hand, amber) with a held chord (right hand, purple) — real two-hand coordination, each hand's actual register shown separately.</p>`;
+        content.innerHTML = `<p class="hk-step-indicator">Beat ${step + 1} of ${pattern.leftHand.length}</p><p>Combining Alberti bass (left hand, pink) with a held chord (right hand, light blue) — real two-hand coordination, each hand's actual register shown separately.</p>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next beat</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
         playChord([...pattern.rightHandChord, midi], { duration: 0.6 });
@@ -959,7 +959,7 @@ function initLessonsTab(root) {
         const chord = LESSON1_CHORDS[key];
         const bass = chord.root - 12;
         kb.highlightHands({ left: [bass], right: chord.notes, leftLabel: chord.number, rightLabel: chord.letter });
-        content.innerHTML = `<p class="hk-step-indicator">Chord ${step + 1} of 4</p><p>${chord.number} (${chord.letter}) — right-hand chord (purple) over a left-hand root (amber), a full octave down.</p>`;
+        content.innerHTML = `<p class="hk-step-indicator">Chord ${step + 1} of 4</p><p>${chord.number} (${chord.letter}) — right-hand chord (light blue) over a left-hand root (pink), a full octave down.</p>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
         playChord([...chord.notes, bass], { duration: 0.8 });
@@ -1129,7 +1129,7 @@ function initLessonsTab(root) {
       if (step < CANON_IN_D.chords.length) {
         const c = CANON_IN_D.chords[step];
         kb.highlightHands({ left: [c.bass], right: c.notes, rightLabel: c.label });
-        content.innerHTML = `<p class="hk-step-indicator">${step + 1} of 8</p><p>${c.label} (purple, right hand) over its bass note (amber, left hand).</p>`;
+        content.innerHTML = `<p class="hk-step-indicator">${step + 1} of 8</p><p>${c.label} (light blue, right hand) over its bass note (pink, left hand).</p>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
         playChord([...c.notes, c.bass], { duration: 0.8 });
@@ -1230,8 +1230,8 @@ function initLessonsTab(root) {
           <p>The beginner's trick that makes this actually work: the <strong>major pentatonic scale always
              fits</strong> reasonably well over a diatonic progression in the same key, because every note in it
              is either a chord tone or a safe passing tone. No deep jazz theory required to sound musical.</p>
-          <p>Left hand (amber) will loop a ii-V-I in C major (Dm7-G7-Cmaj7 — the exact 7th chords from Days
-             26-28). The right hand's "safe notes" (purple outline) are the C major pentatonic scale: C, D, E, G, A.</p>`;
+          <p>Left hand (pink) will loop a ii-V-I in C major (Dm7-G7-Cmaj7 — the exact 7th chords from Days
+             26-28). The right hand's "safe notes" (light blue outline) are the C major pentatonic scale: C, D, E, G, A.</p>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Start noodling</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step = 1; renderStep(); });
       } else {
@@ -1310,8 +1310,8 @@ function initLessonsTab(root) {
         if (i === 0) playChord(FUR_ELISE_OPENING.leftHand, { duration: 2.0, gain: 0.1 });
         content.innerHTML = `
           <p class="hk-step-indicator">Note ${i + 1} of ${FUR_ELISE_OPENING.rightHand.length}</p>
-          <p>The famous opening of Beethoven's "Für Elise" (1810) — right hand (purple) plays the melody while
-             left hand (amber) holds a simple A minor broken chord underneath.</p>`;
+          <p>The famous opening of Beethoven's "Für Elise" (1810) — right hand (light blue) plays the melody while
+             left hand (pink) holds a simple A minor broken chord underneath.</p>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
       } else {

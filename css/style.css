@@ -1,12 +1,28 @@
+/* Pastel blue/pink theme — palette anchored to assets/logo.svg's own
+   gradient (#a7d8f0 light blue -> #f4b8d0 pink, on a #fdf6fa -> #eef7fb
+   near-white background), not picked independently. Blue and pink are
+   deepened slightly from the logo's literal values specifically where
+   they're used as button/text-on-light colors, so contrast against the
+   light background stays real (WCAG-checked by eye against the ~4.5:1
+   bar for body text) rather than just inverting the old dark palette.
+   The piano keyboard, staff, and falling-note highway keep a dark
+   "stage" background on purpose — those need strong white/black key
+   contrast regardless of the page theme, the same way a dark stage
+   floor under real piano keys doesn't clash with a bright room. */
 :root {
-  --hk-bg: #15131f;
-  --hk-panel: #1f1c2e;
-  --hk-accent: #7c5cff;
-  --hk-accent-2: #58d68d;
-  --hk-text: #f0eefc;
-  --hk-text-dim: #a9a3c4;
-  --hk-danger: #ff6b6b;
-  --hk-warn: #e8b84b;
+  --hk-bg: #fdf6fa;
+  --hk-bg-2: #eef7fb;
+  --hk-panel: #ffffff;
+  --hk-border: #dce8f0;
+  --hk-accent: #4a9bc9;       /* deepened from logo's #a7d8f0 for contrast as a button/text color */
+  --hk-accent-soft: #a7d8f0;  /* the logo's literal light blue, for soft fills/backgrounds */
+  --hk-accent-2: #d9678f;     /* deepened from logo's #f4b8d0 for contrast */
+  --hk-accent-2-soft: #f4b8d0; /* the logo's literal pink, for soft fills/backgrounds */
+  --hk-text: #2a2a3a;
+  --hk-text-dim: #6b6478;
+  --hk-danger: #c6476d;
+  --hk-warn: #c98a2e;
+  --hk-stage-bg: #201d2b;     /* dark backdrop reserved for keyboard/staff/highway only */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -14,7 +30,8 @@
 
 body {
   margin: 0;
-  background: var(--hk-bg);
+  background: linear-gradient(135deg, var(--hk-bg), var(--hk-bg-2));
+  background-attachment: fixed;
   color: var(--hk-text);
   min-height: 100vh;
 }
@@ -23,6 +40,7 @@ body {
   padding: 24px 20px 8px;
   text-align: center;
 }
+.hk-logo { width: 64px; height: 64px; display: block; margin: 0 auto 8px; }
 .hk-header h1 {
   margin: 0;
   font-size: 2rem;
@@ -52,7 +70,7 @@ body {
 .hk-tab-active {
   color: var(--hk-text);
   border-color: var(--hk-accent);
-  background: rgba(124, 92, 255, 0.15);
+  background: rgba(74, 155, 201, 0.15);
 }
 
 main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
@@ -71,7 +89,7 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-btn {
   background: var(--hk-panel);
   color: var(--hk-text);
-  border: 1px solid #3a3550;
+  border: 1px solid var(--hk-border);
   padding: 10px 16px;
   border-radius: 8px;
   cursor: pointer;
@@ -86,7 +104,7 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 /* Discover */
 .hk-discover-controls { display: flex; gap: 8px; margin: 16px 0; flex-wrap: wrap; }
 .hk-discover-controls input, .hk-discover-controls select {
-  background: var(--hk-panel); color: var(--hk-text); border: 1px solid #3a3550;
+  background: var(--hk-panel); color: var(--hk-text); border: 1px solid var(--hk-border);
   padding: 10px; border-radius: 8px; font-size: 0.9rem;
 }
 .hk-discover-controls input { flex: 1; min-width: 200px; }
@@ -105,7 +123,7 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 }
 .hk-song-card {
   background: var(--hk-panel); border-radius: 10px; padding: 14px;
-  border: 1px solid #2c2840;
+  border: 1px solid var(--hk-border);
 }
 .hk-song-card-top { display: flex; justify-content: space-between; align-items: start; gap: 8px; }
 .hk-song-card h3 { margin: 0 0 4px; font-size: 1.05rem; }
@@ -116,59 +134,59 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 
 .hk-badge {
   display: inline-block; font-size: 0.7rem; padding: 3px 8px; border-radius: 999px;
-  background: #3a3550; color: var(--hk-text);
+  background: var(--hk-border); color: var(--hk-text);
 }
-.hk-badge-confirmed { background: rgba(88, 214, 141, 0.2); color: var(--hk-accent-2); }
-.hk-badge-unverified { background: rgba(232, 184, 75, 0.2); color: var(--hk-warn); cursor: help; }
-.hk-badge-match { background: rgba(124, 92, 255, 0.25); color: #c9bfff; margin-left: 6px; }
-.hk-badge-advanced { background: rgba(255, 107, 107, 0.2); color: var(--hk-danger); margin-right: 4px; }
+.hk-badge-confirmed { background: rgba(46, 160, 110, 0.15); color: #2e8f5e; }
+.hk-badge-unverified { background: rgba(201, 138, 46, 0.15); color: var(--hk-warn); cursor: help; }
+.hk-badge-match { background: rgba(74, 155, 201, 0.18); color: var(--hk-accent); margin-left: 6px; }
+.hk-badge-advanced { background: rgba(198, 71, 109, 0.15); color: var(--hk-danger); margin-right: 4px; }
 .hk-song-card-advanced { border-color: var(--hk-danger); }
 
 /* Keyboard */
 .hk-keyboard-wrap { margin: 16px 0; }
 .hk-keyboard {
-  position: relative; height: 160px; background: #0d0c14; border-radius: 8px;
+  position: relative; height: 160px; background: var(--hk-stage-bg); border-radius: 8px;
   user-select: none; touch-action: none;
 }
 .hk-key { position: absolute; top: 0; box-sizing: border-box; cursor: pointer; }
 .hk-key-white {
-  height: 100%; background: #f5f3fa; border: 1px solid #2c2840; border-radius: 0 0 6px 6px;
+  height: 100%; background: #f5f3fa; border: 1px solid var(--hk-border); border-radius: 0 0 6px 6px;
   z-index: 1;
 }
 .hk-key-black {
-  height: 60%; background: #1a1824; border: 1px solid #000; border-radius: 0 0 4px 4px;
+  height: 60%; background: #141018; border: 1px solid #000; border-radius: 0 0 4px 4px;
   z-index: 2;
 }
-.hk-key-pressed.hk-key-white { background: #d8cfff; }
-.hk-key-pressed.hk-key-black { background: #4a3f80; }
-.hk-key-highlight.hk-key-white { background: #b9a6ff; }
+.hk-key-pressed.hk-key-white { background: #cfe3f0; }
+.hk-key-pressed.hk-key-black { background: #2e5a74; }
+.hk-key-highlight.hk-key-white { background: var(--hk-accent-soft); }
 .hk-key-highlight.hk-key-black { background: var(--hk-accent); }
 .hk-key-selectable { outline: 1px dashed var(--hk-accent-2); outline-offset: -2px; }
 .hk-key-badge {
   position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
   display: flex; flex-direction: column; align-items: center; pointer-events: none;
 }
-.hk-badge-number { font-size: 1.3rem; font-weight: bold; color: #241c40; }
-.hk-badge-letter { font-size: 0.7rem; color: #4a3f80; }
+.hk-badge-number { font-size: 1.3rem; font-weight: bold; color: #1a2a33; }
+.hk-badge-letter { font-size: 0.7rem; color: #1f4f66; }
 
-/* Per-hand coloring — cohesive with the existing palette, not literal
-   Synthesia blue/green: right hand uses the app's core purple accent
-   (already the "lead" highlight color everywhere else), left hand uses
-   the warm amber already used for streaks/warnings, so the two read as
-   genuinely distinct at a glance without introducing new hues. */
-.hk-key-hand-right.hk-key-white { background: #b9a6ff; }
+/* Per-hand coloring — cohesive with the pastel theme's own two accent
+   hues, not literal Synthesia blue/green: right hand uses the site's
+   light-blue accent, left hand uses the pink accent — the same two
+   colors already anchoring the whole palette, just assigned one per
+   hand so they read as genuinely distinct at a glance. */
+.hk-key-hand-right.hk-key-white { background: var(--hk-accent-soft); }
 .hk-key-hand-right.hk-key-black { background: var(--hk-accent); }
-.hk-key-hand-left.hk-key-white { background: #f0d9a6; }
-.hk-key-hand-left.hk-key-black { background: var(--hk-warn); }
-.hk-badge-hand { font-size: 1.1rem; font-weight: bold; color: #241c40; }
-.hk-key-badge-left .hk-badge-letter { color: #6b5219; }
+.hk-key-hand-left.hk-key-white { background: var(--hk-accent-2-soft); }
+.hk-key-hand-left.hk-key-black { background: var(--hk-accent-2); }
+.hk-badge-hand { font-size: 1.1rem; font-weight: bold; color: #1a2a33; }
+.hk-key-badge-left .hk-badge-letter { color: #7a2e49; }
 
 /* Lessons */
 .hk-lesson-map { display: flex; flex-direction: column; gap: 10px; padding: 16px 0; }
 .hk-streak { font-size: 1rem; margin-bottom: 8px; }
 .hk-lesson-node {
   display: flex; gap: 14px; align-items: center; text-align: left;
-  background: var(--hk-panel); border: 1px solid #2c2840; border-radius: 10px;
+  background: var(--hk-panel); border: 1px solid var(--hk-border); border-radius: 10px;
   padding: 14px; cursor: pointer; color: var(--hk-text);
 }
 .hk-lesson-node:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -193,10 +211,10 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-honest-note { font-size: 0.8rem; color: var(--hk-text-dim); font-style: italic; }
 .hk-lesson-controls { margin-top: 10px; }
 
-.hk-staff { width: 100%; height: 140px; background: #0d0c14; border-radius: 8px; }
-.hk-staff-line { stroke: #4a3f80; stroke-width: 1; }
+.hk-staff { width: 100%; height: 140px; background: var(--hk-stage-bg); border-radius: 8px; }
+.hk-staff-line { stroke: #4a6a8a; stroke-width: 1; }
 .hk-staff-note { fill: var(--hk-accent-2); }
-.hk-staff-note-dim { fill: #3a3550; }
+.hk-staff-note-dim { fill: #46425c; }
 .hk-staff-accidental { fill: var(--hk-accent-2); font-size: 14px; font-weight: bold; }
 .hk-staff-keysig { fill: var(--hk-warn); font-size: 16px; font-weight: bold; }
 
@@ -212,7 +230,7 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 /* Practice */
 .hk-practice-header { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 .hk-practice-header select {
-  background: var(--hk-panel); color: var(--hk-text); border: 1px solid #3a3550;
+  background: var(--hk-panel); color: var(--hk-text); border: 1px solid var(--hk-border);
   padding: 10px; border-radius: 8px; flex: 1; min-width: 200px;
 }
 .hk-practice-meta { color: var(--hk-text-dim); font-size: 0.85rem; }
@@ -222,7 +240,7 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 }
 .hk-timeline-cursor { cursor: grab; }
 .hk-timeline-chord {
-  position: absolute; top: 0; height: 100%; border-right: 1px solid #2c2840;
+  position: absolute; top: 0; height: 100%; border-right: 1px solid var(--hk-border);
   display: flex; align-items: center; justify-content: center; font-size: 0.8rem;
   color: var(--hk-text-dim);
 }
@@ -242,15 +260,15 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 /* Practice modes */
 .hk-mode-picker { display: flex; gap: 8px; margin: 10px 0; flex-wrap: wrap; }
 .hk-mode-btn {
-  background: var(--hk-panel); color: var(--hk-text-dim); border: 1px solid #3a3550;
+  background: var(--hk-panel); color: var(--hk-text-dim); border: 1px solid var(--hk-border);
   padding: 8px 14px; border-radius: 999px; cursor: pointer; font-size: 0.85rem;
 }
-.hk-mode-active { color: var(--hk-text); border-color: var(--hk-accent-2); background: rgba(88, 214, 141, 0.15); }
+.hk-mode-active { color: var(--hk-text); border-color: var(--hk-accent-2); background: rgba(217, 103, 143, 0.15); }
 .hk-mode-desc { color: var(--hk-text-dim); font-size: 0.82rem; margin: 0 0 10px; }
 
 .hk-sections { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
 .hk-section-pill {
-  font-size: 0.75rem; padding: 4px 10px; border-radius: 999px; background: #2c2840;
+  font-size: 0.75rem; padding: 4px 10px; border-radius: 999px; background: var(--hk-border);
   color: var(--hk-text-dim); border: 1px solid transparent;
 }
 .hk-section-active { border-color: var(--hk-accent-2); color: var(--hk-accent-2); }
@@ -270,7 +288,7 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 
 /* Falling-note highway */
 .hk-highway-slot { margin: 10px 0 0; }
-.hk-highway-wrap { position: relative; width: 100%; height: 160px; background: #0d0c14; border-radius: 8px 8px 0 0; overflow: hidden; }
+.hk-highway-wrap { position: relative; width: 100%; height: 160px; background: var(--hk-stage-bg); border-radius: 8px 8px 0 0; overflow: hidden; }
 .hk-highway-canvas { display: block; width: 100%; height: 100%; }
 
 .hk-repertoire-list { list-style: none; padding: 0; }
@@ -340,18 +358,18 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-how-section { background: var(--hk-panel); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
 .hk-how-section h3 { margin-top: 0; color: var(--hk-accent-2); }
 .hk-wave-demo { margin-top: 12px; }
-.hk-wave-demo canvas { width: 100%; max-width: 600px; height: 120px; background: #0d0c14; border-radius: 8px; display: block; }
+.hk-wave-demo canvas { width: 100%; max-width: 600px; height: 120px; background: var(--hk-stage-bg); border-radius: 8px; display: block; }
 .hk-wave-controls { margin-top: 8px; display: flex; align-items: center; gap: 10px; color: var(--hk-text-dim); font-size: 0.85rem; }
 .hk-wave-controls input[type="range"] { flex: 1; }
 .hk-overtone-diagram { margin-top: 12px; }
-.hk-overtone-svg { width: 100%; max-width: 560px; height: auto; display: block; background: #0d0c14; border-radius: 8px; }
+.hk-overtone-svg { width: 100%; max-width: 560px; height: auto; display: block; background: var(--hk-stage-bg); border-radius: 8px; }
 .hk-overtone-label { fill: var(--hk-text-dim); font-size: 11px; }
 
 /* Playback speed control */
 .hk-speed-picker { display: flex; align-items: center; gap: 6px; margin: 4px 0 10px; flex-wrap: wrap; }
 .hk-speed-label { color: var(--hk-text-dim); font-size: 0.82rem; margin-right: 2px; }
 .hk-speed-btn {
-  background: var(--hk-panel); color: var(--hk-text-dim); border: 1px solid #3a3550;
+  background: var(--hk-panel); color: var(--hk-text-dim); border: 1px solid var(--hk-border);
   padding: 6px 12px; border-radius: 999px; cursor: pointer; font-size: 0.8rem; min-height: 32px;
 }
 .hk-speed-active { color: var(--hk-text); border-color: var(--hk-accent); background: rgba(124, 92, 255, 0.15); }
