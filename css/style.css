@@ -87,6 +87,10 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
   padding: 20px;
 }
 .hk-footer a { color: var(--hk-accent-2); }
+.hk-footer-link {
+  background: none; border: none; padding: 0; font: inherit; cursor: pointer;
+  color: var(--hk-accent-2); text-decoration: underline;
+}
 
 /* Buttons */
 .hk-btn {

@@ -1,11 +1,9 @@
 # Third-Party Notices
 
-Hayden Keys is a static site with no build step and very few
-dependencies by design (the zero-cost, zero-backend constraint keeps
-the dependency list short). Each is used under its own license, listed
-below, checked directly against the actual LICENSE file / repo (not
-just a package description) before being added — same discipline as
-the sibling Dawsons project.
+Hayden Keys has very few dependencies by design — the zero-cost,
+zero-backend constraint keeps the list short. Each one below was
+checked directly against its actual LICENSE file (not just a package
+description) before being added.
 
 ## Runtime dependencies (loaded in-browser)
 
