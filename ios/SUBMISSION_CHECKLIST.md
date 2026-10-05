@@ -11,7 +11,29 @@ Sid still needs to do himself.
 
 - [x] Capacitor project scaffolded, `ios/App/App.xcodeproj` committed
       (item 12).
-- [x] `npx cap sync` runs clean (re-verified this pass).
+- [x] `npx cap sync` runs clean (re-verified this pass, after all
+      changes through item 42).
+- [x] **Real gap found and fixed this pass (item 43)**: `www/` (the
+      directory Capacitor actually bundles into the native app) only
+      had symlinks for the files/folders that existed when it was first
+      scaffolded — `reference.html` (added in item 38) and `privacy.html`
+      were missing symlinks entirely, so tapping the in-lesson "Curious
+      about all the keys and chords?" link would have 404'd inside the
+      native iOS app specifically (it worked fine on the web since the
+      web serves from the repo root directly, not through `www/`). Fixed
+      by adding `www/reference.html -> ../reference.html` and
+      `www/privacy.html -> ../privacy.html` symlinks; confirmed both now
+      appear in `ios/App/App/public/` after `cap sync`.
+- [x] App Store icon and launch screen re-confirmed current: both were
+      last regenerated in the item 37 commit (the same commit that fixed
+      the mascot's transparency), which is also the most recent mascot
+      art change — nothing stale to regenerate.
+- [x] `ios/APP_STORE_LISTING.md` re-read against the current app: song
+      count (103), lesson count (101), and feature list (MIDI tab,
+      upload-your-own-recording, camera overlay, ear training) all still
+      match "100+" language and real current features — no stale
+      numbers or references to superseded taglines found, nothing
+      changed.
 - [x] Camera/microphone `Info.plist` usage-description strings present
       and accurate to real app behavior.
 - [x] Bundle identifier set: **`com.haydenkeys.app`** (confirm this is

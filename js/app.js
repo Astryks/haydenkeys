@@ -41,6 +41,18 @@ function init() {
     btn.addEventListener("click", () => showTab(btn.dataset.tab));
   });
 
+  // Item 43: the "Support Hayden Keys" link is a real placeholder until
+  // Sid provides his own Stripe Payment Link URL -- while
+  // data-stripe-link-pending is set, clicking it does nothing silently
+  // broken-looking; it says plainly that it's not live yet instead.
+  const supportLink = document.getElementById("hk-support-link");
+  if (supportLink && supportLink.dataset.stripeLinkPending === "true") {
+    supportLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      alert("Support link coming soon -- not wired up to a real payment page yet.");
+    });
+  }
+
   discoverApi = initDiscoverTab(panels.discover, {
     onStartSong: (song) => {
       initPracticeTab(panels.practice, { initialSong: song });

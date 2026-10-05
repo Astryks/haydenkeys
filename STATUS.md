@@ -1215,3 +1215,40 @@ correctly highlighted MIDI 60 as a right-hand note using the identical
 mapping; Back on the "slowdown" step restored the teaser step's exact
 original content; touch tap worked at mobile width. Zero new console
 errors beyond the known sandbox-only service-worker noise.
+
+## 2026-10-05 update: "Support Hayden Keys" placeholder + iOS submission re-review (item 43)
+
+- [x] **Added a footer "Support Hayden Keys" link**, placed with the
+      existing About/Privacy/README footer links. Genuinely marked as
+      not wired up yet, not silently broken: `data-stripe-link-pending="true"`,
+      a dashed-underline style, and a clear "not wired up to a real
+      payment page yet" message if clicked — Sid is creating the actual
+      Stripe Payment Link himself; the href and `target="_blank" rel="noopener"`
+      are left as one-line code comments for whoever swaps in the real
+      URL once he has it.
+- [x] **iOS re-review, not a redo**: confirmed the App Store icon and
+      launch screen are still current (both were last regenerated in
+      the item 37 commit, which is also the most recent mascot change —
+      nothing stale). Confirmed `ios/APP_STORE_LISTING.md`'s song/lesson
+      counts and feature list still match the real current app (103
+      songs, 101 lessons, MIDI tab and upload-your-own-recording both
+      mentioned) — no stale tagline or feature references found.
+- [x] **A real gap found and fixed, not just reviewed**: `www/` (the
+      directory Capacitor actually bundles for the native app) only had
+      symlinks for the files that existed when it was first scaffolded.
+      `reference.html` (item 38) and `privacy.html` were missing their
+      own symlinks entirely — tapping the in-lesson "Curious about all
+      the keys and chords?" link would have 404'd inside the native iOS
+      app specifically, even though it worked fine on the web (the web
+      serves from the repo root directly, not through `www/`). Fixed by
+      adding `www/reference.html -> ../reference.html` and
+      `www/privacy.html -> ../privacy.html`; confirmed both now land in
+      `ios/App/App/public/` after `npx cap sync ios`.
+- [x] `npx cap sync ios` re-run clean after all changes through item 42.
+
+Verified live: Support link renders clearly in the footer, clicking it
+shows a plain "not wired up yet" message and does not navigate away or
+error; `npx cap sync ios` output shows a clean sync with no warnings;
+`ios/App/App/public/reference.html` and `privacy.html` confirmed
+present after the fix. Zero new console errors beyond the known
+sandbox-only service-worker noise.
