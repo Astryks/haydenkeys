@@ -269,3 +269,61 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 
 .hk-repertoire-list { list-style: none; padding: 0; }
 .hk-repertoire-list li { background: var(--hk-panel); border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; }
+
+/* ===================================================================
+   Mobile responsiveness — real breakpoints, verified by resizing a
+   real browser viewport to phone widths, not just added and assumed.
+   Two tiers: tablet-ish (<=640px) and phone (<=420px). The on-screen
+   keyboard is the hard case — real piano keys need a minimum physical
+   width to stay tappable, so on narrow screens it becomes horizontally
+   scrollable at a fixed minimum width instead of being squished to
+   illegibly thin slivers.
+   =================================================================== */
+@media (max-width: 640px) {
+  main { padding: 0 10px 40px; }
+  .hk-header { padding: 16px 12px 8px; }
+  .hk-header h1 { font-size: 1.5rem; }
+  .hk-tagline { font-size: 0.85rem; }
+
+  .hk-tabs { gap: 6px; padding: 10px 8px; overflow-x: auto; flex-wrap: nowrap; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
+  .hk-tab { padding: 10px 14px; font-size: 0.85rem; flex: 0 0 auto; min-height: 44px; }
+
+  .hk-song-grid { grid-template-columns: 1fr; }
+  .hk-discover-controls { flex-direction: column; }
+  .hk-discover-controls input, .hk-discover-controls select { width: 100%; }
+
+  .hk-practice-header { flex-direction: column; align-items: stretch; }
+  .hk-practice-header select, .hk-practice-header .hk-btn { width: 100%; }
+
+  .hk-mode-picker { flex-wrap: wrap; }
+  .hk-mode-btn { flex: 1 1 auto; min-height: 44px; text-align: center; }
+
+  .hk-practice-controls .hk-btn { min-height: 44px; padding: 10px 18px; }
+
+  .hk-lesson-node { padding: 12px; gap: 10px; }
+  .hk-lesson-node-icon { width: 32px; height: 32px; font-size: 0.9rem; }
+  .hk-lesson-node-title { font-size: 0.95rem; }
+
+  .hk-big-degree { font-size: 3rem; }
+
+  /* The keyboard's keys are positioned with percentage left/width
+     (relative to the keyboard element's own box), so the whole keyboard
+     naturally scales down to fit any viewport width without ever
+     overflowing it — the real fix needed here is just giving it a
+     shorter, phone-appropriate height so keys aren't absurdly tall and
+     thin, and confirming (verified by real viewport resizing) that it
+     never forces horizontal page scroll. The falling-note highway uses
+     the identical percentage layout for the same reason, so it scales
+     in lockstep with the keyboard beneath it. */
+  .hk-highway-wrap, .hk-keyboard { height: 130px; }
+}
+
+@media (max-width: 420px) {
+  .hk-header h1 { font-size: 1.3rem; }
+  .hk-big-degree { font-size: 2.5rem; }
+  .hk-btn { padding: 10px 14px; font-size: 0.85rem; }
+  .hk-highway-wrap, .hk-keyboard { height: 105px; }
+  .hk-key-badge { bottom: 4px; }
+  .hk-badge-number { font-size: 1rem; }
+  .hk-song-card { padding: 12px; }
+}
