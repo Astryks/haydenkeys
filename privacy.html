@@ -85,18 +85,13 @@
         </section>
 
         <section class="hk-how-section">
-          <h3>The only network requests, disclosed honestly</h3>
+          <h3>The only third-party network request, disclosed honestly</h3>
           <p>The Discover tab looks up each song's album cover art using Apple's free, public <strong>iTunes Search
              API</strong> — sending just a song title and artist name as a search query, nothing about you
              personally. The cover images themselves then load from Apple's image servers. This is a lookup, not a
              data collection mechanism, and no response is stored beyond your current session.</p>
-          <p>To make played notes sound like a real piano instead of a plain synthesized tone, the first time
-             any note plays your device automatically downloads the actual piano sample audio from a
-             public sample host (<code>smpldsnds.github.io</code>, part of the open-source <strong>smplr</strong>
-             project — see <a href="https://github.com/Astryks/haydenkeys/blob/main/THIRD_PARTY_NOTICES.md" target="_blank" rel="noopener">THIRD_PARTY_NOTICES.md</a>). Nothing about you or
-             what you're doing in the app is sent with that request; it's just downloading audio files. If
-             that request fails or you're offline, the app quietly falls back to its own plain synthesized
-             tone — this is a nice-to-have, never a requirement to use the app.</p>
+          <p>The real piano sound comes from public-domain Steinway samples that are <strong>bundled with the app
+             itself</strong> — loading them never contacts any third-party server.</p>
         </section>
 
         <section class="hk-how-section">

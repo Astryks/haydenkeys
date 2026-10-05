@@ -10,7 +10,7 @@
 // days); miss it and it drops to box 0 and comes back today. Stored in
 // localStorage like everything else in the app.
 
-import { isLessonComplete, getSavedSongs, recordDailyProgress } from "./storage.js";
+import { isLessonComplete, getSavedSongs, recordDailyProgress, awardXp, completeQuest } from "./storage.js";
 import { chordSymbolToMidi, parseChordSymbol } from "./chord-utils.js";
 import { SONGS } from "./songs-data.js";
 import { onNoteOn } from "./input-hub.js";
@@ -248,9 +248,15 @@ function runDailyReviewSession({ content, controls, kb, mascotSay, onExit, onLes
     if (timer) clearInterval(timer);
     timer = null;
     kb.clearHighlights();
-    if (!reviewDoneToday() && score.total > 0) {
-      markDoneToday();
-      recordDailyProgress();
+    if (score.total > 0) {
+      // Item 60: 2 XP per right answer (+10 for finishing today's review once).
+      const first = !reviewDoneToday();
+      awardXp(score.right * 2 + (first ? 10 : 0), "Daily review");
+      if (first) {
+        markDoneToday();
+        recordDailyProgress();
+        completeQuest("review");
+      }
     }
     content.innerHTML = mascotSay(`<h3>Review done: ${score.right} of ${score.total} right.</h3>
       <p>${score.total && score.right === score.total ? "Perfect — those will come back less often now." : "The ones you missed will show up again soon — that's how they stick."}

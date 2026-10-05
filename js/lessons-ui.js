@@ -8,7 +8,7 @@ import { createPracticePlayer } from "./play-engine.js";
 import { renderGrandStaff } from "./staff.js";
 import { onNoteOn, midiSupported, enableMidi, connectedMidiNames, enableMic, disableMic, micOn } from "./input-hub.js";
 import { runDailyReviewSession, reviewDoneToday } from "./daily-review.js";
-import { ODE_TO_JOY, ODE_MELODY_ONLY, MINUET_IN_G, BACH_PRELUDE_SHEET, BACH_PRELUDE_8, LESSON1_CHORD_DRILL } from "./sheet-data.js";
+import { WALTZ_PATTERN, ODE_TO_JOY, ODE_MELODY_ONLY, MINUET_IN_G, BACH_PRELUDE_SHEET, BACH_PRELUDE_8, LESSON1_CHORD_DRILL } from "./sheet-data.js";
 import {
   LESSON1_CHORDS,
   LESSON1_SEQUENCE,
@@ -26,8 +26,8 @@ import {
   LESSONS,
   CHOOSE_SONGS,
 } from "./lessons-data.js";
-import { SONGS, ONE_FIVE_SIX_FOUR_SONGS } from "./songs-data.js";
-import { isLessonComplete, markLessonComplete, getStreak, getDailyGoal, markSongStatus } from "./storage.js";
+import { SONGS, ONE_FIVE_SIX_FOUR_SONGS, WORLD_LANGUAGES } from "./songs-data.js";
+import { isLessonComplete, markLessonComplete, getStreak, getDailyGoal, markSongStatus, getQuests, completeQuest, awardXp, starsFor, recordStars, getStreakFreezes, getLevel } from "./storage.js";
 import { checkBadges } from "./badges.js";
 import {
   MAJOR_SCALES,
@@ -121,15 +121,28 @@ function dailyGoalHtml() {
 // Lesson 1 is genuinely "The 4 keys to play 100 songs," matching Sid's
 // exact spec, not pushed down by the setup steps ahead of it.
 function lessonDisplayNumber(lesson, index) {
-  if (lesson.pre) return null;
+  if (lesson.pre || lesson.optional) return null;
   let n = 0;
-  for (let i = 0; i <= index; i++) if (!LESSONS[i].pre) n++;
+  for (let i = 0; i <= index; i++) if (!LESSONS[i].pre && !LESSONS[i].optional) n++;
   return n;
 }
 
 function lessonCountLabel() {
-  const numbered = LESSONS.filter((l) => !l.pre).length;
-  return `${numbered} real lessons (plus ${LESSONS.length - numbered} pre-lesson step${LESSONS.length - numbered === 1 ? "" : "s"})`;
+  const numbered = LESSONS.filter((l) => !l.pre && !l.optional).length;
+  const pre = LESSONS.filter((l) => l.pre).length;
+  const optional = LESSONS.filter((l) => l.optional).length;
+  return `${numbered} real lessons (plus ${pre} pre-lesson step${pre === 1 ? "" : "s"} and ${optional} optional World songs lessons)`;
+}
+
+// Item 60: today's three daily quests (each +10 XP, all three +20).
+function questsHtml() {
+  const qs = getQuests();
+  const lv = getLevel();
+  return `<div class="hk-quests">
+    <h4>Today's quests <span class="hk-honest-note">· Level ${lv.level} ${lv.title}, ${lv.xp} XP</span></h4>
+    ${qs.map((q) => `<div class="hk-quest ${q.done ? "hk-quest-done" : ""}">${q.done ? "✅" : "⬜"} ${q.text} <span class="hk-honest-note">+10 XP</span></div>`).join("")}
+    <div class="hk-quest hk-honest-note">Finish all three for a +20 XP bonus.</div>
+  </div>`;
 }
 
 function lessonMapHtml() {
@@ -140,14 +153,14 @@ function lessonMapHtml() {
     // Item 57: a lesson you've already finished is never locked, even if
     // a lesson before it is new or was moved (lesson order can change
     // between updates).
-    const locked = prevId && !isLessonComplete(prevId) && !done;
+    const locked = !lesson.optional && prevId && !isLessonComplete(prevId) && !done;
     const num = lessonDisplayNumber(lesson, i);
     return `
       <button class="hk-lesson-node ${locked ? "hk-locked" : ""} ${done ? "hk-done" : ""}"
               data-lesson="${lesson.id}" ${locked ? "disabled" : ""}>
         <div class="hk-lesson-node-icon">${done ? "&#10003;" : locked ? "&#128274;" : (num ?? "•")}</div>
         <div class="hk-lesson-node-body">
-          <div class="hk-lesson-node-title">${lesson.pre ? "Pre-lesson" : `Lesson ${num}`}: ${lesson.title}</div>
+          <div class="hk-lesson-node-title">${lesson.pre ? "Pre-lesson" : lesson.optional ? "🌍 Optional" : `Lesson ${num}`}: ${lesson.title}</div>
           <div class="hk-lesson-node-subtitle">${lesson.subtitle}</div>
           <div class="hk-lesson-node-desc">${lesson.description}</div>
         </div>
@@ -158,7 +171,8 @@ function lessonMapHtml() {
     <div class="hk-lesson-map">
       <h2 class="hk-lessons-title">100 Lessons to Learn Any Song — START HERE.</h2>
       <p class="hk-honest-note">${lessonCountLabel()} — real and clickable, nothing padded.</p>
-      <div class="hk-streak">🔥 ${streak.count}-day streak</div>
+      <div class="hk-streak">🔥 ${streak.count}-day streak${getStreakFreezes() ? ` · ❄️ ${getStreakFreezes()} streak freeze${getStreakFreezes() === 1 ? "" : "s"}` : ""}</div>
+      ${questsHtml()}
       <button class="hk-btn ${reviewDoneToday() ? "" : "hk-btn-primary"}" data-lesson="daily-review">🧠 2-minute daily review${reviewDoneToday() ? " — done today ✓" : ""}</button>
       ${dailyGoalHtml()}
       ${badgesStripHtml()}
@@ -172,21 +186,21 @@ function lessonMapHtml() {
 // the site's blue/pink base theme); the next lesson up gets its own
 // "you are here" treatment.
 function timelineHtml() {
-  const nextId = LESSONS.find((l) => !isLessonComplete(l.id))?.id;
+  const nextId = LESSONS.find((l) => !l.optional && !isLessonComplete(l.id))?.id;
   const rows = LESSONS.map((lesson, i) => {
     const prevId = LESSONS[i - 1]?.id;
     const done = isLessonComplete(lesson.id);
     // Item 57: a lesson you've already finished is never locked, even if
     // a lesson before it is new or was moved (lesson order can change
     // between updates).
-    const locked = prevId && !isLessonComplete(prevId) && !done;
+    const locked = !lesson.optional && prevId && !isLessonComplete(prevId) && !done;
     const current = lesson.id === nextId;
     const num = lessonDisplayNumber(lesson, i);
     return `
       <button class="hk-roadmap-node ${done ? "hk-roadmap-done" : ""} ${current ? "hk-roadmap-current" : ""} ${locked ? "hk-roadmap-locked" : ""}"
               data-lesson="${lesson.id}" ${locked ? "disabled" : ""} title="${lesson.title}">
         <span class="hk-roadmap-num">${done ? "&#10003;" : (num ?? "•")}</span>
-        <span class="hk-roadmap-label">${lesson.pre ? "Pre: " : ""}${lesson.title}</span>
+        <span class="hk-roadmap-label">${lesson.pre ? "Pre: " : ""}${lesson.title}${lesson.optional ? '<span class="hk-optional-tag">Optional</span>' : ""}</span>
         ${current ? '<span class="hk-roadmap-here">you are here</span>' : ""}
       </button>`;
   }).join("");
@@ -350,6 +364,7 @@ function initLessonsTab(root) {
       "lesson-sheet-minuet": () => runSheetSongLesson("lesson-sheet-minuet", MINUET_IN_G, { hands: false }),
       "lesson-sheet-bach": () => runSheetSongLesson("lesson-sheet-bach", BACH_PRELUDE_SHEET, { hands: true }),
       "lesson-handsloop": runHandsLoopLesson,
+      "lesson-tomjerry": runTomJerryLesson,
       "lesson-timed": runTimedLesson,
       "daily-review": runDailyReview,
       "lesson-beethoven-form": runBeethovenFormLesson,
@@ -359,6 +374,8 @@ function initLessonsTab(root) {
     // lessons) are generated from real song data rather than hand-listed
     // here one at a time — wire them up the same way.
     LESSONS.forEach((l) => {
+      if (l.world) runners[l.id] = () => runWorldLesson(l);
+      if (l.worldIntro) runners[l.id] = runWorldIntro;
       if (l.songTitle) {
         runners[l.id] = () =>
           runMasterSongLesson(SONGS.find((s) => s.title === l.songTitle), l.id, {
@@ -3353,6 +3370,7 @@ function initLessonsTab(root) {
         <button class="hk-btn hk-btn-primary" data-pstart>▶ Start</button>
       </div>
       ${staff ? `<div class="hk-staff-scroll" data-pstaff></div>` : ""}
+      <p class="hk-combo" data-pcombo></p>
       <p class="hk-pp-score" data-pscore></p>`;
     wireInputSources(container);
     const staffEl = container.querySelector("[data-pstaff]");
@@ -3394,6 +3412,8 @@ function initLessonsTab(root) {
         showKeyHints: opts.hints,
         onStep: (st) => {
           drawStaff(st);
+          const c = container.querySelector("[data-pcombo]");
+          if (c) c.textContent = st.stats.combo >= 5 ? `🔥 Combo ×${st.stats.combo}` : "";
           if (opts.loopOn && st.stats.loops) scoreEl.textContent = `Loop ${st.stats.loops + 1} — keep going, or Stop when it feels easy.`;
         },
         onFinish: (r) => {
@@ -3402,6 +3422,13 @@ function initLessonsTab(root) {
           scoreEl.textContent = opts.mode === "wait"
             ? `Done! ${r.right} right, ${r.wrong} wrong key${r.wrong === 1 ? "" : "s"} — ${r.cleanSteps} of ${r.steps} played first try (${r.accuracy}% accuracy).`
             : `Score: ${r.hits} of ${r.hits + r.misses} notes on time (${r.accuracy}%).${r.timing.length ? ` On average you were ${Math.abs(r.avgTimingMs)}ms ${r.avgTimingMs > 0 ? "late" : "early"}.` : ""}${r.wrong ? ` ${r.wrong} extra/wrong key${r.wrong === 1 ? "" : "s"}.` : ""}`;
+          // Item 60: stars (best per piece+mode), XP and the practice quest.
+          const stars = starsFor(r.accuracy);
+          const { best, improved } = recordStars(`${piece.id}|${opts.mode}|${opts.hands}`, stars);
+          scoreEl.innerHTML = `<span class="hk-stars">${"★".repeat(stars)}${"☆".repeat(3 - stars)}</span> ${scoreEl.textContent}
+            ${r.maxCombo >= 5 ? ` Best combo: ×${r.maxCombo}.` : ""}${improved && best > 0 ? " New best!" : ""}`;
+          awardXp(5 + stars * 5, `${stars} star${stars === 1 ? "" : "s"} — ${piece.title}`);
+          if (r.accuracy >= 80) completeQuest("practice");
           if (onResult) onResult(r, opts);
         },
       });
@@ -3678,6 +3705,119 @@ function initLessonsTab(root) {
        use this on every piece you learn from now on.</p>`, "assets/mascot-poses/maestro-conducting.png"));
   }
 
+  // ----- Advanced: Tom and Jerry's concert pieces (item 60) ---------------
+  function runTomJerryLesson() {
+    const C_SHARP_MINOR = [49, 61, 64, 68]; // C#3 + C#4 E4 G#4
+    const F_SHARP_MAJOR = [42, 66, 70, 73]; // F#2 + F#4 A#4 C#5
+    runPagedLesson("lesson-tomjerry", "Tom and Jerry's concert pieces", { startMidi: 40, endMidi: 81 }, [
+      (el, kb) => {
+        el.innerHTML = mascotSay(`<h3>The Cat Concerto (1947)</h3>
+          <p>In this Oscar-winning Tom and Jerry short, Tom is a concert pianist trying to play
+             <strong>Franz Liszt's Hungarian Rhapsody No. 2</strong> while Jerry, who lives inside the piano, does
+             everything he can to ruin it. Bugs Bunny played the very same piece in <em>Rhapsody Rabbit</em> (1946).</p>
+          <p>Who really played the piano? The credits name concert pianist <strong>Jakob Gimpel</strong> (with
+             <strong>Calvin Jackson</strong> uncredited); animation historian Keith Scott says Calvin Jackson recorded it.
+             Gimpel definitely played for <em>Rhapsody Rabbit</em>.</p>
+          <p>Liszt wrote it in <strong>1847</strong>. It has two halves: a slow, dramatic <strong>lassan</strong> in
+             <strong>C♯ minor</strong>, then the wild, fast <strong>friska</strong> that finishes in <strong>F♯ major</strong>.</p>
+          <div class="hk-pedal-buttons">
+            <button class="hk-btn" data-hear="lassan">&#9658; The lassan's home: C♯ minor</button>
+            <button class="hk-btn" data-hear="friska">&#9658; The friska's finish: F♯ major</button>
+          </div>
+          <p class="hk-honest-note">A true virtuoso showpiece — years beyond this course — so here you hear its two
+             home chords rather than a simplified "version" that wouldn't be the real thing.</p>`, "assets/mascot-poses/grand-piano.png");
+        el.querySelector('[data-hear="lassan"]').addEventListener("click", () => {
+          kb.highlightHands({ left: [C_SHARP_MINOR[0]], right: C_SHARP_MINOR.slice(1), rightLabel: "C#m" });
+          playChord(C_SHARP_MINOR, { duration: 2 });
+        });
+        el.querySelector('[data-hear="friska"]').addEventListener("click", () => {
+          kb.highlightHands({ left: [F_SHARP_MAJOR[0]], right: F_SHARP_MAJOR.slice(1), rightLabel: "F#" });
+          playChord(F_SHARP_MAJOR, { duration: 2 });
+        });
+      },
+      (el, kb) => {
+        el.innerHTML = mascotSay(`<h3>Johann Mouse (1953)</h3>
+          <p>Tom and Jerry's last Oscar winner is all about the waltzes of <strong>Johann Strauss II</strong> — the "Waltz
+             King" of Vienna, whose most famous waltz is <em>The Blue Danube</em> (1866). The piano arrangement was
+             created and played by concert pianist <strong>Jakob Gimpel</strong>.</p>
+          <p>Every waltz is in <strong>3/4</strong> and leans on the same left-hand trick: <strong>"oom-pah-pah"</strong> —
+             a low bass note on beat 1, then the chord on beats 2 and 3. Try it below in D: the bass D, then the D chord
+             twice; then A, then the A7 chord twice. The music waits for you.</p>`, "assets/mascot-poses/maestro-conducting.png")
+          + `<div data-panel></div>`;
+        return mountPracticePanel(el.querySelector("[data-panel]"), kb, WALTZ_PATTERN, { modes: ["wait", "timed"], hands: true, staff: true });
+      },
+    ], mascotSay(`<h3>Lesson complete.</h3><p>Next time you watch The Cat Concerto, listen for the switch from the slow
+       lassan to the racing friska — and you now know the left-hand secret behind every Strauss waltz.</p>`, "assets/mascot-poses/maestro-conducting.png"));
+  }
+
+  // ----- Optional: World songs (item 60) -----------------------------------
+  function runWorldIntro() {
+    const { content, keyboardWrap, controls } = lessonShell("World songs");
+    keyboardWrap.innerHTML = "";
+    content.innerHTML = mascotSay(`<h3>The same chords, all over the world.</h3>
+      <p>Music in every language uses the same 12 notes and the same chord shapes you've learned — a G chord is a G
+         chord in Tokyo, Rio and Paris. These optional lessons each have five of the most popular songs in one
+         language. Pick the ones you're curious about, skip the rest: none of them lock anything.</p>
+      <p class="hk-honest-note">Chords are each song's main repeating loop, checked against at least two chord
+         sources; anything less certain is labelled "needs verification" in Discover.</p>`, "assets/mascot-poses/dreaming-notes.png")
+      + `<div class="hk-choose-list">${WORLD_LANGUAGES.map((l) => `<button class="hk-btn hk-choose-btn" data-world="${l.slug}">${l.flag} ${l.name}</button>`).join("")}</div>`;
+    content.querySelectorAll("[data-world]").forEach((b) => b.addEventListener("click", () => {
+      markLessonComplete("lesson-world-intro");
+      startLesson(`lesson-world-${b.dataset.world}`);
+    }));
+    controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
+    controls.querySelector("#hk-done").addEventListener("click", showMap);
+  }
+
+  function runWorldLesson(lesson) {
+    const songs = SONGS.filter((s) => s.world === lesson.world || s.alsoWorld === lesson.world);
+    const lang = WORLD_LANGUAGES.find((l) => l.name === lesson.world);
+    const { content, keyboardWrap, controls } = lessonShell(`${lang ? lang.flag + " " : ""}World songs: ${lesson.world}`);
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 41, endMidi: 84 });
+    function list() {
+      kb.clearHighlights();
+      content.innerHTML = mascotSay(`<h3>${lang ? lang.flag + " " : ""}${lesson.world}: pick a song</h3>
+        <p>Each one plays chord by chord, with the falling blocks — the same way as every song in the app.</p>`, "assets/mascot-poses/dreaming-notes.png")
+        + `<div class="hk-choose-list">${songs.map((s, i) => `<button class="hk-btn hk-choose-btn" data-i="${i}">${s.title} — ${s.artist}${s.year ? ` (${s.year})` : ""}
+            <span class="hk-choose-chords">Key: ${s.key} · ${s.chords.join(" · ")}${s.confidence !== "confirmed" ? " · needs verification" : ""}</span></button>`).join("")}</div>`;
+      content.querySelectorAll("[data-i]").forEach((b) => b.addEventListener("click", () => play(songs[Number(b.dataset.i)])));
+      controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
+      controls.querySelector("#hk-done").addEventListener("click", showMap);
+    }
+    function play(song) {
+      let idx = 0;
+      function render() {
+        if (kb.stopPlayAlong) kb.stopPlayAlong();
+        if (idx < song.chords.length) {
+          const symbol = song.chords[idx];
+          const notes = chordSymbolToMidi(symbol);
+          kb.highlightChord(notes, { letter: symbol, rootMidi: notes[0] });
+          playChord(notes, { delay: 0.1 });
+          content.innerHTML = `<p class="hk-step-indicator">${song.title} — chord ${idx + 1} of ${song.chords.length}</p>
+            ${mascotSay(`${idx === 0 ? `<p><strong>${song.title}</strong> — ${song.artist}. ${song.notes}</p>` : ""}
+              <p><strong>Press and hold ${symbol}.</strong></p>`)}`;
+          controls.innerHTML = `<button class="hk-btn" id="hk-list">&larr; Songs</button>
+            <button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Next chord</button>`;
+          controls.querySelector("#hk-next").addEventListener("click", () => { idx++; render(); });
+          controls.querySelector("#hk-list").addEventListener("click", list);
+          addPlayAlongButton(controls, kb, song.chords);
+        } else {
+          markLessonComplete(lesson.id);
+          markSongStatus(song.title, "completed");
+          kb.clearHighlights();
+          content.innerHTML = mascotSay(`<h3>You played "${song.title}"!</h3><p>Try another ${lesson.world} song, or another language.</p>`);
+          controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-list">Another ${lesson.world} song</button>
+            <button class="hk-btn" id="hk-done">Back to lessons</button>`;
+          controls.querySelector("#hk-list").addEventListener("click", list);
+          controls.querySelector("#hk-done").addEventListener("click", showMap);
+          addPlayAlongButton(controls, kb, song.chords, "Now play it in time");
+        }
+      }
+      render();
+    }
+    list();
+  }
+
   // ----- Daily review (not a numbered lesson) -------------------------------
   function runDailyReview() {
     const { content, keyboardWrap, controls } = lessonShell(DAILY_REVIEW_TITLE);
@@ -3698,7 +3838,7 @@ function initLessonsTab(root) {
   // every lesson screen, for anyone who wants to browse/pick something
   // else instead.
   function startNextLesson() {
-    const next = LESSONS.find((l) => !isLessonComplete(l.id));
+    const next = LESSONS.find((l) => !l.optional && !isLessonComplete(l.id));
     if (next) startLesson(next.id);
     else showMap(); // everything complete — show the full map instead
   }

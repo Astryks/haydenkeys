@@ -137,4 +137,24 @@ const LESSON1_CHORD_DRILL = {
   chordNames: ["G", "D", "Em", "C"],
 };
 
-export { ODE_TO_JOY, ODE_MELODY_ONLY, MINUET_IN_G, BACH_PRELUDE_SHEET, BACH_PRELUDE_8, LESSON1_CHORD_DRILL };
+// The waltz accompaniment pattern ("oom-pah-pah", 3/4): left hand plays
+// the chord's root on beat 1, right hand the chord on beats 2 and 3.
+// D major and A7 — the two chords a waltz in D leans on most.
+const WALTZ_PATTERN = {
+  id: "waltz",
+  title: "Waltz pattern in D",
+  beatsPerBar: 3,
+  beatUnit: 4,
+  bpm: 108,
+  keySig: [6, 1],
+  bars: 4,
+  events: [
+    ...line([[[50, 1]], [[50, 1]], [[45, 1]], [[45, 1]]], "left", 3),
+    ...[0, 1, 2, 3].flatMap((b) => {
+      const chord = b < 2 ? [62, 66, 69] : [61, 64, 67];
+      return [1, 2].flatMap((beat) => chord.map((midi) => ({ midi, start: b * 3 + beat, dur: 1, hand: "right", bar: b })));
+    }),
+  ],
+};
+
+export { WALTZ_PATTERN, ODE_TO_JOY, ODE_MELODY_ONLY, MINUET_IN_G, BACH_PRELUDE_SHEET, BACH_PRELUDE_8, LESSON1_CHORD_DRILL };

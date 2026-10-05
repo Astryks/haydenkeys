@@ -6,14 +6,8 @@
 // unmodified at js/vendor/smplr-1.1.0.mjs, not re-fetched from a CDN
 // for the *library code* itself.
 //
-// This IS a genuinely new network dependency, though: the sample
-// AUDIO files (not the library code) stream from smplr's own public
-// sample host (smpldsnds.github.io) the first time a sampled piano
-// note plays. That's disclosed honestly in privacy.html/
-// THIRD_PARTY_NOTICES.md, the same way the iTunes album-art lookup
-// was (item 25) — this app still runs with zero account/server of its
-// own, but it is not a zero-network-request app once this feature is
-// used.
+// Item 60: the sample AUDIO is vendored as well (assets/piano-samples/,
+// public domain), so this makes no third-party network request.
 //
 // Deliberately a progressive enhancement, never a hard dependency:
 // every caller must keep sounding fine on the plain synth while the
@@ -33,7 +27,28 @@ function loadSampledPiano(ctx) {
   if (loadPromise) return loadPromise;
   loadPromise = import("./vendor/smplr-1.1.0.mjs")
     .then(({ SplendidGrandPiano }) => {
-      const piano = new SplendidGrandPiano(ctx);
+      // Item 60: samples are vendored in this repo (assets/piano-samples/,
+      // public domain — see THIRD_PARTY_NOTICES.md), so the piano sound no
+      // longer depends on smplr's sample host staying online, and the iOS
+      // app makes no network request for it at all. m4a (AAC) only: every
+      // target browser and iOS can play it. The custom storage encodes
+      // each file name: smplr builds URLs like "FF A#2.m4a" unencoded, and
+      // the "#" starts a URL fragment, so every sharp-named sample was
+      // silently requested as "FF A" and failed to load.
+      const piano = new SplendidGrandPiano(ctx, {
+        baseUrl: new URL("../assets/piano-samples", import.meta.url).href,
+        formats: ["m4a"],
+        // Every note plays at the default velocity (100), so only the
+        // layer covering it is loaded (~5 MB instead of all 5 layers,
+        // ~23 MB). All layers are still kept in the repo.
+        notesToLoad: { notes: Array.from({ length: 88 }, (_, i) => 21 + i), velocityRange: [100, 100] },
+        storage: {
+          fetch: (url) => {
+            const cut = url.lastIndexOf("/") + 1;
+            return fetch(url.slice(0, cut) + encodeURIComponent(decodeURIComponent(url.slice(cut))));
+          },
+        },
+      });
       return piano.load.then(() => {
         pianoInstance = piano;
         return piano;

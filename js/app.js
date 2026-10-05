@@ -6,6 +6,7 @@ import { initHowItWorksTab } from "./how-it-works.js";
 import { initAboutTab } from "./about.js";
 import { initMidiTab } from "./midi.js";
 import { checkBadges } from "./badges.js";
+import { getLevel } from "./storage.js";
 
 // Stripe Payment Link for the footer's "Support Hayden Keys" link —
 // empty until Sid creates one in his own Stripe dashboard.
@@ -96,7 +97,63 @@ function init() {
   initAboutTab(panels.about);
   initMidiTab(panels.midi);
 
+  renderLevelChip();
   showTab("lessons");
 }
+
+// --- Item 60: gamification feedback -------------------------------------
+// XP / level in the header, toasts for XP and milestones, and a short
+// confetti burst when a lesson is finished for the first time. Driven by
+// window events from storage.js, so any screen that awards XP gets this
+// for free.
+function renderLevelChip() {
+  const el = document.getElementById("hk-level-chip");
+  if (!el) return;
+  const lv = getLevel();
+  const pct = Math.round((100 * (lv.xp - lv.floor)) / Math.max(1, lv.next - lv.floor));
+  el.innerHTML = `<span class="hk-level-num">Lv ${lv.level}</span> <span class="hk-level-title">${lv.title}</span>
+    <span class="hk-level-bar"><span style="width:${pct}%"></span></span> <span class="hk-level-xp">${lv.xp} XP</span>`;
+  el.title = `${lv.next - lv.xp} XP to level ${lv.level + 1}`;
+}
+
+function toast(text, { big = false } = {}) {
+  let host = document.getElementById("hk-toasts");
+  if (!host) {
+    host = document.createElement("div");
+    host.id = "hk-toasts";
+    host.setAttribute("aria-live", "polite");
+    document.body.appendChild(host);
+  }
+  const t = document.createElement("div");
+  t.className = `hk-toast ${big ? "hk-toast-big" : ""}`;
+  t.textContent = text;
+  host.appendChild(t);
+  setTimeout(() => t.classList.add("hk-toast-out"), big ? 2600 : 1600);
+  setTimeout(() => t.remove(), big ? 3100 : 2100);
+}
+
+function confetti() {
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const host = document.createElement("div");
+  host.className = "hk-confetti";
+  const colors = ["#a7d8f0", "#f4b8d0", "#8a63d2", "#3fb363", "#e8b84b"];
+  for (let i = 0; i < 60; i++) {
+    const p = document.createElement("i");
+    p.style.left = `${Math.random() * 100}%`;
+    p.style.background = colors[i % colors.length];
+    p.style.animationDelay = `${Math.random() * 0.4}s`;
+    p.style.transform = `rotate(${Math.random() * 360}deg)`;
+    host.appendChild(p);
+  }
+  document.body.appendChild(host);
+  setTimeout(() => host.remove(), 2600);
+}
+
+window.addEventListener("hk-xp", (e) => {
+  toast(`+${e.detail.amount} XP · ${e.detail.reason}`);
+  renderLevelChip();
+});
+window.addEventListener("hk-toast", (e) => toast(e.detail.text, { big: e.detail.big }));
+window.addEventListener("hk-celebrate", confetti);
 
 document.addEventListener("DOMContentLoaded", init);

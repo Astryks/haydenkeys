@@ -1,4 +1,4 @@
-import { SONGS, getDifficulty } from "./songs-data.js";
+import { WORLD_LANGUAGES, SONGS, getDifficulty } from "./songs-data.js";
 import { chordSymbolToMidi } from "./chord-utils.js";
 
 // Lesson content/data. Three real, fully-interactive lessons ship in
@@ -239,7 +239,8 @@ const THEORY_LESSONS = [
 // own chord data says "varies dramatically by section," which isn't a
 // literal, playable chord list.
 const MASTERABLE_SONGS = SONGS.filter(
-  (s) => s.confidence === "confirmed" && s.chords.every((c) => chordSymbolToMidi(c).length > 0)
+  // World songs (item 60) get their own optional lessons instead.
+  (s) => !s.world && s.confidence === "confirmed" && s.chords.every((c) => chordSymbolToMidi(c).length > 0)
 );
 const BEGINNER_SONGS = MASTERABLE_SONGS.filter((s) => getDifficulty(s) === "Beginner");
 const INTERMEDIATE_SONGS = MASTERABLE_SONGS.filter((s) => getDifficulty(s) === "Intermediate");
@@ -434,6 +435,12 @@ insertAfter(theoryRest, "lesson-37", [
     description: "The first 8 bars of J.S. Bach's Prelude in C (Well-Tempered Clavier, Book I, 1722) — one broken-chord pattern, a new chord every bar.",
   },
   {
+    id: "lesson-tomjerry",
+    title: "Tom and Jerry's concert pieces",
+    subtitle: "Liszt and Strauss, cartoon-famous",
+    description: "The Hungarian Rhapsody No. 2 Tom plays in 'The Cat Concerto', the Strauss waltzes of 'Johann Mouse', the real pianists behind them — and the waltz 'oom-pah-pah' left hand.",
+  },
+  {
     id: "lesson-sheet",
     title: "Reading sheet music",
     subtitle: "The grand staff, step by step",
@@ -516,7 +523,29 @@ function withReservedPositions(list, reserved) {
   return out;
 }
 
-const LESSONS = [...PRE_LESSONS, ...withReservedPositions(numbered, SPECIAL_POSITIONS)];
+// Item 60: optional World songs, one lesson per language, after the
+// whole curriculum. `optional` lessons are never locked and never picked
+// as "next lesson", so skipping them costs nothing.
+const WORLD_LESSONS = [
+  {
+    id: "lesson-world-intro",
+    title: "World songs: the same chords, everywhere",
+    subtitle: "Optional — skip any you like",
+    description: "Popular songs in 10 other languages. Pick only the languages you're curious about; none of them block anything.",
+    optional: true,
+    worldIntro: true,
+  },
+  ...WORLD_LANGUAGES.map((lang) => ({
+    id: `lesson-world-${lang.slug}`,
+    title: `World songs: ${lang.name}`,
+    subtitle: `${lang.flag} 5 popular songs`,
+    description: `Five of the most popular songs in ${lang.name} — real chords, played the same way as every other song in the app.`,
+    optional: true,
+    world: lang.name,
+  })),
+];
+
+const LESSONS = [...PRE_LESSONS, ...withReservedPositions(numbered, SPECIAL_POSITIONS), ...WORLD_LESSONS];
 
 // Honest final count: every entry above, real and clickable — nothing
 // padded to hit a round number.

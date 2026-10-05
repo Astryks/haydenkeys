@@ -72,7 +72,10 @@ function createPracticePlayer({
   }
   buildSteps();
 
-  const stats = { right: 0, wrong: 0, steps: steps.length, cleanSteps: 0, hits: 0, misses: 0, timing: [], loops: 0 };
+  // combo = notes in a row without a wrong key or a miss (item 60).
+  const stats = { right: 0, wrong: 0, steps: steps.length, cleanSteps: 0, hits: 0, misses: 0, timing: [], loops: 0, combo: 0, maxCombo: 0 };
+  const bumpCombo = () => { stats.combo++; stats.maxCombo = Math.max(stats.maxCombo, stats.combo); };
+  const breakCombo = () => { stats.combo = 0; };
   let clock = 0; // seconds into the (looped) section, including the lead-in
   let lastFrame = null;
   let raf = null;
@@ -139,6 +142,7 @@ function createPracticePlayer({
       if (st.evs.some((e) => e.midi === midi)) {
         st.pressed.add(midi);
         stats.right++;
+        bumpCombo();
         flash(midi, "hk-key-right");
         if (st.evs.every((e) => st.pressed.has(e.midi))) {
           st.done = true;
@@ -149,6 +153,7 @@ function createPracticePlayer({
         showHints();
       } else {
         stats.wrong++;
+        breakCombo();
         st.hadMistake = true;
         flash(midi, "hk-key-wrong");
       }
@@ -163,10 +168,12 @@ function createPracticePlayer({
       if (best) {
         hitEvents.add(best.e);
         stats.hits++;
+        bumpCombo();
         stats.timing.push(best.err);
         flash(midi, "hk-key-right");
       } else {
         stats.wrong++;
+        breakCombo();
         flash(midi, "hk-key-wrong");
       }
     }
@@ -211,6 +218,7 @@ function createPracticePlayer({
         if (e.required && !hitEvents.has(e) && !e.missed && clock > e.t + HIT_WINDOW_SEC) {
           e.missed = true;
           stats.misses++;
+          breakCombo();
         }
       });
       const sounding = events.filter((e) => e.required && clock >= e.t - 0.05 && clock < e.t + e.dur * beatSec);

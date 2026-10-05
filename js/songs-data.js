@@ -1,3 +1,5 @@
+import { WORLD_SONGS, WORLD_LANGUAGES, WORLD_ALSO } from "./world-songs.js";
+
 // Curated 25-song library for Hayden Keys.
 //
 // Sourcing method (per project scope rules): each chord progression below
@@ -1412,6 +1414,614 @@ const SONGS = [
     notes:
       "Uses the same borrowed-chord trick as Radiohead's 'Creep' (a major chord on the 3rd degree, then the 4th degree played both major and minor) — multiple independent sources agree on this exact chord set (Amaj7, Db7, D, Dm) and independently name the Creep-progression connection, not just one site's chart copied around.",
   },
+
+  // ===== Item 60: 32 more songs — 12 easy (incl. two Chet Baker, simplified),
+  // 10 intermediate, 10 advanced (incl. Tom and Jerry's concert pieces). =====
+  {
+    "title": "Heart and Soul",
+    "artist": "Hoagy Carmichael & Frank Loesser (1938)",
+    "genre": "Standard / Piano duet",
+    "popularityRank": 104,
+    "key": "C major",
+    "chords": [
+      "C",
+      "Am",
+      "F",
+      "G"
+    ],
+    "degreeSequence": "I - vi - IV - V",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": "variant",
+    "fourChordOrderFamily": "C",
+    "notes": "The famous two-person piano duet loop — one player loops these four chords low, the other plays the tune on top. Same four chords as Lesson 1, in the I-vi-IV-V order Lesson 4 teaches."
+  },
+  {
+    "title": "Hallelujah",
+    "artist": "Leonard Cohen",
+    "genre": "Folk / Ballad",
+    "popularityRank": 105,
+    "key": "C major (commonly taught key)",
+    "chords": [
+      "C",
+      "Am",
+      "C",
+      "Am",
+      "F",
+      "G",
+      "C",
+      "G"
+    ],
+    "degreeSequence": "I - vi - I - vi - IV - V - I - V (verse)",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "difficulty": "Beginner",
+    "notes": "The verse's slow rocking between C and Am, then up to F and G. Widely taught in C; the chorus is mostly F - Am - F - C - G - C."
+  },
+  {
+    "title": "Imagine",
+    "artist": "John Lennon",
+    "genre": "Rock / Ballad",
+    "popularityRank": 106,
+    "key": "C major",
+    "chords": [
+      "C",
+      "Cmaj7",
+      "F"
+    ],
+    "degreeSequence": "I - Imaj7 - IV (verse)",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "difficulty": "Beginner",
+    "notes": "Famous for its piano part: the verse just rocks between C, Cmaj7 (C with a B on top) and F. The chorus adds G and E7."
+  },
+  {
+    "title": "Happy Birthday to You",
+    "artist": "Traditional (melody by Mildred & Patty Hill, 1893)",
+    "genre": "Traditional",
+    "popularityRank": 107,
+    "key": "C major",
+    "chords": [
+      "C",
+      "G7",
+      "C",
+      "C7",
+      "F",
+      "C",
+      "G7",
+      "C"
+    ],
+    "degreeSequence": "I - V7 - I - I7 - IV - I - V7 - I",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "difficulty": "Beginner",
+    "notes": "The melody is in the public domain in the US. Three chords — C, F and G7 (plus C7 to lead into F) — carry the whole song."
+  },
+  {
+    "title": "Twinkle Twinkle Little Star",
+    "artist": "Traditional (French melody, 1761)",
+    "genre": "Traditional / Children's",
+    "popularityRank": 108,
+    "key": "C major",
+    "chords": [
+      "C",
+      "F",
+      "C",
+      "G7",
+      "C"
+    ],
+    "degreeSequence": "I - IV - I - V7 - I",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "difficulty": "Beginner",
+    "notes": "The 18th-century French tune 'Ah! vous dirai-je, maman' — the same melody as the alphabet song. Public domain."
+  },
+  {
+    "title": "Brown Eyed Girl",
+    "artist": "Van Morrison",
+    "genre": "Rock / Pop",
+    "popularityRank": 109,
+    "key": "G major",
+    "chords": [
+      "G",
+      "C",
+      "G",
+      "D"
+    ],
+    "degreeSequence": "I - IV - I - V",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "difficulty": "Beginner",
+    "notes": "A bright three-chord loop — G, C and D — through most of the song."
+  },
+  {
+    "title": "Three Little Birds",
+    "artist": "Bob Marley & The Wailers",
+    "genre": "Reggae",
+    "popularityRank": 110,
+    "key": "A major",
+    "chords": [
+      "A",
+      "D",
+      "A",
+      "E"
+    ],
+    "degreeSequence": "I - IV - I - V",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "difficulty": "Beginner",
+    "notes": "Three chords, played on the off-beats in reggae style ('every little thing...')."
+  },
+  {
+    "title": "Jingle Bells",
+    "artist": "James Lord Pierpont (1857)",
+    "genre": "Traditional / Holiday",
+    "popularityRank": 111,
+    "key": "G major",
+    "chords": [
+      "G",
+      "C",
+      "G",
+      "D7",
+      "G"
+    ],
+    "degreeSequence": "I - IV - I - V7 - I",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "difficulty": "Beginner",
+    "notes": "Public domain. The chorus is almost all G, with C and D7 at the turns."
+  },
+  {
+    "title": "Hey Jude",
+    "artist": "The Beatles",
+    "genre": "Rock / Pop",
+    "popularityRank": 112,
+    "key": "F major",
+    "chords": [
+      "F",
+      "C",
+      "C7",
+      "F",
+      "Bb",
+      "F",
+      "C7",
+      "F"
+    ],
+    "degreeSequence": "I - V - V7 - I - IV - I - V7 - I (verse)",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "difficulty": "Beginner",
+    "notes": "A piano song at heart (Paul McCartney's piano part). Bb is the first flat chord many beginners meet. The long 'na-na-na' coda is F - Eb - Bb - F."
+  },
+  {
+    "title": "Take Me Home, Country Roads",
+    "artist": "John Denver",
+    "genre": "Country / Folk",
+    "popularityRank": 113,
+    "key": "A major (commonly taught in G)",
+    "chords": [
+      "G",
+      "Em",
+      "D",
+      "C"
+    ],
+    "degreeSequence": "I - vi - V - IV (chorus)",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": "variant",
+    "fourChordOrderFamily": "D",
+    "notes": "The chorus is the same four chords as Lesson 1 in a different order (I-vi-V-IV). Recorded in A; usually taught in G."
+  },
+  {
+    "title": "Autumn Leaves (Chet Baker, simplified)",
+    "artist": "Joseph Kosma — as recorded by Chet Baker & Paul Desmond (1974)",
+    "genre": "Jazz (simplified)",
+    "popularityRank": 114,
+    "key": "E minor / G major",
+    "chords": [
+      "Am",
+      "D",
+      "G",
+      "C",
+      "F#dim",
+      "B",
+      "Em"
+    ],
+    "degreeSequence": "iv - VII - III - VI - ii° - V - i",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "difficulty": "Beginner",
+    "notes": "Chet Baker's version of the jazz standard, simplified to plain 3-note chords so a beginner can play it: the real jazz chords are Am7 - D7 - Gmaj7 - Cmaj7 - F#m7b5 - B7 - Em (see the Advanced 'Autumn Leaves' entry). Same order, simpler shapes."
+  },
+  {
+    "title": "My Funny Valentine (easy version)",
+    "artist": "Rodgers & Hart — Chet Baker's signature song (1954)",
+    "genre": "Jazz (simplified)",
+    "popularityRank": 115,
+    "key": "C minor",
+    "chords": [
+      "Cm",
+      "CmMaj7",
+      "Cm7",
+      "Cm6"
+    ],
+    "degreeSequence": "i - i(maj7) - i7 - i6",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "difficulty": "Beginner",
+    "notes": "Chet Baker's most famous recording. The opening is genuinely beginner-friendly: hold a C minor chord and move just ONE finger down a key at a time (C - B - Bb - A). The full tune is in the Advanced section."
+  },
+  {
+    "title": "Clocks",
+    "artist": "Coldplay",
+    "genre": "Alternative Rock",
+    "popularityRank": 116,
+    "key": "Eb major",
+    "chords": [
+      "Eb",
+      "Bbm",
+      "Fm"
+    ],
+    "degreeSequence": "I - v - ii",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "difficulty": "Intermediate",
+    "notes": "The famous rolling piano riff is broken chords over these three — one of the most recognizable piano parts in modern rock. Three flats, so lots of black keys."
+  },
+  {
+    "title": "Piano Man",
+    "artist": "Billy Joel",
+    "genre": "Rock / Piano",
+    "popularityRank": 117,
+    "key": "C major",
+    "chords": [
+      "C",
+      "G/B",
+      "F/A",
+      "C/G",
+      "F",
+      "C/E",
+      "D7",
+      "G"
+    ],
+    "degreeSequence": "I - V/7 - IV/6 - I/5 - IV - I/3 - II7 - V (verse)",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "difficulty": "Intermediate",
+    "notes": "A walking-down bass line (C - B - A - G - F - E - D) under the chords — the slash chords show the bass note. In 3/4 (waltz) time."
+  },
+  {
+    "title": "Hello",
+    "artist": "Adele",
+    "genre": "Pop / Ballad",
+    "popularityRank": 118,
+    "key": "F minor",
+    "chords": [
+      "Fm",
+      "Ab",
+      "Eb",
+      "Db"
+    ],
+    "degreeSequence": "i - III - VII - VI",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "difficulty": "Intermediate",
+    "notes": "Four chords on piano under the whole verse, all in F minor with four flats."
+  },
+  {
+    "title": "Creep",
+    "artist": "Radiohead",
+    "genre": "Alternative Rock",
+    "popularityRank": 119,
+    "key": "G major",
+    "chords": [
+      "G",
+      "B",
+      "C",
+      "Cm"
+    ],
+    "degreeSequence": "I - III - IV - iv",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "difficulty": "Intermediate",
+    "notes": "Famous for two 'borrowed' chords: B major (not normally in G) and C minor (the minor iv) — that's the sad lift."
+  },
+  {
+    "title": "Counting Stars",
+    "artist": "OneRepublic",
+    "genre": "Pop",
+    "popularityRank": 120,
+    "key": "C# minor",
+    "chords": [
+      "C#m",
+      "E",
+      "B",
+      "A"
+    ],
+    "degreeSequence": "i - III - VII - VI",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "difficulty": "Intermediate",
+    "notes": "Recorded in C# minor (often played as Am - C - G - F with a capo). The same four-chord loop runs through the song."
+  },
+  {
+    "title": "Comptine d'un autre été",
+    "artist": "Yann Tiersen (Amélie, 2001)",
+    "genre": "Film / Piano",
+    "popularityRank": 121,
+    "key": "E minor",
+    "chords": [
+      "Em",
+      "G",
+      "Bm",
+      "D"
+    ],
+    "degreeSequence": "i - III - v - VII",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "difficulty": "Intermediate",
+    "notes": "The Amélie piano piece: the left hand rocks through these four chords while the right hand repeats a fast pattern. Intermediate mainly for the hand speed."
+  },
+  {
+    "title": "River Flows in You",
+    "artist": "Yiruma (2001)",
+    "genre": "Contemporary Piano",
+    "popularityRank": 122,
+    "key": "A major",
+    "chords": [
+      "A",
+      "E",
+      "F#m",
+      "D"
+    ],
+    "degreeSequence": "I - V - vi - IV",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": "exact",
+    "difficulty": "Intermediate",
+    "notes": "One of the most-learned piano pieces online. The same four chords as Lesson 1 (I-V-vi-IV), in A — but as a full flowing piano piece, so it's Intermediate."
+  },
+  {
+    "title": "Radioactive",
+    "artist": "Imagine Dragons",
+    "genre": "Alternative Rock",
+    "popularityRank": 123,
+    "key": "B minor",
+    "chords": [
+      "Bm",
+      "D",
+      "A",
+      "E"
+    ],
+    "degreeSequence": "i - III - VII - IV",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "difficulty": "Intermediate",
+    "notes": "The same four chords throughout the song."
+  },
+  {
+    "title": "Billie Jean",
+    "artist": "Michael Jackson",
+    "genre": "Pop / Funk",
+    "popularityRank": 124,
+    "key": "F# minor",
+    "chords": [
+      "F#m",
+      "G#m/F#",
+      "A/F#",
+      "G#m/F#"
+    ],
+    "degreeSequence": "i - ii - III - ii (over an F# bass)",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "difficulty": "Intermediate",
+    "notes": "The famous bass line stays rooted on F# while the chords change on top — the '/F#' means F# stays in the bass."
+  },
+  {
+    "title": "Sweet Dreams (Are Made of This)",
+    "artist": "Eurythmics",
+    "genre": "Synth-pop",
+    "popularityRank": 125,
+    "key": "C minor",
+    "chords": [
+      "Cm",
+      "Ab",
+      "G"
+    ],
+    "degreeSequence": "i - VI - V",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "difficulty": "Intermediate",
+    "notes": "A three-chord minor loop; the G major chord (not G minor) gives it the pull back to C minor."
+  },
+  {
+    "title": "Fly Me to the Moon",
+    "artist": "Bart Howard (1954)",
+    "genre": "Jazz Standard",
+    "popularityRank": 126,
+    "key": "C major (A section starts on A minor)",
+    "chords": [
+      "Am7",
+      "Dm7",
+      "G7",
+      "Cmaj7",
+      "Fmaj7",
+      "Bm7b5",
+      "E7",
+      "Am7"
+    ],
+    "degreeSequence": "vi7 - ii7 - V7 - Imaj7 - IVmaj7 - vii7b5 - V7/vi - vi7",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "notes": "A textbook 'circle of fifths' progression — every chord's root falls by a fifth to the next. Made famous by Frank Sinatra (1964)."
+  },
+  {
+    "title": "Take Five",
+    "artist": "Paul Desmond — Dave Brubeck Quartet (1959)",
+    "genre": "Jazz Standard",
+    "popularityRank": 127,
+    "key": "Eb minor",
+    "chords": [
+      "Ebm",
+      "Bbm7"
+    ],
+    "degreeSequence": "i - v7 (vamp)",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "notes": "In 5/4 time — five beats per bar, the whole point of the piece. The piano vamps between Ebm and Bbm7 under the sax melody."
+  },
+  {
+    "title": "All of Me (jazz standard)",
+    "artist": "Gerald Marks & Seymour Simons (1931)",
+    "genre": "Jazz Standard",
+    "popularityRank": 128,
+    "key": "C major",
+    "chords": [
+      "C",
+      "E7",
+      "A7",
+      "Dm",
+      "E7",
+      "Am",
+      "D7",
+      "Dm7",
+      "G7"
+    ],
+    "degreeSequence": "I - III7 - VI7 - ii - III7 - vi - II7 - ii7 - V7",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "notes": "Not the John Legend song — the 1931 standard. Famous for its chain of dominant 7th chords (E7 → A7 → Dm, D7 → G7 → C)."
+  },
+  {
+    "title": "Summertime",
+    "artist": "George Gershwin (Porgy and Bess, 1935)",
+    "genre": "Jazz Standard",
+    "popularityRank": 129,
+    "key": "A minor",
+    "chords": [
+      "Am6",
+      "E7",
+      "Am6",
+      "Dm6",
+      "Bm7b5",
+      "E7",
+      "Am6"
+    ],
+    "degreeSequence": "i6 - V7 - i6 - iv6 - ii7b5 - V7 - i6",
+    "confidence": "needs-verification",
+    "oneFiveSixFourMatch": false,
+    "notes": "The basic minor shape (Am - E7 - Am - Dm - E7 - Am) is well established; exact chord colors and bar placement vary a lot between lead sheets, so treat these as a simplified guide."
+  },
+  {
+    "title": "Satin Doll",
+    "artist": "Duke Ellington & Billy Strayhorn (1953)",
+    "genre": "Jazz Standard",
+    "popularityRank": 130,
+    "key": "C major",
+    "chords": [
+      "Dm7",
+      "G7",
+      "Dm7",
+      "G7",
+      "Em7",
+      "A7",
+      "Em7",
+      "A7",
+      "Am7",
+      "D7",
+      "Abm7",
+      "Db7",
+      "Cmaj7"
+    ],
+    "degreeSequence": "ii7 - V7 (×2) - ii7/ii - V7/ii (×2) - ii7/V - V7/V - (chromatic ii-V) - Imaj7",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "notes": "The A section is a chain of ii-V pairs, each one a step lower — the classic jazz 'ii-V' workout."
+  },
+  {
+    "title": "Cantaloupe Island",
+    "artist": "Herbie Hancock (1964)",
+    "genre": "Jazz Standard",
+    "popularityRank": 131,
+    "key": "F minor",
+    "chords": [
+      "Fm7",
+      "Db7",
+      "Dm7",
+      "Fm7"
+    ],
+    "degreeSequence": "i7 - bVI7 - vi7 - i7 (4 bars each)",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "notes": "A 16-bar modal tune: four bars of each chord. The piano riff on Fm7 is the hook."
+  },
+  {
+    "title": "Gymnopédie No. 1",
+    "artist": "Erik Satie (1888)",
+    "genre": "Classical",
+    "popularityRank": 132,
+    "key": "D major",
+    "chords": [
+      "Gmaj7",
+      "Dmaj7"
+    ],
+    "degreeSequence": "IVmaj7 - Imaj7 (alternating)",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "advanced": true,
+    "notes": "Public domain. The famous opening slowly alternates two gentle 7th chords, one per bar, in 3/4 time."
+  },
+  {
+    "title": "Prelude in C major, BWV 846",
+    "artist": "Johann Sebastian Bach (1722)",
+    "genre": "Classical",
+    "popularityRank": 133,
+    "key": "C major",
+    "chords": [
+      "C",
+      "Dm7/C",
+      "G7/B",
+      "C",
+      "Am/C",
+      "D7/C",
+      "G/B",
+      "Cmaj7/B"
+    ],
+    "degreeSequence": "I - ii7/1 - V7/7 - I - vi/3 - V7/V - V/7 - Imaj7/7 (bars 1-8)",
+    "confidence": "confirmed",
+    "oneFiveSixFourMatch": false,
+    "advanced": true,
+    "notes": "Public domain — the first 8 bars, one chord per bar, each played as the same broken-chord pattern. Taught note by note in the Bach lesson."
+  },
+  {
+    "title": "The Blue Danube (waltz)",
+    "artist": "Johann Strauss II (1866)",
+    "genre": "Classical",
+    "popularityRank": 134,
+    "key": "D major",
+    "chords": [
+      "D",
+      "A7"
+    ],
+    "degreeSequence": "I - V7",
+    "confidence": "needs-verification",
+    "oneFiveSixFourMatch": false,
+    "advanced": true,
+    "notes": "Strauss's most famous waltz — Tom and Jerry's Oscar-winning 'Johann Mouse' (1953) is all about Strauss's waltzes, played by concert pianist Jakob Gimpel (which waltzes it uses isn't something we've confirmed). Only the main theme's two core chords are given here (it begins over D major and moves to A7); the full waltz goes much further."
+  },
+  {
+    "title": "Hungarian Rhapsody No. 2",
+    "artist": "Franz Liszt (1847)",
+    "genre": "Classical",
+    "popularityRank": 135,
+    "key": "C# minor → F# major",
+    "chords": [
+      "C#m",
+      "F#"
+    ],
+    "degreeSequence": "i (slow 'lassan') → V of i, ending in F# major ('friska')",
+    "confidence": "needs-verification",
+    "oneFiveSixFourMatch": false,
+    "advanced": true,
+    "notes": "The piece Tom plays in Tom and Jerry's Oscar-winning 'The Cat Concerto' (1947) — and Bugs Bunny in 'Rhapsody Rabbit'. A virtuoso showpiece: a slow, dramatic 'lassan' in C# minor, then a wild, fast 'friska' that ends in F# major. Only those two home chords are given here — the real harmony is far richer."
+  },
 ];
 
 // Precomputed, honestly-reported summary for the Lesson 1 payoff screen.
@@ -1564,10 +2174,21 @@ const SONG_STRUCTURES = {
 //                  not even confident enough to call its chords solid,
 //                  it isn't honest to call it Beginner-simple either).
 function getDifficulty(song) {
+  // Item 60: an explicit difficulty wins (e.g. a simple 3-chord song that
+  // isn't in the 1-5-6-4 family is still Beginner).
+  if (song.difficulty) return song.difficulty;
   if (song.advanced) return "Advanced";
   if (song.genre && song.genre.startsWith("Jazz Standard")) return "Advanced";
   if (song.oneFiveSixFourMatch && song.confidence === "confirmed") return "Beginner";
   return "Intermediate";
 }
 
-export { SONGS, ONE_FIVE_SIX_FOUR_SONGS, SONG_STRUCTURES, getDifficulty };
+// Item 60: the optional "World songs" section — popular songs in 10
+// other languages (world-songs.js), part of the library (Discover,
+// Practice) but taught only in their own skippable lessons at the end.
+SONGS.push(...WORLD_SONGS);
+SONGS.forEach((s) => {
+  if (WORLD_ALSO[s.title]) s.alsoWorld = WORLD_ALSO[s.title];
+});
+
+export { SONGS, ONE_FIVE_SIX_FOUR_SONGS, SONG_STRUCTURES, getDifficulty, WORLD_LANGUAGES };

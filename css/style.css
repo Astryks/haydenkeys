@@ -853,3 +853,51 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-review-head { display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 6px; }
 .hk-review-prompt { font-size: 1.15rem; margin: 0; }
 .hk-lesson-map > .hk-btn[data-lesson="daily-review"] { margin: 6px 0 10px; }
+
+/* Item 60: gamification — level chip, toasts, confetti, quests, stars, combo */
+.hk-level-chip { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 0.8rem; background: var(--hk-panel); border: 1px solid var(--hk-border); border-radius: 999px; padding: 3px 10px; }
+.hk-level-num { font-weight: bold; color: var(--hk-purple); }
+.hk-level-title { color: var(--hk-text); }
+.hk-level-bar { display: inline-block; width: 70px; height: 6px; border-radius: 3px; background: var(--hk-purple-soft); overflow: hidden; }
+.hk-level-bar span { display: block; height: 100%; background: var(--hk-purple); }
+.hk-level-xp { color: var(--hk-text-dim); }
+#hk-toasts { position: fixed; top: 12px; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; flex-direction: column; gap: 6px; align-items: center; pointer-events: none; }
+.hk-toast { background: #2a2a3a; color: #fff; padding: 7px 14px; border-radius: 999px; font-size: 0.85rem; box-shadow: 0 4px 14px rgba(0,0,0,0.18); animation: hk-toast-in 0.25s ease-out; transition: opacity 0.4s, transform 0.4s; }
+.hk-toast-big { background: var(--hk-purple); font-size: 1rem; font-weight: bold; padding: 10px 18px; }
+.hk-toast-out { opacity: 0; transform: translateY(-8px); }
+@keyframes hk-toast-in { from { opacity: 0; transform: translateY(-10px); } }
+.hk-confetti { position: fixed; inset: 0; pointer-events: none; z-index: 9999; overflow: hidden; }
+.hk-confetti i { position: absolute; top: -12px; width: 8px; height: 12px; border-radius: 2px; animation: hk-confetti-fall 2.2s ease-in forwards; }
+@keyframes hk-confetti-fall { to { top: 105%; transform: translateX(40px) rotate(720deg); } }
+.hk-quests { background: var(--hk-panel); border: 1px solid var(--hk-border); border-radius: 10px; padding: 10px 14px; margin: 8px 0; }
+.hk-quests h4 { margin: 0 0 6px; }
+.hk-quest { display: flex; gap: 8px; align-items: center; font-size: 0.88rem; margin: 3px 0; }
+.hk-quest-done { color: #217a3d; text-decoration: line-through; }
+.hk-stars { color: #e8b84b; font-size: 1.3rem; letter-spacing: 2px; }
+.hk-combo { font-weight: bold; color: var(--hk-accent-2); min-height: 1.2em; }
+.hk-optional-tag { font-size: 0.65rem; background: var(--hk-bg-2); border: 1px solid var(--hk-border); border-radius: 6px; padding: 1px 5px; margin-left: 4px; color: var(--hk-text-dim); }
+
+
+/* Item 60: phones in landscape (≈440pt tall). Lesson text used to push
+   the keyboard below the screen, so every step meant scrolling down to
+   the keys. Now: no roadmap sidebar here (it's on the "← Lessons" map),
+   buttons sit above the keyboard, and the falling blocks + keyboard stay
+   pinned to the bottom of the screen while the lesson text scrolls. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .hk-lesson-sidebar { display: none; }
+  .hk-lessons-layout { display: block; }
+  .hk-lesson-player { display: flex; flex-direction: column; padding: 4px 0 0; }
+  .hk-lesson-player h2 { font-size: 1.05rem; margin: 2px 0 4px; }
+  .hk-lesson-content { order: 1; }
+  .hk-lesson-controls { order: 2; margin: 6px 0; }
+  .hk-lesson-highway { order: 3; position: sticky; bottom: 112px; z-index: 5; margin-top: 4px; }
+  .hk-lesson-highway.hk-highway-wrap { height: 54px; }
+  #hk-lesson-keyboard { order: 4; position: sticky; bottom: 0; z-index: 5; height: 112px; background: var(--hk-bg); }
+  .hk-mascot-avatar { width: 34px; height: 34px; }
+  .hk-mascot-bubble { padding: 8px 12px; font-size: 0.9rem; }
+  .hk-big-degree { font-size: 2rem; }
+  .hk-footer { padding-bottom: 8px; }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  #hk-lesson-keyboard:empty { display: none; }
+}

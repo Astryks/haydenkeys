@@ -126,7 +126,10 @@ Sid still needs to do himself.
    native shell. Test the Camera Overlay and Ear Check permission
    prompts on a **real device** specifically — a simulator has a fake
    microphone but no real camera.
-6. **Take App Store screenshots**: Apple requires screenshots for at
+6. **App Store screenshots — already made**: `ios/screenshots/` has 7 landscape screenshots at each required
+   size (`iphone-6.9-*.png` 2868×1320, `ipad-13-*.png` 2752×2064). Upload those, or replace them with your own
+   from a device/simulator if you prefer. (Original note:)
+   **Take App Store screenshots**: Apple requires screenshots for at
    least one device size per device family you support. This app
    supports iPad, so you need **both** a 6.9" iPhone set (e.g. iPhone 17
    Pro Max simulator) **and** a 13" iPad set (e.g. iPad Pro 13-inch

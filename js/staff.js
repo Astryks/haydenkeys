@@ -77,10 +77,14 @@ function renderGrandStaff(piece, { fromBar = 0, toBar = piece.bars, current = ne
   // Clefs (Unicode musical symbols), key signature, time signature
   parts.push(`<text x="14" y="${TREBLE_TOP + 33}" class="hk-st-clef hk-st-treble">𝄞</text>`);
   parts.push(`<text x="16" y="${BASS_TOP + 27}" class="hk-st-clef hk-st-bass">𝄢</text>`);
+  // Sharps in standard key-signature positions: F# (top line / 4th line),
+  // then C# (3rd space / 2nd space).
+  const SHARP_POS = { 6: [TREBLE_TOP + 4, BASS_TOP + 14], 1: [TREBLE_TOP + 19, BASS_TOP + 29] };
   keySig.forEach((pc, i) => {
-    if (pc !== 6) return; // only F# is used by these pieces
-    parts.push(`<text x="${52 + i * 10}" y="${TREBLE_TOP + 4}" class="hk-st-acc">♯</text>`);
-    parts.push(`<text x="${52 + i * 10}" y="${BASS_TOP + 14}" class="hk-st-acc">♯</text>`);
+    const pos = SHARP_POS[pc];
+    if (!pos) return;
+    parts.push(`<text x="${52 + i * 10}" y="${pos[0]}" class="hk-st-acc">♯</text>`);
+    parts.push(`<text x="${52 + i * 10}" y="${pos[1]}" class="hk-st-acc">♯</text>`);
   });
   const tsX = 54 + keySig.length * 10 + 6;
   if (showTime) {

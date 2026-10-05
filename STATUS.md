@@ -2109,3 +2109,30 @@ the existing 🥁 Beat.
   notes, chords by ear), Leitner spacing (1/2/4/7/14/30 days; misses come back the same day), counts toward the
   daily goal. Reachable from the lesson map and a banner on every lesson screen until done for the day.
 
+## 2026-10-05 update: vendored piano samples, 81 more songs, Tom & Jerry, gamification, phone layout, screenshots (item 60)
+
+- **Everything third-party now lives in the repo.** basic-pitch code + model weights were already vendored; now
+  the piano SAMPLE AUDIO is too (`assets/piano-samples/`, 226 m4a files, Splendid Grand Piano — Steinway samples
+  released into the public domain by Akai). The app loads only the velocity layer it plays (62 files, ~7 MB) from
+  its own files: 0 third-party requests. Vendoring exposed a real bug: smplr 1.1.0 put sample names like "Mf D#0"
+  in URLs unencoded, so every sharp-named sample 404'd (verified against the original host); now encoded.
+  The only remaining third-party request is the iTunes album-art lookup (a live service, can't be vendored).
+- **Songs: 103 → 184.** 12 easy (incl. two simplified Chet Baker pieces), 10 intermediate, 10 advanced (incl. Tom
+  and Jerry's Hungarian Rhapsody No. 2 and a Strauss waltz), plus 50 optional **World songs** — 5 in each of
+  French, Spanish, Portuguese (Brazil), Italian, German, Hindi, Japanese, Korean, Mandarin and Arabic, each
+  checked against two chord sources (`js/world-songs.js`). `difficulty` field overrides the tier rule.
+- **World songs are optional and skippable:** 11 lessons at the very end, never locked, never picked as "next
+  lesson", labelled Optional, numbered separately.
+- **Tom and Jerry's concert pieces** lesson: The Cat Concerto (Liszt's Hungarian Rhapsody No. 2 — credited to Jakob
+  Gimpel, with historian Keith Scott attributing the recording to Calvin Jackson), Johann Mouse (Strauss waltzes,
+  played by Gimpel; last Tom and Jerry Oscar), the lassan/friska home chords, and a waltz "oom-pah-pah" drill.
+- **Gamification:** XP + 10 levels (Newcomer → Virtuoso) in the header; XP toasts; confetti on first completion;
+  3 daily quests (+10 each, +20 for all); streak freezes (earned per 7-day milestone, cover one missed day);
+  1-3 stars per practice result (best kept); live combo counter in wait/timed mode; review XP.
+- **Phone landscape layout:** on ~440pt-tall screens the lesson text used to push the keyboard off-screen. Now
+  the roadmap sidebar hides, buttons sit above, and the falling blocks + keyboard stay pinned at the bottom.
+- **Regression:** every one of 156 lessons + the daily review opened and stepped through with 0 errors; all tabs
+  render; new songs play in Practice; new-user flow (XP/quests/World lessons) verified.
+- **App Store screenshots** in `ios/screenshots/` (7 per device, exact required sizes: iPhone 6.9" 2868×1320,
+  iPad 13" 2752×2064), captured with `shoot.mjs` (headless Chrome) in the native look (Support link hidden).
+
