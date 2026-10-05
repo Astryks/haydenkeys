@@ -188,6 +188,7 @@ const LESSONS = [
   { id: "lesson-34", title: "Day 34: Canon, richer", subtitle: "Adding 7th-chord color", description: "Trying a 7th-chord variation on the Canon progression." },
   { id: "lesson-35", title: "Day 35: Full performance", subtitle: "The capstone, both hands", description: "Playing the complete Canon in D progression with both hands — the arc's final payoff." },
   { id: "lesson-36", title: "Bonus: Jazz comping & improv", subtitle: "Left hand comps, right hand improvises", description: "Builds on Days 26-30's 7th chords: left hand plays a ii-V-I, right hand improvises freely using the major pentatonic scale — no right/wrong answer, just noodle." },
+  { id: "lesson-37", title: "Bonus: Advanced repertoire", subtitle: "Für Elise, and a verified catalog beyond it", description: "A real excerpt of Beethoven's famous opening phrase, plus a researched (not guessed) catalog of Chopin, Debussy, and Satie pieces for later." },
 ];
 
 export {

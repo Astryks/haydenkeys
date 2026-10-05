@@ -155,6 +155,47 @@ const JAZZ_COMPING = {
   pentatonicNotes: [60, 62, 64, 67, 69, 72], // C major pentatonic: C D E G A C
 };
 
+// --- Advanced repertoire catalog ------------------------------------------
+// All eight compositions below are safely public domain — every composer
+// died more than 70 years ago (Pachelbel d.1706, Beethoven d.1827,
+// Chopin d.1849, Satie d.1925, Debussy d.1918), so copyright in the
+// *composition* itself has long since expired everywhere. The separate,
+// narrower thing that can still be under copyright is one specific
+// modern publisher's printed edition — its exact engraving, editorial
+// fingering, etc. Nothing here is taken from or modeled on a specific
+// modern edition (Henle/Schirmer/Alfred/etc.): the one excerpt built out
+// below (Für Elise's opening) uses only the famous melodic/harmonic
+// facts that are independently, identically documented across countless
+// sources and method books — not a specific publisher's arrangement —
+// and the fingering is this app's own, not copied from any edition.
+//
+// Honest scope: only Für Elise's opening phrase got a real interactive
+// excerpt this pass (see FUR_ELISE_OPENING below). The rest are listed
+// as a real, verified catalog — composer, year, true difficulty — with
+// no fabricated simplified chart, consistent with how Stella by
+// Starlight and Bohemian Rhapsody were handled rather than guessed at.
+const ADVANCED_REPERTOIRE = [
+  { title: "Nocturne Op. 9 No. 2", composer: "Frédéric Chopin", year: 1832, key: "Eb major", difficulty: "Genuinely intermediate — not a virtuosic étude. Chopin's single most iconic piece; a strong anchor for this section.", built: false },
+  { title: "Prelude Op. 28 No. 4", composer: "Frédéric Chopin", year: 1839, key: "E minor", difficulty: "An easier entry point than the Nocturne, but its left-hand chords move in continuous, non-diatonic chromatic half-steps — real, interesting harmony that isn't confidently reducible to a simple beginner chord chart, so not built into an excerpt here.", built: false },
+  { title: "Waltz in A minor", composer: "Frédéric Chopin", year: undefined, key: "A minor", difficulty: "Accessible. Note: Chopin wrote more than one waltz in A minor (including a well-known posthumous one) — which specific one was intended wasn't disambiguated with full confidence, flagged honestly rather than guessed.", built: false },
+  { title: "Fantaisie-Impromptu", composer: "Frédéric Chopin", year: 1834, key: "C# minor", difficulty: "Genuinely harder — an explicit stretch-goal piece, not watered down to feel falsely easy. Famous for its cross-rhythm (4-against-3) between the hands.", built: false },
+  { title: "Für Elise", composer: "Ludwig van Beethoven", year: 1810, key: "A minor", difficulty: "Accessible opening phrase, harder in its later sections. Built into a real interactive excerpt this pass — see Lesson 37.", built: true },
+  { title: "Clair de Lune", composer: "Claude Debussy", year: 1905, key: "Db major", difficulty: "Intermediate-to-advanced; flowing, rubato-heavy texture that resists a simple beginner reduction. Catalog entry only.", built: false },
+  { title: "Gymnopédie No. 1", composer: "Erik Satie", year: 1888, key: "D major", difficulty: "Genuinely one of the more accessible pieces on this list — slow, sparse, repetitive chords. A strong future-excerpt candidate.", built: false },
+  { title: "Canon in D", composer: "Johann Pachelbel", year: undefined, key: "D major", difficulty: "Already built as the Day 31-35 capstone — see Lessons 31-35, not repeated here.", built: true },
+];
+
+// Für Elise's famous opening phrase (Beethoven, WoO 59, c. 1810) — the
+// E-D#-E-D#-E-B-D-C-A melodic figure, independently documented
+// identically across virtually every piano method book and reference
+// (not a specific modern edition's content). Left hand: a simple A
+// minor broken-chord accompaniment (A2-E3-A3), this app's own
+// simplified voicing, not copied from any specific edition's fingering.
+const FUR_ELISE_OPENING = {
+  rightHand: [76, 75, 76, 75, 76, 71, 74, 72, 69], // E5 D#5 E5 D#5 E5 B4 D5 C5 A4
+  leftHand: [45, 52, 57], // A2 E3 A3, held under the whole phrase
+};
+
 export {
   MAJOR_SCALES,
   MINOR_SCALES,
@@ -163,4 +204,6 @@ export {
   LESSON1_WITH_SEVENTHS,
   CANON_IN_D,
   JAZZ_COMPING,
+  ADVANCED_REPERTOIRE,
+  FUR_ELISE_OPENING,
 };

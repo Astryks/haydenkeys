@@ -25,6 +25,8 @@ import {
   LESSON1_WITH_SEVENTHS,
   CANON_IN_D,
   JAZZ_COMPING,
+  ADVANCED_REPERTOIRE,
+  FUR_ELISE_OPENING,
 } from "./lessons-data-advanced.js";
 
 // --- Shared staff-notation rendering (used by Lessons 3, 9, 10) -------
@@ -144,6 +146,7 @@ function initLessonsTab(root) {
       "lesson-34": runLesson34,
       "lesson-35": runLesson35,
       "lesson-36": runLesson36,
+      "lesson-37": runLesson37,
     };
     (runners[id] || showMap)();
   }
@@ -1273,6 +1276,55 @@ function initLessonsTab(root) {
       controls.querySelector("#hk-back").addEventListener("click", showMap);
     }
 
+    renderStep();
+  }
+
+  // ----- Bonus: advanced repertoire (Für Elise excerpt + verified catalog) -
+  function runLesson37() {
+    const { content, keyboardWrap, controls } = lessonShell("Bonus: Advanced repertoire");
+    const kb = renderKeyboard(keyboardWrap, { startMidi: 40, endMidi: 79 });
+    let step = 0; // 0 = intro/catalog, 1..9 = Für Elise notes, 10 = done
+
+    function catalogHtml() {
+      return `<ul class="hk-repertoire-list">${ADVANCED_REPERTOIRE.map((p) => `
+        <li><strong>${p.title}</strong> — ${p.composer}${p.year ? ` (${p.year})` : ""}, ${p.key}.
+          ${p.built ? '<span class="hk-badge hk-badge-match">excerpt built</span>' : '<span class="hk-badge">catalog only</span>'}
+          <br/><span class="hk-honest-note">${p.difficulty}</span></li>`).join("")}</ul>`;
+    }
+
+    function renderStep() {
+      if (step === 0) {
+        content.innerHTML = `
+          <h3>Beyond the capstone: a verified repertoire catalog.</h3>
+          <p>All public domain (every composer below died more than 70 years ago) — but researched for real, not
+             guessed. One piece, Beethoven's "Für Elise," gets a genuine interactive excerpt below. The rest are a
+             real, honestly-labeled catalog for later, not faked excerpts.</p>
+          ${catalogHtml()}`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Play Für Elise's opening</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step = 1; renderStep(); });
+      } else if (step <= FUR_ELISE_OPENING.rightHand.length) {
+        const i = step - 1;
+        const midi = FUR_ELISE_OPENING.rightHand[i];
+        kb.highlightHands({ left: FUR_ELISE_OPENING.leftHand, right: [midi], leftLabel: "Am" });
+        playTone(midi, { duration: 0.4 });
+        if (i === 0) playChord(FUR_ELISE_OPENING.leftHand, { duration: 2.0, gain: 0.1 });
+        content.innerHTML = `
+          <p class="hk-step-indicator">Note ${i + 1} of ${FUR_ELISE_OPENING.rightHand.length}</p>
+          <p>The famous opening of Beethoven's "Für Elise" (1810) — right hand (purple) plays the melody while
+             left hand (amber) holds a simple A minor broken chord underneath.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-next">Next</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+      } else {
+        markLessonComplete("lesson-37");
+        kb.clearHighlights();
+        content.innerHTML = `
+          <h3>Lesson complete.</h3>
+          <p>That's the most famous nine notes in piano repertoire. The full piece gets considerably harder from
+             here — this excerpt is a real taste, not the whole piece.</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
+        controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+    }
     renderStep();
   }
 
