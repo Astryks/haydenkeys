@@ -17,6 +17,7 @@ const APP_SHELL = [
   "./js/lessons-data.js",
   "./js/lessons-data-advanced.js",
   "./js/lessons-ui.js",
+  "./js/how-it-works.js",
   "./js/keyboard.js",
   "./js/note-highway.js",
   "./js/camera-overlay.js",

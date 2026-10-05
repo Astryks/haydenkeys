@@ -328,3 +328,16 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
   .hk-badge-number { font-size: 1rem; }
   .hk-song-card { padding: 12px; }
 }
+
+/* How It Works */
+.hk-how { padding: 16px 0 40px; }
+.hk-how-sub { color: var(--hk-text-dim); margin-top: -8px; }
+.hk-how-section { background: var(--hk-panel); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
+.hk-how-section h3 { margin-top: 0; color: var(--hk-accent-2); }
+.hk-wave-demo { margin-top: 12px; }
+.hk-wave-demo canvas { width: 100%; max-width: 600px; height: 120px; background: #0d0c14; border-radius: 8px; display: block; }
+.hk-wave-controls { margin-top: 8px; display: flex; align-items: center; gap: 10px; color: var(--hk-text-dim); font-size: 0.85rem; }
+.hk-wave-controls input[type="range"] { flex: 1; }
+.hk-overtone-diagram { margin-top: 12px; }
+.hk-overtone-svg { width: 100%; max-width: 560px; height: auto; display: block; background: #0d0c14; border-radius: 8px; }
+.hk-overtone-label { fill: var(--hk-text-dim); font-size: 11px; }

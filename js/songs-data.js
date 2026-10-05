@@ -1152,6 +1152,112 @@ const SONGS = [
     notes:
       "Only one real source with specific chord detail was found (Am-Dm9-E+ for the intro, with a ii-V-i in A minor recurring through the tune) — not independently cross-confirmed by a second source with matching specificity, so flagged rather than presented as solid, per this project's two-source standard.",
   },
+
+  // --- Third batch: a church-hymn request, a title correction batch, ---
+  // and net-new top-streamed love songs (2026-10-05)
+  {
+    title: "Amazing Grace",
+    artist: "Traditional hymn (John Newton, 1779)",
+    genre: "Hymn/Gospel",
+    popularityRank: 85,
+    key: "G major",
+    chords: ["G", "Em", "C", "D"],
+    degreeSequence: "I - vi - IV - V",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: "variant",
+    fourChordOrderFamily: "C",
+    notes:
+      "The classic, nearly-universal arrangement of this hymn — same I-vi-IV-V family as Lesson 4 and Perfect. Public domain (1779 text; the tune 'New Britain' predates any modern copyright by well over a century).",
+  },
+  {
+    title: "When I Was Your Man",
+    artist: "Bruno Mars",
+    genre: "Pop Ballad",
+    popularityRank: 86,
+    key: "Ab major (original); sources disagree on a practical chord reading",
+    chords: ["insufficient agreement for a simple chart — see notes"],
+    degreeSequence: "needs verification",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Sources genuinely conflict: one gives Bm7-G-D-A, another gives Em7-C-G-D (not the same relative progression), another lists an entirely different basic chord set (C, Dm, F, Am, G, Em), and one describes modal interchange between A major and A minor sections. Too inconsistent to present one confident chart.",
+  },
+  {
+    title: "Break My Heart Again",
+    artist: "FINNEAS",
+    genre: "Pop/Alternative",
+    popularityRank: 87,
+    key: "E minor",
+    chords: ["C", "D", "D7", "Bm", "Em"],
+    degreeSequence: "needs verification — see notes",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Only one source with real chord specificity was found (intro C-D-D7-Bm-Em, chorus built on C-D-D7/G-Em) — not independently cross-confirmed by a second source with matching detail, so flagged per this project's two-source standard despite looking plausible.",
+  },
+  {
+    title: "Can't Help Falling in Love",
+    artist: "Elvis Presley",
+    genre: "Pop Standard",
+    popularityRank: 88,
+    key: "D major (original); commonly played/taught in C",
+    chords: ["C", "Em", "Am", "F"],
+    degreeSequence: "I - iii - vi - IV (verse, in the common C teaching key)",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Verse progression (C-Em-Am-F) is consistently documented across sources, though the exact key varies by recording/version (studio 1961 vs. 1968 vs. 1973 performances differ) — normal for a 60+ year old standard. The bridge uses different, more complex chords (Em7, Bm11, B11b9, A7) not covered here.",
+  },
+  {
+    title: "Say You Won't Let Go",
+    artist: "James Arthur",
+    genre: "Pop Ballad",
+    popularityRank: 89,
+    key: "G major",
+    chords: ["G", "D", "Em", "C"],
+    degreeSequence: "I - V - vi - IV",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: "exact",
+    notes: "Explicitly documented as G-D-Em-C (sometimes Em7) throughout — the exact Lesson 1 shape.",
+  },
+  {
+    title: "Die for You",
+    artist: "The Weeknd",
+    genre: "R&B/Synth-pop",
+    popularityRank: 90,
+    key: "D minor (sources disagree on the chart)",
+    chords: ["insufficient agreement for a simple chart — see notes"],
+    degreeSequence: "needs verification",
+    confidence: "needs-verification",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Sources give three materially different chord sets (Am-Bb-Dm-Gm; Cmaj7-Dm9-F6 for intro with Fmaj7-Fm6-Cmaj7-Asus2-Dm7-Fm6 for pre-chorus; and an entirely separate G-F#m-Bm-Em reading, possibly a different transposition or a different section) — genuinely too inconsistent to present one confident chart.",
+  },
+  {
+    title: "All of Me",
+    artist: "John Legend",
+    genre: "Pop Ballad",
+    popularityRank: 91,
+    key: "Ab major",
+    chords: ["Fm", "Db", "Ab", "Eb"],
+    degreeSequence: "vi - IV - I - V",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: "exact",
+    notes:
+      "Verse is explicitly documented as a vi-IV-I-V progression (Fm-Db-Ab-Eb) — re-derived its chord-to-chord adjacency by hand and confirmed it's the identical edge set to Lesson 1's loop, just starting at a different point in the cycle. A genuine exact match.",
+  },
+  {
+    title: "Just the Way You Are",
+    artist: "Bruno Mars",
+    genre: "Pop/R&B",
+    popularityRank: 92,
+    key: "F major (commonly taught in C)",
+    chords: ["C", "G", "Am", "F"],
+    degreeSequence: "I - V - vi - IV",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: "exact",
+    notes: "A classic, consistently-documented I-V-vi-IV loop in its common teaching key of C major.",
+  },
 ];
 
 // Precomputed, honestly-reported summary for the Lesson 1 payoff screen.

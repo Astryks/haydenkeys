@@ -2,8 +2,9 @@ import { initDiscoverTab } from "./discover.js";
 import { initPracticeTab } from "./practice.js";
 import { initSavedTab } from "./saved.js";
 import { initLessonsTab } from "./lessons-ui.js";
+import { initHowItWorksTab } from "./how-it-works.js";
 
-const TABS = ["discover", "practice", "saved", "lessons"];
+const TABS = ["discover", "practice", "saved", "lessons", "how"];
 const panels = {};
 let savedApi = null;
 
@@ -38,6 +39,7 @@ function init() {
     },
   });
   initLessonsTab(panels.lessons);
+  initHowItWorksTab(panels.how);
 
   showTab("discover");
 }
