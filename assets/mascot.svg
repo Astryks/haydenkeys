@@ -4,10 +4,10 @@
       <stop offset="0%" stop-color="#fdf6fa" />
       <stop offset="100%" stop-color="#eef7fb" />
     </linearGradient>
-    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+    <radialGradient id="bodyGrad" cx="40%" cy="30%" r="80%">
       <stop offset="0%" stop-color="#ffffff" />
-      <stop offset="100%" stop-color="#f3f0ee" />
-    </linearGradient>
+      <stop offset="100%" stop-color="#eceae8" />
+    </radialGradient>
     <linearGradient id="keyStickGrad" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#a7d8f0" />
       <stop offset="100%" stop-color="#f4b8d0" />
@@ -16,58 +16,74 @@
 
   <rect x="0" y="0" width="1024" height="1024" rx="190" fill="url(#bgGrad)" />
 
-  <!-- legs, sitting cross-legged -->
-  <ellipse cx="400" cy="840" rx="110" ry="50" fill="#2a2a32" />
-  <ellipse cx="624" cy="840" rx="110" ry="50" fill="#2a2a32" />
+  <!-- fluffy fat legs/feet -->
+  <ellipse cx="400" cy="850" rx="120" ry="58" fill="#2f2f38" />
+  <ellipse cx="636" cy="850" rx="120" ry="58" fill="#2f2f38" />
+  <!-- little fluff tufts on the feet -->
+  <circle cx="330" cy="818" r="22" fill="#2f2f38" />
+  <circle cx="470" cy="818" r="22" fill="#2f2f38" />
+  <circle cx="566" cy="818" r="22" fill="#2f2f38" />
+  <circle cx="706" cy="818" r="22" fill="#2f2f38" />
 
-  <!-- fat round white body, leaning slightly to hold the stick -->
-  <ellipse cx="500" cy="630" rx="225" ry="205" fill="url(#bodyGrad)" />
-
-  <!-- the "bamboo stick" - a vertical strip of piano keys, held upright like real bamboo -->
-  <g transform="rotate(-8 700 560)">
-    <rect x="672" y="300" width="56" height="520" rx="10" fill="url(#keyStickGrad)" />
-    <!-- segment joints, like bamboo nodes, doubling as the piano's black keys -->
-    <rect x="672" y="380" width="56" height="16" fill="#2a2a32" />
-    <rect x="672" y="470" width="56" height="16" fill="#2a2a32" />
-    <rect x="672" y="560" width="56" height="16" fill="#2a2a32" />
-    <rect x="672" y="650" width="56" height="16" fill="#2a2a32" />
-    <!-- a little music note sprouting off the top, like a bamboo leaf -->
-    <circle cx="700" cy="270" r="22" fill="url(#keyStickGrad)" />
-    <rect x="716" y="180" width="10" height="100" fill="url(#keyStickGrad)" />
-    <path d="M 726 180 C 760 184 772 210 752 232 C 744 216 732 206 718 202 Z" fill="url(#keyStickGrad)" />
+  <!-- extra-round, extra-fat fluffy body -->
+  <ellipse cx="500" cy="660" rx="255" ry="225" fill="url(#bodyGrad)" />
+  <!-- fluff texture tufts around the body edge -->
+  <g fill="#ffffff">
+    <circle cx="270" cy="560" r="26" /><circle cx="250" cy="640" r="24" /><circle cx="258" cy="720" r="22" />
+    <circle cx="730" cy="560" r="26" /><circle cx="750" cy="640" r="24" /><circle cx="742" cy="720" r="22" />
+    <circle cx="340" cy="860" r="20" /><circle cx="660" cy="860" r="20" />
   </g>
 
-  <!-- black arms gripping the stick, one high one low like a real bamboo grip -->
-  <ellipse cx="640" cy="520" rx="46" ry="64" fill="#2a2a32" transform="rotate(25 640 520)" />
-  <ellipse cx="612" cy="700" rx="46" ry="64" fill="#2a2a32" transform="rotate(35 612 700)" />
-  <circle cx="676" cy="560" r="32" fill="#2a2a32" />
-  <circle cx="648" cy="740" r="32" fill="#2a2a32" />
+  <!-- the "bamboo stick" - vertical piano-key strip -->
+  <g transform="rotate(-8 712 560)">
+    <rect x="684" y="300" width="56" height="520" rx="10" fill="url(#keyStickGrad)" />
+    <rect x="684" y="380" width="56" height="16" fill="#2f2f38" />
+    <rect x="684" y="470" width="56" height="16" fill="#2f2f38" />
+    <rect x="684" y="560" width="56" height="16" fill="#2f2f38" />
+    <rect x="684" y="650" width="56" height="16" fill="#2f2f38" />
+    <circle cx="712" cy="270" r="22" fill="url(#keyStickGrad)" />
+    <rect x="728" y="180" width="10" height="100" fill="url(#keyStickGrad)" />
+    <path d="M 738 180 C 772 184 784 210 764 232 C 756 216 744 206 730 202 Z" fill="url(#keyStickGrad)" />
+  </g>
 
-  <!-- head, tilted slightly toward the stick, mid-nibble -->
-  <ellipse cx="470" cy="410" rx="195" ry="175" fill="url(#bodyGrad)" />
+  <!-- fluffy black arms -->
+  <ellipse cx="652" cy="540" rx="52" ry="70" fill="#2f2f38" transform="rotate(25 652 540)" />
+  <ellipse cx="624" cy="710" rx="52" ry="70" fill="#2f2f38" transform="rotate(35 624 710)" />
+  <circle cx="690" cy="580" r="36" fill="#2f2f38" />
+  <circle cx="660" cy="748" r="36" fill="#2f2f38" />
 
-  <!-- ears -->
-  <circle cx="340" cy="268" r="62" fill="#2a2a32" />
-  <circle cx="606" cy="262" r="62" fill="#2a2a32" />
+  <!-- extra-round, fluffy head -->
+  <ellipse cx="460" cy="420" rx="215" ry="195" fill="url(#bodyGrad)" />
+  <!-- fluff tufts around the head/cheeks -->
+  <g fill="#ffffff">
+    <circle cx="268" cy="400" r="22" /><circle cx="252" cy="470" r="20" />
+    <circle cx="652" cy="394" r="22" /><circle cx="668" cy="464" r="20" />
+  </g>
 
-  <!-- panda eye patches -->
-  <ellipse cx="398" cy="415" rx="58" ry="70" fill="#2a2a32" transform="rotate(-12 398 415)" />
-  <ellipse cx="546" cy="412" rx="58" ry="70" fill="#2a2a32" transform="rotate(10 546 412)" />
+  <!-- big round fluffy ears -->
+  <circle cx="320" cy="270" r="74" fill="#2f2f38" />
+  <circle cx="600" cy="262" r="74" fill="#2f2f38" />
+  <circle cx="320" cy="270" r="30" fill="#45454f" />
+  <circle cx="600" cy="262" r="30" fill="#45454f" />
 
-  <!-- eyes, looking happily toward the stick -->
-  <circle cx="412" cy="418" r="26" fill="#ffffff" />
-  <circle cx="538" cy="416" r="26" fill="#ffffff" />
-  <circle cx="420" cy="422" r="14" fill="#2a2a32" />
-  <circle cx="546" cy="420" r="14" fill="#2a2a32" />
-  <circle cx="425" cy="416" r="5" fill="#ffffff" />
-  <circle cx="551" cy="414" r="5" fill="#ffffff" />
+  <!-- panda eye patches, extra large and round for a softer cute look -->
+  <ellipse cx="380" cy="430" rx="68" ry="80" fill="#2f2f38" transform="rotate(-10 380 430)" />
+  <ellipse cx="538" cy="426" rx="68" ry="80" fill="#2f2f38" transform="rotate(10 538 426)" />
+
+  <!-- BIG sparkly eyes -->
+  <circle cx="392" cy="434" r="36" fill="#ffffff" />
+  <circle cx="548" cy="430" r="36" fill="#ffffff" />
+  <circle cx="400" cy="440" r="20" fill="#2f2f38" />
+  <circle cx="556" cy="436" r="20" fill="#2f2f38" />
+  <circle cx="408" cy="430" r="7" fill="#ffffff" />
+  <circle cx="564" cy="426" r="7" fill="#ffffff" />
+  <circle cx="390" cy="450" r="4" fill="#ffffff" />
+  <circle cx="546" cy="446" r="4" fill="#ffffff" />
 
   <!-- rosy cheeks -->
-  <circle cx="372" cy="470" r="24" fill="#f6b8c6" opacity="0.7" />
-  <circle cx="576" cy="468" r="24" fill="#f6b8c6" opacity="0.7" />
+  <circle cx="352" cy="488" r="26" fill="#f6b8c6" opacity="0.75" />
+  <circle cx="566" cy="484" r="26" fill="#f6b8c6" opacity="0.75" />
 
-  <!-- nose + open happy mouth, mid-bite on the "bamboo" -->
-  <ellipse cx="478" cy="462" rx="26" ry="18" fill="#2a2a32" />
-  <path d="M 478 480 L 478 494" stroke="#2a2a32" stroke-width="6" stroke-linecap="round" />
-  <path d="M 450 500 Q 478 530 512 500 Q 500 518 478 518 Q 456 518 450 500 Z" fill="#2a2a32" />
+  <!-- small nose only - no mouth/lips, kept blank per request -->
+  <ellipse cx="462" cy="480" rx="24" ry="17" fill="#2f2f38" />
 </svg>
