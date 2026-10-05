@@ -122,7 +122,7 @@ function initPracticeTab(root, { initialSong } = {}) {
       });
     });
     root.querySelector("#hk-open-calibration").addEventListener("click", toggleCalibration);
-    root.querySelector("#hk-timeline").addEventListener("pointerdown", scrub);
+    root.querySelector("#hk-timeline").addEventListener("pointerdown", onPlayheadDown);
     root.querySelector("#hk-audio-upload").addEventListener("change", handleUpload);
 
     renderSections();
@@ -191,17 +191,79 @@ function initPracticeTab(root, { initialSong } = {}) {
     }
   }
 
-  function scrub(e) {
-    if (mode === "ear" || mode === "camera") return;
-    const track = e.currentTarget;
+  // --- Draggable playhead ------------------------------------------------
+  // Real pointer-drag scrubbing on the timeline, not just click-to-seek.
+  // Snaps to the nearest chord-cell boundary (chords don't have a
+  // meaningful "position within a cell") rather than arbitrary sub-cell
+  // positions. Pauses playback during the drag (resuming afterward if it
+  // was playing) so chord audio doesn't rapid-fire while scrubbing, but
+  // the keyboard highlight, active section pill, and falling-note highway
+  // all update live on every pointermove — not just the visual line —
+  // because they're driven by the same seekToStep() that actually moves
+  // pausedAt/playStartedAt, the real playback clock.
+  let dragging = false;
+  let wasPlayingBeforeDrag = false;
+
+  function stepIndexFromClientX(clientX) {
+    const track = root.querySelector("#hk-timeline");
     const rect = track.getBoundingClientRect();
-    const fraction = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
-    pausedAt = fraction * totalDuration();
+    const fraction = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    const rawIndex = Math.floor(fraction * songMeta.steps.length);
+    return Math.max(0, Math.min(songMeta.steps.length - 1, rawIndex));
+  }
+
+  // Moves actual playback position to the start of the given chord-step
+  // index and refreshes every view that depends on current position
+  // (timeline cursor, keyboard hand-highlight, active section pill, and
+  // the Follow Along falling-note highway).
+  function seekToStep(stepIndex) {
+    pausedAt = stepIndex * CHORD_DURATION_SEC;
     playStartedAt = performance.now();
-    lastChordIndex = -1;
     ended = false;
+    lastChordIndex = stepIndex;
+    const step = songMeta.steps[stepIndex];
+    if (step) {
+      const midiNotes = chordSymbolToMidi(step.chord);
+      if (kb && midiNotes.length) {
+        kb.highlightHands({ left: [midiNotes[0] - 12], right: midiNotes, rightLabel: step.chord });
+      }
+      highlightActiveSection(step.section);
+    }
     updateCursor();
-    if (mode === "follow" && highway) highway.render(pausedAt, highwayNotes);
+    if (mode === "follow" && highway) {
+      const loopedT = songMeta.loops ? pausedAt % totalDuration() : pausedAt;
+      highway.render(loopedT, highwayNotes);
+    }
+  }
+
+  function onPlayheadDown(e) {
+    if (mode === "ear" || mode === "camera") return;
+    dragging = true;
+    wasPlayingBeforeDrag = playing;
+    if (playing) {
+      playing = false;
+      cancelAnimationFrame(raf);
+      const btn = root.querySelector("#hk-playpause");
+      if (btn) btn.textContent = "▶ Play";
+    }
+    seekToStep(stepIndexFromClientX(e.clientX));
+    window.addEventListener("pointermove", onPlayheadMove);
+    window.addEventListener("pointerup", onPlayheadUp, { once: true });
+  }
+  function onPlayheadMove(e) {
+    if (!dragging) return;
+    seekToStep(stepIndexFromClientX(e.clientX));
+  }
+  function onPlayheadUp() {
+    dragging = false;
+    window.removeEventListener("pointermove", onPlayheadMove);
+    if (wasPlayingBeforeDrag) {
+      playing = true;
+      const btn = root.querySelector("#hk-playpause");
+      if (btn) btn.textContent = "⏸ Pause";
+      playStartedAt = performance.now();
+      loop();
+    }
   }
 
   function togglePlay() {
