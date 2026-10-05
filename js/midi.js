@@ -47,7 +47,7 @@ function initMidiTab(root) {
     <div class="hk-midi">
       <h2>MIDI: play with your computer keyboard</h2>
       <div class="hk-mascot-row">
-        <img src="assets/mascot-face.svg" alt="" class="hk-mascot-avatar" />
+        <img src="assets/mascot-face.png" alt="" class="hk-mascot-avatar" />
         <div class="hk-mascot-bubble">
           <p>This is handy for exploring without a piano nearby, but your fingers won't build the real
              muscle memory they need this way. Practicing on an actual keyboard — even a cheap one, see

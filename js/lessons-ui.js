@@ -299,7 +299,7 @@ function initLessonsTab(root) {
   // next to whatever it's "saying," Duolingo-owl-style.
   function mascotSay(html) {
     return `<div class="hk-mascot-row">
-      <img src="assets/mascot-face.svg" alt="" class="hk-mascot-avatar" />
+      <img src="assets/mascot-face.png" alt="" class="hk-mascot-avatar" />
       <div class="hk-mascot-bubble">${html}</div>
     </div>`;
   }

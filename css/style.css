@@ -43,7 +43,14 @@ body {
   padding: 24px 20px 8px;
   text-align: center;
 }
-.hk-logo { width: 64px; height: 64px; display: block; margin: 0 auto 8px; }
+.hk-logo {
+  width: 64px; height: 64px; display: block; margin: 0 auto 8px; border-radius: 14px;
+  /* mascot-square.png's subject sits left-of-center in its frame, not
+     literally edge-to-edge — object-position nudges the visible crop
+     toward the panda/piano instead of showing equal empty margin on
+     both sides at this small display size. */
+  object-fit: cover; object-position: 28% 32%;
+}
 .hk-header h1 {
   margin: 0;
   font-size: 2rem;
@@ -549,6 +556,7 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-how-sub { color: var(--hk-text-dim); margin-top: -8px; }
 .hk-how-section { background: var(--hk-panel); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
 .hk-how-section h3 { margin-top: 0; color: var(--hk-accent-2); }
+.hk-about-hero { width: 100%; max-width: 480px; display: block; margin: 12px auto 20px; border-radius: 14px; }
 .hk-wave-demo { margin-top: 12px; }
 .hk-wave-demo canvas { width: 100%; max-width: 600px; height: 120px; background: var(--hk-stage-bg); border-radius: 8px; display: block; }
 .hk-wave-controls { margin-top: 8px; display: flex; align-items: center; gap: 10px; color: var(--hk-text-dim); font-size: 0.85rem; }

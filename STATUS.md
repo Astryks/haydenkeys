@@ -633,3 +633,40 @@ rest of that page.
   user-paced "look at this, press Next" flow with nothing actually
   playing through time on its own, which per the brief doesn't need
   pause/rewind/speed controls.
+
+## 2026-10-05 update: mascot switched from vector SVG to Sid's own illustration
+
+- [x] **Mascot is now a raster illustration, not an SVG** — Sid replaced
+      the code-drawn panda with his own original hand-drawn-style
+      artwork (confirmed directly with him it's his own work, same
+      provenance standard applied to every asset here): `assets/
+      mascot-full.png` (1408x768, panda at an upright piano with sheet
+      music — used as a hero illustration on the About page) and
+      `assets/mascot-square.png` (768x768, used for the header logo,
+      favicon, and all PWA/iOS icon generation).
+- [x] Regenerated all 5 PWA icon sizes from `mascot-square.png` via the
+      same `sips` pipeline used for every prior mascot swap.
+- [x] **New narrator avatar**: `assets/mascot-face.png`, a 420x420 crop
+      of `mascot-square.png` tight on the panda's face (cropped with
+      PIL, checked visually that it still reads clearly at the small
+      48px avatar size) — replaces `assets/mascot-face.svg` everywhere
+      it was referenced (`js/lessons-ui.js`'s `mascotSay()`, `js/midi.js`'s
+      caveat card).
+- [x] `assets/mascot-full.png` used as a hero illustration on the About
+      page (`js/about.js`) — a natural fit for the wider image per the
+      "use it where a wide illustration fits better" guidance.
+- [x] Old `assets/mascot.svg` / `assets/mascot-face.svg` left in the repo
+      unreferenced (same "don't delete, just stop using as primary"
+      convention already established for the original key-shaped
+      `logo.svg`).
+
+### Important note for future mascot requests
+
+**The mascot is now a fixed illustration, not a vector drawing this
+project can recolor/repose on demand.** Every prior "redraw" (wallaby,
+panda variations, pose changes, no-mouth, waving arm, etc.) was possible
+because the mascot was hand-coded SVG shapes that could be edited
+directly. That's no longer true: future requests like "change the
+mascot's pose" or "make it a different color" need a **new image
+supplied by Sid**, the same way `mascot-full.png`/`mascot-square.png`
+themselves arrived — not something achievable by editing code.
