@@ -1,6 +1,7 @@
 import { SONGS, getDifficulty } from "./songs-data.js";
 import { markSongStatus, getSavedSongs } from "./storage.js";
 import { transcribeFile } from "./transcribe.js";
+import { renderKeyboard, playTone } from "./keyboard.js";
 
 const TIER_ORDER = ["Beginner", "Intermediate", "Advanced"];
 const UNLOCK_THRESHOLD = 5; // complete 5 songs in a tier to unlock the next
@@ -153,6 +154,7 @@ function initDiscoverTab(root, { onStartSong } = {}) {
            figure out the notes, right in your browser.</p>
         <input type="file" id="hk-discover-upload" accept="audio/*,video/*" />
         <div id="hk-discover-upload-status" class="hk-cal-status"></div>
+        <div id="hk-discover-upload-playback"></div>
         <p class="hk-scope-note">
           Note: Hayden Keys teaches from a curated library of real, chord-verified songs below.
           It does <strong>not</strong> support pasting a YouTube link or any other URL to import
@@ -193,16 +195,56 @@ function initDiscoverTab(root, { onStartSong } = {}) {
     const file = e.target.files[0];
     if (!file) return;
     const statusEl = root.querySelector("#hk-discover-upload-status");
+    const playbackEl = root.querySelector("#hk-discover-upload-playback");
+    playbackEl.innerHTML = "";
     try {
       const notes = await transcribeFile(file, (text) => {
         statusEl.textContent = text;
       });
-      statusEl.textContent = `Done — detected ${notes.length} notes. Head to the Practice tab to play along with a library song while you're at it. (Turning your own upload into a playable lesson is a Phase 2 item — this confirms transcription itself works.)`;
+      // Honesty fix (item 27): this used to tell the user to "head to the
+      // Practice tab," but the transcribed notes were never actually
+      // passed anywhere — Practice has no idea an upload happened, so
+      // that was a real dead end, not a crash. Real, immediate next step
+      // instead: a "Play it" button right here, reusing the exact same
+      // keyboard-highlight/synth playback (keyboard.js's renderKeyboard +
+      // playTone) every other part of the app already uses — no second
+      // parallel audio path.
+      statusEl.textContent = `Done — detected ${notes.length} notes.`;
+      playbackEl.innerHTML = `
+        <button class="hk-btn hk-btn-primary" id="hk-discover-play-upload">Play it</button>
+        <p class="hk-honest-note">This plays back exactly what was detected — turning it into a full
+           playable lesson (with chords, structure, etc.) is still a Phase 2 item.</p>
+        <div id="hk-discover-upload-kb" class="hk-keyboard-wrap"></div>`;
+      playbackEl.querySelector("#hk-discover-play-upload").addEventListener("click", () => {
+        playTranscribedNotes(notes, playbackEl.querySelector("#hk-discover-upload-kb"));
+      });
     } catch (err) {
       statusEl.textContent = err.message;
       console.error(err);
     }
   });
+
+  // Schedules real audio playback + visual key highlighting for a
+  // basic-pitch note list, using the same on-screen keyboard component
+  // and Web Audio synth (keyboard.js) used everywhere else in the app —
+  // not a second, parallel playback implementation.
+  function playTranscribedNotes(notes, container) {
+    if (!notes.length) return;
+    const midiValues = notes.map((n) => n.pitchMidi);
+    const kb = renderKeyboard(container, {
+      startMidi: Math.max(21, Math.min(...midiValues) - 3),
+      endMidi: Math.min(108, Math.max(...midiValues) + 3),
+    });
+    const sorted = [...notes].sort((a, b) => a.startTimeSeconds - b.startTimeSeconds);
+    sorted.forEach((note) => {
+      setTimeout(() => {
+        kb.highlightChord([note.pitchMidi], { rootMidi: note.pitchMidi });
+        playTone(note.pitchMidi, { duration: Math.max(0.15, note.durationSeconds) });
+      }, note.startTimeSeconds * 1000);
+    });
+    const totalMs = (sorted[sorted.length - 1].startTimeSeconds + sorted[sorted.length - 1].durationSeconds + 0.3) * 1000;
+    setTimeout(() => kb.clearHighlights(), totalMs);
+  }
 
   function render() {
     const query = searchInput.value.trim().toLowerCase();

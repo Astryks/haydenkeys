@@ -451,3 +451,60 @@ rest of that page.
 - Jazz/classical showcase lessons at 11/15/25/30/35 are deliberately
   thin (a handful of chords/notes each) — real, verified, honestly
   scoped, but not full performances of those pieces/tunes.
+
+## 2026-10-05 update: mascot syncs, purple lesson buttons, real overflow fix, upload "Play it"
+
+- [x] **Mascot kept in sync across two more of Sid's own redraws**
+      (wallaby -> panda "bamboo stick" pose -> fatter/fluffier/bigger-eyed/
+      no-mouth version) — PNG icons regenerated via `sips` and
+      `assets/mascot-face.svg` (the cropped narrator avatar) rebuilt to
+      match each time, verified visually in the header and in-lesson
+      mascot bubble.
+- [x] **Lesson-progression buttons now consistently use `--hk-purple`**
+      (the same exact variable the roadmap's "completed" accent uses,
+      not a separate shade) — scoped specifically to the lesson flow
+      (`js/lessons-ui.js`'s ~99 Next/Start/Continue/Try-it buttons got a
+      new `.hk-btn-lesson-next` class) rather than recoloring every
+      `.hk-btn-primary` site-wide, since Practice/calibration/camera
+      buttons elsewhere were never asked to change.
+- [x] **The piano-buying intro's "let's go" button was real navigation
+      already** (calls `showMap()`), but landed on the lesson map instead
+      of continuing straight into the next lesson — changed it (and the
+      "Get Started" calibration's finish/skip) to call `startNextLesson()`
+      instead, so the whole pre-lesson run-up is genuinely zero-friction,
+      not just the very first tab load. Verified by clicking through from
+      a cleared localStorage state.
+- [x] **Real text-overflow bug found and fixed**: `.hk-mascot-bubble`
+      (the card wrapping every mascot-narrated lesson screen, including
+      the piano-buying intro Sid screenshotted) was a flex item with no
+      `min-width: 0` — the classic flexbox bug where a flex child's
+      default `min-width: auto` can let it refuse to shrink/wrap below
+      its content's intrinsic width and overflow its container. Fixed
+      with `min-width: 0; overflow-wrap: break-word;`. Verified by
+      resizing a real browser to 320px, 375px, 700px, and 900px widths
+      and confirming every line wraps cleanly with nothing clipped.
+- [x] **Discover upload: added a real "Play it" button** after a
+      successful transcription, reusing the exact same keyboard-highlight
+      + Web Audio synth (`keyboard.js`'s `renderKeyboard`/`playTone`)
+      every other part of the app already uses for playback — no second
+      parallel audio path. Verified end-to-end: synthesized a real WAV
+      tone in-browser, uploaded it through the actual file input (via a
+      `DataTransfer`-constructed `File`, dispatching a real `change`
+      event — not a mocked function call), confirmed a real transcription
+      result, clicked "Play it," and confirmed the keyboard rendered and
+      highlighted the correct key with zero console errors.
+- [x] **Investigated "it doesn't work after transcribing" as its own bug,
+      per explicit instruction not to assume the Play-it button alone
+      fixes it.** Traced the exact real user path: after a transcription,
+      the old status message said "head to the Practice tab," but the
+      transcribed notes were never passed or stored anywhere — clicking
+      through to Practice (confirmed by actually doing it) shows the
+      Practice tab's unrelated default song (`SONGS[0]`) with zero
+      connection to the upload. **Finding: this is a real dead end, not a
+      crash** — no console error, no broken state, just nothing useful to
+      do with the old guidance. The misleading "head to Practice" message
+      was removed and replaced with accurate copy; the new "Play it"
+      button is the actual fix. Applied the identical fix to the Practice
+      tab's own (separate, pre-existing) upload flow too, for the same
+      honesty reason — it had the exact same "Playback is Phase 2" claim,
+      which would otherwise now be stale/inaccurate.

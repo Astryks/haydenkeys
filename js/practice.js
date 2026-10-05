@@ -140,6 +140,7 @@ function initPracticeTab(root, { initialSong } = {}) {
              THIRD_PARTY_NOTICES.md for license details.</p>
           <input type="file" id="hk-audio-upload" accept="audio/*" />
           <div id="hk-upload-status" class="hk-cal-status"></div>
+          <div id="hk-upload-playback"></div>
         </section>
       </div>`;
 
@@ -475,15 +476,46 @@ function initPracticeTab(root, { initialSong } = {}) {
     const file = e.target.files[0];
     if (!file) return;
     const statusEl = root.querySelector("#hk-upload-status");
+    const playbackEl = root.querySelector("#hk-upload-playback");
+    playbackEl.innerHTML = "";
     try {
       const notes = await transcribeFile(file, (text) => {
         statusEl.textContent = text;
       });
-      statusEl.textContent = `Done — detected ${notes.length} notes. (Playback of transcribed notes is a Phase 2 item; this confirms transcription itself works.)`;
+      statusEl.textContent = `Done — detected ${notes.length} notes.`;
+      playbackEl.innerHTML = `
+        <button class="hk-btn hk-btn-primary" id="hk-play-upload">Play it</button>
+        <p class="hk-honest-note">This plays back exactly what was detected — turning it into a full
+           playable lesson (with chords, structure, etc.) is still a Phase 2 item.</p>
+        <div id="hk-upload-kb" class="hk-keyboard-wrap"></div>`;
+      playbackEl.querySelector("#hk-play-upload").addEventListener("click", () => {
+        playTranscribedNotes(notes, playbackEl.querySelector("#hk-upload-kb"));
+      });
     } catch (err) {
       statusEl.textContent = err.message;
       console.error(err);
     }
+  }
+
+  // Same reasoning/implementation as Discover's identical upload flow
+  // (js/discover.js) — reuses the existing keyboard-highlight/synth
+  // playback, not a second parallel audio path.
+  function playTranscribedNotes(notes, container) {
+    if (!notes.length) return;
+    const midiValues = notes.map((n) => n.pitchMidi);
+    const upKb = renderKeyboard(container, {
+      startMidi: Math.max(21, Math.min(...midiValues) - 3),
+      endMidi: Math.min(108, Math.max(...midiValues) + 3),
+    });
+    const sorted = [...notes].sort((a, b) => a.startTimeSeconds - b.startTimeSeconds);
+    sorted.forEach((note) => {
+      setTimeout(() => {
+        upKb.highlightChord([note.pitchMidi], { rootMidi: note.pitchMidi });
+        playTone(note.pitchMidi, { duration: Math.max(0.15, note.durationSeconds) });
+      }, note.startTimeSeconds * 1000);
+    });
+    const totalMs = (sorted[sorted.length - 1].startTimeSeconds + sorted[sorted.length - 1].durationSeconds + 0.3) * 1000;
+    setTimeout(() => upKb.clearHighlights(), totalMs);
   }
 
   render();
