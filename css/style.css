@@ -112,8 +112,13 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
    scoped to the lesson flow specifically (js/lessons-ui.js), not a
    site-wide change to every .hk-btn-primary (Practice/calibration/
    camera-overlay buttons elsewhere intentionally keep the blue accent). */
-.hk-btn-lesson-next { background: var(--hk-purple); border-color: var(--hk-purple); }
-.hk-btn-lesson-next:hover { border-color: var(--hk-purple); }
+.hk-btn-lesson-next {
+  background: var(--hk-purple); border-color: var(--hk-purple);
+  /* Real contrast bug Sid caught via screenshot: dark text on this
+     purple background was hard to read. White text throughout. */
+  color: #ffffff;
+}
+.hk-btn-lesson-next:hover { border-color: var(--hk-purple); color: #ffffff; }
 .hk-btn-small { padding: 6px 10px; font-size: 0.8rem; }
 .hk-btn-danger { border-color: var(--hk-danger); color: var(--hk-danger); }
 
@@ -391,7 +396,12 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 /* ----- Level-up celebration (item 21) ------------------------------------ */
 .hk-levelup { text-align: center; }
 .hk-levelup-badge { font-size: 1.3rem; margin: 10px 0; }
-.hk-lesson-controls { margin-top: 10px; }
+/* "Next"/advance controls move to bottom-right (item 31) — the
+   conventional "move forward" position — instead of the previous
+   left-aligned default. A flex row with flex-end pushes every button in
+   controls to the right as a group; screens with a single Next button
+   (the overwhelming majority) land exactly bottom-right. */
+.hk-lesson-controls { margin-top: 10px; display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
 
 .hk-staff { width: 100%; height: 140px; background: var(--hk-stage-bg); border-radius: 8px; }
 .hk-staff-line { stroke: #4a6a8a; stroke-width: 1; }

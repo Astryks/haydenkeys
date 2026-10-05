@@ -589,3 +589,47 @@ rest of that page.
       keyboard's range to MIDI 88. Verified visually: both hands now
       show their real colors (pink left, blue right) with correct L/R
       badges.
+
+## 2026-10-05 update: lesson template consistency pass
+
+- [x] **Two real bugs fixed everywhere `.hk-btn-lesson-next` appears**
+      (the purple lesson-progression button class from item 27): white
+      text instead of dark-on-purple (a real contrast/readability bug),
+      and moved to bottom-right via `.hk-lesson-controls` becoming a
+      `flex; justify-content: flex-end` row instead of left-aligned flow
+      — both fixed once in CSS, so every lesson screen picked it up
+      automatically, not just the one screen Sid screenshotted.
+- [x] **Mascot-narration consistency extended through the original Day
+      1-10 arc** (`runLesson3` through `runLesson10` in `js/lessons-ui.js`)
+      — these predated the mascot pattern introduced in items 21/25 and
+      were plain-paragraph text; now wrapped in the same `mascotSay()`
+      bubble as every newer lesson, matching the screenshot's template
+      (title → step indicator → big visual → mascot-narrated card →
+      keyboard → bottom-right Next).
+- [x] **Playback controls added where something actually plays
+      continuously through time**: the early "jazz trick" preview and
+      the deeper "Jazz comping & improv" bonus lesson both loop a chord
+      progression via `setInterval` while the user free-plays — these
+      now have a real Pause/Resume toggle alongside "Mark complete,"
+      bringing them to parity with Practice's playback controls.
+      Verified by clicking Pause mid-loop and confirming it stops/
+      restarts correctly, toggling its own label.
+
+### Honestly, what's NOT done in this consistency pass
+
+- **Days 11-37** (scales, two-hand coordination, 7ths, Canon in D, the
+  classical/advanced-repertoire catalog lesson) still use plain-paragraph
+  text, not the mascot-narrated card — a real, explicitly-scoped gap,
+  not hidden. The *structural* template (title, step indicator, keyboard,
+  bottom-right white-on-purple Next) is now universal across all ~100
+  lessons via the shared `lessonShell()` + CSS fix, since every lesson
+  already used that shared component; it was specifically the mascot
+  bubble wrapping that was only extended through Day 10 in this pass,
+  given the volume of remaining lesson functions (~26 more). Finishing
+  the mascot wrap for Days 11-37 is real, well-scoped future work, not
+  a different kind of change.
+- No other lesson types were found to need playback controls beyond the
+  two jazz-loop lessons — every other lesson type is genuinely a
+  user-paced "look at this, press Next" flow with nothing actually
+  playing through time on its own, which per the brief doesn't need
+  pause/rewind/speed controls.
