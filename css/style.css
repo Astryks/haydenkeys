@@ -273,6 +273,14 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-key-highlight.hk-key-white { background: var(--hk-accent-2-soft); }
 .hk-key-highlight.hk-key-black { background: var(--hk-accent-2); }
 .hk-key-selectable { outline: 1px dashed var(--hk-accent-2); outline-offset: -2px; }
+/* Item 56: per-key note letter in a highlighted chord, and the
+   permanent Middle C marker (a purple bar along the key's bottom edge). */
+.hk-key-letter {
+  position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+  font-size: 0.72rem; font-weight: bold; color: #1a2a33; pointer-events: none;
+}
+.hk-key-black .hk-key-letter { color: #fff; font-size: 0.6rem; }
+.hk-key-middlec { box-shadow: inset 0 -5px 0 var(--hk-purple); }
 .hk-key-badge {
   position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
   display: flex; flex-direction: column; align-items: center; pointer-events: none;
@@ -347,7 +355,7 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
   position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
   font-size: 0.68rem; font-weight: bold; color: var(--hk-text-dim); pointer-events: none;
 }
-.hk-key-black .hk-ref-keylabel { color: #d8d8e0; }
+.hk-key-black .hk-ref-keylabel { color: #d8d8e0; font-size: 0.52rem; text-align: center; line-height: 1.15; }
 .hk-ref-glossary-list { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; margin: 0; }
 .hk-ref-glossary-list li {
   background: var(--hk-bg); border: 1px solid var(--hk-border); border-radius: 8px;
@@ -365,6 +373,7 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-streak { font-size: 1rem; margin-bottom: 8px; }
 .hk-choose-list { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
 .hk-choose-btn { text-align: left; }
+.hk-choose-chords { display: block; font-size: 0.78rem; color: var(--hk-text-dim); font-weight: normal; margin-top: 2px; }
 
 .hk-daily-goal { margin-bottom: 14px; }
 .hk-daily-goal-label { font-size: 0.85rem; color: var(--hk-text-dim); margin-bottom: 4px; }

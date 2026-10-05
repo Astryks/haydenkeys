@@ -485,7 +485,7 @@ function initLessonsTab(root) {
       if (step === "intro") {
         content.innerHTML = mascotSay(`
           ${intermediateUnlock ? "<h3>Intermediate unlocked!</h3><p>You've completed enough Beginner songs to get here for real.</p>" : `<h3>${song.title}</h3>`}
-          <p>${intermediateUnlock ? `"${song.title}" by ${song.artist}` : `By ${song.artist}`}. Real, verified chords: <strong>${song.chords.join(" - ")}</strong>.</p>
+          <p>${intermediateUnlock ? `"${song.title}" by ${song.artist}` : `By ${song.artist}`}. Key: <strong>${song.key}</strong>. Real, verified chords: <strong>${song.chords.join(" - ")}</strong>${song.degreeSequence ? ` (as numbers: ${song.degreeSequence})` : ""}.</p>
           <p>Let's press them one at a time, together.</p>`, intermediateUnlock ? "assets/mascot-poses/maestro-conducting.png" : poseForSong(song.title));
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Start</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => goForward({ step: "play", idx: 0 }));
@@ -552,8 +552,11 @@ function initLessonsTab(root) {
           <h3>Last Christmas — Wham!</h3>
           <p>Honest heads-up: this song does NOT use Lesson 1's exact chords. It's its own 4-chord
              pattern: <strong>${song.chords.join(" - ")}</strong> (D, Bm, Em, A).</p>
-          <p>It does share 2 of the 4 chords with what you just learned — but it's a real, different
-             pattern, not a repeat. Let's press them one at a time.</p>`);
+          <p>It's also in a different <strong>key</strong>: this song's home is <strong>D</strong>, not G. In the
+             key of D, the 1 chord is D, 6 is Bm, 2 is Em and 5 is A — so its pattern is <strong>1-6-2-5</strong>.
+             Same numbering idea, new home, new letters.</p>
+          <p>Two chords here have black keys: Bm has F#, and A has C# (the black key just right of C).
+             Let's press them one at a time.</p>`);
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Start</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step = "play"; idx = 0; renderStep(); });
       } else if (step === "play") {
@@ -591,10 +594,13 @@ function initLessonsTab(root) {
     const { content, keyboardWrap, controls } = lessonShell("Choose your song");
     keyboardWrap.innerHTML = "";
     content.innerHTML = mascotSay(`
-      <h3>Pick a song — any of these use the chords you already know.</h3>
-      <p>All ${CHOOSE_SONGS.length} use the same 1-5-6-4 chord family as Lesson 1.</p>`) +
+      <h3>Pick a song — every one uses the 1-5-6-4 pattern you just learned.</h3>
+      <p>All ${CHOOSE_SONGS.length} use the same number pattern as your first 4 chords. Some are in a different
+         key, so the letters change (and you may meet a new chord shape) — the lit-up keys show you exactly
+         what to press.</p>`) +
       `<div class="hk-choose-list">${CHOOSE_SONGS.map((s) => `
-        <button class="hk-btn hk-choose-btn" data-song="${s.title}">${s.title} — ${s.artist}</button>`).join("")}</div>`;
+        <button class="hk-btn hk-choose-btn" data-song="${s.title}">${s.title} — ${s.artist}
+          <span class="hk-choose-chords">${s.chords.join(" · ")}</span></button>`).join("")}</div>`;
     controls.innerHTML = "";
     content.querySelectorAll("[data-song]").forEach((btn) => {
       btn.addEventListener("click", () => playChosenSong(btn.dataset.song));
@@ -620,7 +626,7 @@ function initLessonsTab(root) {
           markSongStatus(song.title, "completed");
           kb.clearHighlights();
           content.innerHTML = mascotSay(`<h3>You just played "${song.title}" start to finish!</h3>
-            <p>Your choice, your song — same chords you already had from Lesson 1.</p>`);
+            <p>Your choice, your song — the same 1-5-6-4 pattern from your first lesson.</p>`);
           controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
           controls.querySelector("#hk-done").addEventListener("click", showMap);
         }
@@ -791,15 +797,38 @@ function initLessonsTab(root) {
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Try it</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step = 1; renderStep(); });
       } else if (step <= ODE_TO_JOY_MELODY.length) {
+        // Item 56: genuinely by ear — the key used to be lit up before
+        // you'd even listened, which gave the answer away. Now nothing is
+        // shown until you find it (or tap "Show me").
         const i = step - 1;
         const midi = ODE_TO_JOY_MELODY[i];
-        kb.highlightChord([midi], { rootMidi: midi });
+        kb.clearHighlights();
         playTone(midi, { duration: 0.5 });
         content.innerHTML = `
           <p class="hk-step-indicator">Note ${i + 1} of ${ODE_TO_JOY_MELODY.length}</p>
-          ${mascotSay(`<p>Listen, then find this exact note on the keyboard by ear. Press it, then tap Next.</p>`)}`;
-        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Next</button>`;
-        controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
+          ${mascotSay(`<p>Listen, then find this exact note on the keyboard by ear — tap keys until one sounds
+             the same.${i > 0 ? " Tip: it's often the same note as last time, or a key right next to it." : ""}</p>`)}
+          <p id="hk-ear-feedback" class="hk-quiz-feedback"></p>`;
+        controls.innerHTML = `
+          <button class="hk-btn" id="hk-ear-replay">&#9658; Hear it again</button>
+          <button class="hk-btn" id="hk-ear-show">Show me</button>
+          <button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Skip</button>`;
+        const feedback = content.querySelector("#hk-ear-feedback");
+        const found = (how) => {
+          kb.highlightChord([midi], { letter: noteLetter(midi), rootMidi: midi });
+          feedback.textContent = how === "found" ? `Yes — that's ${noteLetter(midi)}!` : `It was ${noteLetter(midi)}.`;
+          feedback.className = `hk-quiz-feedback ${how === "found" ? "hk-quiz-feedback-correct" : ""}`;
+          const next = controls.querySelector("#hk-next");
+          if (next) next.textContent = "Next note";
+          kb.onKeyPress(() => {});
+        };
+        kb.onKeyPress((pressed) => {
+          if (pressed === midi) found("found");
+          else feedback.textContent = pressed < midi ? "Higher — try further right." : "Lower — try further left.";
+        });
+        controls.querySelector("#hk-ear-replay").addEventListener("click", () => playTone(midi, { duration: 0.5 }));
+        controls.querySelector("#hk-ear-show").addEventListener("click", () => found("shown"));
+        controls.querySelector("#hk-next").addEventListener("click", () => { kb.onKeyPress(() => {}); step++; renderStep(); });
       } else {
         markLessonComplete("lesson-eartraining");
         kb.clearHighlights();
@@ -869,7 +898,10 @@ function initLessonsTab(root) {
     function renderStep() {
       if (idx < song.chords.length) {
         const symbol = song.chords[idx];
-        const notes = chordSymbolToMidi(symbol);
+        // Item 56: voice the first Cm with a top C, so the famous line is
+        // what you SEE move along the top: C → B → Bb → A, one half-step
+        // per chord (CmMaj7/Cm7/Cm6 already end on B/Bb/A).
+        const notes = symbol === "Cm" ? [...chordSymbolToMidi(symbol), 72] : chordSymbolToMidi(symbol);
         kb.highlightChord(notes, { letter: symbol, rootMidi: notes[0] });
         playChord(notes, { delay: 0.1 });
         content.innerHTML = `
@@ -879,8 +911,9 @@ function initLessonsTab(root) {
                <p>This exact 4-chord descending line is so famous it's nicknamed after this very song —
                   you'll hear it in countless other jazz tunes and film scores once you know to listen
                   for it. One note moves down by a half-step each chord: C, B, Bb, A.</p>
+               <p>Watch the <strong>top key</strong>: it slides down one key at a time.</p>
                <p><strong>Press and hold ${symbol}.</strong></p>`
-            : `<p><strong>Press and hold ${symbol}.</strong></p>`, "assets/mascot-poses/harp.png")}`;
+            : `<p><strong>Press and hold ${symbol}.</strong> The top key is now <strong>${({ 71: "B", 70: "Bb", 69: "A" })[notes[notes.length - 1]] || noteLetter(notes[notes.length - 1])}</strong>.</p>`, "assets/mascot-poses/harp.png")}`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Next chord</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { idx++; renderStep(); });
       } else {
@@ -917,13 +950,13 @@ function initLessonsTab(root) {
       } else if (step <= FUR_ELISE_OPENING.rightHand.length) {
         const i = step - 1;
         const midi = FUR_ELISE_OPENING.rightHand[i];
-        kb.highlightHands({ left: FUR_ELISE_OPENING.leftHand, right: [midi], leftLabel: "Am" });
+        kb.highlightHands({ left: FUR_ELISE_OPENING.leftHand, right: [midi], leftLabel: "A" });
         playTone(midi, { duration: 0.4 });
         if (i === 0) playChord(FUR_ELISE_OPENING.leftHand, { duration: 2.0, gain: 0.1 });
         content.innerHTML = `
           <p class="hk-step-indicator">Note ${i + 1} of ${FUR_ELISE_OPENING.rightHand.length}</p>
-          ${mascotSay(`<p>Right hand (light blue) plays the melody; left hand (pink) holds a simple
-             A minor broken chord underneath.</p>`)}`;
+          ${mascotSay(`<p>Right hand (light blue) plays the melody; left hand (pink) holds the low A and E
+             underneath, giving it that A-minor feel.</p>`)}`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Next</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
       } else {
@@ -1062,9 +1095,9 @@ function initLessonsTab(root) {
     // edge. C's root IS Middle C itself, a nice concrete callback.
     const CHORD_ANCHOR = {
       C: "Its root is <strong>Middle C itself</strong> — the exact key you found in Get Started.",
-      D: "Its root is <strong>2 white keys to the right of Middle C</strong> (C, D — that's it).",
-      Em: "Its root is <strong>3 white keys to the right of Middle C</strong> (C, D, E).",
-      G: "Its root is <strong>5 white keys to the right of Middle C</strong> — count them: C, D, E, F, G.",
+      D: "Its root is the <strong>2nd white key, counting Middle C as 1</strong>: C, D — the white key right next to Middle C. (Landmark: D always sits between the 2 black keys.)",
+      Em: "Its root is the <strong>3rd white key, counting Middle C as 1</strong>: C, D, E. (Landmark: E is just right of the 2 black keys.)",
+      G: "Its root is the <strong>5th white key, counting Middle C as 1</strong>: C, D, E, F, G. (Landmark: G sits inside the group of 3 black keys, after F.)",
     };
 
     // Optional, non-blocking reference link (item 38) — never inserted
@@ -1135,9 +1168,11 @@ function initLessonsTab(root) {
         content.innerHTML = mascotSay(`
           <h3>Did you know 4 chords play over 100 songs?</h3>
           <p>From <strong>"${HOOK_SONG_1.title}"</strong> by ${HOOK_SONG_1.artist} to
-             <strong>"${HOOK_SONG_2.title}"</strong> by ${HOOK_SONG_2.artist} — same 4 chords, every time.</p>
-          <p>These chords are usually called by letters, but we'll learn them with <strong>numbers first</strong>
-             — it's easier, because the same numbers work in any key. These are the chords:</p>
+             <strong>"${HOOK_SONG_2.title}"</strong> by ${HOOK_SONG_2.artist} — the same 4-chord pattern, every
+             time. Each song just starts it from a different note.</p>
+          <p>Chords are usually called by letters, but we'll learn them with <strong>numbers first</strong>
+             (1-5-6-4) — it's easier, because the numbers stay the same in every song while the letters change.
+             Here's the pattern starting from G, the version we'll learn first:</p>
           <div class="hk-chord-preview-row">
             ${LESSON1_SEQUENCE.map((k) => {
               const c = LESSON1_CHORDS[k];
@@ -1161,9 +1196,9 @@ function initLessonsTab(root) {
         // 51's numbering clarification.
         content.innerHTML = mascotSay(`
           <h3>Two quick words before we start: "key" and "numbers."</h3>
-          <p>Every song has a <strong>"home" note</strong> — like home base in a game. For this song, G is
-             home. We call that G's <strong>"key."</strong> All the other chords are described by how far
-             they are from home.</p>
+          <p>Every song has a <strong>"home" note</strong> — like home base in a game. In the songs we're
+             about to play, G is home. We say they're <strong>"in the key of G."</strong> All the other chords
+             are described by how far they are from home.</p>
           <p class="hk-honest-note">Heads up: that's a totally different "key" from the piano keys you press
              with your fingers. Same word, two different things — sorry about that!</p>
           <p>Here's a secret about the <strong>numbers</strong> (1-5-6-4): the exact same song pattern can
@@ -1243,10 +1278,20 @@ function initLessonsTab(root) {
           <p class="hk-step-indicator">Chord ${teachIdx + 1} of 4</p>
           <div class="hk-big-degree">${chord.number}<span class="hk-big-letter">${chord.letter}</span></div>
           ${mascotSay(`
-            <p>This chord's <strong>name is ${chord.letter}</strong> — named after its lowest note. It's made
-               of ${chord.notes.length} individual keys, <strong>named ${noteNames.join(", ")}</strong>: press all
-               ${chord.notes.length} together and that's the ${chord.letter} chord.</p>
+            <p>This chord's <strong>name is ${chord.letter}</strong> — named after its <strong>root</strong>, the
+               note it's built up from (here that's also its lowest note). It's made of ${chord.notes.length}
+               individual keys, <strong>named ${noteNames.join(", ")}</strong>: press all ${chord.notes.length}
+               together and that's the ${chord.letter} chord. ${teachIdx === 0 ? `So "G" on its own means one key;
+               "the G chord" means these three keys together, built up from G.` : ""}</p>
             <p>${CHORD_ANCHOR[key]}</p>
+            ${/m$/.test(chord.letter) ? `<p class="hk-honest-note">The small <strong>"m"</strong> means
+               <strong>minor</strong>: ${chord.letter} is "${chord.letter.replace(/m$/, "")} minor" — a softer, sadder-sounding
+               chord than a plain (major) one. You'll hear the difference properly in "Major or minor? It's a pattern."</p>` : ""}
+            ${noteNames.some((n) => n.includes("#")) ? `<p class="hk-honest-note"><strong>Your first black key!</strong>
+               Black keys are named after the white key next to them. The black key just to the RIGHT of a white
+               key is its <strong>sharp</strong> (#): the black key right of F is <strong>F#</strong> ("F sharp").
+               The black key just to the LEFT of a white key is its <strong>flat</strong> (b): that same key is also
+               called G♭. One key over — black or white — is called a <strong>half-step</strong>.</p>` : ""}
             ${teachIdx === 0 ? `<p class="hk-honest-note">Quick heads-up: the big <strong>1</strong> next to G
                here is a totally different "number" from the 5 we counted earlier to physically find G on the
                keyboard. That counting was about location (5 white keys from Middle C). This 1-5-6-4 numbering
@@ -1321,15 +1366,18 @@ function initLessonsTab(root) {
         kb.clearHighlights();
         content.innerHTML = mascotSay(`
           <h3>Remember "${HOOK_SONG_1.title}" and "${HOOK_SONG_2.title}" from the very start? Here's even more proof.</h3>
-          <p>Same four chords, same order — here's a quick run through ${montageSongsAfterTeaser.length} more real
-             songs in the library that use this exact pattern. Just tap through, next song, next song.</p>`);
+          <p>Same 1-5-6-4 pattern, same order — here's a quick run through ${montageSongsAfterTeaser.length} more real
+             songs in the library that use it (in whatever key each song is in). Just tap through, next song, next song.</p>
+          <p class="hk-honest-note">You'll see the pattern written as <strong>I - V - vi - IV</strong>. Those are just
+             Roman numerals for the same numbers (I = 1, IV = 4, V = 5, vi = 6). <strong>CAPITALS</strong> mean a
+             major chord, <strong>lowercase</strong> means minor — that's why the 6 (Em) is written small.</p>`);
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Go</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => goForward({ montageIdx: 0, step: "montage" }));
       } else if (step === "montage") {
         const s = montageSongsAfterTeaser[montageIdx];
         content.innerHTML = `
           <p class="hk-step-indicator">Song ${montageIdx + 1} of ${montageSongsAfterTeaser.length}</p>
-          ${mascotSay(`<h3>${s.title}</h3><p>${s.artist} — same 4 chords (${s.degreeSequence}).</p>`)}`;
+          ${mascotSay(`<h3>${s.title}</h3><p>${s.artist} — same 1-5-6-4 pattern (${s.degreeSequence})${s.key ? `, in ${s.key}` : ""}: <strong>${s.chords.join(" - ")}</strong>.</p>`)}`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Next song</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => {
           if (montageIdx < montageSongsAfterTeaser.length - 1) goForward({ montageIdx: montageIdx + 1 });
@@ -1589,7 +1637,7 @@ function initLessonsTab(root) {
           <p class="hk-step-indicator">A new shape</p>
           <div class="hk-big-degree">2<span class="hk-big-letter">Am</span></div>
           ${mascotSay(`<p>Beyond the core four, this is "the 2nd" — in G major, that's <strong>A minor</strong>. You already know from
-             Lesson 2 that degree 2 is always minor in a major key — this is that chord.</p>`)}`;
+             "Major or minor? It's a pattern" that degree 2 is always minor in a major key — this is that chord.</p>`)}`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Try it</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step = 1; renderStep(); });
         playChord(LESSON5_CHORD.notes, { delay: 0.1 });
@@ -2024,7 +2072,7 @@ function initLessonsTab(root) {
           ${mascotSay(`<h3>A key signature is just a shortcut.</h3>
           <p>Instead of writing a sharp next to every single F in a piece, the key of G major puts <strong>one sharp</strong>
              on the F line/space at the start of the staff, meaning "every F in this piece is F#, unless marked otherwise."</p>
-          <p>You've already been playing that F# — it's inside the D chord and the Em chord from Lesson 1.</p>`)}
+          <p>You've already been playing that F# — it's the middle note of the D chord (D-F#-A) from your first 4 chords.</p>`)}
           <div id="hk-staff-wrap">${renderStaffSvg(G_MAJOR_SCALE_FOR_STAFF, G_MAJOR_SCALE_FOR_STAFF.length, { keySignatureSharps: [77] })}</div>
           <p class="hk-step-indicator">The G major scale, with its one-sharp key signature marked at the start.</p>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Try it</button>`;

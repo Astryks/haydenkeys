@@ -33,7 +33,7 @@ const MAJOR_SCALES = [
     key: "G",
     notes: [67, 69, 71, 72, 74, 76, 78, 79],
     fingeringRH: [1, 2, 3, 1, 2, 3, 4, 5],
-    accidentals: "one sharp (F#) — the same F# already inside your D and Em chords",
+    accidentals: "one sharp (F#) — the same F# already inside your D chord (D-F#-A)",
   },
   {
     day: 13,

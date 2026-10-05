@@ -33,7 +33,7 @@
 
         <section class="hk-how-section">
           <h3>Common chords, spelled out</h3>
-          <p>A chord's name always comes from its lowest note. Here are the ones you'll run into earliest:</p>
+          <p>A chord is named after its <strong>root</strong> — the note it's built up from (usually, but not always, its lowest note). Here are the ones you'll run into earliest:</p>
           <div id="hk-reference-glossary"></div>
         </section>
       </div>
@@ -54,9 +54,11 @@
       if (!el) continue;
       const label = document.createElement("div");
       label.className = "hk-ref-keylabel";
-      const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+      // Black keys carry both names (sharp and flat) — lessons use both,
+      // e.g. F# in the D chord and Bb in My Funny Valentine.
+      const NOTE_NAMES = ["C", "C#<br>Db", "D", "D#<br>Eb", "E", "F", "F#<br>Gb", "G", "G#<br>Ab", "A", "A#<br>Bb", "B"];
       const pc = ((midi % 12) + 12) % 12;
-      label.textContent = NOTE_NAMES[pc];
+      label.innerHTML = NOTE_NAMES[pc];
       el.appendChild(label);
     }
 

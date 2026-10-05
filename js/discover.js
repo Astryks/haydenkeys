@@ -256,7 +256,7 @@ function initDiscoverTab(root, { onStartSong } = {}) {
       // curated lesson flow uses (renderTranscribedPlayback, shared
       // from transcribe.js — not a second visualizer built here).
       statusEl.textContent = `Done — detected ${notes.length} notes.`;
-      renderTranscribedPlayback(playbackEl, notes);
+      renderTranscribedPlayback(playbackEl, notes, { file });
     } catch (err) {
       statusEl.textContent = err.message;
       console.error(err);

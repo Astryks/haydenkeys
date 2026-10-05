@@ -103,7 +103,7 @@ function computeKeyLayout(startMidi, endMidi) {
 }
 
 // Renders a keyboard into `container` and returns a control API.
-function renderKeyboard(container, { startMidi = 60, endMidi = 84 } = {}) {
+function renderKeyboard(container, { startMidi = 60, endMidi = 84, markMiddleC = true } = {}) {
   container.innerHTML = "";
   container.classList.add("hk-keyboard");
 
@@ -116,6 +116,12 @@ function renderKeyboard(container, { startMidi = 60, endMidi = 84 } = {}) {
     el.style.left = `${pos.xPct}%`;
     el.style.width = `${pos.widthPct}%`;
     el.dataset.midi = String(midi);
+    // Item 56: a permanent Middle C marker on every keyboard, so the
+    // landmark every lesson counts from is always visible on screen.
+    if (midi === 60 && markMiddleC) {
+      el.classList.add("hk-key-middlec");
+      el.title = "Middle C";
+    }
     container.appendChild(el);
     keyElements.set(midi, el);
   });
@@ -142,7 +148,7 @@ function renderKeyboard(container, { startMidi = 60, endMidi = 84 } = {}) {
   function clearHighlights() {
     keyElements.forEach((el) => {
       el.classList.remove("hk-key-highlight", "hk-key-hand-left", "hk-key-hand-right");
-      el.querySelectorAll(".hk-key-badge, .hk-key-notename").forEach((b) => b.remove());
+      el.querySelectorAll(".hk-key-badge, .hk-key-notename, .hk-key-letter, .hk-finger-badge").forEach((b) => b.remove());
     });
   }
 
@@ -154,6 +160,15 @@ function renderKeyboard(container, { startMidi = 60, endMidi = 84 } = {}) {
       const el = keyElements.get(midi);
       if (!el) return;
       el.classList.add("hk-key-highlight");
+      // Item 56: in a chord, every lit key shows its own note letter
+      // (G · B · D), so "the G chord" reads as three named keys rather
+      // than one labelled key plus two anonymous ones.
+      if (midiNotes.length > 1) {
+        const tag = document.createElement("div");
+        tag.className = "hk-key-letter";
+        tag.textContent = midiToName(midi).replace(/-?\d+$/, "");
+        el.appendChild(tag);
+      }
       if (midi === (rootMidi ?? midiNotes[0]) && (number || letter)) {
         const badge = document.createElement("div");
         badge.className = "hk-key-badge";

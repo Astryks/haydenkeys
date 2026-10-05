@@ -10,37 +10,62 @@
 
 import { renderKeyboard, playTone, midiToName } from "./keyboard.js";
 import { renderNoteHighway } from "./note-highway.js";
+import { playBeat } from "./drums.js";
+import { getAudioContext } from "./keyboard.js";
 
 // Item 44: a short cleanup pass on basic-pitch's raw note output.
-// Real piano notes are rarely shorter than ~60ms and rarely have a
-// same-pitch repeat land within ~30ms of the previous one ending — both
-// patterns are typical artifacts of an over-sensitive frame-by-frame
-// detector (a sustained note's pitch wobbling in and out of the
-// detection threshold for a frame or two, reported as several tiny
-// notes instead of one). This merges those back together and drops
-// anything left that's still too short to be a real played note,
-// rather than rendering every raw detection as its own note.
+//
+// Item 56, re-tuned after testing against recordings with KNOWN notes
+// (a melody, a chord progression, and both together). basic-pitch's
+// pitches and onsets were right for every real note (within ~10ms) —
+// the problems were all in this cleanup step:
+//  - It merged any same-pitch notes that touched. But two presses of
+//    the same key always touch, so "E E F G G" came back as one long E
+//    and one long G. Same-pitch fragments are now only joined when the
+//    later one is a tiny sliver (a pitch wobble), never a full note.
+//  - Faint overtones came through as notes: a quiet copy an octave,
+//    a 12th, two octaves or a 17th above a louder note starting at the
+//    same moment (the piano's own harmonics). Those are dropped when
+//    they're well under half as loud as the note they shadow — a real
+//    played octave is about as loud as its partner, so it stays.
+//  - Very short, quiet blips (under ~0.12s and quiet) are dropped.
+const OVERTONE_INTERVALS = new Set([12, 19, 24, 28]);
 function cleanupNotes(rawNotes) {
   const MIN_DURATION_SEC = 0.06;
+  const SLIVER_SEC = 0.08;
   const MERGE_GAP_SEC = 0.03;
   const sorted = [...rawNotes].sort((a, b) => a.startTimeSeconds - b.startTimeSeconds);
-  const merged = [];
+  const amp = (n) => n.amplitude ?? 0.5;
+
+  // 1. Re-join pitch-wobble slivers onto the note they broke off from.
+  const lastByPitch = new Map();
+  const joined = [];
   for (const note of sorted) {
-    const prev = merged[merged.length - 1];
-    if (
-      prev &&
-      prev.pitchMidi === note.pitchMidi &&
-      note.startTimeSeconds - (prev.startTimeSeconds + prev.durationSeconds) <= MERGE_GAP_SEC
-    ) {
-      prev.durationSeconds = Math.max(
-        prev.durationSeconds,
-        note.startTimeSeconds + note.durationSeconds - prev.startTimeSeconds
-      );
+    const prev = lastByPitch.get(note.pitchMidi);
+    const gap = prev ? note.startTimeSeconds - (prev.startTimeSeconds + prev.durationSeconds) : Infinity;
+    if (prev && gap <= MERGE_GAP_SEC && note.durationSeconds < SLIVER_SEC) {
+      prev.durationSeconds = Math.max(prev.durationSeconds, note.startTimeSeconds + note.durationSeconds - prev.startTimeSeconds);
       continue;
     }
-    merged.push({ ...note });
+    const copy = { ...note };
+    joined.push(copy);
+    lastByPitch.set(copy.pitchMidi, copy);
   }
-  return merged.filter((n) => n.durationSeconds >= MIN_DURATION_SEC);
+
+  // 2. Drop overtones of a louder note that starts at (about) the same time.
+  const withoutOvertones = joined.filter((n) =>
+    !joined.some((other) =>
+      other !== n &&
+      OVERTONE_INTERVALS.has(n.pitchMidi - other.pitchMidi) &&
+      Math.abs(other.startTimeSeconds - n.startTimeSeconds) <= 0.06 &&
+      amp(n) < 0.6 * amp(other)
+    )
+  );
+
+  // 3. Drop short, quiet blips and anything too short to be a played note.
+  return withoutOvertones.filter((n) =>
+    n.durationSeconds >= MIN_DURATION_SEC && !(n.durationSeconds < 0.12 && amp(n) < 0.45)
+  );
 }
 
 // basic-pitch requires mono audio at exactly 22050 Hz. decodeAudioData
@@ -196,6 +221,45 @@ function simplifyToBlocks(highwayNotes, { windowSec = 1, maxNotes = 4 } = {}) {
   return out;
 }
 
+// Item 56: a beat for uploaded songs (which come with no tempo data).
+// Estimates the beat from the detected note onsets: autocorrelate an
+// onset-strength signal (10ms bins) over 60-180 BPM, gently preferring
+// the 80-140 BPM range most songs sit in (so it doesn't lock onto half
+// or double time as easily), then pick the phase that lines up with the
+// most onsets. Returns null when there's too little to go on. An
+// estimate, labelled as one in the UI — not real drum transcription.
+function estimateBeat(notes) {
+  if (notes.length < 8) return null;
+  const BIN = 0.01;
+  const end = Math.max(...notes.map((n) => n.time));
+  const env = new Float32Array(Math.ceil(end / BIN) + 2);
+  notes.forEach((n) => { env[Math.round(n.time / BIN)] += 1; });
+  let best = null;
+  for (let lag = Math.round(60 / 180 / BIN); lag <= Math.round(60 / 60 / BIN); lag++) {
+    let score = 0;
+    for (let i = 0; i + lag < env.length; i++) {
+      if (!env[i]) continue;
+      // ±1 bin tolerance for slightly uneven playing
+      score += env[i] * (env[i + lag] + 0.5 * ((env[i + lag - 1] || 0) + (env[i + lag + 1] || 0)));
+      // Also credit onsets two beats later, so a song whose chords only
+      // change every other beat (or every bar) still finds its beat.
+      score += 0.5 * env[i] * (env[i + 2 * lag] || 0);
+    }
+    const bpm = 60 / (lag * BIN);
+    score *= Math.exp(-Math.pow(Math.log2(bpm / 110), 2) / (2 * 0.6 * 0.6));
+    if (!best || score > best.score) best = { lag, score };
+  }
+  if (!best || best.score <= 0) return null;
+  let bestOffset = 0;
+  let bestHits = -1;
+  for (let off = 0; off < best.lag; off++) {
+    let hits = 0;
+    for (let i = off; i < env.length; i += best.lag) hits += env[i] + 0.5 * ((env[i - 1] || 0) + (env[i + 1] || 0));
+    if (hits > bestHits) { bestHits = hits; bestOffset = off; }
+  }
+  return { beatSec: best.lag * BIN, offsetSec: bestOffset * BIN, bpm: Math.round(60 / (best.lag * BIN)) };
+}
+
 function formatClock(sec) {
   const s = Math.max(0, Math.floor(sec));
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
@@ -214,10 +278,12 @@ function formatClock(sec) {
 // same currentTime()/pausedAt clock as the highway), a note-name label
 // on every currently-highlighted key plus a "Now playing" readout, and
 // the opt-in Easy mode above.
-function renderTranscribedPlayback(container, notes) {
+function renderTranscribedPlayback(container, notes, { file = null } = {}) {
   // A second upload into the same container must stop the first one's
   // scheduled audio, not play both on top of each other.
   if (container._hkStopPlayback) container._hkStopPlayback();
+  if (container._hkObjectUrl) URL.revokeObjectURL(container._hkObjectUrl);
+  container._hkObjectUrl = null;
   if (!notes.length) {
     container.innerHTML = `<p class="hk-honest-note">No notes were detected in this clip.</p>`;
     return;
@@ -225,7 +291,12 @@ function renderTranscribedPlayback(container, notes) {
   const midiValues = notes.map((n) => n.pitchMidi).sort((a, b) => a - b);
   const minMidi = Math.max(21, midiValues[0] - 3);
   const maxMidi = Math.min(108, midiValues[midiValues.length - 1] + 3);
-  const medianMidi = midiValues[Math.floor(midiValues.length / 2)];
+  // Item 56: split hands at Middle C like real piano music, not at the
+  // median note — on a full band recording most detected notes are bass,
+  // so a median split painted half the bass line as "right hand". Falls
+  // back to the median only if nearly everything is on one side.
+  const aboveMiddleC = midiValues.filter((m) => m >= 60).length / midiValues.length;
+  const handSplitMidi = aboveMiddleC >= 0.1 && aboveMiddleC <= 0.9 ? 60 : midiValues[Math.floor(midiValues.length / 2)];
   const detailedNotes = notes
     .slice()
     .sort((a, b) => a.startTimeSeconds - b.startTimeSeconds)
@@ -233,10 +304,31 @@ function renderTranscribedPlayback(container, notes) {
       midi: n.pitchMidi,
       time: n.startTimeSeconds,
       duration: Math.max(0.15, n.durationSeconds),
-      hand: n.pitchMidi < medianMidi ? "left" : "right",
+      hand: n.pitchMidi < handSplitMidi ? "left" : "right",
     }));
   const easyNotes = simplifyToBlocks(detailedNotes);
   const SPEEDS = [0.5, 0.75, 1];
+  const beat = estimateBeat(detailedNotes);
+
+  // Item 56: the original recording, played in sync. Hearing the actual
+  // song (vocals included) is what tells you where you are in it — the
+  // piano re-synthesis alone doesn't. When it's on, it IS the clock:
+  // the highway and keyboard follow the media element's own position,
+  // so they can't drift from the audio. Slower speeds keep the pitch
+  // (browsers' default preservesPitch). Original on + piano notes off is
+  // the default whenever the file is available.
+  let originalEl = null;
+  if (file) {
+    originalEl = document.createElement("audio");
+    originalEl.preload = "auto";
+    originalEl.src = container._hkObjectUrl = URL.createObjectURL(file);
+    originalEl.preservesPitch = true;
+    originalEl.webkitPreservesPitch = true;
+  }
+  let originalOn = Boolean(originalEl);
+  let pianoOn = !originalEl;
+  let drumsOn = false;
+  let lastBeatSlot = null;
 
   let highwayNotes = detailedNotes;
   let totalDuration = 0;
@@ -255,6 +347,12 @@ function renderTranscribedPlayback(container, notes) {
         <button class="hk-speed-btn hk-speed-active" data-mode="detailed">Detailed</button>
         <button class="hk-speed-btn" data-mode="easy" title="Groups notes into simple chord-sized blocks">Easy</button>
         <button class="hk-btn hk-btn-primary" id="hk-upload-playpause">Play</button>
+      </div>
+      <div class="hk-speed-picker">
+        <span class="hk-speed-label">Hear:</span>
+        ${originalEl ? `<button class="hk-speed-btn ${originalOn ? "hk-speed-active" : ""}" data-toggle="original" title="Your recording, in sync with the falling notes">🎵 Original recording</button>` : ""}
+        <button class="hk-speed-btn ${pianoOn ? "hk-speed-active" : ""}" data-toggle="piano" title="The detected notes, played on piano">🎹 Piano notes</button>
+        ${beat ? `<button class="hk-speed-btn" data-toggle="drums" title="A simple beat at the song's estimated tempo">🥁 Beat (~${beat.bpm} BPM)</button>` : ""}
       </div>
       <div class="hk-upload-seek">
         <span class="hk-upload-clock" id="hk-upload-clock">0:00</span>
@@ -292,6 +390,7 @@ function renderTranscribedPlayback(container, notes) {
 
   function currentTime() {
     if (!playing) return pausedAt;
+    if (originalOn && originalEl && !originalEl.paused) return originalEl.currentTime;
     return pausedAt + ((performance.now() - playStartedAt) / 1000) * speed;
   }
 
@@ -302,6 +401,7 @@ function renderTranscribedPlayback(container, notes) {
 
   function scheduleAudioFrom(t) {
     clearScheduled();
+    if (!pianoOn) return;
     highwayNotes.forEach((n) => {
       if (n.time < t) return; // already started — don't replay it mid-note on resume/seek
       const delayMs = ((n.time - t) / speed) * 1000;
@@ -358,6 +458,13 @@ function renderTranscribedPlayback(container, notes) {
     }
     const t = currentTime();
     drawFrame(t);
+    if (drumsOn && beat && t >= beat.offsetSec) {
+      const slot = Math.floor((t - beat.offsetSec) / beat.beatSec);
+      if (slot !== lastBeatSlot) {
+        lastBeatSlot = slot;
+        playBeat(getAudioContext(), slot, getAudioContext().currentTime);
+      }
+    }
     if (t >= totalDuration) {
       pause();
       pausedAt = 0;
@@ -371,6 +478,12 @@ function renderTranscribedPlayback(container, notes) {
     if (pausedAt >= totalDuration) pausedAt = 0;
     playing = true;
     playStartedAt = performance.now();
+    lastBeatSlot = null;
+    if (originalOn && originalEl) {
+      originalEl.playbackRate = speed;
+      originalEl.currentTime = pausedAt;
+      originalEl.play().catch(() => {});
+    }
     scheduleAudioFrom(pausedAt);
     playBtn.textContent = "Pause";
     raf = requestAnimationFrame(loop);
@@ -380,6 +493,7 @@ function renderTranscribedPlayback(container, notes) {
     pausedAt = currentTime();
     playing = false;
     clearScheduled();
+    if (originalEl) originalEl.pause();
     if (raf) cancelAnimationFrame(raf);
     raf = null;
     playBtn.textContent = "Play";
@@ -396,6 +510,18 @@ function renderTranscribedPlayback(container, notes) {
       if (playing) pause();
       speed = Number(btn.dataset.speed);
       container.querySelectorAll("[data-speed]").forEach((b) => b.classList.toggle("hk-speed-active", b === btn));
+      if (wasPlaying) play();
+    });
+  });
+  container.querySelectorAll("[data-toggle]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const wasPlaying = playing;
+      if (playing) pause();
+      const which = btn.dataset.toggle;
+      if (which === "original") originalOn = !originalOn;
+      if (which === "piano") pianoOn = !pianoOn;
+      if (which === "drums") drumsOn = !drumsOn;
+      btn.classList.toggle("hk-speed-active", which === "original" ? originalOn : which === "piano" ? pianoOn : drumsOn);
       if (wasPlaying) play();
     });
   });

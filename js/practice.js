@@ -75,6 +75,11 @@ function initPracticeTab(root, { initialSong } = {}) {
   // by explicit choice, never forced into the default experience).
   let drumsOn = false;
   let lastBeatSlot = -1;
+  // Item 56: optional bass line (the chord's root, low, on beats 1 and
+  // 3) — a second backing instrument alongside the beat, same off-by-
+  // default rule and same clock.
+  let bassOn = false;
+  let lastBassSlot = -1;
 
   // Ear Check mode state
   let stopListening = null;
@@ -164,6 +169,10 @@ function initPracticeTab(root, { initialSong } = {}) {
                   title="A simple kick/snare/hi-hat beat under playback, roughly matched to the tempo">
             🥁 Beat: ${drumsOn ? "On" : "Off"}
           </button>
+          <button class="hk-btn hk-btn-small hk-drums-toggle ${bassOn ? "hk-drums-on" : ""}" id="hk-bass-toggle"
+                  title="A simple bass line: each chord's root note, low, on beats 1 and 3">
+            🎸 Bass: ${bassOn ? "On" : "Off"}
+          </button>
         </div>
         <div id="hk-highway" class="hk-highway-slot ${mode === "follow" ? "" : "hk-hidden"}"></div>
         <div id="hk-practice-keyboard" class="hk-keyboard-wrap"></div>
@@ -224,6 +233,13 @@ function initPracticeTab(root, { initialSong } = {}) {
     });
     root.querySelectorAll("[data-speed]").forEach((btn) => {
       btn.addEventListener("click", () => setSpeed(Number(btn.dataset.speed)));
+    });
+    root.querySelector("#hk-bass-toggle").addEventListener("click", () => {
+      bassOn = !bassOn;
+      lastBassSlot = -1;
+      const btn = root.querySelector("#hk-bass-toggle");
+      btn.textContent = `🎸 Bass: ${bassOn ? "On" : "Off"}`;
+      btn.classList.toggle("hk-drums-on", bassOn);
     });
     root.querySelector("#hk-drums-toggle").addEventListener("click", () => {
       drumsOn = !drumsOn;
@@ -468,6 +484,19 @@ function initPracticeTab(root, { initialSong } = {}) {
       }
     }
     const chordIndex = Math.min(songMeta.steps.length - 1, Math.floor(loopedT / chordDuration()));
+    if (bassOn && mode === "follow" && playing) {
+      const beatLenSec = chordDuration() / 4;
+      const beatSlot = Math.floor(t / beatLenSec);
+      if (beatSlot !== lastBassSlot) {
+        lastBassSlot = beatSlot;
+        const notes = chordSymbolToMidi(songMeta.steps[chordIndex].chord);
+        if (notes.length && beatSlot % 2 === 0) {
+          let bass = notes[0] - 24;
+          while (bass < 28) bass += 12;
+          playTone(bass, { duration: beatLenSec * 1.8 });
+        }
+      }
+    }
     if (chordIndex !== lastChordIndex) {
       lastChordIndex = chordIndex;
       const step = songMeta.steps[chordIndex];
@@ -661,7 +690,7 @@ function initPracticeTab(root, { initialSong } = {}) {
       // bare "Play it + one highlighted key" view — same function
       // Discover's upload flow calls, not a second implementation.
       statusEl.textContent = `Done — detected ${notes.length} notes.`;
-      renderTranscribedPlayback(playbackEl, notes);
+      renderTranscribedPlayback(playbackEl, notes, { file });
     } catch (err) {
       statusEl.textContent = err.message;
       console.error(err);

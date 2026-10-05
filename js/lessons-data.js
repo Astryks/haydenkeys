@@ -80,7 +80,7 @@ const LESSON8_CHORDS = [
 ];
 
 // Lesson 9 — key signatures: G major has one sharp (F#), which is
-// exactly the F# already played inside the D and Em chords since
+// exactly the F# already played inside the D chord (D-F#-A) since
 // Lesson 1 — the key signature is just a shorthand for "every F in
 // this piece is F#", not new information.
 const G_MAJOR_SCALE_FOR_STAFF = [67, 69, 71, 72, 74, 76, 78, 79]; // G4..G5, F# not F
@@ -198,7 +198,7 @@ const THEORY_LESSONS = [
   // "strong early-intermediate," never "advanced" — real advanced piano
   // takes years, not 35 lessons.
   { id: "lesson-11", title: "Day 11: C major scale", subtitle: "A scale is just degrees 1-7 in a row", description: "No black keys — the easiest possible scale, and the same numbers you already know from chords." },
-  { id: "lesson-12", title: "Day 12: G major scale", subtitle: "Same shape, new key", description: "One sharp (F#) — the exact note already hiding inside your D and Em chords." },
+  { id: "lesson-12", title: "Day 12: G major scale", subtitle: "Same shape, new key", description: "One sharp (F#) — the exact note already hiding inside your D chord (D-F#-A)." },
   { id: "lesson-13", title: "Day 13: D major scale", subtitle: "Same shape again", description: "Two sharps — the pattern keeps transposing, just like the chords did." },
   { id: "lesson-14", title: "Day 14: F major scale", subtitle: "The one exception", description: "One flat (Bb) — and the one scale where the fingering pattern genuinely changes." },
   { id: "lesson-15", title: "Day 15: Scales review", subtitle: "A chord is a scale, stacked", description: "Connecting the dots: scale degrees 1-3-5 played together are literally the chords you already know." },

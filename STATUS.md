@@ -2009,3 +2009,48 @@ hand down to A0, one-hand up to C8).
 - Easy mode is a heuristic, not chord recognition — it can keep an odd
   passing note.
 
+## 2026-10-05 update: upload accuracy, original-audio sync, backing instruments, beginner-clarity fixes (item 57)
+
+**Upload transcription, measured.** Tested against synthesized recordings with known notes (melody, chord
+progression, both together) and Sid's own "Fortnight" (Taylor Swift) file:
+- basic-pitch itself was accurate (every real note's pitch right, onsets within ~10ms). The errors were in
+  `cleanupNotes()`: it merged repeated same-pitch notes (Ode to Joy's "E E" became one long E) and passed
+  through quiet overtones/blips. Rewritten: only pitch-wobble slivers are re-joined; overtones (+12/19/24/28
+  semitones, under 60% of the louder note's amplitude, same onset) and short quiet blips are dropped.
+  Results: melody 80%→100% of notes found with 0 false notes; chords 24%→9% false; mixed 40%→16% false.
+- Fortnight (4 min): 1,872 notes in ~31s, every one in B major (7 pitch classes, zero outside), bass cycling
+  F#→G#→E. 60% of notes are bass, the vocal line is only partly captured — a limit of transcribing a full
+  band mix, stated honestly in the summary.
+- Hands now split at Middle C (was the median note, which painted bass as right hand).
+
+**"Where am I in the song?"** No lyrics (copyrighted; would need a license — same rule as before). Instead,
+uploads now play the **original recording in sync** (default on; the media element is the clock, pitch kept at
+slower speeds), with the piano re-play as a toggle.
+
+**Backing instruments.** Uploads: 🥁 Beat at an estimated tempo (onset autocorrelation; 100/75 BPM correct on
+the test clips, ~97 BPM for Fortnight). Practice: new 🎸 Bass toggle (chord root, low, beats 1 and 3) next to
+the existing 🥁 Beat.
+
+**Beginner-clarity audit fixes:**
+- Wrong theory fixed: "F# is inside the Em chord" (3 places) — it's only in D.
+- "Same 4 chords" claims → "same 1-5-6-4 pattern, letters change with the key" (teaser, Choose your song —
+  which now lists each song's chords, Lesson 1 montage — which now shows each song's key and chords).
+- Sharps/flats/half-steps explained at the first black key (Lesson 1's D chord) and in calibration;
+  "m" = minor explained at Em; Roman numerals explained in the montage; "note G" vs "the G chord" spelled out.
+- Every key of a lit chord shows its letter (G · B · D); Middle C has a permanent purple marker on every
+  keyboard; finger-number badges no longer linger after the fingers step.
+- Middle-C counting hints reworded ("the 5th white key, counting Middle C as 1") plus black-key landmarks;
+  calibration's "25-key keyboard has one group" claim fixed; "octave" defined.
+- Last Christmas explains its key (D) and pattern (1-6-2-5); song lessons show key + number pattern.
+- Chord parser: m9, 9, maj9, 7b9, 7#9, 7b5, 7#5, 7sus4, 6/9 with its 9th, slash-chord bass (D/F#).
+- My Funny Valentine voiced so the top key visibly walks C→B→Bb→A; ear training no longer lights the
+  answer first (find it by ear, Higher/Lower hints, Show me); reference page shows sharp AND flat names;
+  "named after its lowest note" → "named after its root"; cross-references by title, not stale numbers.
+
+### Honestly, not changed
+- Lesson 1's title "The 4 keys to play 100 songs" (Sid's own wording) still uses "keys" to mean chords —
+  suggest "The 4 chords to play 100 songs".
+- Lesson order unchanged: minor-key songs and 7th chords still appear before "Major or minor?" and the 7th-
+  chord lessons (reordering would re-lock progress for existing users) — suggest moving "Major or minor?"
+  right after Lesson 1.
+
