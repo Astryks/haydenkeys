@@ -939,3 +939,47 @@ wired up, and re-verified working — with one real bug found and fixed
 behavior surfaced and explained (not fixed, since redesigning the SW
 update strategy wasn't asked for). The lesson count is now a clean,
 duplicate-free 100. No other regressions found.
+
+## 2026-10-05 update: transparent mascot background + tagline change
+
+- [x] **Transparent mascot PNGs** (Sid's own edit, commit `9b407c4`,
+      flood-filled from the image borders rather than a naive global
+      color threshold) merged in and verified: spot-checked alpha
+      channel values at the corners (0, fully transparent) vs. the
+      panda/piano silhouette (255, fully opaque), and ascii-mapped the
+      whole alpha channel at a coarse grid to confirm a clean, coherent
+      cutout with no holes bled through the fur or sheet music.
+- [x] **Apple's no-alpha requirement for the iOS App Store icon handled
+      correctly**: the new transparent `mascot-square.png` is NOT used
+      directly for `AppIcon-512@2x.png` — it's flattened onto a solid
+      opaque cream background (`#fdf6fa`, the site's own background
+      color) first, then the same tightened crop from item 32 is
+      reapplied, confirmed via `file`/PIL that the saved icon has mode
+      `RGB` (no alpha channel at all).
+- [x] **PWA/app-icon-style sizes flattened, favicon sizes kept
+      transparent** — per Sid's own guidance ("flattening is the safer
+      default for app-icon-style uses, reserve pure transparency for
+      in-page display: header/favicon/narrator avatar"): `icon-16.png`/
+      `icon-32.png` (favicon `<link>` tags) stay transparent (`RGBA`);
+      `icon-180.png` (apple-touch-icon), `icon-192.png`, `icon-512.png`
+      (PWA manifest install icons) are flattened to opaque `RGB`. The
+      iOS launch screen (`Splash.imageset`) was also regenerated from
+      the new art for consistency.
+- [x] **Narrator avatar (`assets/mascot-face.png`) regenerated as
+      transparent** too, from the new source, same crop region as
+      before — explicitly one of the "in-page display" uses Sid called
+      out for keeping transparency.
+- [x] **Tagline changed** to Sid's exact wording, "Learn any song in
+      piano for free!", replacing "Learn piano the way four chords
+      taught the world a hundred songs." in both `index.html` and
+      `privacy.html` (the only two places it appeared).
+- [ ] **`assets/mascot-poses/*.png` background removal** — explicitly
+      flagged by Sid as optional/not required this pass. Not done; those
+      12 files still have their original cream background. Flagging as
+      a real, known follow-up rather than silently leaving it undone.
+
+Verified in a real browser: header and narrator avatar both now show a
+clean transparent edge blending into the page's own pastel gradient
+background (no visible cream square); the new tagline displays
+correctly; zero console errors beyond the known sandbox service-worker
+noise.
