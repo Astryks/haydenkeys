@@ -16,6 +16,171 @@ first (the real 1-5-6-4 pattern: G-D-Em-C, not the originally-misstated
 and now gates a 102-song library behind an honest difficulty-tier
 system.
 
+## Playbook for future instrument apps (item 49)
+
+Written for a future agent with zero memory of this conversation who
+needs to build a sibling app for a different instrument (Sid's next
+project: "Jaxx Guitar," same gamified/numbers-first concept, for
+guitar). This section is the reusable summary — read this instead of
+the whole file below, which is a chronological log, not a design doc.
+
+**1. Overall architecture — reuse directly, instrument-agnostic.**
+Pure static site: no backend, no database, no server-side code, no
+per-request cost. Every page is plain HTML/CSS/vanilla-JS ES modules
+(`<script type="module">`), no build step, no bundler, no framework.
+All user state (progress, streaks, badges, saved songs, calibration)
+lives in `localStorage` only — see `js/storage.js` for the full
+read/write API. This is *why* the app can be free forever: there is no
+ongoing hosting cost to recoup. A guitar app should copy this shape
+wholesale — it has nothing to do with piano specifically.
+
+**2. The lesson system design — reuse the pattern, not the content.**
+`js/lessons-data.js` builds one flat `LESSONS` array from several
+pieces, assembled in a specific order (see the file's own comments for
+the exact assembly, which has shifted over many items — don't assume a
+specific lesson count or order, re-read the file):
+  - `PRE_LESSONS` — a couple of onboarding lessons before Lesson 1
+    (e.g. "get an instrument," "find Middle C"/calibration). For
+    guitar, the calibration-equivalent would be "find which string is
+    which" or "tune your guitar" — same *role*, different content.
+  - `THEORY_LESSONS` — the core theory arc, written numbers-first:
+    teach "the 1, the 5, the 6, the 4" (Nashville numbers / scale
+    degrees) BEFORE letter chord names, because the same numbers
+    transpose to any key — this pedagogy choice is instrument-agnostic
+    and should carry over directly to guitar (a guitarist capo-ing up
+    two frets needs the same numbers-first mental model).
+  - `masterSongLesson(song, extra)` — a factory that auto-generates one
+    "Master: <Song Title>" lesson per song in the library, rather than
+    hand-writing one lesson per song. Directly reusable: swap in a
+    guitar chord-shape renderer instead of `renderKeyboard()`/
+    `highlightChord()` and the same factory pattern works.
+  - Tier gating (Beginner/Intermediate/Advanced): `getDifficulty(song)`
+    (in `songs-data.js`) buckets songs by tier; `tierUnlockStatus()` (in
+    `discover.js`) gates a tier until 5 songs in the prior tier are
+    completed (`UNLOCK_THRESHOLD`). This gating logic has nothing to do
+    with piano and should be lifted as-is.
+  - `withReservedPositions()` — places specific showcase lessons (e.g.
+    a classical/jazz preview) at an exact numbered position in the
+    generated sequence, regardless of how other content shifts around
+    them. Reusable as-is for any "drop a specific lesson at position
+    N" need.
+  - **Known real bug class to watch for in a new app**: lesson-count/
+    tier-boundary drift. This app had at least two real instances (a
+    duplicate-lesson bug in item 36, a tier-boundary placement check in
+    item 47) — always verify `TOTAL_LESSON_COUNT`, check for duplicate
+    IDs, and confirm *array position* (not the literal numeric suffix
+    in an id string) after inserting anything, the same way this app's
+    own STATUS.md entries do.
+
+**3. The song library approach — reuse the discipline, not the data.**
+Every song's chords in `js/songs-data.js` are independently
+cross-checked against at least two real sources before being marked
+`confidence: "confirmed"`; anything disputed or unverifiable is marked
+`confidence: "needs-verification"` and says so honestly in the UI
+(never silently guessed, never presented as fact). No chord-chart
+scraping (Ultimate Guitar, Songsterr, etc. explicitly ruled out at the
+product level, not just avoided as a dependency), no song lyrics
+anywhere, no YouTube/streaming-URL import (would violate those
+platforms' ToS). **All of this applies identically to a guitar app** —
+chord progressions are chord progressions regardless of instrument; the
+verification discipline and legal boundaries carry over word-for-word.
+
+**4. The "upload your own song" pipeline — reuse as-is.**
+`js/transcribe.js` is instrument-agnostic: `transcribeFile()` decodes
+any audio/video file, resamples to mono 22050 Hz via an
+`OfflineAudioContext` (`resampleToMono22050()`, required because
+basic-pitch needs that exact format), then runs Spotify's vendored,
+offline `basic-pitch` (audio → notes, Apache-2.0, `js/vendor/basic-pitch/`)
+entirely client-side. **Real lesson learned (item 44)**: the original
+code called `outputToNotesPoly()` with far more sensitive-than-default
+thresholds (`onsetThresh`/`frameThresh` at 0.25/0.25 vs. the library's
+real defaults of 0.5/0.3), causing a reported "6233 notes for one
+song" explosion from noise/harmonics. Fixed by using the library's own
+defaults plus a `cleanupNotes()` post-filter (merge same-pitch notes
+separated by <30ms gaps, drop anything under 60ms). **A guitar app
+reusing this pipeline should start from the library's real defaults,
+not copy this app's old over-tuned values.** Polyphonic pitch output
+(a note list with start/duration/pitch) is instrument-agnostic — the
+only guitar-specific work is turning that raw note list into chord
+*shapes* (see point 7).
+
+**5. Reusable UX/interaction patterns (items 46-48).**
+  - The falling-notes "highway" (`js/note-highway.js`) renders
+    scrolling note blocks timed against a shared clock
+    (`currentTime()`/`chordDuration()` in `practice.js`), horizontally
+    positioned via `keyboard.js`'s `computeKeyLayout()`. The *timing/
+    clock* mechanism is directly reusable; the *horizontal layout*
+    function is piano-key-specific and would need a guitar-fretboard
+    equivalent (see point 7).
+  - The multiple-choice chord-recognition ear-training quiz
+    (`runChordQuizLesson()` in `lessons-ui.js`, item 47): play a chord,
+    4 options (1 correct + 3 real distractors from the same
+    already-taught pool), immediate right/wrong feedback. Entirely
+    reusable for guitar — it only cares about chord *audio* and chord
+    *names*, never chord *shapes* or fingerings.
+  - "Play what you hear" open-ended practice mode (`initPlayByEar()`
+    in `practice.js`, item 48): pick a real song, hear its chord
+    progression, try to replicate it by ear, reveal the real chords to
+    self-check. Also entirely audio/chord-name based, not
+    shape-based — reusable as-is.
+  - The optional drum-beat layer (`js/drums.js`, item 45) and the
+    optional sampled-instrument upgrade (`js/piano-sample.js` +
+    vendored `smplr`, item 45) are both generic Web-Audio-level
+    enhancements with no piano-specific logic — reusable directly,
+    just point `smplr` at a different sampled instrument (e.g. an
+    acoustic/electric guitar sample set) instead of
+    `SplendidGrandPiano`.
+
+**6. Gamification — reuse as-is.**
+Streaks, daily goals, and badges (`js/badges.js`, `js/storage.js`) are
+pure `localStorage` logic with zero piano-specific assumptions baked
+in — lift directly.
+
+**7. What is genuinely piano-specific and needs fresh design work for
+guitar (do NOT assume these are reusable):**
+  - `js/keyboard.js`'s entire rendered keyboard (DOM piano keys,
+    `highlightChord()`, `highlightHands()`) — a guitar app needs chord-
+    shape/fret diagrams instead (which frets/strings to press, open vs.
+    muted strings), a fundamentally different visual grammar.
+  - Capo logic has no piano equivalent at all — new design surface.
+  - Strumming-pattern teaching (down/up strokes, rhythm patterns) has
+    no piano equivalent — new design surface, though the existing
+    "optional drum beat" clock-driven approach (point 5) could plausibly
+    generalize to "strum pattern driven by the same clock."
+  - The MIDI tab's computer-keyboard-key-to-piano-note mapping
+    (`js/computer-keys.js`) is piano-note-specific; a guitar app
+    exploring without a real guitar would need a different input
+    metaphor entirely (there's no obvious "QWERTY row = guitar string"
+    mapping the way there is for piano keys).
+  - The falling-notes highway's horizontal layout (point 5) needs a
+    fretboard-position equivalent, not just a recolor.
+
+**8. iOS wrapping — reuse directly.**
+The Capacitor setup (`ios/App/App.xcodeproj`, `capacitor.config.json`,
+the `www/` symlink-based bundling approach) has zero piano-specific
+logic and should be copied wholesale for a guitar app. **Real lesson
+learned (item 43)**: `www/` only symlinks files/folders that existed
+when first scaffolded — any new top-level HTML file added later (this
+app's `reference.html`/`privacy.html`) needs its own explicit symlink
+added, or it silently 404s inside the native app specifically while
+working fine on the web. Remember to add that symlink proactively for
+every new top-level page in a new project, not just when someone
+reports the native app is broken.
+
+**9. Mascot/illustration approach — partially reusable.**
+The "zero AI-generated art, Sid's own original hand-drawn illustration,
+multiple contextual pose variations for different app contexts"
+approach is a content/process choice independent of instrument — fully
+reusable *as a process*, but the actual piano-mascot artwork obviously
+isn't. **Real lesson learned (item 37)**: removing a flat color
+background from hand-drawn art works far better with a flood-fill from
+the image's own borders than a naive global color-threshold — the
+flood-fill approach correctly leaves color that happens to match the
+background elsewhere in the image (e.g. inside fur, sheet music)
+intact, where a global threshold would incorrectly punch holes in it.
+Worth reusing that specific technique for any future transparent-cutout
+work, regardless of instrument.
+
 ## The full checklist, re-verified
 
 - [x] **4+1 tabs**: Lessons, Discover, Practice, Saved, How It Works —
