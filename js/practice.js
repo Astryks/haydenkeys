@@ -94,8 +94,9 @@ function initPracticeTab(root, { initialSong } = {}) {
           <h3>Practice with your own recording</h3>
           <p>Upload a recording you made or legally own. Transcription runs
              locally in your browser using Spotify's <code>basic-pitch</code>
-             (Apache-2.0, via TensorFlow.js) — nothing is uploaded to a server.
-             See THIRD_PARTY_NOTICES.md for license details.</p>
+             (Apache-2.0, via TensorFlow.js), vendored directly in this repo
+             — no CDN, nothing uploaded to a server. See
+             THIRD_PARTY_NOTICES.md for license details.</p>
           <input type="file" id="hk-audio-upload" accept="audio/*" />
           <div id="hk-upload-status" class="hk-cal-status"></div>
         </section>
@@ -472,19 +473,24 @@ function initPracticeTab(root, { initialSong } = {}) {
       return;
     }
 
-    // Separately: loading the model needs the network (it's fetched
-    // from a CDN, never bundled/vendored — see THIRD_PARTY_NOTICES.md).
-    // A failure here is a genuinely different problem (no internet)
-    // from a decode/format problem, and is reported as such rather than
-    // one bundled, confusing message.
+    // basic-pitch (code + model weights) is vendored locally in
+    // js/vendor/basic-pitch/ — no runtime CDN dependency. This protects
+    // against unpkg/esm.sh dropping the package or Spotify archiving the
+    // project out from under a live site; Apache-2.0 explicitly permits
+    // redistribution. See THIRD_PARTY_NOTICES.md for exact version/
+    // provenance. A failure here now means a genuinely different problem
+    // than "no internet" (since nothing is fetched from a CDN anymore) —
+    // most likely the browser itself lacking WebGL/WASM support that
+    // TensorFlow.js needs — reported as such rather than blaming the
+    // network for something no longer network-dependent.
     let BasicPitch, outputToNotesPoly, addPitchBendsToNoteEvents, noteFramesToTime, basicPitch;
     try {
-      statusEl.textContent = "Loading transcription model from CDN (first use downloads ~a few MB, cached after)...";
+      statusEl.textContent = "Loading transcription model (vendored locally, no network needed)...";
       ({ BasicPitch, outputToNotesPoly, addPitchBendsToNoteEvents, noteFramesToTime } =
-        await import("https://esm.sh/@spotify/basic-pitch@1.0.1?bundle"));
-      basicPitch = new BasicPitch("https://unpkg.com/@spotify/basic-pitch@1.0.1/model/model.json");
+        await import("./vendor/basic-pitch/basic-pitch.bundle.js"));
+      basicPitch = new BasicPitch(new URL("./vendor/basic-pitch/model/model.json", import.meta.url).href);
     } catch (err) {
-      statusEl.textContent = `Couldn't reach the transcription model (${err.message}). This feature needs network access to fetch basic-pitch from its CDN the first time — check your connection and try again.`;
+      statusEl.textContent = `Couldn't load the local transcription model (${err.message}). This usually means your browser lacks WebGL/WASM support for TensorFlow.js.`;
       console.error(err);
       return;
     }

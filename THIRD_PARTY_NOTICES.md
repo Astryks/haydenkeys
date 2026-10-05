@@ -11,7 +11,10 @@ the sibling Dawsons project.
 
 | Component | License (verified) | What it does in Hayden Keys |
 |---|---|---|
-| `@spotify/basic-pitch` (`basic-pitch-ts`), loaded from a CDN (unpkg/esm.sh) at runtime | **Apache License 2.0** — verified directly against `github.com/spotify/basic-pitch`'s LICENSE file and license badge, and against the TypeScript sibling repo `github.com/spotify/basic-pitch-ts`. **Correction from the original brief:** this was assumed to be MIT; it is actually Apache-2.0. Apache-2.0 is still a permissive, commercial-use-friendly license with no fees — it just additionally requires preserving the license/notice and stating changes, which this notice does. | Automatic music transcription (audio → notes) for the Practice tab's "upload your own recording" feature. Runs as a TensorFlow.js model entirely in the user's browser — confirmed via Spotify's own documentation that "the model runs entirely in your browser via TensorFlow.js... your audio never leaves your device." Not bundled/vendored in this repo; fetched from a CDN at first use and cached by the browser, so it adds no weight to the base site and no server-side cost. |
+| `@spotify/basic-pitch` v1.0.1, **vendored locally** at `js/vendor/basic-pitch/` | **Apache License 2.0** — verified directly against `github.com/spotify/basic-pitch`'s LICENSE file and license badge, and against the TypeScript sibling repo `github.com/spotify/basic-pitch-ts`. License text copied in full at `js/vendor/basic-pitch/LICENSE-basic-pitch.txt`. **Correction from the original brief:** this was assumed to be MIT; it is actually Apache-2.0. Apache-2.0 is still a permissive, commercial-use-friendly license with no fees — it just additionally requires preserving the license/notice and stating changes, which this notice does. | Automatic music transcription (audio → notes) for the Practice tab's "upload your own recording" feature. Runs as a TensorFlow.js model entirely in the user's browser. **Originally loaded from the unpkg/esm.sh CDN at runtime; switched to a locally-vendored copy** (2026-10-05) specifically to remove the runtime dependency on those CDNs staying online — protects the app if Spotify archives the project or the CDN drops the package. `js/vendor/basic-pitch/basic-pitch.bundle.js` was built with `esbuild` from the real npm package (`@spotify/basic-pitch@1.0.1`, downloaded via `npm pack`, sha verified against the published npm registry tarball), bundling it together with its two actual runtime dependencies so nothing is fetched remotely: |
+| ↳ `@tensorflow/tfjs` (bundled into basic-pitch.bundle.js, not a separate file) | Apache-2.0 — this package doesn't ship its own LICENSE file in the npm tarball, so the license text isn't duplicated separately, but Apache-2.0 is declared in its own `package.json` and is the same license already copied in full for basic-pitch above. | The actual ML runtime basic-pitch's model runs on. |
+| ↳ `@tonejs/midi` (bundled into basic-pitch.bundle.js, not a separate file) | MIT — copied in full at `js/vendor/basic-pitch/LICENSE-tonejs-midi.txt`. | A basic-pitch-internal dependency (MIDI note-event utilities); not used directly by Hayden Keys' own code. |
+| Model weights, `js/vendor/basic-pitch/model/model.json` + `group1-shard1of1.bin` | Apache-2.0 (same basic-pitch license covers the published weights, same as the code) | The actual trained transcription model — copied unmodified from the npm package's own `model/` directory. Real size: ~900 KB total (174 KB JSON + 742 KB binary weights) — small enough that vendoring it added negligible repo weight, nowhere near "tens of MB." |
 
 No other third-party runtime code is used. The piano keyboard, chord
 playback, pitch detection, and all four tabs are plain DOM/CSS/Web
@@ -35,7 +38,8 @@ project.
 ## Hosting
 
 Deployed as a static site (e.g. GitHub Pages). No server-side code, no
-database, no paid API calls at runtime — the only network request this
-app ever makes after the initial page load is the one-time CDN fetch
-of the `basic-pitch` model, and only if/when the user chooses to upload
-their own audio.
+database, no paid API calls at runtime, and (as of 2026-10-05) **no
+runtime CDN dependency at all** — `basic-pitch` and its own dependencies
+are vendored locally, so the app makes zero third-party network
+requests after the initial page load, even when a user uploads their
+own audio.
