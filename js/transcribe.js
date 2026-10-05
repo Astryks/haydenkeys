@@ -212,9 +212,18 @@ function renderTranscribedPlayback(container, notes) {
   function loop() {
     const t = currentTime();
     highway.render(t, highwayNotes);
-    const active = highwayNotes.filter((n) => t >= n.time && t < n.time + n.duration).map((n) => n.midi);
-    if (active.length) kb.highlightChord(active, { rootMidi: active[0] });
-    else kb.clearHighlights();
+    // Item 55: use the SAME left/right hand split the highway above
+    // already colors notes by, instead of a generic single-color
+    // highlight — keeps the keyboard and the falling notes agreeing
+    // on hand coloring, same pink-left/light-blue-right convention
+    // used everywhere else two-handed content is shown.
+    const active = highwayNotes.filter((n) => t >= n.time && t < n.time + n.duration);
+    if (active.length) {
+      kb.highlightHands({
+        left: active.filter((n) => n.hand === "left").map((n) => n.midi),
+        right: active.filter((n) => n.hand === "right").map((n) => n.midi),
+      });
+    } else kb.clearHighlights();
     if (t >= totalDuration) {
       playing = false;
       pausedAt = 0;

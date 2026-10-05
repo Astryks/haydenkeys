@@ -1846,3 +1846,60 @@ deeper DOM restructure) — functional, not polished; a future pass
 could give the keyboard its own independent scroll region if that
 rougher edge matters later. Zero new console errors beyond the known
 sandbox-only service-worker noise.
+
+## 2026-10-05 update: final orientation call — landscape-only, polished (item 55)
+
+- [x] **Final reversal applied**: `ios/App/App/Info.plist` now locks
+      both iPhone and iPad to landscape only (`UIInterfaceOrientationLandscapeLeft`/
+      `Right` only — portrait and portrait-upside-down removed from
+      both orientation arrays).
+- [x] **Item 54's portrait workaround removed as dead code**: the
+      portrait horizontal-scroll media query is gone from
+      `css/style.css`, since the native app can no longer be rotated
+      into portrait at all.
+- [x] **Plain web version handled honestly**: the web can't force
+      orientation the way the native wrapper can, so a new
+      `.hk-rotate-prompt` (in `index.html`, shown only via a
+      `(orientation: portrait) and (max-width: 700px)` media query —
+      never on desktop or landscape) replaces the entire page with a
+      friendly "Rotate your phone" message instead of showing a
+      cramped layout. Verified live via screenshot at 375x812.
+- [x] **Landscape vertical-space polish**: found via actual screenshot
+      at 812x375 that the full-size header/logo/tagline alone pushed
+      the falling-notes highway and keyboard below the fold before any
+      music content was visible at all — arguably the real "not
+      polished" issue at phone landscape heights. Added a
+      `(orientation: landscape) and (max-height: 500px)` rule that
+      compacts the header/logo/tagline/tabs and gives the highway a
+      touch more height (there's spare width in landscape), so the
+      most visually important part of the app is immediately visible.
+- [x] **Real hand-color inconsistency found and fixed**: `note-highway.js`'s
+      falling blocks were still hardcoded to an old amber/light-purple
+      pair from before item 30 repainted every other hand-colored
+      element (the keyboard itself) to pastel pink/light-blue — the
+      highway and the keyboard beneath it had silently disagreed on
+      hand colors ever since. Fixed by reading the live
+      `--hk-accent-2-soft`/`--hk-accent-soft` CSS custom properties
+      instead of a second hardcoded pair, so they can't drift apart
+      again.
+- [x] **Uploaded-song playback (item 44) brought in line too**: its
+      keyboard highlight was using a single generic color during
+      playback even though the highway above it already computes a
+      real left/right hand split per note — switched to
+      `highlightHands()` with that same split so the keyboard and
+      highway agree. Checked the ear-training quiz (item 47) and
+      "play what you hear" (item 48) too: the quiz highlights one
+      chord as a single unit (not two-handed content, left as-is
+      correctly), and the practice mode shows no visual at all by
+      design (audio-only, "no falling notes" is the whole point) — so
+      neither needed a hand-color fix.
+
+Verified live: landscape at 812x375 shows a compact header with the
+highway (now 150px tall) and keyboard both visible with minimal
+scrolling, and reading `--hk-accent-2-soft`/`--hk-accent-soft` live
+confirms the highway's colors now match the keyboard's pink/light-blue
+exactly; portrait at 375x812 shows the full-screen rotate prompt
+instead of a cramped layout; a plain landscape resize back to
+812x375/900x400 confirms the prompt correctly does not appear outside
+portrait. Zero new console errors beyond the known sandbox-only
+service-worker noise. `node --check` passes on every touched JS file.

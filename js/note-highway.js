@@ -4,9 +4,15 @@
 // aligned to the exact key(s) each note corresponds to (reusing
 // keyboard.js's own computeKeyLayout, not a second layout system).
 //
-// Color is by hand, reusing the SAME amber-left/purple-right convention
-// already built for the two-hand lessons and the jazz lesson (items 7/8/10)
-// rather than inventing a second hand-color scheme.
+// Color is by hand, reusing the SAME pink-left/light-blue-right
+// convention the keyboard itself uses (.hk-key-hand-left/-right) for
+// every two-hand lesson. Item 55 polish: this used to be a second,
+// hand-picked pair of hex values (amber/purple) that silently drifted
+// out of sync when item 30 repainted the keyboard's hand colors to
+// pastel pink/light-blue — the canvas never got updated, so the
+// highway and the keyboard beneath it disagreed on hand colors. Fixed
+// by reading the SAME CSS custom properties the keyboard CSS uses, so
+// they can't drift apart again.
 //
 // Timing: each note carries an absolute `time` (seconds from the start
 // of the song/loop) and `duration`. At render time, a note's vertical
@@ -18,10 +24,13 @@
 // scroll — verified directly against the clock in practice.js (same
 // `currentTime()` driving both the keyboard highlight and the highway).
 
-const HAND_COLORS = {
-  left: "#f0d9a6", // amber — matches .hk-key-hand-left
-  right: "#b9a6ff", // light purple — matches .hk-key-hand-right
-};
+function handColors() {
+  const style = getComputedStyle(document.documentElement);
+  return {
+    left: style.getPropertyValue("--hk-accent-2-soft").trim() || "#f4b8d0",
+    right: style.getPropertyValue("--hk-accent-soft").trim() || "#a7d8f0",
+  };
+}
 
 function renderNoteHighway(container, keyLayout, { lookaheadSec = 2.2, hitLineFrac = 0.88 } = {}) {
   container.innerHTML = "";
@@ -54,6 +63,7 @@ function renderNoteHighway(container, keyLayout, { lookaheadSec = 2.2, hitLineFr
     const h = canvas.height;
     const hitLineY = h * hitLineFrac;
     ctx.clearRect(0, 0, w, h);
+    const colors = handColors();
 
     // Hit line
     ctx.strokeStyle = "rgba(255,255,255,0.25)";
@@ -77,7 +87,7 @@ function renderNoteHighway(container, keyLayout, { lookaheadSec = 2.2, hitLineFr
       const blockWidth = (pos.widthPct / 100) * w;
       const blockHeight = Math.max(6, bottomY - topY);
 
-      ctx.fillStyle = note.hand === "left" ? HAND_COLORS.left : HAND_COLORS.right;
+      ctx.fillStyle = note.hand === "left" ? colors.left : colors.right;
       ctx.globalAlpha = note.time <= now ? 1 : 0.85;
       ctx.fillRect(x + 1, topY, Math.max(2, blockWidth - 2), blockHeight);
       ctx.globalAlpha = 1;
