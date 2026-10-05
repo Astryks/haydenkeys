@@ -928,38 +928,100 @@ function initLessonsTab(root) {
     // in the library (confirmed, no capo/alternate-version note).
     const FEATURED_SONG = SONGS.find((s) => s.title === "Shallow");
     const montageSongs = ONE_FIVE_SIX_FOUR_SONGS.filter((s) => s.title !== FEATURED_SONG.title);
+    // The opening teaser (item 40) shows a quick taste of 3 OTHER real
+    // songs — distinct from Shallow (the full walkthrough) and kept out
+    // of the later montage pool so nothing repeats twice in one lesson.
+    const TEASER_SONGS = montageSongs.slice(0, 3);
+    const montageSongsAfterTeaser = montageSongs.slice(3);
 
-    // Finding your starting key now has its own earlier lesson ("Get
-    // Started" — see runGetStarted below), so this lesson starts
-    // straight at teaching the first chord.
-    let step = "teach";
+    // Item 38/40: anchor every early chord to the one landmark already
+    // established in "Get Started" (Middle C), the same equipment-
+    // agnostic reasoning — "count white keys from Middle C" works no
+    // matter how big or small the keyboard is, unlike counting from an
+    // edge. C's root IS Middle C itself, a nice concrete callback.
+    const CHORD_ANCHOR = {
+      C: "Its root is <strong>Middle C itself</strong> — the exact key you found in Get Started.",
+      D: "Its root is <strong>2 white keys to the right of Middle C</strong> (C, D — that's it).",
+      Em: "Its root is <strong>3 white keys to the right of Middle C</strong> (C, D, E).",
+      G: "Its root is <strong>5 white keys to the right of Middle C</strong> — count them: C, D, E, F, G.",
+    };
+
+    // Optional, non-blocking reference link (item 38) — never inserted
+    // into the required flow, just a small escape hatch for anyone
+    // curious about the full keyboard/more chords than these 4.
+    const REFERENCE_LINK = `<p class="hk-ref-link"><a href="reference.html" target="_blank" rel="noopener">
+      Curious about all the keys and chords? Tap here — you don't need this right now to keep going.</a></p>`;
+
+    // Finding your starting key itself now has its own earlier lesson
+    // ("Get Started" — see runGetStarted below); this lesson opens with
+    // a hook/teaser instead of jumping straight into teaching (item 40).
+    let step = "teaser";
+    let teaserIdx = 0;
     let teachIdx = 0;
     let songIdx = 0;
     let montageIdx = 0;
 
     function renderStep() {
-      if (step === "teach") {
+      if (step === "teaser") {
+        const s = TEASER_SONGS[teaserIdx];
+        content.innerHTML = mascotSay(`
+          <h3>You can play 100 songs with just 4 chords.</h3>
+          <p>Here they are. Here's proof: <strong>"${s.title}"</strong> by ${s.artist} uses this exact same
+             4-chord pattern (${s.degreeSequence}).</p>`, "assets/mascot-poses/maestro-conducting.png");
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">${teaserIdx < TEASER_SONGS.length - 1 ? "Next proof" : "Okay, show me how"}</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => {
+          if (teaserIdx < TEASER_SONGS.length - 1) { teaserIdx++; renderStep(); }
+          else { step = "slowdown"; renderStep(); }
+        });
+      } else if (step === "slowdown") {
+        content.innerHTML = mascotSay(`
+          <h3>Okay — let's slow down and actually learn this.</h3>
+          <p>A <strong>chord</strong> just means pressing a few keys at once, together, so they ring out as
+             one sound. That's the whole concept. Let's find the first one on your actual keyboard.</p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Let's go</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step = "find-g"; renderStep(); });
+      } else if (step === "find-g") {
+        const gChord = LESSON1_CHORDS.G;
+        kb.highlightChord([gChord.root], { letter: "G", rootMidi: gChord.root });
+        playTone(gChord.root, { duration: 0.6 });
+        content.innerHTML = mascotSay(`
+          <h3>First, find G — no matter what keyboard you've got.</h3>
+          <p>Start from the <strong>Middle C you found in Get Started</strong>. Now count 5 white keys to the
+             right, including Middle C itself: <strong>C, D, E, F, G</strong>. That last one, G, is lit up
+             below. This works the same way whether your keyboard has 25 keys or 88 — always count from
+             Middle C, never from the edge.</p>
+          <p><strong>Press that G key now.</strong></p>`);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Got it</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step = "teach"; teachIdx = 0; renderStep(); });
+      } else if (step === "teach") {
         const key = LESSON1_SEQUENCE[teachIdx];
         const chord = LESSON1_CHORDS[key];
         const noteNames = chord.notes.map((n) => noteLetter(n));
         kb.highlightChord(chord.notes, { number: chord.number, letter: chord.letter, rootMidi: chord.root });
-        const chordIntro =
-          teachIdx === 0
-            ? `<p>Hi! I'm your guide. A <strong>chord</strong> means pressing a few keys at once, together.</p>`
-            : "";
         content.innerHTML = `
           <p class="hk-step-indicator">Chord ${teachIdx + 1} of 4</p>
           <div class="hk-big-degree">${chord.number}<span class="hk-big-letter">${chord.letter}</span></div>
-          ${mascotSay(`${chordIntro}
-            <p>This chord is called <strong>${chord.letter}</strong>.</p>
-            <p>It's <strong>${chord.notes.length} keys, all lit up below: ${noteNames.join(", ")}</strong>.</p>
+          ${mascotSay(`
+            <p>This chord's <strong>name is ${chord.letter}</strong> — named after its lowest note. It's made
+               of ${chord.notes.length} individual keys, <strong>named ${noteNames.join(", ")}</strong>: press all
+               ${chord.notes.length} together and that's the ${chord.letter} chord.</p>
+            <p>${CHORD_ANCHOR[key]}</p>
             <p><strong>Press all ${chord.notes.length} lit-up keys now.</strong> Then tap Next.</p>`)}`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Next</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => {
           if (teachIdx < LESSON1_SEQUENCE.length - 1) { teachIdx++; renderStep(); }
-          else { step = "quiz"; renderStep(); }
+          else { step = "other-chords"; renderStep(); }
         });
         playChord(chord.notes, { delay: 0.1 });
+      } else if (step === "other-chords") {
+        kb.clearHighlights();
+        content.innerHTML = `
+          ${mascotSay(`<h3>These 4 are the most useful to start.</h3>
+            <p>There are other chords out there too — you don't need them yet, these 4 alone unlock a huge
+               number of real songs.</p>`)}
+          ${REFERENCE_LINK}`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Quiz me</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => { step = "quiz"; renderStep(); });
       } else if (step === "quiz") {
         content.innerHTML = `
           ${mascotSay(`<p>Now play all four in order: <strong>1 (G) &rarr; 5 (D) &rarr; 6 (Em) &rarr; 4 (C)</strong>.
@@ -1008,19 +1070,19 @@ function initLessonsTab(root) {
       } else if (step === "montage-intro") {
         kb.clearHighlights();
         content.innerHTML = mascotSay(`
-          <h3>You already know more songs than you think.</h3>
-          <p>Same four chords, same order — here's a quick run through ${montageSongs.length} more real songs in the
-             library that use this exact pattern. Just tap through, next song, next song.</p>`);
+          <h3>Remember the proof from the very start? Here's the rest of it.</h3>
+          <p>Same four chords, same order — here's a quick run through ${montageSongsAfterTeaser.length} more real
+             songs in the library that use this exact pattern. Just tap through, next song, next song.</p>`);
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Go</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { montageIdx = 0; step = "montage"; renderStep(); });
       } else if (step === "montage") {
-        const s = montageSongs[montageIdx];
+        const s = montageSongsAfterTeaser[montageIdx];
         content.innerHTML = `
-          <p class="hk-step-indicator">Song ${montageIdx + 1} of ${montageSongs.length}</p>
+          <p class="hk-step-indicator">Song ${montageIdx + 1} of ${montageSongsAfterTeaser.length}</p>
           ${mascotSay(`<h3>${s.title}</h3><p>${s.artist} — same 4 chords (${s.degreeSequence}).</p>`)}`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Next song</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => {
-          if (montageIdx < montageSongs.length - 1) { montageIdx++; renderStep(); }
+          if (montageIdx < montageSongsAfterTeaser.length - 1) { montageIdx++; renderStep(); }
           else { step = "social"; renderStep(); }
         });
       } else if (step === "social") {

@@ -983,3 +983,99 @@ clean transparent edge blending into the page's own pastel gradient
 background (no visible cream square); the new tagline displays
 correctly; zero console errors beyond the known sandbox service-worker
 noise.
+
+## 2026-10-05 update: Lesson 1 clarity fix, Middle-C anchors, new optional
+## reference page, two song-library additions, full Lesson 1 narrative restructure (items 38, 39, 40)
+
+- [x] **Chord-name vs. note-name ambiguity fixed** on every one of Lesson
+      1's 4 chord-teaching screens (G, D, Em, C), not just G. Old wording
+      ("This chord is called G. It's 3 keys, all lit up below: G, B, D")
+      used "G" for two different things with nothing distinguishing them.
+      New wording for each chord explicitly separates the two: *"This
+      chord's name is G — named after its lowest note. It's made of 3
+      individual keys, named G, B, D: press all 3 together and that's the
+      G chord."* Verified live for all 4 chords (G/D/Em/C) in a real
+      browser — each one correctly names the chord once, then lists its
+      individual notes once, with explanatory text in between.
+- [x] **Middle-C physical anchor added to all 4 chords**, reusing the
+      exact landmark from the Get Started calibration lesson (the "two
+      black keys nearest the middle" method), not re-explaining it from
+      scratch:
+      - G — "5 white keys to the right of Middle C — count them: C, D, E, F, G."
+      - D — "2 white keys to the right of Middle C (C, D — that's it)."
+      - Em — "3 white keys to the right of Middle C (C, D, E)."
+      - C — "Middle C itself — the exact key you found in Get Started."
+      Verified live, each anchor line renders under its corresponding
+      chord.
+- [x] **New optional, non-blocking reference page built**: `reference.html`.
+      Checked first whether something suitable already existed — How It
+      Works covers the pitch-detection ML model specifically, not a
+      keys/chords glossary, so it's genuinely different content, not a
+      duplicate. The new page has a full 2-octave keyboard diagram with
+      every key labeled with its real note name, plus a chord glossary
+      (G, D, Em, C, Am, Bm) spelled out note-by-note — all pulled from the
+      same already-verified chord data the lessons themselves use
+      (`LESSON1_CHORDS`, `LESSON5_CHORD`, `LESSON2_DEGREES`), not invented
+      fresh. Linked from Lesson 1's "these 4 are the most useful to
+      start" screen via a small, clearly secondary line: *"Curious about
+      all the keys and chords? Tap here — you don't need this right now
+      to keep going."* — opens in a new tab (`target="_blank"`), never
+      inserted into the main lesson flow. Verified live: keyboard renders
+      with every note correctly labeled (C, C#, D, D#, E, F, F#, G, G#,
+      A, A#, B repeating across both octaves), glossary shows all 6
+      chords with correct notes, zero console errors.
+- [x] **"Make You Feel My Love" (Adele) checked before adding** — given
+      the real duplicate-lesson bug item 36 found (My Funny Valentine
+      taught twice), explicitly grepped the library first rather than
+      assuming. Confirmed it already exists (added in item 16) with
+      honest data: `confidence: "needs-verification"`, chords left as
+      "insufficient agreement for a simple chart" with notes explaining
+      the Dylan-original vs. Adele-cover dispute. Left untouched — no
+      duplicate created.
+- [x] **"My Love Mine All Mine" (Mitski) added**, genuinely new. Chords
+      (Amaj7, Db7, D, Dm — the "Creep progression": a borrowed major III
+      and a minor iv) cross-checked across multiple independent sources
+      that agree on the exact chord set and independently name the same
+      Creep-progression connection — not one chart copied around — so
+      marked `confidence: "confirmed"`, not needs-verification. Verified
+      via node: parses correctly, classifies as Intermediate difficulty,
+      brings the real song count to 103 and `TOTAL_LESSON_COUNT` to 101
+      (its own auto-generated "Master: My Love Mine All Mine" lesson),
+      confirmed no ID collisions. Verified live in the roadmap sidebar at
+      position 88.
+- [x] **Lesson 1's opening restructured into the exact 6-step arc**:
+      1. **Teaser, before any teaching** — "You can play 100 songs with
+         just 4 chords. Here they are. Here's proof," cycling through 3
+         real library songs (Love Story, Someone You Loved, Perfect) with
+         "Next proof" / final "Okay, show me how" buttons. Verified live,
+         all 3 play through correctly.
+      2. **Explicit slow-down transition** — "Okay — let's slow down and
+         actually learn this," into the existing what's-a-chord explainer.
+         Verified live.
+      3. **Finding G, equipment-agnostic** — "First, find G — no matter
+         what keyboard you've got," using the same Middle-C-anchored,
+         count-don't-assume-edge method as calibration: "count 5 white
+         keys to the right, including Middle C itself... This works the
+         same way whether your keyboard has 25 keys or 88 — always count
+         from Middle C, never from the edge." Verified live with the G key
+         correctly highlighted and labeled on the keyboard.
+      4. **All 4 chords taught with the item-38 clarity fix** (see above).
+      5. **"Other chords exist" + optional reference link** — "These 4 are
+         the most useful to start... There are other chords out there
+         too," with the `reference.html` link. Verified live.
+      6. **Return to real songs, framed as the teaser's payoff** — the
+         montage-intro screen now explicitly says "Remember the proof from
+         the very start? Here's the rest of it," and the montage pool
+         correctly excludes the 3 songs already shown in the teaser
+         (confirmed live: "Song 1 of 23," starting with Yellow, not
+         repeating Love Story/Someone You Loved/Perfect).
+      Full flow verified start-to-finish in a real browser as a
+      brand-new user (localStorage cleared): piano-buying pre-lesson →
+      Get Started (Middle C skip) → teaser (3 songs) → slowdown → find-G
+      → teach G/D/Em/C (each with clarity fix + anchor) → other-chords +
+      reference link → quiz (G→D→Em→C root presses) → Shallow walkthrough
+      (4 chords) → montage-intro (teaser callback) → montage song 1 of 23.
+      `node --check js/lessons-ui.js` passes. Network tab shows all
+      requests 200 OK; only console message is the single known
+      sandbox-only "unknown error... fetching the script" service-worker
+      noise already documented in earlier audits — no new errors.

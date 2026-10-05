@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Keyboard &amp; Chord Reference — Hayden Keys</title>
+<meta name="description" content="An optional reference: every note name on the keyboard, and a short glossary of common chords. You don't need this to follow the lessons." />
+<link rel="icon" href="assets/icons/icon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="assets/icons/icon-180.png" />
+<meta name="theme-color" content="#fdf6fa" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="hk-header">
+    <img src="assets/mascot-square.png" alt="Hayden Keys mascot — a hand-drawn panda playing an upright piano" class="hk-logo" />
+    <h1>Hayden Keys</h1>
+    <p class="hk-tagline">Learn any song in piano for free!</p>
+  </header>
+
+  <main>
+    <section class="hk-panel">
+      <div class="hk-how">
+        <h2>Keyboard &amp; chord reference</h2>
+        <p class="hk-how-sub">Totally optional. The lessons teach you everything you need, when you need it — this
+           page is just here for anyone curious to look ahead. Bookmark it and come back any time.</p>
+
+        <section class="hk-how-section">
+          <h3>Every note name, labeled</h3>
+          <p>Piano keys repeat in a pattern of 12 (7 white, 5 black), over and over, low to high. Here are two
+             octaves' worth, each key labeled with its real name:</p>
+          <div id="hk-reference-keyboard" class="hk-keyboard-wrap"></div>
+        </section>
+
+        <section class="hk-how-section">
+          <h3>Common chords, spelled out</h3>
+          <p>A chord's name always comes from its lowest note. Here are the ones you'll run into earliest:</p>
+          <div id="hk-reference-glossary"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="hk-footer">
+    <p><a href="index.html">&larr; Back to Hayden Keys</a></p>
+  </footer>
+
+  <script type="module">
+    import { renderKeyboard } from "./js/keyboard.js";
+    import { LESSON1_CHORDS, LESSON5_CHORD, LESSON2_DEGREES } from "./js/lessons-data.js";
+
+    const kb = renderKeyboard(document.getElementById("hk-reference-keyboard"), { startMidi: 48, endMidi: 79 });
+    for (let midi = 48; midi <= 79; midi++) {
+      const el = kb.getKeyElement(midi);
+      if (!el) continue;
+      const label = document.createElement("div");
+      label.className = "hk-ref-keylabel";
+      const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+      const pc = ((midi % 12) + 12) % 12;
+      label.textContent = NOTE_NAMES[pc];
+      el.appendChild(label);
+    }
+
+    // Glossary pulled straight from the same real, already-verified data
+    // the lessons themselves use — not invented fresh for this page.
+    const bm = LESSON2_DEGREES.find((d) => d.letter === "Bm");
+    const chords = [
+      { letter: "G", ...LESSON1_CHORDS.G },
+      { letter: "D", ...LESSON1_CHORDS.D },
+      { letter: "Em", ...LESSON1_CHORDS.Em },
+      { letter: "C", ...LESSON1_CHORDS.C },
+      { letter: "Am", notes: LESSON5_CHORD.notes },
+      { letter: "Bm", notes: bm ? bm.notes : [] },
+    ];
+    const NOTE_NAMES2 = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+    function noteName(midi) {
+      return NOTE_NAMES2[((midi % 12) + 12) % 12];
+    }
+    const glossaryEl = document.getElementById("hk-reference-glossary");
+    glossaryEl.innerHTML = `<ul class="hk-ref-glossary-list">${chords.map((c) =>
+      `<li><strong>${c.letter}</strong> — ${c.notes.map(noteName).join(", ")}</li>`
+    ).join("")}</ul>`;
+  </script>
+</body>
+</html>

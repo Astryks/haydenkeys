@@ -1389,6 +1389,29 @@ const SONGS = [
     notes:
       "No reliable source with real chord/key detail for this specific song was found (searches returned other Michael Learns to Rock songs and an unrelated same-titled song by a different artist instead) — flagged rather than guessed.",
   },
+  {
+    // Item 39: independently researched and cross-checked across
+    // multiple sources (a UkuTabs-style chord chart, a separate
+    // "Creep progression" reference discussing this exact song, and a
+    // third general chord-chart result) — all agree on the same chord
+    // set and all independently identify it as using the famous
+    // "Creep" borrowed-chord progression (I-III7-IV-iv in A major,
+    // the same trick Radiohead's "Creep" uses in G), which is also a
+    // real, musically-sensible fact on its own (not just "sources
+    // agree," the harmony itself checks out). Confident enough to mark
+    // confirmed rather than needs-verification.
+    title: "My Love Mine All Mine",
+    artist: "Mitski",
+    genre: "Indie Pop",
+    popularityRank: 103,
+    key: "A major",
+    chords: ["Amaj7", "Db7", "D", "Dm"],
+    degreeSequence: "I(maj7) - III7 - IV - iv (the \"Creep progression\" — a borrowed major III and minor iv)",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    notes:
+      "Uses the same borrowed-chord trick as Radiohead's 'Creep' (a major chord on the 3rd degree, then the 4th degree played both major and minor) — multiple independent sources agree on this exact chord set (Amaj7, Db7, D, Dm) and independently name the Creep-progression connection, not just one site's chart copied around.",
+  },
 ];
 
 // Precomputed, honestly-reported summary for the Lesson 1 payoff screen.

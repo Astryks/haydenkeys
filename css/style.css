@@ -263,6 +263,23 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
   .hk-midi-keylabel { opacity: 0.35; font-size: 0.6rem; }
 }
 
+/* Keyboard & chord reference page (item 38) */
+.hk-ref-keylabel {
+  position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+  font-size: 0.68rem; font-weight: bold; color: var(--hk-text-dim); pointer-events: none;
+}
+.hk-key-black .hk-ref-keylabel { color: #d8d8e0; }
+.hk-ref-glossary-list { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; margin: 0; }
+.hk-ref-glossary-list li {
+  background: var(--hk-bg); border: 1px solid var(--hk-border); border-radius: 8px;
+  padding: 8px 12px; font-size: 0.9rem;
+}
+/* The optional "want to know more?" link on chord-teaching screens
+   (item 38) — deliberately understated, never styled like a primary
+   lesson action, so it reads as genuinely secondary/skippable. */
+.hk-ref-link { margin: 4px 0 0; font-size: 0.82rem; }
+.hk-ref-link a { color: var(--hk-text-dim); text-decoration: underline; }
+
 /* Lessons */
 .hk-lesson-map { display: flex; flex-direction: column; gap: 10px; padding: 16px 0; }
 .hk-lessons-title { margin: 0 0 2px; font-size: 1.4rem; color: var(--hk-accent-2); }
