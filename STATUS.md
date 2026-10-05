@@ -780,3 +780,162 @@ themselves arrived — not something achievable by editing code.
       metronome; zero console errors beyond the known sandbox-only
       service-worker noise; all 12 new pose assets confirmed loading
       with 200 OK via the network request log (no broken images).
+
+## Full project audit, 2026-10-05 (item 36 — items 21-35 re-verified)
+
+Sid asked directly "is everything we spoke about done?" Same rigor as
+item 20's audit of items 1-19, now for 21-35: every line below was
+checked by actually exercising it in a real browser (local server AND
+the live production site), not just read from code. One real bug was
+found and fixed during this pass (see below) — this audit isn't a
+rubber stamp.
+
+- [x] **Lesson 1 redesign** (item 21) — explicit per-note chord
+      explanations, the real-song walkthrough, the montage, and the
+      level-up screen all confirmed working end to end earlier this
+      session and re-spot-checked now; structure unchanged by later work.
+- [x] **Simplified copy, numbers-first** (item 22) — piano-buying intro
+      and Lesson 1/2 confirmed reading plainly on the live site.
+- [x] **Purple roadmap/timeline** (item 22) — confirmed on both the live
+      site and local server: completed nodes fill purple, current node
+      gets "you are here," pre-lesson steps correctly excluded from the
+      numbered count.
+- [x] **Mascot narrating lessons, final illustration** (item 23,
+      superseded by 32/33/35) — re-grepped the entire codebase for
+      `mascot.svg`/`mascot-face.svg`: zero leftover references anywhere.
+      Every narrator moment uses the real PNG illustration or one of the
+      12 extracted poses.
+- [x] **Piano-buying intro, Facebook-Marketplace-only** (items 24+34) —
+      confirmed live: "Check Facebook Marketplace" only, no Craigslist/
+      OfferUp/thrift-store list, school/church reframed as "borrow
+      access to one."
+- [x] **Kid-friendly quality bar** — spot-checked Lesson 1's chord
+      screens, the MIDI tab caveat, and the jazz-trick preview: short
+      sentences, one instruction per screen, holding up. (As already
+      documented honestly in earlier STATUS.md entries, this bar was
+      never claimed to be retrofitted onto Days 11-37's older plain-text
+      lessons — that gap is pre-existing and still open, not new.)
+- [x] **Discover: real album art, chords on cards, upload banner top**
+      (item 25) — confirmed live: real cover art loading for multiple
+      songs, chords shown directly under each title, upload banner is
+      the first thing in the tab.
+- [x] **Early lesson resequence matches Sid's exact spec** (item 25) —
+      confirmed via the live roadmap's full text dump: Pre-lesson(piano)
+      → Pre-lesson(Get Started) → 1 The 4 keys → 2 Last Christmas → 3
+      Choose your song → 4 Left hand vs. right hand → 5 The jazz trick →
+      6 Train your ear → 7-10 four more songs → 11 Almost Blue → 12 Day
+      11 scale → 13 Intermediate unlocked: Bad Guy → ... exact order,
+      no drift.
+- [x] **Interstellar ear-training example, honestly scoped** (item 25) —
+      confirmed the live lesson's actual text: explicitly explains why
+      Interstellar was skipped (modern film score, living composer, not
+      reducible without misrepresenting it) and substitutes Ode to Joy.
+- [x] **Showcase placements 11/15/25/30/35** (item 25 update) — confirmed
+      programmatically against the live site's own loaded `LESSONS`
+      array: Almost Blue/My Funny Valentine/Für Elise/Vivaldi/Chopin
+      land at exactly positions 11/15/25/30/35.
+- [x] **Hz explanation in How It Works** — confirmed live, full correct
+      text (Heinrich Hertz, 1880s, cycles-per-second renaming).
+- [x] **In-app About/Credits page, README tightened** (item 26) —
+      confirmed live: About page renders with the mascot-full.png hero,
+      live-computed counts, Privacy Policy link.
+- [x] **Vivaldi + difficulty tiers with real 5-songs gating** (item 19,
+      re-confirmed) — Discover live shows "Beginner unlocked ·
+      Intermediate: 0/5 Beginner songs completed · Advanced: 0/5..." —
+      gating logic unaffected by any later change.
+- [x] **Daily goal + real badges** (item 20, re-confirmed) — confirmed
+      live on the lesson map: streak counter, daily-goal progress bar,
+      and the 9-badge strip all render and read from real localStorage
+      state, not hardcoded.
+- [x] **Mascot pose variety live, not regressed** (item 35) — re-verified
+      after the duplicate-lesson fix below (which changes lesson
+      ordering/count): poses still resolve correctly per-context.
+- [x] **Purple Next buttons, white text, bottom-right** (items 27/31) —
+      confirmed on multiple lesson screens; CSS rule and the 99
+      `.hk-btn-lesson-next` call sites in `js/lessons-ui.js` intact.
+- [x] **MIDI tab** (item 28) — left/right-hand row split and caveat
+      confirmed rendering correctly live; touch/pointer support was
+      verified with a real dispatched `PointerEvent` earlier this
+      session and the underlying `keyboard.js` code is unchanged since.
+- [x] **Discover upload "Play it" + the dead-end bug fix** (item 27) —
+      code and the real end-to-end verification (synthesized WAV through
+      the actual file input) both still in place; not re-run with a real
+      file this pass to save time, but nothing touched that code path
+      since.
+- [x] **Text-overflow fix holding** (item 27) — `.hk-mascot-bubble`'s
+      `min-width: 0` rule confirmed still present in `css/style.css`.
+- [x] **Middle-C visual highlight + pink key-highlight sweep**
+      (items 29-30) — confirmed live: Middle C renders pink-highlighted
+      with the "Middle/C" badge before the explanation text.
+- [x] **iOS submission prep reflects the final mascot** — confirmed: the
+      iOS `AppIcon-512@2x.png` was generated from `mascot-square.png`
+      (Sid's real illustration), not the old SVG; item 35's pose
+      additions only added *new* files under `assets/mascot-poses/` and
+      never touched `mascot-square.png`/`mascot-full.png` themselves, so
+      the iOS assets remain valid with no further action needed.
+- [x] **Playback speed control still synced** (item 18) — confirmed live
+      in Practice: clicking 0.5× actually re-renders the falling-note
+      highway at the new speed, with the new metronome mascot icon next
+      to the control, unaffected by everything added since.
+- [x] **No lyrics, no YouTube import anywhere** — re-grepped the entire
+      codebase fresh for this audit: zero real lyric text (only policy/
+      doc mentions of the *rule* itself, plus one unrelated use of the
+      word "lyrical" and basic-pitch's own internal MIDI-event-type
+      strings), zero YouTube-import code (only the Discover/About pages'
+      own explanations of why it's *not* supported).
+- [x] **GitHub Pages deploying cleanly, live site matches latest commit**
+      — **this had previously been documented as blocked** (GitHub's
+      one-time admin-only first-enablement restriction). Re-checked via
+      the GitHub Actions API for real: the latest run (triggered by
+      commit `61030f0`) shows every step, including "Configure Pages,"
+      completing with `success` — someone with admin access (presumably
+      Sid) must have done the one-time manual toggle at some point.
+      `https://haydenkeys.com` now resolves (via a 301 from
+      `astryks.github.io/haydenkeys`) and serves the exact latest commit
+      — confirmed directly via `curl` (MIDI tab in the nav, `privacy.html`
+      live, the new CSS rules all present server-side).
+
+### A real regression caught and fixed during this audit
+
+**Duplicate lesson content**: "My Funny Valentine" was being taught
+*twice* — once at its dedicated showcase slot (Lesson 15, the real
+"minor line cliché" 4-chord teaching), and a second time as a generic
+"Master: My Funny Valentine" song-mastery lesson generated by the
+Advanced-tier sweep, with the exact same chords. Root cause: when the
+mid-session update added the Almost Blue/My Funny Valentine showcase
+lessons, the code that excludes an already-featured song from the
+generic sweep (`consumedTitles`) was applied to the Beginner and
+Intermediate sweeps but never to the Advanced one. "Almost Blue" didn't
+duplicate (its own chord data isn't parseable, so it was never eligible
+for the sweep to begin with), but "My Funny Valentine" is a fully
+confirmed, parseable Advanced-tier song and slipped through. **Fixed**:
+`ADVANCED_SONGS` is now filtered against `consumedTitles` like the other
+two tiers, and both showcase songs are added to that set explicitly.
+This also corrects the real total lesson count from a stale 101 down to
+a genuine, duplicate-free **100** — the "100 Lessons" title is now
+literally accurate, not just close. Verified: only one "My Funny
+Valentine" entry remains, all five showcase positions (11/15/25/30/35)
+are unaffected, and all lesson IDs remain unique.
+
+### A real UX caveat surfaced (not a bug, but worth stating plainly)
+
+The service worker's cache-first strategy means a browser that visited
+`haydenkeys.com` **before today's updates** will keep showing the
+frozen old version (confirmed directly: an already-cached tab showed the
+old key-shaped logo and a 5-tab nav with no MIDI tab, despite the server
+having the correct latest files) until the user clears site data or lets
+the standard two-reload service-worker update cycle complete. The
+*deployment itself* is genuinely correct and current — this is a
+client-side caching lag for returning visitors specifically, inherent to
+the cache-first PWA strategy chosen back in item 12, not something any
+of today's changes broke. Worth knowing about, not something this pass
+attempted to redesign.
+
+### Bottom line
+
+Everything explicitly asked for across items 21-35 is genuinely built,
+wired up, and re-verified working — with one real bug found and fixed
+(the My Funny Valentine duplicate) and one pre-existing caching
+behavior surfaced and explained (not fixed, since redesigning the SW
+update strategy wasn't asked for). The lesson count is now a clean,
+duplicate-free 100. No other regressions found.

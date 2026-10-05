@@ -306,7 +306,23 @@ const NEW_FRONT_LESSONS = [
 // itself) so this feels like fresh choices, not a repeat.
 const CHOOSE_SONGS = BEGINNER_SONGS.filter((s) => s.oneFiveSixFourMatch && s.title !== "Shallow").slice(0, 10);
 
-const consumedTitles = new Set(["Shallow", "Last Christmas", ...CHOOSE_SONGS.map((s) => s.title)]);
+// "My Funny Valentine" and "Almost Blue" get their own dedicated
+// showcase lessons (11 and 15, added in a later update — see
+// SPECIAL_POSITIONS below) — excluded here too so the generic
+// Advanced-tier sweep doesn't also generate a second, redundant
+// "Master: My Funny Valentine" lesson for the exact same song. Real
+// duplicate-content bug found during the item-36 full audit: the
+// Advanced sweep (unlike the Beginner/Intermediate sweeps) wasn't
+// filtered against consumedTitles at all, so "My Funny Valentine"
+// (confirmed-chord, Advanced-tier) silently got taught twice — once at
+// Lesson 15, once again as the very last song-mastery lesson. "Almost
+// Blue" didn't duplicate (its own chord data isn't fully parseable, so
+// it was never in the Advanced sweep's pool to begin with), but it's
+// added here too for the same reason, in case that ever changes.
+const consumedTitles = new Set([
+  "Shallow", "Last Christmas", "My Funny Valentine", "Almost Blue",
+  ...CHOOSE_SONGS.map((s) => s.title),
+]);
 
 // Lessons 7-10: four more individual Beginner-tier songs, distinct from
 // the "Choose your song" list.
@@ -339,7 +355,7 @@ const BEGINNER_REMAINING = BEGINNER_SONGS.filter((s) => !consumedTitles.has(s.ti
 const INTERMEDIATE_REMAINING = INTERMEDIATE_SONGS.filter((s) => !consumedTitles.has(s.title));
 const beginnerRemainingLessons = BEGINNER_REMAINING.map((s) => masterSongLesson(s));
 const intermediateRemainingLessons = INTERMEDIATE_REMAINING.map((s) => masterSongLesson(s));
-const advancedSongLessons = ADVANCED_SONGS.map((s) => masterSongLesson(s));
+const advancedSongLessons = ADVANCED_SONGS.filter((s) => !consumedTitles.has(s.title)).map((s) => masterSongLesson(s));
 
 const theoryById = Object.fromEntries(THEORY_LESSONS.map((l) => [l.id, l]));
 // lesson-1 (the 4 keys) and lesson-11 (C major scale, pulled forward as
