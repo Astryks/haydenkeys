@@ -4,9 +4,10 @@ import { initSavedTab } from "./saved.js";
 import { initLessonsTab } from "./lessons-ui.js";
 import { initHowItWorksTab } from "./how-it-works.js";
 import { initAboutTab } from "./about.js";
+import { initMidiTab } from "./midi.js";
 import { checkBadges } from "./badges.js";
 
-const TABS = ["discover", "practice", "saved", "lessons", "how", "about"];
+const TABS = ["discover", "practice", "saved", "lessons", "how", "about", "midi"];
 const panels = {};
 let savedApi = null;
 let discoverApi = null;
@@ -56,6 +57,7 @@ function init() {
   lessonsApi = initLessonsTab(panels.lessons);
   initHowItWorksTab(panels.how);
   initAboutTab(panels.about);
+  initMidiTab(panels.midi);
 
   showTab("lessons");
 }

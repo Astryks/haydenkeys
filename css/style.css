@@ -228,6 +228,24 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-badge-hand { font-size: 1.1rem; font-weight: bold; color: #1a2a33; }
 .hk-key-badge-left .hk-badge-letter { color: #7a2e49; }
 
+/* MIDI tab: computer-keyboard-playable virtual piano (item 28) */
+.hk-midi { padding: 16px 0 40px; }
+.hk-midi-instructions { margin: 10px 0 16px; font-size: 0.9rem; }
+.hk-hand-left-label { color: var(--hk-accent-2); font-weight: bold; }
+.hk-hand-right-label { color: var(--hk-accent); font-weight: bold; }
+.hk-midi-keylabel {
+  position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+  font-size: 0.7rem; font-weight: bold; color: var(--hk-text-dim); pointer-events: none;
+}
+.hk-key-black .hk-midi-keylabel { color: #d8d8e0; }
+@media (max-width: 640px) {
+  /* Computer-key labels are meaningless without a physical keyboard —
+     de-emphasize them on touch-sized widths so tapping is the obvious
+     primary interaction instead (same mobile-responsive spirit as the
+     rest of the app, item 12). */
+  .hk-midi-keylabel { opacity: 0.35; font-size: 0.6rem; }
+}
+
 /* Lessons */
 .hk-lesson-map { display: flex; flex-direction: column; gap: 10px; padding: 16px 0; }
 .hk-lessons-title { margin: 0 0 2px; font-size: 1.4rem; color: var(--hk-accent-2); }

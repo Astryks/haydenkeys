@@ -508,3 +508,49 @@ rest of that page.
       tab's own (separate, pre-existing) upload flow too, for the same
       honesty reason — it had the exact same "Playback is Phase 2" claim,
       which would otherwise now be stale/inaccurate.
+
+## 2026-10-05 update: new MIDI tab — computer-keyboard-playable virtual piano
+
+- [x] **New "MIDI" tab** (`js/midi.js`, 6th nav tab) — a fully playable
+      on-screen keyboard driven by the computer's physical keyboard, for
+      anyone exploring the app without a real piano nearby. Reuses
+      `keyboard.js`'s existing `renderKeyboard`/`playTone`/
+      `highlightHands` exactly as-is — no second parallel
+      piano-rendering or audio implementation.
+- [x] **Left/right-hand row split, per Sid's exact refinement**: the
+      home row (`A S D F G H J K L ; '`, 11 keys) is the left hand's
+      range (C3-A#3); the top letter row (`Q W E R T Y U I O P [ ]`,
+      12 keys) is the right hand's range (C4-B4) — a continuous 25-note
+      span, left hand lower/right hand higher, the same register
+      convention real two-hand playing uses. Wired into the exact same
+      `highlightHands()` left/right color coding (pink/blue) already
+      used by the falling-note highway and every two-hand lesson, not a
+      new color scheme.
+- [x] **Required caveat included, not buried**: a mascot-voiced note at
+      the top of the tab says plainly that this is handy for exploring
+      without a piano, but real physical practice is what actually
+      builds muscle memory, with a direct pointer to the "Get yourself a
+      piano" lesson.
+- [x] **Real touch/pointer support, verified, not assumed**: `keyboard.js`
+      already binds `pointerdown`/`pointerup` (the unified Pointer
+      Events API covers mouse AND touch natively), so tapping keys
+      works for free — verified directly by dispatching a real
+      `PointerEvent` with `pointerType: "touch"` at a 375px mobile
+      viewport and confirming the correct `hk-key-pressed` /
+      `hk-key-hand-left` classes applied and cleared correctly. Also
+      verified real `KeyboardEvent`s for both rows produce correct
+      left/right highlighting and clear on key-up.
+- [x] **Mobile-responsive key labels**: the on-screen computer-key
+      labels (meaningless without a physical keyboard) fade to low
+      opacity under 640px, same breakpoint convention as the rest of the
+      app's mobile-responsive work (item 12), so tapping is the obvious
+      primary interaction on touch-sized screens.
+- [x] **No regression to other tabs' keyboard input**: the computer-key
+      listener is attached to `document` but checks the MIDI panel's own
+      visibility before acting, and ignores input while focus is in a
+      text field — verified by typing "asdf quick" into Discover's
+      search box (which overlaps several mapped letters) while on a
+      different tab and confirming it types normally.
+- [x] Standalone-tab scope only this pass — not wired as an alternate
+      input method inside Practice/Lessons (explicitly left as "your
+      call" in the brief; the standalone tab works fully on its own).
