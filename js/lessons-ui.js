@@ -1077,6 +1077,27 @@ function initLessonsTab(root) {
         // transition's promise generic; the step that actually leads
         // into G (below) is the one that now says "G" in its button.
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Okay, show me how</button>`;
+        controls.querySelector("#hk-next").addEventListener("click", () => goForward({ step: "key-and-numbers" }));
+      } else if (step === "key-and-numbers") {
+        // Item 52: two words/ideas just got used in the teaser ("key",
+        // "numbers") that have never actually been explained — fixed
+        // right here, at their first real use, same pattern as item
+        // 51's numbering clarification.
+        content.innerHTML = mascotSay(`
+          <h3>Two quick words before we start: "key" and "numbers."</h3>
+          <p>Every song has a <strong>"home" note</strong> — like home base in a game. For this song, G is
+             home. We call that G's <strong>"key."</strong> All the other chords are described by how far
+             they are from home.</p>
+          <p class="hk-honest-note">Heads up: that's a totally different "key" from the piano keys you press
+             with your fingers. Same word, two different things — sorry about that!</p>
+          <p>Here's a secret about the <strong>numbers</strong> (1-5-6-4): the exact same song pattern can
+             start from ANY home note. Starting from G, it's G-D-Em-C. Starting from C instead, the very
+             same pattern becomes C-G-Am-F — different letters, but it's still the same dance moves, just
+             done in a different spot! The numbers are the dance moves — they never change. The letters are
+             just which spot you're standing in. Learn the number-dance once, and you can spot it in ANY
+             song, in ANY key, even when the letters look totally different.</p>`,
+          "assets/mascot-poses/maestro-conducting.png");
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Got it</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => goForward({ step: "slowdown" }));
       } else if (step === "slowdown") {
         content.innerHTML = mascotSay(`

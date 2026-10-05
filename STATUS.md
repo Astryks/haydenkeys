@@ -1726,3 +1726,35 @@ clearly on G's teach screen immediately after both numbers ("5 white
 keys" and the big "1") have been shown, reads naturally in the
 mascot's casual voice, and does not repeat on later chords. Zero new
 console errors beyond the known sandbox-only service-worker noise.
+
+## 2026-10-05 update: explain "key" and why numbers beat letters, kid-level (item 52)
+
+- [x] **New step added to Lesson 1** (`step: "key-and-numbers"`,
+      between the teaser and the chord-definition "slowdown" step) —
+      checked first whether "key" (the musical sense) had ever actually
+      been defined plainly anywhere in the app before this: it hadn't,
+      it was just used casually starting in the teaser's own line ("the
+      same numbers work in any key").
+- [x] **"Key" explained with the home-base analogy**, explicitly
+      flagging the word collision with physical piano keys, close to
+      verbatim to Sid's suggested wording: "Every song has a 'home'
+      note... We call that G's 'key'... that's a totally different
+      'key' from the piano keys you press with your fingers. Same
+      word, two different things — sorry about that!"
+- [x] **Numbers-vs-letters explained with the "dance moves" analogy**:
+      same pattern starting from G is G-D-Em-C, starting from C
+      becomes C-G-Am-F — "different letters, but it's still the same
+      dance moves, just done in a different spot... Learn the
+      number-dance once, and you can spot it in ANY song, in ANY key."
+- [x] **Both placed at the exact first point of confusion**, same
+      pattern as item 51's fix: right after the teaser is the first
+      place "key" and "1-5-6-4" are both used, so the explanation lands
+      immediately, not buried pages later or bolted onto an unrelated
+      screen.
+
+Verified live in a real browser from a freshly cleared localStorage:
+the new step renders both explanations clearly between the teaser and
+the "let's slow down" chord-definition screen, Back/Next both work,
+and the sequence correctly continues into the existing fingers/find-G
+flow afterward. Zero new console errors beyond the known sandbox-only
+service-worker noise.
