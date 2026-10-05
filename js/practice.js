@@ -1,4 +1,4 @@
-import { SONGS, SONG_STRUCTURES } from "./songs-data.js";
+import { SONGS, SONG_STRUCTURES, ONE_FIVE_SIX_FOUR_SONGS } from "./songs-data.js";
 import { renderKeyboard, playChord, playTone } from "./keyboard.js";
 import { chordSymbolToMidi, parseChordSymbol } from "./chord-utils.js";
 import { initCalibration } from "./calibration.js";
@@ -154,6 +154,18 @@ function initPracticeTab(root, { initialSong } = {}) {
           <div id="hk-upload-status" class="hk-cal-status"></div>
           <div id="hk-upload-playback"></div>
         </section>
+        <section class="hk-playbyear-section" id="hk-playbyear-section">
+          <h3>🎧 Play what you hear</h3>
+          <p>A different kind of practice: no falling notes, no chord names shown up front. Pick a song, listen
+             to its chord progression, then try to replicate it on the keyboard below by ear. Replay as many
+             times as you want, then reveal the real chords to check yourself.</p>
+          <select id="hk-playbyear-song"></select>
+          <div class="hk-playbyear-controls">
+            <button class="hk-btn hk-btn-primary" id="hk-playbyear-play">&#9658; Play clip</button>
+            <button class="hk-btn" id="hk-playbyear-reveal">Reveal chords</button>
+          </div>
+          <div id="hk-playbyear-answer" class="hk-honest-note"></div>
+        </section>
       </div>`;
 
     const kbWrap = root.querySelector("#hk-practice-keyboard");
@@ -189,6 +201,7 @@ function initPracticeTab(root, { initialSong } = {}) {
     root.querySelector("#hk-open-calibration").addEventListener("click", toggleCalibration);
     root.querySelector("#hk-timeline").addEventListener("pointerdown", onPlayheadDown);
     root.querySelector("#hk-audio-upload").addEventListener("change", handleUpload);
+    initPlayByEar();
 
     renderSections();
     renderControls();
@@ -500,6 +513,47 @@ function initPracticeTab(root, { initialSong } = {}) {
       panel.classList.add("hk-hidden");
       panel.innerHTML = "";
     }
+  }
+
+  // --- "Play what you hear" ear-training practice mode (item 48) -------
+  // Deliberately open-ended practice, not a graded lesson: pick a real
+  // song with a simple, well-known progression (the 1-5-6-4 family,
+  // same pool Lesson 1's montage uses), listen to its chords played
+  // once, try to find them by ear on the keyboard below with NO chord
+  // names or falling notes shown, replay as many times as wanted, then
+  // reveal the real answer to check yourself. Reuses playChord() — the
+  // same chord-progression audio every lesson already uses — not a
+  // second audio path.
+  const PLAY_BY_EAR_SONGS = ONE_FIVE_SIX_FOUR_SONGS.slice(0, 15);
+  function initPlayByEar() {
+    const select = root.querySelector("#hk-playbyear-song");
+    select.innerHTML = PLAY_BY_EAR_SONGS.map(
+      (s) => `<option value="${s.title}">${s.title} — ${s.artist}</option>`
+    ).join("");
+    const answerEl = root.querySelector("#hk-playbyear-answer");
+    answerEl.textContent = "";
+
+    function currentPick() {
+      return PLAY_BY_EAR_SONGS.find((s) => s.title === select.value) || PLAY_BY_EAR_SONGS[0];
+    }
+    function playClip() {
+      const song = currentPick();
+      let t = 0;
+      song.chords.forEach((symbol) => {
+        const notes = chordSymbolToMidi(symbol);
+        playChord(notes, { delay: t });
+        t += 1.1;
+      });
+    }
+    select.addEventListener("change", () => {
+      answerEl.textContent = "";
+    });
+    root.querySelector("#hk-playbyear-play").addEventListener("click", playClip);
+    root.querySelector("#hk-playbyear-reveal").addEventListener("click", () => {
+      const song = currentPick();
+      answerEl.innerHTML = `<strong>${song.title}</strong> by ${song.artist}: <code>${song.chords.join(" - ")}</code>
+        (${song.degreeSequence}). How close did you get?`;
+    });
   }
 
   // --- Upload-your-own-audio transcription (basic-pitch, Apache-2.0) ---

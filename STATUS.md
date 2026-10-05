@@ -1454,3 +1454,36 @@ deliberately wrong, one correct, confirming both feedback states
 render correctly), reached the results screen, roadmap showed "92 of
 104 done" with the quiz correctly positioned. Zero new console errors
 beyond the known sandbox-only service-worker noise.
+
+## 2026-10-05 update: "Play what you hear" ear-training practice mode (item 48)
+
+- [x] **New, separate practice feature** (distinct from item 47's
+      in-lesson multiple-choice quiz) added as its own section inside
+      the existing Practice tab, right after the upload section — easy
+      to find without being jammed into the fixed 100+-lesson sequence,
+      per the explicit instruction that this is a drill/practice mode,
+      not a graded lesson.
+- [x] **Song pool pulled from the real library**: the first 15 songs
+      from `ONE_FIVE_SIX_FOUR_SONGS` (`js/songs-data.js`) — genuinely
+      simple, well-known progressions, not an arbitrary or difficult
+      pick, per the instruction to start with reasonable ear-training
+      difficulty.
+- [x] **Reuses the existing chord-progression audio path**: "Play clip"
+      calls the same `playChord()`/`chordSymbolToMidi()` every lesson
+      already uses to sound out a song's real chords in sequence — no
+      second audio implementation. Replayable as many times as wanted
+      (just re-triggers the same function, no play-once lockout).
+      Verified live: clicking Play clip produces zero console errors.
+- [x] **"Reveal chords" shows the real answer**, pulled directly from
+      the song's own verified data (title, artist, chord list, degree
+      sequence) — verified live: revealed "Love Story by Taylor Swift:
+      D - A - Bm - G (I - V - vi - IV). How close did you get?"
+      matching the real song data exactly, not a placeholder.
+- [x] No sheet music, no chord names, and no falling notes are shown
+      before reveal — genuinely ear-first, per the spec.
+
+Verified live in a real browser: song picker populated with real
+titles/artists, Play clip triggers real chord audio with zero console
+errors, Reveal chords displays the correct real chord data for the
+selected song. Zero new console errors beyond the known sandbox-only
+service-worker noise.
