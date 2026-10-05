@@ -2,6 +2,7 @@ import { renderKeyboard, playChord, playTone, midiToName } from "./keyboard.js";
 import { initCalibration } from "./calibration.js";
 import { chordSymbolToMidi } from "./chord-utils.js";
 import { createTunerWidget } from "./pitch.js";
+import { registerComputerKeyboardTarget } from "./computer-keys.js";
 import {
   LESSON1_CHORDS,
   LESSON1_SEQUENCE,
@@ -396,6 +397,23 @@ function initLessonsTab(root) {
     const kb = renderKeyboard(keyboardWrap, { startMidi: 48, endMidi: 84 });
     let step = "intro";
     let idx = 0;
+    // Item 42: real Back support for this shared template — used by
+    // every auto-generated "Master: X" lesson (the large majority of
+    // lesson screens in the app), same pattern as Lesson 1.
+    const history = [];
+    function goForward(next) {
+      history.push({ step, idx });
+      if ("step" in next) step = next.step;
+      if ("idx" in next) idx = next.idx;
+      renderStep();
+    }
+    function goBack() {
+      if (!history.length) return;
+      const prev = history.pop();
+      step = prev.step;
+      idx = prev.idx;
+      renderStep();
+    }
 
     function renderStep() {
       if (step === "intro") {
@@ -404,7 +422,7 @@ function initLessonsTab(root) {
           <p>${intermediateUnlock ? `"${song.title}" by ${song.artist}` : `By ${song.artist}`}. Real, verified chords: <strong>${song.chords.join(" - ")}</strong>.</p>
           <p>Let's press them one at a time, together.</p>`, intermediateUnlock ? "assets/mascot-poses/maestro-conducting.png" : poseForSong(song.title));
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Start</button>`;
-        controls.querySelector("#hk-next").addEventListener("click", () => { step = "play"; idx = 0; renderStep(); });
+        controls.querySelector("#hk-next").addEventListener("click", () => goForward({ step: "play", idx: 0 }));
       } else if (step === "play") {
         const symbol = song.chords[idx];
         const notes = chordSymbolToMidi(symbol);
@@ -415,8 +433,8 @@ function initLessonsTab(root) {
           ${mascotSay(`<p><strong>Press and hold ${symbol}.</strong> It's the lit-up keys below.</p>`)}`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Next chord</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => {
-          if (idx < song.chords.length - 1) { idx++; renderStep(); }
-          else { step = "done"; renderStep(); }
+          if (idx < song.chords.length - 1) goForward({ idx: idx + 1 });
+          else goForward({ step: "done" });
         });
       } else {
         markLessonComplete(lessonId);
@@ -436,6 +454,15 @@ function initLessonsTab(root) {
           newlyEarned.length ? "assets/mascot-poses/maestro-conducting.png" : poseForSong(song.title));
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
         controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+      if (history.length > 0) {
+        const backBtn = document.createElement("button");
+        backBtn.type = "button";
+        backBtn.className = "hk-btn hk-btn-lesson-back";
+        backBtn.id = "hk-back";
+        backBtn.textContent = "Back";
+        backBtn.addEventListener("click", goBack);
+        controls.insertBefore(backBtn, controls.firstChild);
       }
     }
     renderStep();
@@ -922,6 +949,11 @@ function initLessonsTab(root) {
   function runLesson1() {
     const { content, keyboardWrap, controls } = lessonShell("Your first 4 chords: 1-5-6-4");
     const kb = renderKeyboard(keyboardWrap, { startMidi: 55, endMidi: 79 });
+    // Item 42: same computer-keyboard mapping as the standalone MIDI tab
+    // (item 28), reused via the shared module — not a second mapping.
+    // Touch/mouse tapping already works here for free (keyboard.js's
+    // shared pointerdown/pointerup handling, same as every other tab).
+    registerComputerKeyboardTarget(kb, keyboardWrap);
 
     // The featured "let's play a song" pick: must be a song whose real,
     // verified chords are LITERALLY G-D-Em-C (not just "same family in a
@@ -961,6 +993,13 @@ function initLessonsTab(root) {
     const REFERENCE_LINK = `<p class="hk-ref-link"><a href="reference.html" target="_blank" rel="noopener">
       Curious about all the keys and chords? Tap here — you don't need this right now to keep going.</a></p>`;
 
+    // Item 42: a small, easy-to-ignore hint about the laptop-keyboard
+    // shortcut — tap works everywhere already, this is just a bonus for
+    // anyone without a real piano/keyboard handy and not touching a
+    // touchscreen either.
+    const KEYBOARD_HINT = `<p class="hk-keyboard-hint">No piano handy? Tap the keys above, or on a laptop:
+      home row (A S D F G H J K L ; ') and top row (Q W E R T Y U I O P [ ]) play too.</p>`;
+
     // Finding your starting key itself now has its own earlier lesson
     // ("Get Started" — see runGetStarted below); this lesson opens with
     // a hook/teaser instead of jumping straight into teaching (item 40).
@@ -980,6 +1019,33 @@ function initLessonsTab(root) {
       activeTuner = createTunerWidget(mountEl, targetMidi, opts);
     }
 
+    // Item 42: a real Back button, not just a visual flicker — every
+    // forward transition below pushes a full snapshot of this lesson's
+    // state onto `history` via `goForward()`; Back pops it and restores
+    // the exact same variables renderStep() reads, so re-rendering the
+    // previous step shows the same content it showed the first time.
+    const history = [];
+    function goForward(nextState) {
+      history.push({ step, teachIdx, songIdx, montageIdx });
+      Object.assign(lessonState, nextState);
+      renderStep();
+    }
+    const lessonState = {
+      get step() { return step; }, set step(v) { step = v; },
+      get teachIdx() { return teachIdx; }, set teachIdx(v) { teachIdx = v; },
+      get songIdx() { return songIdx; }, set songIdx(v) { songIdx = v; },
+      get montageIdx() { return montageIdx; }, set montageIdx(v) { montageIdx = v; },
+    };
+    function goBack() {
+      if (!history.length) return;
+      const prev = history.pop();
+      step = prev.step;
+      teachIdx = prev.teachIdx;
+      songIdx = prev.songIdx;
+      montageIdx = prev.montageIdx;
+      renderStep();
+    }
+
     function renderStep() {
       if (activeTuner) { activeTuner.destroy(); activeTuner = null; }
       if (step === "teaser") {
@@ -997,14 +1063,14 @@ function initLessonsTab(root) {
           </div>
           <p><strong>Let's start with G.</strong></p>`, "assets/mascot-poses/maestro-conducting.png");
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Let's start with G</button>`;
-        controls.querySelector("#hk-next").addEventListener("click", () => { step = "slowdown"; renderStep(); });
+        controls.querySelector("#hk-next").addEventListener("click", () => goForward({ step: "slowdown" }));
       } else if (step === "slowdown") {
         content.innerHTML = mascotSay(`
           <h3>Okay — let's slow down and actually learn this.</h3>
           <p>A <strong>chord</strong> just means pressing a few keys at once, together, so they ring out as
              one sound. That's the whole concept. Let's find the first one on your actual keyboard.</p>`);
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Let's go</button>`;
-        controls.querySelector("#hk-next").addEventListener("click", () => { step = "find-g"; renderStep(); });
+        controls.querySelector("#hk-next").addEventListener("click", () => goForward({ step: "find-g" }));
       } else if (step === "find-g") {
         const gChord = LESSON1_CHORDS.G;
         kb.highlightChord([gChord.root], { letter: "G", rootMidi: gChord.root });
@@ -1016,14 +1082,14 @@ function initLessonsTab(root) {
              below. This works the same way whether your keyboard has 25 keys or 88 — always count from
              Middle C, never from the edge.</p>
           <p><strong>Press that G key now.</strong></p>
-          <div class="hk-tuner-mount"></div>`);
+          <div class="hk-tuner-mount"></div>`) + KEYBOARD_HINT;
         // Item 41: an optional, genuinely non-forced tuner-style match
         // button — same mic pitch-detector as Get Started's Middle-C
         // calibration and Practice's Ear Check, just made available
         // right here too for anyone who wants extra confidence.
         mountTuner(content.querySelector(".hk-tuner-mount"), gChord.root, { label: "Tune this note (optional)" });
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Got it</button>`;
-        controls.querySelector("#hk-next").addEventListener("click", () => { step = "teach"; teachIdx = 0; renderStep(); });
+        controls.querySelector("#hk-next").addEventListener("click", () => goForward({ step: "teach", teachIdx: 0 }));
       } else if (step === "teach") {
         const key = LESSON1_SEQUENCE[teachIdx];
         const chord = LESSON1_CHORDS[key];
@@ -1038,14 +1104,15 @@ function initLessonsTab(root) {
                ${chord.notes.length} together and that's the ${chord.letter} chord.</p>
             <p>${CHORD_ANCHOR[key]}</p>
             <p><strong>Press all ${chord.notes.length} lit-up keys now.</strong> Then tap Next.</p>
-            <div class="hk-tuner-mount"></div>`)}`;
+            <div class="hk-tuner-mount"></div>`)}
+          ${KEYBOARD_HINT}`;
         mountTuner(content.querySelector(".hk-tuner-mount"), chord.root, {
           label: `Tune this note (${chord.letter}'s root, optional)`,
         });
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Next</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => {
-          if (teachIdx < LESSON1_SEQUENCE.length - 1) { teachIdx++; renderStep(); }
-          else { step = "other-chords"; renderStep(); }
+          if (teachIdx < LESSON1_SEQUENCE.length - 1) goForward({ teachIdx: teachIdx + 1 });
+          else goForward({ step: "other-chords" });
         });
         playChord(chord.notes, { delay: 0.1 });
       } else if (step === "other-chords") {
@@ -1056,7 +1123,7 @@ function initLessonsTab(root) {
                number of real songs.</p>`)}
           ${REFERENCE_LINK}`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Quiz me</button>`;
-        controls.querySelector("#hk-next").addEventListener("click", () => { step = "quiz"; renderStep(); });
+        controls.querySelector("#hk-next").addEventListener("click", () => goForward({ step: "quiz" }));
       } else if (step === "quiz") {
         content.innerHTML = `
           ${mascotSay(`<p>Now play all four in order: <strong>1 (G) &rarr; 5 (D) &rarr; 6 (Em) &rarr; 4 (C)</strong>.
@@ -1074,8 +1141,7 @@ function initLessonsTab(root) {
               content.querySelector("#hk-quiz-progress").innerHTML =
                 `Press the <strong>${nextChord.number} chord (${nextChord.letter})</strong> root key.`;
             } else {
-              step = "song-intro";
-              renderStep();
+              goForward({ step: "song-intro" });
             }
           }
         });
@@ -1087,7 +1153,7 @@ function initLessonsTab(root) {
           <p>"<strong>${FEATURED_SONG.title}</strong>" by ${FEATURED_SONG.artist} uses exactly these four chords, in
              exactly this order — G, D, Em, C. Nothing new to learn, just the shapes you already know.</p>`);
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Play along</button>`;
-        controls.querySelector("#hk-next").addEventListener("click", () => { songIdx = 0; step = "song"; renderStep(); });
+        controls.querySelector("#hk-next").addEventListener("click", () => goForward({ songIdx: 0, step: "song" }));
       } else if (step === "song") {
         const key = FEATURED_SONG.chords[songIdx];
         const chord = LESSON1_CHORDS[key];
@@ -1098,8 +1164,8 @@ function initLessonsTab(root) {
           ${mascotSay(`<p>Press and hold <strong>${chord.letter}</strong> along with the song.</p>`)}`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Next chord</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => {
-          if (songIdx < FEATURED_SONG.chords.length - 1) { songIdx++; renderStep(); }
-          else { step = "montage-intro"; renderStep(); }
+          if (songIdx < FEATURED_SONG.chords.length - 1) goForward({ songIdx: songIdx + 1 });
+          else goForward({ step: "montage-intro" });
         });
         playChord(chord.notes, { delay: 0.1 });
       } else if (step === "montage-intro") {
@@ -1109,7 +1175,7 @@ function initLessonsTab(root) {
           <p>Same four chords, same order — here's a quick run through ${montageSongsAfterTeaser.length} more real
              songs in the library that use this exact pattern. Just tap through, next song, next song.</p>`);
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Go</button>`;
-        controls.querySelector("#hk-next").addEventListener("click", () => { montageIdx = 0; step = "montage"; renderStep(); });
+        controls.querySelector("#hk-next").addEventListener("click", () => goForward({ montageIdx: 0, step: "montage" }));
       } else if (step === "montage") {
         const s = montageSongsAfterTeaser[montageIdx];
         content.innerHTML = `
@@ -1117,8 +1183,8 @@ function initLessonsTab(root) {
           ${mascotSay(`<h3>${s.title}</h3><p>${s.artist} — same 4 chords (${s.degreeSequence}).</p>`)}`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Next song</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => {
-          if (montageIdx < montageSongsAfterTeaser.length - 1) { montageIdx++; renderStep(); }
-          else { step = "social"; renderStep(); }
+          if (montageIdx < montageSongsAfterTeaser.length - 1) goForward({ montageIdx: montageIdx + 1 });
+          else goForward({ step: "social" });
         });
       } else if (step === "social") {
         content.innerHTML = mascotSay(`
@@ -1126,7 +1192,7 @@ function initLessonsTab(root) {
           <p>You've got these 4 chords down. The next step isn't more theory — it's playing a full song (verse,
              chorus, the works) while someone else sings on top. Genuinely the most fun part of this whole thing.</p>`);
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Continue</button>`;
-        controls.querySelector("#hk-next").addEventListener("click", () => { step = "levelup"; renderStep(); });
+        controls.querySelector("#hk-next").addEventListener("click", () => goForward({ step: "levelup" }));
       } else {
         // levelup
         markLessonComplete("lesson-1");
@@ -1149,6 +1215,20 @@ function initLessonsTab(root) {
           </div>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Back to lessons</button>`;
         controls.querySelector("#hk-done").addEventListener("click", showMap);
+      }
+      // Item 42: a real "Back" control, added uniformly after whichever
+      // branch above just rendered this step's Next/done button — pops
+      // the history stack and restores the exact previous state rather
+      // than just visually flickering. Hidden on the very first step
+      // (nothing to go back to).
+      if (history.length > 0) {
+        const backBtn = document.createElement("button");
+        backBtn.type = "button";
+        backBtn.className = "hk-btn hk-btn-lesson-back";
+        backBtn.id = "hk-back";
+        backBtn.textContent = "Back";
+        backBtn.addEventListener("click", goBack);
+        controls.insertBefore(backBtn, controls.firstChild);
       }
     }
     renderStep();

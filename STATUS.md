@@ -1172,3 +1172,46 @@ notice on first attempt, then by the oscillator substitution test
 above); needle and readout respond correctly to in-tune/sharp/flat
 input; mic is released when navigating to the next step. Zero new
 console errors beyond the known sandbox-only service-worker noise.
+
+## 2026-10-05 update: real Back navigation + computer-keyboard play on lesson screens (item 42)
+
+- [x] **Real Back button added to Lesson 1 and the shared "Master: X"
+      song template** (`runMasterSongLesson`, which drives the large
+      majority of auto-generated lesson screens in the app) — a history
+      stack of full state snapshots is pushed on every forward
+      transition; Back pops it and restores the exact same variables
+      `renderStep()` reads, so the previous screen's real content comes
+      back, not a visual flicker. Verified live: teaser -> slowdown ->
+      Back correctly restored the original teaser screen with both
+      named songs and all 4 chord pills.
+      Honest scope note: the ~37 individually hand-built Lesson 2-37
+      functions use the same step-machine pattern but were NOT swept
+      this pass (each would need the same history-stack treatment
+      individually) — flagging this as a real, known follow-up rather
+      than claiming full coverage.
+- [x] **Computer-keyboard play extended to lesson screens**: factored
+      the MIDI tab's key-mapping/listener (item 28) out of `js/midi.js`
+      into a new shared `js/computer-keys.js` (`registerComputerKeyboardTarget()`),
+      so Lesson 1's keyboard calls the exact same mapping function
+      instead of a second implementation. A single shared document-level
+      listener routes to whichever registered keyboard is currently
+      visible (`offsetParent !== null`), so multiple tabs/screens can
+      each render their own keyboard without conflicting.
+- [x] **Touch tap confirmed already working** on lesson screens (not
+      just assumed) — `keyboard.js`'s shared pointerdown/pointerup
+      handling covers mouse and touch with no extra code; verified live
+      at a 375x812 mobile viewport.
+- [x] **Typing-elsewhere guard carried over**: the shared listener
+      checks `document.activeElement` for INPUT/TEXTAREA/SELECT before
+      intercepting any key, exactly like the MIDI tab's original guard.
+      Verified live: focusing a text input and pressing "W" left the
+      keyboard's highlight state completely unchanged.
+- [x] A small optional hint line ("No piano handy? ... home row / top
+      row play too") added to Lesson 1's find-G and chord-teach screens
+      so the feature is discoverable without cluttering the main flow.
+
+Verified live: pressing "Q" on a lesson screen (not the MIDI tab)
+correctly highlighted MIDI 60 as a right-hand note using the identical
+mapping; Back on the "slowdown" step restored the teaser step's exact
+original content; touch tap worked at mobile width. Zero new console
+errors beyond the known sandbox-only service-worker noise.

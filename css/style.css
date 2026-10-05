@@ -126,6 +126,15 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
   color: #ffffff;
 }
 .hk-btn-lesson-next:hover { border-color: var(--hk-purple); color: #ffffff; }
+/* Item 42: Back sits to Next's left in the same bottom-right controls
+   row (controls is flex + justify-content:flex-end, so inserting Back
+   as the first child places it left-of-Next, not on the opposite side
+   of the screen) — deliberately lower-emphasis than the purple/white
+   Next button, not competing with it. */
+.hk-btn-lesson-back {
+  background: transparent; border-color: var(--hk-border); color: var(--hk-text-dim);
+}
+.hk-btn-lesson-back:hover { border-color: var(--hk-purple); color: var(--hk-purple); }
 .hk-btn-small { padding: 6px 10px; font-size: 0.8rem; }
 .hk-btn-danger { border-color: var(--hk-danger); color: var(--hk-danger); }
 
