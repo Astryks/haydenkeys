@@ -41,7 +41,7 @@ function init() {
   initLessonsTab(panels.lessons);
   initHowItWorksTab(panels.how);
 
-  showTab("discover");
+  showTab("lessons");
 }
 
 document.addEventListener("DOMContentLoaded", init);

@@ -1333,7 +1333,19 @@ function initLessonsTab(root) {
     return map[n] || `${n}th`;
   }
 
-  showMap();
+  // Zero-friction entry: landing on the Lessons tab drops straight into
+  // the next actionable lesson (the first incomplete one — Day 1 itself
+  // for a brand-new user) instead of a map the user has to parse first.
+  // The map is still one tap away via the "<- Lessons" exit link inside
+  // every lesson screen, for anyone who wants to browse/pick something
+  // else instead.
+  function startNextLesson() {
+    const next = LESSONS.find((l) => !isLessonComplete(l.id));
+    if (next) startLesson(next.id);
+    else showMap(); // everything complete — show the full map instead
+  }
+
+  startNextLesson();
 }
 
 export { initLessonsTab };

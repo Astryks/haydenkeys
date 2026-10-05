@@ -183,6 +183,7 @@ const ADVANCED_REPERTOIRE = [
   { title: "Clair de Lune", composer: "Claude Debussy", year: 1905, key: "Db major", difficulty: "Intermediate-to-advanced; flowing, rubato-heavy texture that resists a simple beginner reduction. Catalog entry only.", built: false },
   { title: "Gymnopédie No. 1", composer: "Erik Satie", year: 1888, key: "D major", difficulty: "Genuinely one of the more accessible pieces on this list — slow, sparse, repetitive chords. A strong future-excerpt candidate.", built: false },
   { title: "Canon in D", composer: "Johann Pachelbel", year: undefined, key: "D major", difficulty: "Already built as the Day 31-35 capstone — see Lessons 31-35, not repeated here.", built: true },
+  { title: "Spring (\"La Primavera\"), from The Four Seasons", composer: "Antonio Vivaldi", year: 1725, key: "E major", difficulty: "Vivaldi's single most famous work — originally for violin and string orchestra, not piano, so any piano version is already an arrangement of the real composition's melodic material. Catalog entry only this pass; a real interactive excerpt would need its own careful simplification, not rushed here.", built: false },
 ];
 
 // Für Elise's famous opening phrase (Beethoven, WoO 59, c. 1810) — the
