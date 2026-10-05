@@ -1,9 +1,11 @@
-<svg viewBox="230 190 470 420" xmlns="http://www.w3.org/2000/svg">
-  <!-- Cropped head-only version of mascot.svg (the fluffier, bigger-eyed,
-       no-mouth panda redraw), for use as a small recurring "narrator"
-       avatar inside lesson screens — see assets/mascot.svg for the
-       source of truth and commit history. Kept in sync by hand whenever
-       the full mascot art changes. -->
+<svg viewBox="110 160 620 460" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cropped version of mascot.svg (the "open joyful mouth + raised
+       waving paw" redraw) for use as a small recurring "narrator" avatar
+       inside lesson screens — see assets/mascot.svg for the source of
+       truth and commit history. This crop includes the raised/waving
+       arm (not just the head) since it's now a defining part of the
+       pose; previous crops were head-only before this redraw added the
+       wave. Kept in sync by hand whenever the full mascot art changes. -->
   <defs>
     <radialGradient id="bodyGradFace" cx="40%" cy="30%" r="80%">
       <stop offset="0%" stop-color="#ffffff" />
@@ -11,38 +13,51 @@
     </radialGradient>
   </defs>
 
-  <!-- extra-round, fluffy head -->
-  <ellipse cx="460" cy="420" rx="215" ry="195" fill="url(#bodyGradFace)" />
-  <!-- fluff tufts around the head/cheeks -->
+  <!-- RAISED cheering arm with open paw, waving up and out -->
+  <ellipse cx="270" cy="480" rx="56" ry="90" fill="#2f2f38" transform="rotate(-35 270 480)" />
+  <!-- open paw/hand, fingers spread like a wave -->
+  <circle cx="190" cy="340" r="52" fill="#2f2f38" />
+  <circle cx="150" cy="300" r="20" fill="#2f2f38" />
+  <circle cx="186" cy="278" r="20" fill="#2f2f38" />
+  <circle cx="222" cy="286" r="20" fill="#2f2f38" />
+  <circle cx="250" cy="312" r="18" fill="#2f2f38" />
+  <!-- paw pad details -->
+  <circle cx="184" cy="348" r="14" fill="#55555f" />
+  <circle cx="160" cy="330" r="9" fill="#55555f" />
+  <circle cx="196" cy="316" r="9" fill="#55555f" />
+
+  <!-- fat fluffy head, tilted up joyfully toward the raised paw -->
+  <ellipse cx="490" cy="420" rx="215" ry="195" fill="url(#bodyGradFace)" transform="rotate(-6 490 420)" />
   <g fill="#ffffff">
-    <circle cx="268" cy="400" r="22" /><circle cx="252" cy="470" r="20" />
-    <circle cx="652" cy="394" r="22" /><circle cx="668" cy="464" r="20" />
+    <circle cx="298" cy="400" r="22" /><circle cx="282" cy="470" r="20" />
   </g>
 
   <!-- big round fluffy ears -->
-  <circle cx="320" cy="270" r="74" fill="#2f2f38" />
-  <circle cx="600" cy="262" r="74" fill="#2f2f38" />
-  <circle cx="320" cy="270" r="30" fill="#45454f" />
-  <circle cx="600" cy="262" r="30" fill="#45454f" />
+  <circle cx="352" cy="266" r="76" fill="#2f2f38" />
+  <circle cx="628" cy="258" r="76" fill="#2f2f38" />
+  <circle cx="352" cy="266" r="32" fill="#45454f" />
+  <circle cx="628" cy="258" r="32" fill="#45454f" />
 
-  <!-- panda eye patches, extra large and round for a softer cute look -->
-  <ellipse cx="380" cy="430" rx="68" ry="80" fill="#2f2f38" transform="rotate(-10 380 430)" />
-  <ellipse cx="538" cy="426" rx="68" ry="80" fill="#2f2f38" transform="rotate(10 538 426)" />
+  <!-- panda eye patches -->
+  <ellipse cx="408" cy="420" rx="66" ry="78" fill="#2f2f38" transform="rotate(-10 408 420)" />
+  <ellipse cx="562" cy="414" rx="66" ry="78" fill="#2f2f38" transform="rotate(10 562 414)" />
 
-  <!-- BIG sparkly eyes -->
-  <circle cx="392" cy="434" r="36" fill="#ffffff" />
-  <circle cx="548" cy="430" r="36" fill="#ffffff" />
-  <circle cx="400" cy="440" r="20" fill="#2f2f38" />
-  <circle cx="556" cy="436" r="20" fill="#2f2f38" />
-  <circle cx="408" cy="430" r="7" fill="#ffffff" />
-  <circle cx="564" cy="426" r="7" fill="#ffffff" />
-  <circle cx="390" cy="450" r="4" fill="#ffffff" />
-  <circle cx="546" cy="446" r="4" fill="#ffffff" />
+  <!-- big joyful eyes, slightly squinted-happy from the open smile -->
+  <circle cx="420" cy="424" r="34" fill="#ffffff" />
+  <circle cx="570" cy="418" r="34" fill="#ffffff" />
+  <circle cx="428" cy="432" r="18" fill="#2f2f38" />
+  <circle cx="578" cy="426" r="18" fill="#2f2f38" />
+  <circle cx="436" cy="422" r="6" fill="#ffffff" />
+  <circle cx="586" cy="416" r="6" fill="#ffffff" />
 
   <!-- rosy cheeks -->
-  <circle cx="352" cy="488" r="26" fill="#f6b8c6" opacity="0.75" />
-  <circle cx="566" cy="484" r="26" fill="#f6b8c6" opacity="0.75" />
+  <circle cx="382" cy="478" r="26" fill="#f6b8c6" opacity="0.75" />
+  <circle cx="590" cy="470" r="26" fill="#f6b8c6" opacity="0.75" />
 
-  <!-- small nose only - no mouth/lips, kept blank per request -->
-  <ellipse cx="462" cy="480" rx="24" ry="17" fill="#2f2f38" />
+  <!-- nose -->
+  <ellipse cx="492" cy="468" rx="24" ry="17" fill="#2f2f38" />
+
+  <!-- open joyful mouth -->
+  <path d="M 444 492 Q 492 598 540 492 Q 540 558 492 570 Q 444 558 444 492 Z" fill="#2f2f38" />
+  <path d="M 462 514 Q 492 558 522 514 Q 518 542 492 548 Q 466 542 462 514 Z" fill="#e78fa0" />
 </svg>
