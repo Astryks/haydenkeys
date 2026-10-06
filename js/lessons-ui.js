@@ -1,4 +1,4 @@
-import { renderKeyboard, playChord, playTone, midiToName } from "./keyboard.js";
+import { renderKeyboard, playChord, playTone, midiToName, isBlackKey } from "./keyboard.js";
 import { renderNoteHighway, stepsToHighwayNotes } from "./note-highway.js";
 import { initCalibration } from "./calibration.js";
 import { chordSymbolToMidi } from "./chord-utils.js";
@@ -229,16 +229,23 @@ const H_G = [55, ...G], H_D = [50, ...D], H_EM = [52, ...EM], H_C = [48, ...C];
 // replaces, so Today moves straight on (they stay in the Roadmap).
 const DAY_ENDS = { "m-another-song": [1, ["lesson-1"]], "d2-key-c": [2, ["lesson-2", "lesson-4"]], "d3-song": [3, ["lesson-twohand-preview", "lesson-eartraining"]] };
 const MICRO_CARDS = {
-  "m-find-c": { say: "Let's find <b>middle C</b> 🎹<br>See the <b>2 black keys</b> in the middle?<br>Middle C is just <b>left</b> of them. Press it!", want: { notes: [60] }, help: [60], hideMiddleC: true, done: "Yes! That's middle C 🎉" },
+  "m-intro": { say: "Fun fact: just <b>4 chords</b> play over <b>100 songs</b>! 🎶<br>We'll learn them soon.<br>But first… let's get to know <b>your piano</b> 🎹", want: { tap: true }, ok: "Let's go! 🚀", demoSeq: [[G, ""], [D, ""], [EM, ""], [C, ""]], done: "Let's meet your piano! 🎹" },
+  "m-black-keys": { say: "Look at the <b>black keys</b> 👀<br>They come in groups of <b>2</b> and <b>3</b>, again and again.<br>Press any black key in a group of <b>2</b>!", want: { pcs: [1, 3] }, labels: "groups", done: "That's your map! 🗺️ Every piano has it." },
+  "m-any-piano": { say: "Pianos come in <b>all sizes</b> 🎹<br>Middle C isn't always in the exact middle!<br>🔎 Every <b>C</b> is just <b>left of the 2 black keys</b>.<br>Big piano (88 keys): the <b>4th C</b> from the left.<br>Smaller keyboard: usually the <b>3rd C</b>.", want: { tap: true }, ok: "Got it 👍", done: "Find the 2 black keys, go left. Easy! 🎉" },
+  "m-find-c": { say: "Let's find <b>middle C</b> 🎹<br>See the <b>2 black keys</b> in the middle?<br>Middle C is just <b>left</b> of them. Press it!", want: { notes: [60] }, help: [60], hideMiddleC: true, tip: "🎹 Now find middle C on your <b>real piano</b> too!", done: "Yes! That's middle C 🎉" },
   "m-find-g": { say: "From middle C, count the white keys:<br><b>C · D · E · F · G</b><br>Press <b>G</b>!", want: { notes: [67] }, help: [67], done: "That's G! 🎉" },
-  "m-chord-g": { say: "Press <b>3 keys</b>: <b>G · B · D</b><br>That's the <b>G chord</b>!", want: { notes: G }, show: G, done: "Your first chord! 🎹" },
-  "m-jargon": { say: "🚨 <b>Jargon alert!</b><br>A <b>key</b> = one thing you press.<br>A <b>chord</b> = 3 keys together.<br>You just played the <b>G chord</b>!", want: { tap: true }, demoSeq: [[[67], "key"], [G, "chord"]], done: "Key 🎹 vs chord 🎹🎹🎹 👍" },
+  "m-chord-g": { say: "Press <b>3 keys</b>: <b>G · B · D</b><br>That's the <b>G chord</b>!", want: { notes: G }, show: G, tip: "🎹 Try the G chord on your <b>real piano</b> too!", done: "Your first chord! 🎹" },
+  "m-letters": { say: "Every key has a <b>letter</b> 🔤<br>The white keys go <b>C D E F G A B</b>… then start again!<br>Find <b>G</b> and press it.", labels: "letters", want: { notes: [67] }, done: "There's G! 🎉" },
+  "m-jargon": { say: "🚨 <b>Jargon alert!</b> Two different things:<br>🎹 <b>G key</b> = just one key<br>🎹🎹🎹 <b>G chord</b> = G + 2 friends (B, D)<br>Press the <b>G key</b>… then the <b>G chord</b>!", labels: "letters", want: { seq: [[67], G] }, demoSeq: [[[67], "key"], [G, "chord"]], done: "G key 👆 G chord ✋ Got it!" },
+  "m-key-of-g": { say: "One more word 🏠<br>A song can be <b>in the key of G</b>. That just means <b>G is home</b>.<br>We'll keep it simple: <b>home = G</b>, and we play <b>4 chords</b>!", want: { tap: true }, demoSeq: [[G, "home"], [D, ""], [G, "home"]], done: "Home is G 🏠" },
   "m-another-g": { say: "Wait… is there <b>another G</b>? 🤔<br>Yes! The keys repeat. Press a <b>different G</b>.", want: { pc: 7, not: 67 }, help: [55], done: "There's a G in every group! 🎉" },
   "m-back-g": { say: "Back to <b>middle C</b>…<br>now play the <b>G chord</b> again.", want: { notes: G }, show: G, done: "Nice! 👏" },
   "m-chord-em": { say: "Chord 2: <b>E minor</b><br>Press <b>E · G · B</b>. It sounds a little sad 🥲", want: { notes: EM }, show: EM, done: "That's E minor! 🎉" },
   "m-chord-c": { say: "Chord 3: <b>C</b><br>Start on middle C: <b>C · E · G</b>", want: { notes: C }, show: C, done: "That's C! 🎉" },
   "m-chord-d": { say: "Chord 4: <b>D</b><br>Press <b>D · F♯ · A</b><br>F♯ is the <b>black</b> key.", want: { notes: D }, show: D, done: "That's D! 🎉" },
-  "m-numbers": { say: "Each chord has a <b>number</b>:<br><b>G = 1 · D = 5 · Em = 6 · C = 4</b><br>Play songs in any key — the numbers stay the same!", want: { tap: true }, demoSeq: [[G, "1"], [D, "5"], [EM, "6"], [C, "4"]], done: "1 · 5 · 6 · 4 👍" },
+  "m-num-home": { say: "<b>G</b> is our <b>home</b> 🏠<br>So G gets the number <b>1</b>.<br>Now count up the white keys: <b>1 2 3 4 5 6</b>", labels: "fromG", want: { notes: [67] }, show: [67], done: "G = 1 🏠" },
+  "m-numbers": { say: "Count from G 👆<br><b>D</b> is the <b>5th</b> key → <b>5</b><br><b>E</b> is the <b>6th</b> → <b>6</b><br><b>C</b> is the <b>4th</b> → <b>4</b><br>Press <b>1 · 5 · 6 · 4</b>: G, D, E, C", labels: "fromG", want: { seq: [[67], [74], [76], [72]] }, demoSeq: [[[67], "1"], [[74], "5"], [[76], "6"], [[72], "4"]], done: "1 · 5 · 6 · 4 = G · D · Em · C 🎉" },
+  "m-num-shape": { say: "Chords are <b>easy</b> ✋<br>Every chord is the <b>same shape</b>:<br><b>press · skip · press · skip · press</b><br>Play <b>G</b>, then slide the same shape to <b>C</b>!", want: { seq: [G, C] }, demoSeq: [[G, "G"], [C, "C"], [EM, "Em"], [D, "D ⚫"]], tip: "The only twist: <b>D</b> uses one <b>black key</b> (F♯) ⚫", done: "Same shape, any chord! ✋🎉" },
   "m-boom": { say: "<b>Boom!</b> You know 4 chords 💥<br>Play them in a row:<br><b>G → D → Em → C</b>", want: { seq: [G, D, EM, C] }, demoSeq: [[G, "G"], [D, "D"], [EM, "Em"], [C, "C"]], done: "That's the loop in hundreds of songs! 🎉" },
   "m-soft-strong": { say: "Play <b>G</b> <b>softly</b>… then <b>strong</b> 💪<br>It feels different!<br><small>(Best on a real piano.)</small>", want: { times: 2, notes: G }, show: G, soft: true, done: "Soft and strong. Nice! 🎉" },
   "m-sing": { say: "Play <b>C</b> and press the <b>top key</b> a bit <b>harder</b>.<br>Now it sings! 🎶", want: { notes: C }, show: C, sing: true, done: "Beautiful! 🎶" },
@@ -725,13 +732,36 @@ function initLessonsTab(root) {
     };
     // C3 to E5: middle C sits right in the middle of the screen.
     const kb = lessonKeyboard(keyboardWrap, { startMidi: 48, endMidi: 76, markMiddleC: !card.hideMiddleC });
+    // Labels on the keys: every white key's letter, or numbers counted from G.
+    const FROM_G = { 67: "1\nG", 69: "2\nA", 71: "3\nB", 72: "4\nC", 74: "5\nD", 76: "6\nE" };
+    const relabel = () => {
+      if (!card.labels) return;
+      if (card.labels === "groups") {
+        kb.keyElements.forEach((el, m) => { if ([1, 3].includes(m % 12)) el.classList.add("hk-key-group2"); else if ([6, 8, 10].includes(m % 12)) el.classList.add("hk-key-group3"); });
+        return;
+      }
+      const map = card.labels === "fromG" ? FROM_G : Object.fromEntries([...kb.keyElements.keys()].filter((m) => ![1, 3, 6, 8, 10].includes(m % 12)).map((m) => [m, midiToName(m).replace(/-?\d+$/, "")]));
+      Object.entries(map).forEach(([m, label]) => {
+        const el = kb.keyElements.get(Number(m));
+        if (!el || el.querySelector(".hk-key-notename")) return;
+        const t = document.createElement("div");
+        t.className = "hk-key-notename hk-key-notename-big";
+        t.textContent = label;
+        el.appendChild(t);
+      });
+    };
+    const hl = kb.highlightChord.bind(kb);
+    const clr = kb.clearHighlights.bind(kb);
+    kb.highlightChord = (n, o) => { hl(n, o); relabel(); };
+    kb.clearHighlights = () => { clr(); relabel(); };
+    relabel();
     if (card.show) kb.highlightChord(card.show);
     const say = content.querySelector("#hk-micro-say");
     const demoNotes = card.demo || card.show || card.help || (card.want.notes || []);
     controls.innerHTML = `
       ${card.demoSeq ? '<button class="hk-btn" id="hk-micro-hear">🔊 Hear it</button>' : card.soft ? '<button class="hk-btn" id="hk-micro-soft">🔈 Soft</button><button class="hk-btn" id="hk-micro-strong">🔊 Strong</button>' : '<button class="hk-btn" id="hk-micro-hear">🔊 Hear it</button>'}
       ${card.help ? '<button class="hk-btn" id="hk-micro-help">👀 Show me</button>' : ""}
-      ${card.want.tap ? '<button class="hk-btn hk-btn-primary" id="hk-micro-ok">Got it!</button>' : ""}
+      ${card.want.tap ? `<button class="hk-btn hk-btn-primary" id="hk-micro-ok">${card.ok || "Got it!"}</button>` : ""}
       ${card.want.choice ? '<button class="hk-btn hk-micro-choice" data-choice="happy">😀 Happy</button><button class="hk-btn hk-micro-choice" data-choice="sad">🥲 Sad</button>' : ""}`;
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     async function playSeq(seq) {
@@ -764,6 +794,11 @@ function initLessonsTab(root) {
       if (finished) return;
       recent.push({ midi, t: performance.now() });
       const w = card.want;
+      if (w.pcs) {
+        if (w.pcs.includes(((midi % 12) + 12) % 12)) return success();
+        reply(isBlackKey(midi) ? "That's a group of <b>3</b> 😄 Find a group of <b>2</b>!" : "Try a <b>black</b> key 🖤", "hk-micro-oops");
+        return;
+      }
       if (w.pc !== undefined) {
         if (((midi % 12) + 12) % 12 === w.pc && midi !== w.not) return success();
         if (midi === w.not) reply("That's the same G 😄 Find a <b>different</b> one!", "hk-micro-oops");
@@ -806,6 +841,7 @@ function initLessonsTab(root) {
       finished = true;
       unsub();
       say.innerHTML = card.say;
+      if (card.tip) reply(card.tip);
       reply(`<div class="hk-micro-done">${card.done}</div>`, "hk-micro-yay");
       const ids = MICRO_LESSONS.map((l) => l.id);
       const nextId = ids[ids.indexOf(id) + 1];

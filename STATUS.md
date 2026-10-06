@@ -2216,3 +2216,22 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
   - Each day ends with "Finish Day N 🏆".
 - **Tested:** all 27 cards (Days 1–3) in a phone-sized browser, including wrong keys and quiz answers. No errors.
 - **Next:** later lessons (from "Major or minor?" onward in the Roadmap) are still chat-style rather than tiny cards.
+
+## 2026-10-07 (evening): clearer Day 1, swipeable popups, landscape fit
+- **Day 1 now opens with "4 chords play over 100 songs… but first, let's get to know your piano":**
+  - **Black keys in 2s and 3s:** colour-coded, then press one in a group of 2.
+  - **Middle C on any piano:** every C is just left of the 2 black keys. On an 88-key piano it's the 4th C from the left; on smaller keyboards (61/76) usually the 3rd.
+- **"Try it on your real piano too!" nudges:** after finding middle C and after the first G chord.
+- **G key vs G chord:**
+  - **Every key has a letter:** white keys labelled C–B.
+  - **🚨 G key or G chord?:** press the G key, then the G chord.
+  - **"In the key of G":** G is home, and we keep it simple with home = G and 4 chords.
+- **The numbers:**
+  - **G is home = 1.**
+  - **Count to 5:** keys labelled 1G 2A 3B 4C 5D 6E, so D = 5, E = 6, C = 4.
+  - **Same shape every time:** press · skip · press · skip · press, where only D uses a black key.
+- **Popups:**
+  - **Swipe up:** tips, fun facts and the new popup can all be swiped up to dismiss.
+  - **New "Turn your phone sideways!" popup:** appears when a piano shows in portrait (once per session). It auto-hides after 7s or when you rotate.
+- **Landscape phones:** the lesson fits on one screen, with title and Next lesson in the top bar, a short message, and a slim falling-notes strip over a full-height keyboard. Next is always visible, with no scrolling.
+- **Tested:** all 34 Day 1–3 cards (phone portrait), the popup swipe, and the landscape fit (Next visible, page doesn't scroll).

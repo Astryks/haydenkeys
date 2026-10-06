@@ -1005,3 +1005,45 @@ body.hk-lesson-open .hk-rotate-tip { display: none !important; }
 @keyframes hk-wiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-2deg); } 75% { transform: rotate(2deg); } }
 @keyframes hk-nudge { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 @media (prefers-reduced-motion: reduce) { .hk-micro-thread .hk-micro, .hk-micro-next, .hk-micro-yay .hk-micro-avatar, .hk-micro-oops .hk-micro-bubble { animation: none; } }
+
+/* ===== Popups: swipe up to dismiss ===== */
+.hk-toast { pointer-events: auto; touch-action: pan-x; }
+.hk-funfact-card, .hk-rotate-tip { touch-action: pan-x; }
+.hk-sideways { position: fixed; z-index: 10002; left: 12px; right: 12px; top: calc(10px + env(safe-area-inset-top, 0px)); display: flex; align-items: center; gap: 12px; padding: 14px 44px 18px 14px; border-radius: 20px; background: linear-gradient(135deg, #fff, #f3eeff); border: 2px solid var(--hk-purple-soft); box-shadow: 0 10px 30px rgba(60, 40, 120, 0.25); font-size: 1.05rem; line-height: 1.4; animation: hk-pop 0.35s cubic-bezier(.2,1.4,.4,1); touch-action: pan-x; }
+.hk-sideways b { color: var(--hk-purple); }
+.hk-sideways-phone { font-size: 2.2rem; animation: hk-rotate-hint 1.6s ease-in-out infinite; }
+.hk-sideways-x { position: absolute; top: 8px; right: 10px; border: none; background: none; font-size: 1.1rem; color: var(--hk-text-dim); cursor: pointer; }
+.hk-swipe-hint { position: absolute; bottom: 4px; left: 0; right: 0; text-align: center; font-size: 0.7rem; color: var(--hk-text-dim); }
+.hk-swipe-hint::before { content: ""; display: block; width: 36px; height: 4px; border-radius: 2px; background: var(--hk-border); margin: 0 auto 2px; }
+@keyframes hk-rotate-hint { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(90deg); } }
+
+/* Big letter/number labels on keys (Day 1 "letters" and "count from G" cards) */
+.hk-key-notename-big { font-size: 0.85rem !important; font-weight: 800; color: var(--hk-purple); bottom: 8px; }
+
+/* ===== Landscape phones: the whole lesson fits on one screen, Next always visible ===== */
+@media (orientation: landscape) and (max-height: 500px) {
+  body.hk-lesson-open main { padding: 0 8px; }
+  body.hk-lesson-open .hk-lesson-player {
+    display: grid; height: 100dvh; padding: 4px 0 env(safe-area-inset-bottom, 0px);
+    grid-template-columns: 1fr auto; grid-template-rows: auto minmax(0, auto) 34px 1fr;
+    grid-template-areas: "top controls" "content content" "highway highway" "keys keys"; gap: 4px;
+  }
+  body.hk-lesson-open .hk-lesson-topbar { grid-area: top; position: static; padding: 0; background: none; }
+  body.hk-lesson-open .hk-lesson-topbar h2 { font-size: 0.95rem; }
+  body.hk-lesson-open .hk-lesson-topbar .hk-lesson-exit { width: 32px; height: 32px; }
+  body.hk-lesson-open #hk-lesson-controls { grid-area: controls; margin: 0; display: flex; gap: 6px; align-items: center; justify-content: flex-end; flex-wrap: nowrap; }
+  body.hk-lesson-open #hk-lesson-controls .hk-btn { min-height: 34px; padding: 4px 12px; font-size: 0.85rem; white-space: nowrap; }
+  body.hk-lesson-open .hk-micro-next { font-size: 0.95rem !important; padding: 6px 18px !important; min-height: 38px !important; }
+  body.hk-lesson-open #hk-lesson-content { grid-area: content; max-height: 34vh; overflow-y: auto; }
+  body.hk-lesson-open #hk-lesson-highway { grid-area: highway; height: 34px !important; min-height: 0; margin: 0; }
+  body.hk-lesson-open #hk-lesson-keyboard { grid-area: keys; margin: 0; min-height: 0; }
+  body.hk-lesson-open #hk-lesson-keyboard .hk-keyboard { height: 100% !important; }
+  .hk-micro-thread { margin: 0 auto; gap: 4px; max-width: none; }
+  .hk-micro-avatar { width: 34px; height: 34px; }
+  .hk-micro-bubble { font-size: 0.95rem; padding: 6px 12px; }
+  .hk-micro-done { font-size: 1.05rem; }
+  .hk-micro-oops .hk-micro-bubble { font-size: 0.9rem; }
+}
+.hk-key-notename-big { white-space: pre-line; line-height: 1.05; text-align: center; left: 0; right: 0; }
+.hk-key-group2 { box-shadow: inset 0 -10px 0 #ec8fb5 !important; }
+.hk-key-group3 { box-shadow: inset 0 -10px 0 #7fb8e6 !important; }

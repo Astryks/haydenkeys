@@ -8,6 +8,7 @@ import { initMidiTab } from "./midi.js";
 import { checkBadges } from "./badges.js";
 import { getLevel } from "./storage.js";
 import { maybeShowFunFact, showFunFact } from "./fun-facts.js";
+import { initPopups } from "./popups.js";
 
 // Stripe Payment Link for the footer's "Support Hayden Keys" link —
 // empty until Sid creates one in his own Stripe dashboard.
@@ -61,6 +62,7 @@ function init() {
   TABS.forEach((t) => {
     panels[t] = document.getElementById(`panel-${t}`);
   });
+  initPopups();
 
   document.querySelectorAll("[data-tab]").forEach((btn) => {
     btn.addEventListener("click", () => showTab(btn.dataset.tab));
