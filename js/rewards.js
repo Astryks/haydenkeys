@@ -8,7 +8,7 @@
 
 import { getStreak } from "./storage.js";
 import { icon } from "./icons.js";
-import { pandaSvg } from "./panda.js";
+import { pandaSvg, nextTrick } from "./panda.js";
 import { shareButton } from "./share.js";
 
 const KEY = "hk_unlocks";
@@ -64,7 +64,7 @@ function showDayComplete(day, fresh) {
     el.className = "hk-daydone";
     el.innerHTML = `
       <div class="hk-daydone-card">
-        <div class="hk-daydone-panda">${pandaSvg("cheer")}</div>
+        <div class="hk-daydone-panda">${pandaSvg(nextTrick("yay"))}</div>
         <h2>Day ${day} complete!</h2>
         <div class="hk-daydone-streak">${icon("flame", 34)}<b>${streak}</b><span>day streak</span></div>
         ${fresh.length ? `<div class="hk-daydone-label">You unlocked</div>${fresh.map((r) => `<div class="hk-reward">${icon(r.icon, 36)}<div><b>${r.title}</b><span>${r.text}</span></div></div>`).join("")}` : ""}

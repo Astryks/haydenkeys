@@ -2326,3 +2326,10 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
 - Share: "I just learned <song> on Hayden Keys! Check it out haydenkeys.com" (native share sheet).
 - Header respects the notch / Dynamic Island (verified in simulator).
 - Build 17: cuter panda — no mouth, bigger sparkly eyes, happy ^ ^ eyes when cheering/singing, smaller nose, rosier cheeks.
+
+## 2026-10-06 — iOS build 18
+- Panda redrawn cuter: no mouth, purple bowtie, shiny eyes, softer cheeks, hands with paw pads, stubby legs with toe beans; holds a mini piano. Props rotate in chats (sunglasses, headphones, maracas, bamboo, mic, balloon). Calm idle (breathing, blinking, glancing); big moves play once then settle.
+- Tricks: right answers → quick spin / kung fu / noodles / qi energy ball / pushups / cheer; wrong answers → struggling situps / oops.
+- New app icon, web icons and launch splash from the new panda (old hand-drawn one had a mouth).
+- Song player: cover art (iTunes Search, cached; privacy policy updated), key, chord progression section by section, press Play (no autoplay), Share below the piano. Falling notes now flow continuously through the hit line instead of stopping at it. Drum beat / Bass line toggles with custom icons and On/Off switches; Tap tempo hidden in the simple player.
+- Audio: tap-to-unlock listeners stay active all session so sound recovers after iOS interrupts it.

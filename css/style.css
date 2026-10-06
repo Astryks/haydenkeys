@@ -1078,66 +1078,138 @@ body.hk-lesson-open .hk-rotate-tip { display: none !important; }
 .hk-upload-rec-artist { color: var(--hk-text-dim); font-size: 0.9rem; }
 .hk-upload-rec-links { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
 
-/* ===== Hayden the panda (flat, animated) ===== */
+/* ===== Hayden the panda (flat, animated) =====
+   Calm by default (breathing, blinking, glancing); big moves play once or
+   twice, then Hayden settles back into a natural waiting pose. */
 .hk-panda { display: block; width: 100%; height: 100%; overflow: visible; }
 .hk-panda .hp-black { fill: #2a2a3a; }
 .hk-panda .hp-ear-in { fill: #4a4a5e; }
+.hk-panda .hp-pad { fill: #f0bfcf; }
 .hk-panda .hp-pupil { fill: #2a2a3a; }
-.hk-panda .hp-cheek { fill: #f7a1bf; opacity: 0.9; }
+.hk-panda .hp-cheek { fill: #f7a1bf; opacity: 0.4; }
 .hk-panda .hp-line { fill: none; stroke: #fff; stroke-width: 4; stroke-linecap: round; }
 .hk-panda .hp-head .hp-line:not(.hp-white-line) { stroke: #2a2a3a; }
-.hk-panda .hp-mouth-open { fill: #2a2a3a; }
-.hk-panda .hp-tongue { fill: #f07a9b; }
-.hk-panda .hp-bow path, .hk-panda .hp-bow circle { fill: #d9678f; }
-.hk-panda .hp-bow circle { fill: #b84d74; }
+.hk-panda .hp-bow path { fill: #8a63d2; }
+.hk-panda .hp-bow circle { fill: #6a45b5; }
 .hk-panda .hp-sweat { fill: #8fd0f5; }
 .hk-panda .hp-sparkles path { fill: #f5c542; }
 .hk-panda .hp-notes text, .hk-panda .hp-zzz text { font: 800 22px system-ui, sans-serif; fill: #8a63d2; }
 .hk-panda .hp-zzz text { fill: #4a9bc9; font-size: 18px; }
-.hk-panda g, .hk-panda path, .hk-panda rect { transform-box: fill-box; }
-.hk-panda .hp-arm-l { transform-origin: 50% 10%; }
-.hk-panda .hp-arm-r { transform-origin: 50% 10%; }
-.hk-panda .hp-head { transform-origin: 50% 90%; }
-.hk-panda .hp-all { transform-origin: 50% 100%; transform-box: view-box; }
-.hk-panda .hp-eyes { transform-origin: 50% 50%; }
+.hk-panda .hpt-shout { font: 900 20px system-ui, sans-serif; fill: #e4573d; }
+.hk-panda .hpt-ugh { fill: #8a8399; font-size: 18px; }
+.hk-panda .hpt-count { fill: #3fb363; }
+.hk-panda .hpt-strand { fill: none; stroke: #f2c94c; stroke-width: 5; stroke-linecap: round; }
+.hk-panda g, .hk-panda path, .hk-panda rect, .hk-panda text, .hk-panda .hpt-shadow { transform-box: fill-box; }
+.hk-panda .hp-arm-l { transform-box: view-box; transform-origin: 56px 142px; }
+.hk-panda .hp-arm-r { transform-box: view-box; transform-origin: 144px 142px; }
+.hk-panda .hp-head { transform-box: view-box; transform-origin: 100px 150px; }
+.hk-panda .hp-leg-r { transform-box: view-box; transform-origin: 124px 196px; }
+.hk-panda .hp-all, .hk-panda .hp-live { transform-box: view-box; transform-origin: 100px 214px; }
+.hk-panda .hp-eyes, .hk-panda .hpt-orb, .hk-panda .hpt-shout { transform-origin: 50% 50%; }
+.hk-panda .hpt-swirl { transform-box: view-box; transform-origin: 100px 172px; }
 
-/* Poses: where the paws are */
-.hp-wave .hp-arm-r { transform: rotate(-150deg); }
-.hp-cheer .hp-arm-l { transform: rotate(150deg); } .hp-cheer .hp-arm-r { transform: rotate(-150deg); }
-.hp-think .hp-arm-r { transform: rotate(-120deg) translateY(4px); } .hp-think .hp-head { transform: rotate(-7deg); }
+/* Resting poses */
+.hp-think .hp-head { transform: rotate(-7deg); }
+.hp-think .hp-arm-r, .hpi-bamboo .hp-arm-r { transform: rotate(-60deg); }
 .hp-oops .hp-arm-l { transform: rotate(35deg); } .hp-oops .hp-arm-r { transform: rotate(-35deg); }
-.hp-play .hp-arm-l { transform: rotate(-20deg); } .hp-play .hp-arm-r { transform: rotate(20deg); }
-.hp-sing .hp-arm-l { transform: rotate(60deg); } .hp-sing .hp-arm-r { transform: rotate(-60deg); }
+.hp-sing .hp-arm-r, .hpi-mic .hp-arm-r { transform: rotate(-140deg); }
+.hp-noodles .hp-arm-l { transform: rotate(-30deg); } .hp-noodles .hp-arm-r { transform: rotate(30deg); }
+.hp-qi .hp-arm-l { transform: rotate(-45deg); } .hp-qi .hp-arm-r { transform: rotate(45deg); }
+.hp-pushups .hp-body, .hp-pushups .hp-leg { display: none; }
+.hp-pushups .hp-arm-l { transform: rotate(40deg); } .hp-pushups .hp-arm-r { transform: rotate(-40deg); }
+.hp-situps .hp-all { transform: translate(64px, -58px) rotate(-90deg) scale(0.82); }
+.hp-situps .hp-arm-l { transform: rotate(165deg); } .hp-situps .hp-arm-r { transform: rotate(-165deg); }
+.hpi-balloon .hp-arm-r { transform: rotate(-170deg); }
+.hk-panda .hpt-hiya { opacity: 0; }
 
 @media (prefers-reduced-motion: no-preference) {
-  .hk-panda .hp-all { animation: hp-bob 2.6s ease-in-out infinite; }
-  .hk-panda .hp-eyes { animation: hp-blink 4.5s infinite; }
-  .hp-wave .hp-arm-r { animation: hp-wave 1s ease-in-out infinite; }
-  .hp-cheer .hp-all { animation: hp-jump 0.7s ease-out infinite; }
-  .hp-cheer .hp-sparkles { animation: hp-twinkle 0.7s ease-in-out infinite alternate; transform-origin: center; }
-  .hp-think .hp-head { animation: hp-tilt 2.4s ease-in-out infinite; }
+  /* Alive but calm: breathe, blink, glance around, the odd ear twitch */
+  .hk-panda .hp-live { animation: hp-breathe 3.6s ease-in-out infinite; }
+  .hk-panda .hp-eyes { animation: hp-blink 5s infinite; }
+  .hk-panda .hp-look { animation: hp-glance 8s ease-in-out infinite; }
+  .hk-panda .hp-ear-r { animation: hp-twitch 7s ease-in-out infinite; transform-origin: 30% 80%; }
+  /* Poses */
+  .hp-wave .hp-arm-r { animation: hp-wave 2.2s ease-in-out 1; }
+  .hp-cheer .hp-all, .hp-spin .hp-all { animation: hp-spin 0.75s cubic-bezier(.3,.7,.4,1) 1; transform-origin: 100px 120px; }
+  .hp-cheer .hp-arm-l, .hp-spin .hp-arm-l { animation: hp-arms-up-l 1.2s ease-out 1; }
+  .hp-cheer .hp-arm-r, .hp-spin .hp-arm-r { animation: hp-arms-up-r 1.2s ease-out 1; }
+  .hp-cheer .hp-sparkles { animation: hp-sparkle 1.4s ease-out 1 forwards; }
+  .hp-spin .hpt-swoosh { animation: hp-sparkle 0.8s ease-out 1 forwards; }
   .hp-oops .hp-all { animation: hp-shake 0.5s ease-in-out 2; }
-  .hp-oops .hp-sweat { animation: hp-drip 1.2s ease-in infinite; }
-  .hp-play .hp-arm-l { animation: hp-tap-l 0.5s ease-in-out infinite; }
-  .hp-play .hp-arm-r { animation: hp-tap-r 0.5s ease-in-out 0.25s infinite; }
-  .hp-sing .hp-notes text { animation: hp-float 1.6s ease-out infinite; }
-  .hp-sing .hp-notes text:nth-child(2) { animation-delay: 0.6s; }
-  .hp-sleep .hp-all { animation: hp-breathe 3s ease-in-out infinite; }
+  .hk-panda .hp-sweat { animation: hp-drip 1.4s ease-in 3 forwards; }
+  .hp-play .hpi-paw-l { animation: hp-tap 0.5s ease-in-out infinite; }
+  .hp-play .hpi-paw-r { animation: hp-tap 0.5s ease-in-out 0.25s infinite; }
+  .hp-play .hpi-pop text, .hp-sing .hp-notes text { animation: hp-float 1.8s ease-out infinite; }
+  .hp-play .hpi-pop text:nth-child(2), .hp-sing .hp-notes text:nth-child(2) { animation-delay: 0.9s; }
+  .hk-panda:not(.hp-play):not(.hp-sing) .hpi-pop text { opacity: 0; }
   .hp-sleep .hp-zzz text { animation: hp-float 2.4s ease-out infinite; }
   .hp-sleep .hp-zzz text:nth-child(2) { animation-delay: 0.8s; } .hp-sleep .hp-zzz text:nth-child(3) { animation-delay: 1.6s; }
+  /* Props */
+  .hpi-maracas .hp-arm-l { animation: hp-maraca-l 1.8s ease-in-out 1; }
+  .hpi-maracas .hp-arm-r { animation: hp-maraca-r 1.8s ease-in-out 1; }
+  .hpi-sunglasses .hpi-shades { animation: hp-peek 6s ease-in-out infinite; }
+  .hpi-headphones .hp-head { animation: hp-groove 1.6s ease-in-out infinite; }
+  .hpi-bamboo .hp-head { animation: hp-munch 4s ease-in-out infinite; }
+  .hpi-balloon .hpi-balloon-ball { animation: hp-float-soft 3s ease-in-out infinite; }
+  /* Tricks: a couple of goes, then settle */
+  .hp-kungfu .hp-all { animation: hp-hop 0.9s ease-in-out 2; }
+  .hp-kungfu .hp-leg-r { animation: hp-kick 0.9s ease-in-out 2; }
+  .hp-kungfu .hp-arm-l { animation: hp-chop 0.9s ease-in-out 2; }
+  .hp-kungfu .hpt-hiya { animation: hp-pop 1.8s ease-out 1; }
+  .hp-noodles .hpt-strand { stroke-dasharray: 30 10; animation: hp-slurp 0.6s linear 4; }
+  .hp-noodles .hpt-steam { animation: hp-float 2.4s ease-out infinite; }
+  .hp-noodles .hp-head { animation: hp-munch-fast 0.6s ease-in-out 4; }
+  .hp-qi .hp-all { animation: hp-levitate 2.4s ease-in-out 2; }
+  .hp-qi .hpt-orb { animation: hp-pulse 1.6s ease-in-out infinite; }
+  .hp-qi .hpt-swirl { animation: hp-whirl 2.4s linear infinite; }
+  .hp-qi .hpt-shadow { animation: hp-shadow 2.4s ease-in-out 2; transform-origin: 50% 50%; }
+  .hp-pushups .hp-head, .hp-pushups .hp-bow { animation: hp-push-down 0.9s ease-in-out 3; }
+  .hp-pushups .hp-arm-l { animation: hp-push-l 0.9s ease-in-out 3; }
+  .hp-pushups .hp-arm-r { animation: hp-push-r 0.9s ease-in-out 3; }
+  .hp-pushups .hpt-count { animation: hp-float 0.9s ease-out 3 forwards; }
+  .hp-situps .hp-all { animation: hp-situp 2.4s ease-in-out 2; }
+  .hp-situps .hpt-ugh { animation: hp-pop 2.4s ease-out 2 forwards; }
 }
-@keyframes hp-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-@keyframes hp-blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
-@keyframes hp-wave { 0%, 100% { transform: rotate(-150deg); } 50% { transform: rotate(-120deg); } }
-@keyframes hp-jump { 0%, 100% { transform: translateY(0) scale(1, 1); } 15% { transform: translateY(0) scale(1.04, 0.96); } 50% { transform: translateY(-16px) scale(0.98, 1.03); } }
-@keyframes hp-twinkle { from { opacity: 0.4; } to { opacity: 1; } }
-@keyframes hp-tilt { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(-2deg); } }
+@keyframes hp-breathe { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.012, 1.02); } }
+@keyframes hp-blink { 0%, 94%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
+@keyframes hp-glance { 0%, 30%, 100% { transform: translateX(0); } 38%, 50% { transform: translateX(-3px); } 58%, 70% { transform: translateX(3px); } 78% { transform: translateX(0); } }
+@keyframes hp-twitch { 0%, 88%, 100% { transform: rotate(0); } 91% { transform: rotate(10deg); } 94% { transform: rotate(-4deg); } }
+@keyframes hp-wave { 0% { transform: rotate(0); } 15% { transform: rotate(-150deg); } 32% { transform: rotate(-115deg); } 50% { transform: rotate(-150deg); } 68% { transform: rotate(-115deg); } 82% { transform: rotate(-150deg); } 100% { transform: rotate(0); } }
+@keyframes hp-spin { 0% { transform: translateY(0) rotate(0); } 25% { transform: translateY(-12px) rotate(0); } 80% { transform: translateY(-12px) rotate(360deg); } 100% { transform: translateY(0) rotate(360deg); } }
+@keyframes hp-arms-up-l { 0%, 60% { transform: rotate(150deg); } 100% { transform: rotate(0); } }
+@keyframes hp-arms-up-r { 0%, 60% { transform: rotate(-150deg); } 100% { transform: rotate(0); } }
+@keyframes hp-sparkle { 0% { opacity: 0; } 30%, 60% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes hp-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 @keyframes hp-drip { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(14px); opacity: 0; } }
-@keyframes hp-tap-l { 0%, 100% { transform: rotate(-20deg) translateY(0); } 50% { transform: rotate(-20deg) translateY(6px); } }
-@keyframes hp-tap-r { 0%, 100% { transform: rotate(20deg) translateY(0); } 50% { transform: rotate(20deg) translateY(6px); } }
+@keyframes hp-tap { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
 @keyframes hp-float { 0% { transform: translateY(6px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-14px); opacity: 0; } }
-@keyframes hp-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+@keyframes hp-float-soft { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-6px) rotate(4deg); } }
+@keyframes hp-maraca-l { 0%, 100% { transform: rotate(0); } 15%, 35%, 55%, 75% { transform: rotate(140deg); } 25%, 45%, 65% { transform: rotate(160deg); } }
+@keyframes hp-maraca-r { 0%, 100% { transform: rotate(0); } 15%, 35%, 55%, 75% { transform: rotate(-140deg); } 25%, 45%, 65% { transform: rotate(-160deg); } }
+@keyframes hp-peek { 0%, 70%, 100% { transform: translateY(0); } 76%, 88% { transform: translateY(12px); } }
+@keyframes hp-groove { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes hp-munch { 0%, 80%, 100% { transform: translateY(0); } 84%, 92% { transform: translateY(2px) rotate(-2deg); } 88%, 96% { transform: translateY(0); } }
+@keyframes hp-munch-fast { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(2px) rotate(-2deg); } }
+@keyframes hp-hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-8px); } }
+@keyframes hp-kick { 0%, 20%, 100% { transform: rotate(0); } 40%, 65% { transform: rotate(-85deg); } }
+@keyframes hp-chop { 0%, 100% { transform: rotate(0); } 40%, 65% { transform: rotate(95deg); } }
+@keyframes hp-pop { 0% { transform: scale(0); opacity: 0; } 15% { transform: scale(1.2); opacity: 1; } 25%, 75% { transform: scale(1); opacity: 1; } 100% { opacity: 0; } }
+@keyframes hp-slurp { to { stroke-dashoffset: 40; } }
+@keyframes hp-levitate { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+@keyframes hp-shadow { 0%, 100% { transform: scaleX(1); opacity: 0.12; } 50% { transform: scaleX(0.75); opacity: 0.06; } }
+@keyframes hp-pulse { 0%, 100% { transform: scale(0.9); } 50% { transform: scale(1.1); } }
+@keyframes hp-whirl { to { transform: rotate(360deg); } }
+@keyframes hp-push-down { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(16px); } }
+@keyframes hp-push-l { 0%, 100% { transform: rotate(40deg) scaleY(1); } 50% { transform: translateY(16px) rotate(40deg) scaleY(0.55); } }
+@keyframes hp-push-r { 0%, 100% { transform: rotate(-40deg) scaleY(1); } 50% { transform: translateY(16px) rotate(-40deg) scaleY(0.55); } }
+@keyframes hp-situp {
+  0%, 15% { transform: translate(64px, -58px) rotate(-90deg) scale(0.82); }
+  45% { transform: translate(64px, -58px) rotate(-62deg) scale(0.82); }
+  50% { transform: translate(64px, -58px) rotate(-66deg) scale(0.82); }
+  55% { transform: translate(64px, -58px) rotate(-60deg) scale(0.82); }
+  60% { transform: translate(64px, -58px) rotate(-65deg) scale(0.82); }
+  75%, 100% { transform: translate(64px, -58px) rotate(-90deg) scale(0.82); }
+}
 /* New panda containers */
 .hk-logo { width: 64px; height: 70px; display: block; margin: 0 auto 8px; }
 .hk-chat-avatar, .hk-micro-avatar, .hk-mascot-avatar, .hk-today-mascot { background: none !important; border-radius: 0 !important; overflow: visible; }
@@ -1148,8 +1220,6 @@ body.hk-lesson-open .hk-rotate-tip { display: none !important; }
 .hk-empty-mascot { width: 110px; height: 120px; margin: 0 auto; }
 .hk-speed-mascot { width: 40px; height: 44px; }
 .hk-mascot-avatar { width: 50px; height: 55px; }
-/* think: paw up near the chin */
-.hp-think .hp-arm-r { transform: rotate(-165deg) translate(14px, 4px); }
 /* Upload settings live below the piano */
 .hk-upload-settings { margin: 10px 0; border: 1px solid var(--hk-border); border-radius: 14px; background: var(--hk-panel); padding: 4px 12px; }
 .hk-upload-settings > summary { cursor: pointer; font-weight: 700; padding: 10px 0; list-style: none; }
@@ -1273,3 +1343,27 @@ body.hk-gold-keys .hk-key-black { background: linear-gradient(#5a4310, #2e2206) 
 .hk-share-pop { position: fixed; inset: 0; z-index: 20005; background: rgba(42,30,80,0.4); display: flex; align-items: flex-end; justify-content: center; padding: 16px; }
 .hk-share-card { width: min(420px, 100%); background: #fff; border-radius: 22px; padding: 16px; animation: hk-pop 0.3s ease-out; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
 .hk-share-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+
+/* Song player: cover art, key and the chords section by section */
+.hk-player-bar { justify-content: space-between; }
+.hk-song-card { display: flex; gap: 14px; align-items: center; margin: 6px 0 12px; }
+.hk-song-art { flex: 0 0 auto; width: 92px; height: 92px; border-radius: 18px; overflow: hidden; display: grid; place-items: center; background: linear-gradient(135deg, var(--hk-accent), var(--hk-purple)); box-shadow: 0 6px 18px rgba(90, 60, 160, 0.22); }
+.hk-song-art span { color: #fff; font-weight: 900; font-size: 1.6rem; }
+.hk-song-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hk-song-info { min-width: 0; }
+.hk-song-info h2 { margin: 0; font-size: 1.35rem; line-height: 1.2; }
+.hk-song-info p { margin: 2px 0 8px; color: var(--hk-text-dim); }
+.hk-song-key { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: #efe9ff; color: #6a45b5; font-weight: 800; font-size: 0.9rem; }
+.hk-song-prog { background: var(--hk-panel); border: 1px solid var(--hk-border); border-radius: 16px; padding: 10px 12px; margin-bottom: 10px; }
+.hk-song-prog-title { font-weight: 800; font-size: 0.85rem; color: #8a63d2; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
+.hk-song-prog-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 10px; padding: 5px 0; border-top: 1px dashed var(--hk-border); }
+.hk-song-prog-row:first-of-type { border-top: none; }
+.hk-song-prog-row span { font-size: 0.85rem; color: var(--hk-text-dim); }
+.hk-song-prog-row b { display: flex; gap: 6px; flex-wrap: wrap; }
+.hk-song-prog-row i { font-style: normal; font-weight: 900; min-width: 34px; text-align: center; padding: 3px 8px; border-radius: 10px; background: #fff; border: 2px solid #d9d0f5; color: #2a2a3a; }
+.hk-player-share { margin: 14px 0 8px; display: flex; justify-content: center; }
+/* Simple player: our card shows the key and chords; no tap tempo here */
+.hk-practice-simple .hk-practice-meta, .hk-practice-simple #hk-tap-tempo { display: none !important; }
+.hk-switch { display: inline-block; min-width: 34px; margin-left: 4px; padding: 1px 8px; border-radius: 999px; background: #e6e1f2; color: #6b6585; font-size: 0.8rem; font-weight: 800; }
+.hk-switch-on { background: #3fb363; color: #fff; }
+.hk-drums-toggle { display: inline-flex; align-items: center; gap: 6px; }

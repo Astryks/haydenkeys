@@ -200,16 +200,16 @@ function initPracticeTab(root, { initialSong } = {}) {
           <span class="hk-speed-label">Speed:</span>
           ${SPEEDS.map((s) => `<button class="hk-speed-btn ${s === playbackSpeed ? "hk-speed-active" : ""}" data-speed="${s}">${s}×${s === 1 ? " (normal)" : s === 0.5 ? " (slow)" : ""}</button>`).join("")}
           <button class="hk-btn hk-btn-small hk-drums-toggle ${drumsOn ? "hk-drums-on" : ""}" id="hk-drums-toggle"
-                  title="A simple kick/snare/hi-hat beat under playback, roughly matched to the tempo">
-            🥁 Beat: ${drumsOn ? "On" : "Off"}
+                  title="Adds a simple drum beat while the song plays">
+            ${drumLabel()}
           </button>
           <button class="hk-btn hk-btn-small" id="hk-tap-tempo"
                   title="Tap along with the real recording (4+ taps, one per beat) to practice at its actual tempo">
-            👆 Tap tempo${tappedBpm ? ` (♩ = ${tappedBpm})` : ""}
+            ${icon("tap", 18)} Tap tempo${tappedBpm ? ` (♩ = ${tappedBpm})` : ""}
           </button>
           <button class="hk-btn hk-btn-small hk-drums-toggle ${bassOn ? "hk-drums-on" : ""}" id="hk-bass-toggle"
-                  title="A simple bass line: each chord's root note, low, on beats 1 and 3">
-            🎸 Bass: ${bassOn ? "On" : "Off"}
+                  title="Adds a low bass note (each chord's root) while the song plays">
+            ${bassLabel()}
           </button>
         </div>
         <div id="hk-highway" class="hk-highway-slot ${mode === "follow" ? "" : "hk-hidden"}"></div>
@@ -272,7 +272,7 @@ function initPracticeTab(root, { initialSong } = {}) {
         tappedBpm = null;
         tapTimes = [];
         const tap = root.querySelector("#hk-tap-tempo");
-        if (tap) tap.textContent = "👆 Tap tempo";
+        if (tap) tap.innerHTML = `${icon("tap", 18)} Tap tempo`;
         setSpeed(Number(btn.dataset.speed));
       });
     });
@@ -283,7 +283,7 @@ function initPracticeTab(root, { initialSong } = {}) {
       tapTimes = tapTimes.slice(-8);
       const btn = root.querySelector("#hk-tap-tempo");
       if (tapTimes.length < 4) {
-        btn.textContent = `👆 Tap tempo (${4 - tapTimes.length} more…)`;
+        btn.innerHTML = `${icon("tap", 18)} Tap tempo (${4 - tapTimes.length} more…)`;
         return;
       }
       const gaps = tapTimes.slice(1).map((t, i) => t - tapTimes[i]);
@@ -291,20 +291,20 @@ function initPracticeTab(root, { initialSong } = {}) {
       tappedBpm = Math.round(60 / beatSec);
       const speed = Math.min(2.5, Math.max(0.25, BASE_CHORD_DURATION_SEC / (4 * beatSec)));
       setSpeed(speed);
-      btn.textContent = `👆 Tap tempo (♩ = ${tappedBpm})`;
+      btn.innerHTML = `${icon("tap", 18)} Tap tempo (♩ = ${tappedBpm})`;
     });
     root.querySelector("#hk-bass-toggle").addEventListener("click", () => {
       bassOn = !bassOn;
       lastBassSlot = -1;
       const btn = root.querySelector("#hk-bass-toggle");
-      btn.textContent = `🎸 Bass: ${bassOn ? "On" : "Off"}`;
+      btn.innerHTML = bassLabel();
       btn.classList.toggle("hk-drums-on", bassOn);
     });
     root.querySelector("#hk-drums-toggle").addEventListener("click", () => {
       drumsOn = !drumsOn;
       lastBeatSlot = -1;
       const btn = root.querySelector("#hk-drums-toggle");
-      btn.textContent = `🥁 Beat: ${drumsOn ? "On" : "Off"}`;
+      btn.innerHTML = drumLabel();
       btn.classList.toggle("hk-drums-on", drumsOn);
     });
     root.querySelector("#hk-open-calibration").addEventListener("click", toggleCalibration);
@@ -318,6 +318,14 @@ function initPracticeTab(root, { initialSong } = {}) {
     if (mode === "follow" && highway) highway.render(pausedAt, highwayNotes);
 
     if (mode === "camera") startCameraMode();
+  }
+
+  // Backing band toggles: a clear on/off switch with our own icons.
+  function drumLabel() {
+    return `${icon("drum", 20)} Drum beat <span class="hk-switch ${drumsOn ? "hk-switch-on" : ""}">${drumsOn ? "On" : "Off"}</span>`;
+  }
+  function bassLabel() {
+    return `${icon("bass", 20)} Bass line <span class="hk-switch ${bassOn ? "hk-switch-on" : ""}">${bassOn ? "On" : "Off"}</span>`;
   }
 
   function modeDescription() {

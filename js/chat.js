@@ -66,7 +66,7 @@ function buildChat(el) {
   function reply(ex, instant) {
     const row = document.createElement("div");
     row.className = "hk-chat-msg hk-chat-them";
-    row.innerHTML = `<div class="hk-chat-avatar">${pandaSvg(poseFor(pose))}</div><div class="hk-chat-bubble"><span class="hk-chat-typing"><i></i><i></i><i></i></span></div>`;
+    row.innerHTML = `<div class="hk-chat-avatar">${pandaSvg(poseFor(pose), { item: poseFor(pose) === "idle" ? "surprise" : undefined })}</div><div class="hk-chat-bubble"><span class="hk-chat-typing"><i></i><i></i><i></i></span></div>`;
     thread.appendChild(row);
     scroll(row);
     const fill = () => {

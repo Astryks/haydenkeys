@@ -3,7 +3,7 @@
 // like Tetris blocks and the learner follows along on their own piano
 // (no need to touch the screen). ← All songs / Next song → move between them.
 
-import { SONGS, getDifficulty } from "./songs-data.js";
+import { SONGS, SONG_STRUCTURES, getDifficulty } from "./songs-data.js";
 import { initPracticeTab } from "./practice.js";
 import { transcribeFile, renderTranscribedPlayback } from "./transcribe.js";
 import { unlockedSongs } from "./rewards.js";
@@ -24,6 +24,46 @@ function songList() {
   const rank = (s) => (unlocked.has(s.title) ? 0 : saved.has(s.title) ? 1 : 2) * 10 + TIERS.indexOf(getDifficulty(s));
   return playable.sort((a, b) => rank(a) - rank(b) || (a.popularityRank || 999) - (b.popularityRank || 999));
 }
+
+
+// Album artwork for the song card, from Apple's public iTunes Search API
+// (no account; only the song title and artist are sent). Cached on the
+// device. Falls back to the artist's initials if offline.
+const ART_KEY = "hk_song_art";
+function artCache() {
+  try { return JSON.parse(localStorage.getItem(ART_KEY) || "{}"); } catch (e) { return {}; }
+}
+async function songArt(song) {
+  const id = `${song.title}|${song.artist}`;
+  const cached = artCache()[id];
+  if (cached) return cached;
+  const term = encodeURIComponent(`${song.title} ${song.artist}`);
+  const res = await fetch(`https://itunes.apple.com/search?term=${term}&entity=song&limit=5&country=us`);
+  const data = await res.json();
+  const hit = (data.results || []).find((r) => r.artistName?.toLowerCase().includes(song.artist.split(/[ ,&]/)[0].toLowerCase())) || data.results?.[0];
+  if (!hit?.artworkUrl100) return null;
+  const art = { img: hit.artworkUrl100.replace("100x100bb", "300x300bb"), url: hit.trackViewUrl || hit.collectionViewUrl || "" };
+  try { localStorage.setItem(ART_KEY, JSON.stringify({ ...artCache(), [id]: art })); } catch (e) { /* ignore */ }
+  return art;
+}
+
+// "Intro · Verse 1 · Chorus 1: D A Bm G" — the song's chords, section by
+// section, with neighbouring sections that share chords grouped together.
+function progressionRows(song) {
+  const structure = SONG_STRUCTURES[song.title];
+  if (!structure) return [{ label: "Whole song", chords: song.chords }];
+  const rows = [];
+  structure.forEach((part) => {
+    const last = rows[rows.length - 1];
+    const name = part.section.replace(/\s+\d+$/, "");
+    if (last && last.chords.join() === part.chords.join()) {
+      if (!last.names.includes(name)) last.names.push(name);
+    } else rows.push({ names: [name], chords: part.chords });
+  });
+  return rows.map((r) => ({ label: r.names.join(" · "), chords: r.chords }));
+}
+
+const initials = (name) => name.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
 
 function initPracticeHome(root) {
   let list = songList();
@@ -73,18 +113,35 @@ function initPracticeHome(root) {
     });
   }
 
-  function openSong(i, { autoplay = true } = {}) {
+  function openSong(i, { autoplay = false } = {}) {
     const song = list[i];
     if (!song) return showHome();
     root.innerHTML = `
       <div class="hk-player-bar">
         <button class="hk-btn hk-player-back">← All songs</button>
-        <div class="hk-player-title"><b>${esc(song.title)}</b><span>${esc(song.artist)}</span></div>
         <button class="hk-btn hk-btn-primary hk-player-next">Next song →</button>
       </div>
-      <div class="hk-player-tip">${icon("piano", 20)} Watch the chords fall and play along on your own piano. No need to touch the screen!</div>
-      <div class="hk-player-share">${shareButton(song.title, "I learned it! Share")}</div>
-      <div class="hk-practice-simple" id="hk-player"></div>`;
+      <div class="hk-song-card">
+        <a class="hk-song-art" id="hk-song-art" aria-label="${esc(song.title)} cover art"><span>${esc(initials(song.artist))}</span></a>
+        <div class="hk-song-info">
+          <h2>${esc(song.title)}</h2>
+          <p>${esc(song.artist)}</p>
+          <span class="hk-song-key">${icon("piano", 18)} Key of ${esc(song.key.replace(/\s*\(.*\)/, ""))}</span>
+        </div>
+      </div>
+      <div class="hk-song-prog">
+        <div class="hk-song-prog-title">The chords in this song</div>
+        ${progressionRows(song).map((r) => `<div class="hk-song-prog-row"><span>${esc(r.label)}</span><b>${r.chords.map((c) => `<i>${esc(c)}</i>`).join("")}</b></div>`).join("")}
+      </div>
+      <div class="hk-player-tip">${icon("piano", 20)} Press Play, watch the chords fall and play along on your own piano.</div>
+      <div class="hk-practice-simple" id="hk-player"></div>
+      <div class="hk-player-share">${shareButton(song.title, "I learned it! Share")}</div>`;
+    songArt(song).then((art) => {
+      const el = root.querySelector("#hk-song-art");
+      if (!art || !el) return;
+      el.innerHTML = `<img src="${art.img}" alt="" />`;
+      if (art.url) { el.href = art.url; el.target = "_blank"; el.rel = "noopener"; }
+    }).catch(() => {});
     root.querySelector(".hk-player-back").addEventListener("click", showHome);
     root.querySelector(".hk-player-next").addEventListener("click", () => openSong((i + 1) % list.length));
     player = initPracticeTab(root.querySelector("#hk-player"), { initialSong: song });

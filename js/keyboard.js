@@ -51,8 +51,10 @@ function unlockAudio() {
     s.connect(c.destination);
     s.start(0);
   } catch (e) { /* ignore */ }
+  // Keep listening for taps for the whole session: iOS can suspend or
+  // "interrupt" audio later (a call, Siri, the app going to the
+  // background), and it only comes back from inside a real tap.
   if (c.state !== "running") c.resume?.();
-  else ["touchend", "pointerdown", "keydown"].forEach((t) => window.removeEventListener(t, unlockAudio, true));
 }
 if (typeof document !== "undefined") document.addEventListener("visibilitychange", () => { if (!document.hidden) getAudioContext(); });
 if (typeof window !== "undefined") ["touchend", "pointerdown", "keydown"].forEach((t) => window.addEventListener(t, unlockAudio, true));

@@ -29,7 +29,7 @@ import {
 } from "./lessons-data.js";
 import { SONGS, ONE_FIVE_SIX_FOUR_SONGS, WORLD_LANGUAGES } from "./songs-data.js";
 import { watchChats, chatHtml } from "./chat.js";
-import { pandaSvg } from "./panda.js";
+import { pandaSvg, nextTrick } from "./panda.js";
 import { icon } from "./icons.js";
 import { shareButton } from "./share.js";
 import { claimRewards, showDayComplete, unlockedSongs, nextReward } from "./rewards.js";
@@ -829,7 +829,7 @@ function initLessonsTab(root) {
     setTimeout(() => { if (!finished) say.innerHTML = card.say; }, 550);
     const reply = (html, cls = "") => {
       thread.querySelector(".hk-micro-oops")?.remove();
-      thread.insertAdjacentHTML("beforeend", `<div class="hk-micro hk-micro-reply ${cls}"><div class="hk-micro-avatar">${pandaSvg(cls.includes("yay") ? "cheer" : cls.includes("oops") ? "oops" : "idle")}</div><div class="hk-micro-bubble">${html}</div></div>`);
+      thread.insertAdjacentHTML("beforeend", `<div class="hk-micro hk-micro-reply ${cls}"><div class="hk-micro-avatar">${pandaSvg(cls.includes("yay") ? nextTrick("yay") : cls.includes("oops") ? nextTrick("try") : "idle", { item: cls.includes("yay") || cls.includes("oops") ? undefined : "surprise" })}</div><div class="hk-micro-bubble">${html}</div></div>`);
       thread.lastElementChild.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
     };
     // C3 to E5: middle C sits right in the middle of the screen.

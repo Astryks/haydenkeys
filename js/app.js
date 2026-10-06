@@ -75,7 +75,7 @@ function init() {
   applyRewards();
   showIntro(courseProgress());
   const logo = document.getElementById("hk-logo-panda");
-  if (logo) logo.innerHTML = pandaSvg("wave", { label: "Hayden Keys" });
+  if (logo) logo.innerHTML = pandaSvg("idle", { label: "Hayden Keys" });
 
   document.querySelectorAll("[data-tab]").forEach((btn) => {
     btn.addEventListener("click", () => showTab(btn.dataset.tab));

@@ -79,18 +79,18 @@ function renderNoteHighway(container, keyLayout, { lookaheadSec = 2.2, hitLineFr
       const endTime = note.time + note.duration;
       // Skip notes fully outside the visible window (already passed, or
       // further away than the lookahead).
-      if (endTime < now - 0.05 || note.time > now + lookaheadSec) return;
+      if (note.time > now + lookaheadSec) return;
 
       // Item 57 fix: a note's START is its LOWER edge (it reaches the hit
-      // line first) and its END is its upper edge. These were swapped,
-      // which made every height negative — so every note, however long,
-      // was drawn as a 6px sliver instead of a block. Blocks are now as
-      // tall as the note is long, and stop at the hit line (where the
-      // keys take over) once they're sounding.
+      // line first) and its END is its upper edge. Blocks are as tall as
+      // the note is long and keep flowing at the same speed past the hit
+      // line into the keys (no stopping while they sound), so the stream
+      // never looks like it pauses.
       const startY = yForTime(note.time, now, hitLineY);
       const endY = yForTime(endTime, now, hitLineY);
+      if (endY >= h) return;
       const topY = Math.max(0, endY);
-      const bottomY = Math.min(hitLineY, startY);
+      const bottomY = Math.min(h, startY);
       if (bottomY <= 0) return;
       const x = (pos.xPct / 100) * w;
       const blockWidth = (pos.widthPct / 100) * w;
@@ -99,7 +99,7 @@ function renderNoteHighway(container, keyLayout, { lookaheadSec = 2.2, hitLineFr
       ctx.fillStyle = note.hand === "left" ? colors.left : colors.right;
       // Item 59: "ghost" notes (the hand the app is playing for you in
       // hands-separately practice) are drawn faded.
-      ctx.globalAlpha = note.ghost ? 0.3 : note.time <= now ? 1 : 0.85;
+      ctx.globalAlpha = note.ghost ? 0.3 : note.time <= now && endTime > now ? 1 : 0.85;
       ctx.fillRect(x + 1, topY, Math.max(2, blockWidth - 2), blockHeight);
       ctx.globalAlpha = 1;
     });
