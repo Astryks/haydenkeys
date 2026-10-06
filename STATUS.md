@@ -2334,3 +2334,4 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
 - Song player: cover art (iTunes Search, cached; privacy policy updated), key, chord progression section by section, press Play (no autoplay), Share below the piano. Falling notes now flow continuously through the hit line instead of stopping at it. Drum beat / Bass line toggles with custom icons and On/Off switches; Tap tempo hidden in the simple player.
 - Audio: tap-to-unlock listeners stay active all session so sound recovers after iOS interrupts it.
 - Build 19: uploads decode natively on iPhone (AVFoundation, any format iOS plays incl. videos), web decoder as fallback; new upload disclaimer wording.
+- Build 20: intro says just "G, D, Em and C"; no Back button on lesson 1; Hear it only shown when there is something to hear; panda no longer waves (idle with props instead).

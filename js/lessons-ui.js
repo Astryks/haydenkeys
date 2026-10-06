@@ -237,7 +237,7 @@ const DAY_ENDS = { "m-pop-song": [1, ["lesson-1"]], "d2-key-c": [2, ["lesson-2",
 const MICRO_CARDS = {
   "m-intro": { chat: `<h3>Welcome to Hayden Keys! 🎹</h3>
       <p>Did you know just <b>4 chords</b> can play over <b>100</b> of the most popular songs? 🎶</p>
-      <p>Those chords are <b>G, D, Em and C</b> (you might hear people call them "G A C D").</p>
+      <p>Those chords are <b>G, D, Em and C</b>.</p>
       <p>We'll get right into them, but first, let's make sure your piano and this app agree where <b>middle C</b> is.</p>`,
     say: "Ready? Let's find <b>middle C</b> together! 🎹", want: { tap: true }, ok: "Let's go! 🚀", noKeys: true, done: "Here we go! 🎹" },
   "m-black-keys": { say: "Look at the <b>black keys</b> 👀<br>They come in groups of <b>2</b> and <b>3</b>, again and again.<br>Press any black key in a group of <b>2</b>!", want: { pcs: [1, 3] }, labels: "groups", done: "That's your map! 🗺️ Every piano has it." },
@@ -354,7 +354,7 @@ function todayHtml() {
     </button>`;
   const hero = next ? `
       <button class="hk-hero" data-lesson="${next.id}">
-        <div class="hk-hero-panda">${pandaSvg(started ? "wave" : "cheer")}</div>
+        <div class="hk-hero-panda">${pandaSvg(started ? "idle" : "cheer")}</div>
         <div class="hk-hero-body">
           <div class="hk-hero-kicker">${started ? `Lesson ${number} of ${total}` : "Your piano journey starts here"}</div>
           <div class="hk-hero-title">${next.title}</div>
@@ -612,7 +612,9 @@ function initLessonsTab(root) {
     const order = LESSONS.filter((l) => !l.optional && !l.pre);
     const at = order.findIndex((l) => l.id === currentLessonId);
     const backBtn = main.querySelector("#hk-lesson-back");
+    // Lesson 1 has nothing before it, so no Back button there.
     if (at > 0) backBtn.addEventListener("click", () => startLesson(order[at - 1].id));
+    else backBtn.style.visibility = "hidden";
     const core = LESSONS.filter((l) => !l.optional && !l.pre);
     const ci = core.findIndex((l) => l.id === currentLessonId);
     if (ci >= 0) main.querySelector("#hk-lesson-count").textContent = `${ci + 1}/${core.length}`;
@@ -824,7 +826,7 @@ function initLessonsTab(root) {
     const lesson = LESSONS.find((l) => l.id === id);
     const { content, keyboardWrap, controls } = lessonShell(lesson.title);
     // Chat style: Hayden "types" for a moment, then the message pops in.
-    content.innerHTML = (card.chat ? chatHtml(card.chat, "idle") : "") + `<div class="hk-micro-thread" id="hk-micro-thread"><div class="hk-micro"><div class="hk-micro-avatar">${pandaSvg(card.want.choice ? "think" : card.sing ? "sing" : card.want.tap ? "wave" : "play")}</div><div class="hk-micro-bubble" id="hk-micro-say"><span class="hk-chat-typing"><i></i><i></i><i></i></span></div></div></div>`;
+    content.innerHTML = (card.chat ? chatHtml(card.chat, "idle") : "") + `<div class="hk-micro-thread" id="hk-micro-thread"><div class="hk-micro"><div class="hk-micro-avatar">${pandaSvg(card.want.choice ? "think" : card.sing ? "sing" : card.want.tap ? "idle" : "play", { item: card.want.tap ? "surprise" : undefined })}</div><div class="hk-micro-bubble" id="hk-micro-say"><span class="hk-chat-typing"><i></i><i></i><i></i></span></div></div></div>`;
     const thread = content.querySelector("#hk-micro-thread");
     setTimeout(() => { if (!finished) say.innerHTML = card.say; }, 550);
     const reply = (html, cls = "") => {
@@ -867,7 +869,7 @@ function initLessonsTab(root) {
     const say = content.querySelector("#hk-micro-say");
     const demoNotes = card.demo || card.show || card.help || (card.want.notes || []);
     controls.innerHTML = `
-      ${card.want.choice && card.options ? "" : card.soft ? `<button class="hk-btn" id="hk-micro-soft">${icon("soft", 20)} Soft</button><button class="hk-btn" id="hk-micro-strong">${icon("speaker", 20)} Strong</button>` : card.extra === "pop" ? "" : `<button class="hk-btn" id="hk-micro-hear">${icon("speaker", 20)} Hear it</button>`}
+      ${card.want.choice && card.options ? "" : card.soft ? `<button class="hk-btn" id="hk-micro-soft">${icon("soft", 20)} Soft</button><button class="hk-btn" id="hk-micro-strong">${icon("speaker", 20)} Strong</button>` : card.extra === "pop" || !(demoNotes.length || card.demoSeq) ? "" : `<button class="hk-btn" id="hk-micro-hear">${icon("speaker", 20)} Hear it</button>`}
       ${card.help ? `<button class="hk-btn" id="hk-micro-help">${icon("eye", 20)} Show me</button>` : ""}
       ${card.want.tap ? `<button class="hk-btn hk-btn-primary" id="hk-micro-ok">${card.ok || "Got it!"}</button>` : ""}
       ${card.want.choice ? (card.options || ["happy", "sad"]).map((o) => `<button class="hk-btn hk-micro-choice" data-choice="${o}">${o === "happy" ? "😀 Happy" : o === "sad" ? "🥲 Sad" : o}</button>`).join("") : ""}
