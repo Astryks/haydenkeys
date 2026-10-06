@@ -1,29 +1,26 @@
 // Hayden the panda: a flat, bold, logo-style mascot drawn in SVG so it
 // stays crisp at any size and can move. One drawing, many poses — each
-// pose just moves the arms, mouth, eyes and props (CSS in style.css):
+// pose just moves the arms, eyes and props (CSS in style.css):
 //   idle   gentle bob + blink           wave   one paw waving hello
-//   cheer  both paws up, jumping        think  head tilt, paw on chin
+//   cheer  paws up, jumping, ^ ^ eyes    think  head tilt, paw on chin
 //   oops   wide eyes, sweat drop        play   paws tapping piano keys
-//   sing   mouth open, notes floating   sleep  eyes shut, z z z
+//   sing   happy eyes, notes floating   sleep  eyes shut, z z z
 
+// No mouth: the eyes do the talking.
 const POSES = ["idle", "wave", "cheer", "think", "oops", "play", "sing", "sleep"];
 
-function mouth(pose) {
-  if (pose === "cheer" || pose === "sing") return '<path class="hp-mouth-open" d="M86 122 Q100 142 114 122 Z"/><path class="hp-tongue" d="M93 131 Q100 138 107 131 Q100 127 93 131Z"/>';
-  if (pose === "oops") return '<ellipse class="hp-mouth-open" cx="100" cy="127" rx="6" ry="8"/>';
-  if (pose === "sleep") return '<path class="hp-line" d="M93 125 Q100 129 107 125"/>';
-  if (pose === "think") return '<path class="hp-line" d="M92 126 Q101 124 108 121"/>';
-  return '<path class="hp-line" d="M88 121 Q100 134 112 121"/>';
-}
-
 function eyes(pose) {
-  if (pose === "sleep") return '<path class="hp-line hp-white-line" d="M66 94 Q76 100 86 94"/><path class="hp-line hp-white-line" d="M114 94 Q124 100 134 94"/>';
+  if (pose === "sleep") return '<path class="hp-line hp-white-line" d="M66 96 Q76 102 86 96"/><path class="hp-line hp-white-line" d="M114 96 Q124 102 134 96"/>';
+  // Happy "^ ^" eyes when cheering or singing.
+  if (pose === "cheer" || pose === "sing") return '<path class="hp-line hp-white-line" d="M66 98 Q76 86 86 98"/><path class="hp-line hp-white-line" d="M114 98 Q124 86 134 98"/>';
   const look = pose === "think" ? -4 : 0;
-  const big = pose === "oops" ? 13 : 11;
+  const big = pose === "oops" ? 14 : 12.5;
+  const pr = pose === "oops" ? 7 : 9;
   return `<g class="hp-eyes">
-      <circle cx="76" cy="92" r="${big}" fill="#fff"/><circle cx="124" cy="92" r="${big}" fill="#fff"/>
-      <circle class="hp-pupil" cx="${78 + look / 2}" cy="${93 + look}" r="6.5"/><circle class="hp-pupil" cx="${122 + look / 2}" cy="${93 + look}" r="6.5"/>
-      <circle cx="${80 + look / 2}" cy="${90 + look}" r="2.3" fill="#fff"/><circle cx="${124 + look / 2}" cy="${90 + look}" r="2.3" fill="#fff"/>
+      <circle cx="76" cy="94" r="${big}" fill="#fff"/><circle cx="124" cy="94" r="${big}" fill="#fff"/>
+      <circle class="hp-pupil" cx="${77 + look / 2}" cy="${95 + look}" r="${pr}"/><circle class="hp-pupil" cx="${123 + look / 2}" cy="${95 + look}" r="${pr}"/>
+      <circle cx="${80 + look / 2}" cy="${91 + look}" r="3.4" fill="#fff"/><circle cx="${126 + look / 2}" cy="${91 + look}" r="3.4" fill="#fff"/>
+      <circle cx="${74 + look / 2}" cy="${99 + look}" r="1.6" fill="#fff"/><circle cx="${120 + look / 2}" cy="${99 + look}" r="1.6" fill="#fff"/>
     </g>`;
 }
 
@@ -64,9 +61,8 @@ function pandaSvg(pose = "idle", { label = "Hayden the panda" } = {}) {
         <ellipse cx="74" cy="93" rx="21" ry="26" transform="rotate(-24 74 93)" class="hp-black"/>
         <ellipse cx="126" cy="93" rx="21" ry="26" transform="rotate(24 126 93)" class="hp-black"/>
         ${eyes(pose)}
-        <ellipse cx="58" cy="118" rx="11" ry="7" class="hp-cheek"/><ellipse cx="142" cy="118" rx="11" ry="7" class="hp-cheek"/>
-        <path d="M91 108 Q100 104 109 108 Q106 117 100 118 Q94 117 91 108Z" class="hp-black"/>
-        ${mouth(pose)}
+        <ellipse cx="56" cy="120" rx="13" ry="8" class="hp-cheek"/><ellipse cx="144" cy="120" rx="13" ry="8" class="hp-cheek"/>
+        <path d="M94 113 Q100 110 106 113 Q104 119 100 120 Q96 119 94 113Z" class="hp-black"/>
         ${accessory()}
       </g>
       <g class="hp-bow"><path d="M100 152 L82 142 Q78 152 82 162 Z"/><path d="M100 152 L118 142 Q122 152 118 162 Z"/><circle cx="100" cy="152" r="6"/></g>

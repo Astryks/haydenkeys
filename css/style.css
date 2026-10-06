@@ -1083,7 +1083,7 @@ body.hk-lesson-open .hk-rotate-tip { display: none !important; }
 .hk-panda .hp-black { fill: #2a2a3a; }
 .hk-panda .hp-ear-in { fill: #4a4a5e; }
 .hk-panda .hp-pupil { fill: #2a2a3a; }
-.hk-panda .hp-cheek { fill: #f4a6c0; opacity: 0.75; }
+.hk-panda .hp-cheek { fill: #f7a1bf; opacity: 0.9; }
 .hk-panda .hp-line { fill: none; stroke: #fff; stroke-width: 4; stroke-linecap: round; }
 .hk-panda .hp-head .hp-line:not(.hp-white-line) { stroke: #2a2a3a; }
 .hk-panda .hp-mouth-open { fill: #2a2a3a; }

@@ -2325,3 +2325,4 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
 - Custom drawn icons everywhere (emoji only inside chats). New flat panda logo with animated poses. Intro screen (Start now / Continue, Lesson N of total).
 - Share: "I just learned <song> on Hayden Keys! Check it out haydenkeys.com" (native share sheet).
 - Header respects the notch / Dynamic Island (verified in simulator).
+- Build 17: cuter panda — no mouth, bigger sparkly eyes, happy ^ ^ eyes when cheering/singing, smaller nose, rosier cheeks.
