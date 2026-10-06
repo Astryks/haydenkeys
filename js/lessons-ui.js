@@ -252,7 +252,7 @@ const MICRO_CARDS = {
   "m-sing": { say: "Play <b>C</b> and press the <b>top key</b> a bit <b>harder</b>.<br>Now it sings! 🎶", want: { notes: C }, show: C, sing: true, done: "Beautiful! 🎶" },
   "m-another-song": { say: "Same 4 chords, <b>new order</b>:<br><b>G → Em → C → D</b><br>That's the shape of songs like <i>Perfect</i>!", want: { seq: [G, EM, C, D] }, demoSeq: [[G, "G"], [EM, "Em"], [C, "C"], [D, "D"]], done: "Two songs' worth of chords! 🏆" },
   "d2-note": { say: "Each key plays a <b>note</b> 🎵<br>Notes are letters: <b>A B C D E F G</b>… then they start again!<br>Press <b>E</b>.", want: { notes: [64] }, help: [64], done: "That's E! 🎉" },
-  "d2-octave": { say: "Notes have <b>numbers</b> too: <b>A2</b>, <b>A3</b>, <b>C4</b> 🔢<br>The letter is the key. The number is <b>which group</b>.<br><b>Middle C = C4</b>. Smaller number = further <b>left</b>.<br>Press <b>A3</b> (just left of middle C), then <b>A2</b>!", labels: "octave", want: { seq: [[57], [45]] }, done: "A3 then A2: same letter, one group lower! 🎉" },
+  "d2-octave": { say: "Notes have <b>numbers</b> too: <b>A2</b>, <b>A3</b>, <b>C4</b> 🔢<br>Same <b>letter</b> = same <b>colour</b> 🎨 (all the As match!)<br>The number says <b>which group</b>: smaller = further <b>left</b>. <b>Middle C = C4</b>.<br>Press <b>A3</b>, then <b>A2</b>!", labels: "octave", want: { seq: [[57], [45]] }, done: "Same colour, same letter, one group lower! 🎉" },
   "d2-song-key": { say: "Songs have a <b>key</b> too! 🏠<br>It's the song's <b>home</b> chord.<br>Play <b>G → D → G</b>. Back home!", want: { seq: [G, D, G] }, demoSeq: [[G, "home"], [D, "away"], [G, "home"]], done: "This song is in the key of G 🏠" },
   "d2-major": { say: "This is <b>C major</b>: <b>C · E · G</b><br>It sounds <b>happy</b> 😀", want: { notes: C }, show: C, done: "Happy! 😀" },
   "d2-minor": { say: "Now move the middle key <b>one step down</b> to the black key: <b>C · E♭ · G</b><br>It sounds <b>sad</b> 🥲 That's <b>C minor</b>!", want: { notes: CMIN }, show: CMIN, done: "Sad! 🥲 One key changed it." },
@@ -753,7 +753,10 @@ function initLessonsTab(root) {
         kb.keyElements.forEach((el, m) => { if ([1, 3].includes(m % 12)) el.classList.add("hk-key-group2");  });
         return;
       }
-      const map = card.labels === "fromG" ? FROM_G : card.labels === "octave" ? Object.fromEntries([...kb.keyElements.keys()].filter((m) => m % 12 === 0 || m % 12 === 9).map((m) => [m, midiToName(m)])) : Object.fromEntries([...kb.keyElements.keys()].filter((m) => ![1, 3, 6, 8, 10].includes(m % 12)).map((m) => [m, midiToName(m).replace(/-?\d+$/, "")]));
+      const map = card.labels === "fromG" ? FROM_G : card.labels === "octave" ? Object.fromEntries([...kb.keyElements.keys()].filter((m) => ![1, 3, 6, 8, 10].includes(m % 12)).map((m) => {
+        kb.keyElements.get(m).classList.add(`hk-letter-${midiToName(m)[0]}`);
+        return [m, midiToName(m).replace(/^([A-G])(\d)$/, "$1\n$2")];
+      })) : Object.fromEntries([...kb.keyElements.keys()].filter((m) => ![1, 3, 6, 8, 10].includes(m % 12)).map((m) => [m, midiToName(m).replace(/-?\d+$/, "")]));
       Object.entries(map).forEach(([m, label]) => {
         const el = kb.keyElements.get(Number(m));
         if (!el || el.querySelector(".hk-key-notename")) return;

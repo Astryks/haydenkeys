@@ -1064,3 +1064,11 @@ body.hk-lesson-open .hk-rotate-tip { display: none !important; }
 .hk-upload-input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .hk-upload-pick { display: inline-block; margin: 6px 0; padding: 14px 24px; border-radius: 999px; font-size: 1.15rem; font-weight: 800; color: #fff; cursor: pointer; background: linear-gradient(135deg, var(--hk-accent), var(--hk-purple)); box-shadow: 0 6px 16px rgba(138, 99, 210, 0.3); }
 .hk-upload-fine { font-size: 0.72rem; line-height: 1.35; color: var(--hk-text-dim); margin: 6px 0 0; opacity: 0.85; }
+
+/* "A2, A3, C4?" card: every letter has its own colour, the same in every group */
+.hk-key.hk-letter-C { background: #ffd6d6 !important; } .hk-key.hk-letter-D { background: #ffe6c7 !important; }
+.hk-key.hk-letter-E { background: #fff5bf !important; } .hk-key.hk-letter-F { background: #d8f5d0 !important; }
+.hk-key.hk-letter-G { background: #cfeff5 !important; } .hk-key.hk-letter-A { background: #d9e2ff !important; }
+.hk-key.hk-letter-B { background: #ecdcff !important; }
+.hk-key[class*="hk-letter-"] .hk-key-notename-big { font-size: 0.68rem !important; color: #3a3550; }
+.hk-key[class*="hk-letter-"].hk-key-highlight { background: #f4b8d0 !important; }
