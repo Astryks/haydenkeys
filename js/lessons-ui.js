@@ -250,9 +250,11 @@ function keysPic(lo, hi, marks = {}, { w = 20, font = 0, captions = [] } = {}) {
     if (!mk.label) return "";
     return `<text x="${x}" y="${mk.above ? -8 : H + fs + 4}" text-anchor="middle" font-size="${fs}" font-weight="800" fill="${mk.text || "#3a2d6b"}">${mk.label}</text>`;
   };
+  // A coloured key keeps its white/black face; only its bottom part is coloured.
   whites.forEach((m, i) => {
     const mk = marks[m] || {};
-    white += `<rect x="${i * w}" y="0" width="${w}" height="${H}" rx="${w * 0.15}" fill="${mk.fill || "#fff"}" stroke="#2a2a3a" stroke-width="1.2"/>`;
+    white += `<rect x="${i * w}" y="0" width="${w}" height="${H}" rx="${w * 0.15}" fill="#fff" stroke="#2a2a3a" stroke-width="1.2"/>`;
+    if (mk.fill) white += `<rect x="${i * w + 1.2}" y="${H * 0.66}" width="${w - 2.4}" height="${H * 0.34 - 1.2}" rx="${w * 0.12}" fill="${mk.fill}"/>`;
     labels += label(i * w + w / 2, m, mk);
   });
   for (let m = lo; m <= hi; m++) {
@@ -260,7 +262,8 @@ function keysPic(lo, hi, marks = {}, { w = 20, font = 0, captions = [] } = {}) {
     const i = whites.filter((x) => x < m).length;
     const mk = marks[m] || {};
     const x = i * w - bw / 2;
-    black += `<rect x="${x}" y="0" width="${bw}" height="${BH}" rx="${bw * 0.15}" fill="${mk.fill || "#2a2a3a"}" stroke="#2a2a3a" stroke-width="1"/>`;
+    black += `<rect x="${x}" y="0" width="${bw}" height="${BH}" rx="${bw * 0.15}" fill="#2a2a3a" stroke="#2a2a3a" stroke-width="1"/>`;
+    if (mk.fill) black += `<rect x="${x + 1}" y="${BH * 0.7}" width="${bw - 2}" height="${BH * 0.3 - 1}" rx="${bw * 0.15}" fill="${mk.fill}"/>`;
     labels += label(x + bw / 2, m, mk);
   }
   // Captions centred over a group of keys, e.g. "2 black keys".
@@ -316,7 +319,7 @@ const IS_AM = [45, 57, 60, 64], IS_F = [41, 57, 60, 64], IS_C = [48, 55, 60, 64]
 const C7 = [60, 64, 67, 70], F7 = [53, 57, 60, 63], G7 = [55, 59, 62, 65], DM7 = [62, 65, 69, 72], CMAJ7 = [60, 64, 67, 71];
 const F_MAJ = [65, 69, 72], E_MAJ = [64, 68, 71], D_MIN = [62, 65, 69];
 const MICRO_CARDS = {
-  "m-intro": { say: "Welcome to Hayden Keys! 🎹<br>In about <b>a minute</b> you'll learn <b>4 chords</b> that play <b>100+ songs</b>:<br><b>G · D · Em · C</b> 🎶<br><br>But bear with us while we cover the <b>basics</b> first. It'll only take a few seconds! ⏱️<br><br>Go to <b>your piano</b> (or keyboard) 🎹", want: { tap: true }, ok: "I'm at my piano! 🎹", noKeys: true, done: "Let's find middle C! 🚀" },
+  "m-intro": { say: "Welcome to Hayden Keys! 🎹<br>In about <b>a minute</b> you'll learn <b>4 chords</b> that play <b>100+ songs</b>:<br><b>G · D · Em · C</b> 🎶<br><br>But <b>bear</b> 🐻 with us while we cover the <b>basics</b> first. It'll only take a few seconds! ⏱️<br><br>Go to <b>your piano</b> (or keyboard) 🎹", want: { tap: true }, ok: "I'm at my piano! 🎹", noKeys: true, done: "Let's find middle C! 🚀" },
   "m-black-keys": { say: "Look at the <b>black keys</b> 👀<br>They come in groups of <b>2</b> and <b>3</b>, again and again.<br>Press any black key in a group of <b>2</b>!", want: { pcs: [1, 3] }, labels: "groups", done: "That's your map! 🗺️ Every piano has it." },
   "m-any-piano": { say: "Pianos come in <b>all sizes</b> 🎹<br>Middle C isn't always in the exact middle!<br>🔎 Every <b>C</b> is just <b>left of the 2 black keys</b>.<br>Big piano (88 keys): the <b>4th C</b> from the left.<br>Smaller keyboard: usually the <b>3rd C</b>.", want: { tap: true }, ok: "Got it 👍", done: "Find the 2 black keys, go left. Easy! 🎉" },
   "m-find-c": { say: `Welcome to Hayden Keys! 🎹<br>In about <b>a minute</b> you'll learn <b>4 chords</b> that play <b>100+ songs</b>: <b>G · D · Em · C</b> 🎶<br>But bear with us while we cover the <b>basics</b> first. It'll only take a few seconds! ⏱️<br><br><b>Let's start by finding middle C</b> 🏠<br>Go to <b>your piano</b> (the real one!) and look in the <b>center</b> of the keys. Middle C is the white key just <b>left</b> of the <b>2 black keys</b> there.${PIC_MIDDLE_C}Found it on your piano?`, want: { tap: true }, ok: "Found it! ✅", cantFind: `<b>No problem! Count from the left</b> 👇<br>🎹 <b>88 keys</b> (full piano): the <b>40th</b> key<br>🎹 <b>76 keys</b>: the <b>33rd</b> key<br>🎹 <b>61 keys</b> (keyboard): the <b>25th</b> key<br><small>Count every key, white and black.</small>`, labels: "groups", show: [60], hideMiddleC: true, done: "That's middle C, home base! 🏠" },

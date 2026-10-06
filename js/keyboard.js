@@ -88,6 +88,13 @@ function playSynthTone(midi, { duration = 0.6, gain = 0.18, delay = 0 } = {}) {
 // piano instead, with no caller-side code changes needed.
 function playTone(midi, opts = {}) {
   const ctx = getAudioContext();
+  // iOS can hand back a paused audio engine for a moment (after a call, the
+  // photo picker, or the first tap). A note scheduled then is never heard,
+  // so wait for the engine to wake up and play it then.
+  if (ctx.state !== "running" && !opts._retried) {
+    ctx.resume?.().then(() => playTone(midi, { ...opts, _retried: true })).catch(() => playTone(midi, { ...opts, _retried: true }));
+    return;
+  }
   loadSampledPiano(ctx);
   const piano = getSampledPianoIfReady();
   // velocity 1-127 (default 100): how hard the key is pressed.

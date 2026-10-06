@@ -1494,3 +1494,12 @@ body.hk-lesson-open .hk-lesson-topbar { padding-top: 6px !important; }
 .hk-micro-bubble .hk-keys-pic { max-width: 300px; margin: 6px auto 4px; }
 @media (min-width: 768px) { .hk-micro-bubble { font-size: 1.2rem !important; } }
 @media (max-width: 520px) { body.hk-lesson-open .hk-lesson-highway { height: 84px !important; } }
+
+/* Same-letter colours on the keyboard: only the bottom part of each key */
+.hk-key.hk-letter-A { background: linear-gradient(to top, #c9b6f7 0 34%, #f5f3fa 34%) !important; }
+.hk-key.hk-letter-B { background: linear-gradient(to top, #f7a9a9 0 34%, #f5f3fa 34%) !important; }
+.hk-key.hk-letter-C { background: linear-gradient(to top, #fcc98a 0 34%, #f5f3fa 34%) !important; }
+.hk-key.hk-letter-D { background: linear-gradient(to top, #f6e27f 0 34%, #f5f3fa 34%) !important; }
+.hk-key.hk-letter-E { background: linear-gradient(to top, #b6e6a4 0 34%, #f5f3fa 34%) !important; }
+.hk-key.hk-letter-F { background: linear-gradient(to top, #9fdde3 0 34%, #f5f3fa 34%) !important; }
+.hk-key.hk-letter-G { background: linear-gradient(to top, #a9c4f7 0 34%, #f5f3fa 34%) !important; }
