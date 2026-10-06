@@ -2373,3 +2373,9 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
   - Home page cleaned up: tagline "Learn any song in the piano for free!", three big tiles (Lessons / Practice / My songs) with icons, one Continue card, and "Upload any song and we'll find the chords for you" (opens Practice + the file picker). Footer links only on My songs.
   - Single-message chat bubbles render instantly, fixing older lessons whose buttons/widgets inside the bubble weren't wired (e.g. Pedals, Tom & Jerry, the original Lesson 1 tuner step). Three "Next lesson →" buttons went back to the map; now they go to the next lesson.
   - Full curriculum smoke test (scripted, every lesson): 140/157 complete automatically; the rest need real key presses/quiz answers the script can't make (checked individually).
+
+## Where things stand (2026-10-07)
+- **TestFlight:** build 20 is the last one uploaded. Builds 21–24 were committed; **build 24** (which includes everything from 21–23) is archived and ready, but the upload is blocked by Xcode's "Failed to Use Accounts" error. Re-sign in to Xcode (Settings → Accounts → remove and re-add the Apple ID), then upload build 24.
+- **Testing:** all 59 lesson cards pass the automated card test; the scripted walk-through of every lesson completes 140/157 automatically, and the remaining lessons need real key presses or quiz answers (spot-checked by hand).
+- **App Store submission:** not submitted. Screenshots, content rights, age rating, App Privacy and review contact are still to do in App Store Connect.
+- **Sibling app:** Jaxx Guitar has the same changes, adapted for guitar (its build 8).
