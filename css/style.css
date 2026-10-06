@@ -1063,3 +1063,4 @@ body.hk-lesson-open .hk-rotate-tip { display: none !important; }
 .hk-upload-match-box small { color: var(--hk-text-dim); }
 .hk-upload-input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .hk-upload-pick { display: inline-block; margin: 6px 0; padding: 14px 24px; border-radius: 999px; font-size: 1.15rem; font-weight: 800; color: #fff; cursor: pointer; background: linear-gradient(135deg, var(--hk-accent), var(--hk-purple)); box-shadow: 0 6px 16px rgba(138, 99, 210, 0.3); }
+.hk-upload-fine { font-size: 0.72rem; line-height: 1.35; color: var(--hk-text-dim); margin: 6px 0 0; opacity: 0.85; }

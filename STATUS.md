@@ -2269,3 +2269,4 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
   - **Note names:** a hint explains them (C4 = middle C, A3 = the A just left of it).
   - **"These songs use the same chords":** the heard chord loop is compared with every library song in any key, and tapping one opens the full song in Practice. It's a hint, not Shazam-style identification, which needs an online audio fingerprint service.
   - **Easy mode (just chords) is now the default,** next to Hard mode (every note). Easy mode follows the tempo (1 beat per chord on slow songs, 2 on fast), so it no longer merges chords. The test clip went from "2 chords" to the correct 4.
+- **Upload disclaimer:** now small bracketed text under the button: "(Hayden Keys is for entertainment and learning only. We don't support copying songs from YouTube or other links without the artist's permission…)". Build 11.
