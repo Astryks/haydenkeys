@@ -2380,3 +2380,4 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
 - **App Store submission:** not submitted. Screenshots, content rights, age rating, App Privacy and review contact are still to do in App Store Connect.
 - **Sibling app:** Jaxx Guitar has the same changes, adapted for guitar (its build 8).
 - Build 25: "Four scales, one shape" quiz gets a Show me button (it had no way forward for a stuck learner). Final one-by-one lesson test: no errors anywhere.
+- Build 26: new app icon — the hand-drawn panda at an upright piano (supplied by Sid), cropped square; web icons (16–512) updated too.
