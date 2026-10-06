@@ -9,6 +9,7 @@ import { checkBadges } from "./badges.js";
 import { getLevel } from "./storage.js";
 import { maybeShowFunFact, showFunFact } from "./fun-facts.js";
 import { initPopups } from "./popups.js";
+import { pandaSvg } from "./panda.js";
 
 // Stripe Payment Link for the footer's "Support Hayden Keys" link —
 // empty until Sid creates one in his own Stripe dashboard.
@@ -63,6 +64,8 @@ function init() {
     panels[t] = document.getElementById(`panel-${t}`);
   });
   initPopups();
+  const logo = document.getElementById("hk-logo-panda");
+  if (logo) logo.innerHTML = pandaSvg("wave", { label: "Hayden Keys" });
 
   document.querySelectorAll("[data-tab]").forEach((btn) => {
     btn.addEventListener("click", () => showTab(btn.dataset.tab));

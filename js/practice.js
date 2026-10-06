@@ -1,3 +1,4 @@
+import { pandaSvg } from "./panda.js";
 import { SONGS, SONG_STRUCTURES, ONE_FIVE_SIX_FOUR_SONGS } from "./songs-data.js";
 import { renderKeyboard, playChord, playTone } from "./keyboard.js";
 import { chordSymbolToMidi, parseChordSymbol } from "./chord-utils.js";
@@ -194,7 +195,7 @@ function initPracticeTab(root, { initialSong } = {}) {
         </div>
         <p class="hk-mode-desc">${modeDescription()}</p>
         <div class="hk-speed-picker" id="hk-speed-picker">
-          <img src="assets/mascot-poses/metronome.png" alt="" class="hk-speed-mascot" />
+          <div class="hk-speed-mascot">${pandaSvg("think")}</div>
           <span class="hk-speed-label">Speed:</span>
           ${SPEEDS.map((s) => `<button class="hk-speed-btn ${s === playbackSpeed ? "hk-speed-active" : ""}" data-speed="${s}">${s}×${s === 1 ? " (normal)" : s === 0.5 ? " (slow)" : ""}</button>`).join("")}
           <button class="hk-btn hk-btn-small hk-drums-toggle ${drumsOn ? "hk-drums-on" : ""}" id="hk-drums-toggle"

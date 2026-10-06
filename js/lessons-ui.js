@@ -29,6 +29,7 @@ import {
 } from "./lessons-data.js";
 import { SONGS, ONE_FIVE_SIX_FOUR_SONGS, WORLD_LANGUAGES } from "./songs-data.js";
 import { watchChats, chatHtml } from "./chat.js";
+import { pandaSvg } from "./panda.js";
 import { isLessonComplete, markLessonComplete, getStreak, getDailyGoal, markSongStatus, getQuests, completeQuest, awardXp, starsFor, recordStars, getStreakFreezes, getLevel } from "./storage.js";
 import { checkBadges } from "./badges.js";
 import {
@@ -284,7 +285,7 @@ function todayHtml() {
   return `
     <div class="hk-today">
       <div class="hk-today-head">
-        <img src="assets/mascot-face.png" alt="" class="hk-today-mascot">
+        <div class="hk-today-mascot">${pandaSvg("wave")}</div>
         <div><h2>${started ? "Today's piano time" : "Welcome to Hayden Keys!"}</h2>
         <p class="hk-honest-note">${started ? `🔥 ${streak.count}-day streak · Level ${lv.level} ${lv.title}` : "Tap your first task to begin. One step at a time!"}</p></div>
       </div>
@@ -732,12 +733,12 @@ function initLessonsTab(root) {
     const lesson = LESSONS.find((l) => l.id === id);
     const { content, keyboardWrap, controls } = lessonShell(lesson.title);
     // Chat style: Hayden "types" for a moment, then the message pops in.
-    content.innerHTML = `<div class="hk-micro-thread" id="hk-micro-thread"><div class="hk-micro"><img src="assets/mascot-face.png" alt="" class="hk-micro-avatar"><div class="hk-micro-bubble" id="hk-micro-say"><span class="hk-chat-typing"><i></i><i></i><i></i></span></div></div></div>`;
+    content.innerHTML = `<div class="hk-micro-thread" id="hk-micro-thread"><div class="hk-micro"><div class="hk-micro-avatar">${pandaSvg(card.want.choice ? "think" : card.sing ? "sing" : card.want.tap ? "wave" : "play")}</div><div class="hk-micro-bubble" id="hk-micro-say"><span class="hk-chat-typing"><i></i><i></i><i></i></span></div></div></div>`;
     const thread = content.querySelector("#hk-micro-thread");
     setTimeout(() => { if (!finished) say.innerHTML = card.say; }, 550);
     const reply = (html, cls = "") => {
       thread.querySelector(".hk-micro-oops")?.remove();
-      thread.insertAdjacentHTML("beforeend", `<div class="hk-micro hk-micro-reply ${cls}"><img src="assets/mascot-face.png" alt="" class="hk-micro-avatar"><div class="hk-micro-bubble">${html}</div></div>`);
+      thread.insertAdjacentHTML("beforeend", `<div class="hk-micro hk-micro-reply ${cls}"><div class="hk-micro-avatar">${pandaSvg(cls.includes("yay") ? "cheer" : cls.includes("oops") ? "oops" : "idle")}</div><div class="hk-micro-bubble">${html}</div></div>`);
       thread.lastElementChild.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
     };
     // C3 to E5: middle C sits right in the middle of the screen.

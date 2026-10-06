@@ -1,3 +1,4 @@
+import { pandaSvg } from "./panda.js";
 // "About" — an in-app, site-styled presentation of README.md and
 // THIRD_PARTY_NOTICES.md, for a curious visitor who doesn't want to go
 // dig through raw markdown files on GitHub. Every fact here is the same
@@ -15,7 +16,7 @@ function initAboutTab(root) {
     <div class="hk-how">
       <h2>About Hayden Keys</h2>
       <p class="hk-how-sub">What this is, what it uses, and the legal lines it won't cross — in plain language, not raw markdown.</p>
-      <img src="assets/mascot-full.png" alt="Hand-drawn illustration of the Hayden Keys panda mascot playing an upright piano, sheet music propped open" class="hk-about-hero" />
+      <div class="hk-about-hero">${pandaSvg("play", { label: "Hayden the panda playing piano" })}</div>
 
       <section class="hk-how-section">
         <h3>What this is</h3>

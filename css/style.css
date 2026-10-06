@@ -1072,3 +1072,86 @@ body.hk-lesson-open .hk-rotate-tip { display: none !important; }
 .hk-key.hk-letter-B { background: #ecdcff !important; }
 .hk-key[class*="hk-letter-"] .hk-key-notename-big { font-size: 0.68rem !important; color: #3a3550; }
 .hk-key[class*="hk-letter-"].hk-key-highlight { background: #f4b8d0 !important; }
+.hk-upload-rec-box { display: flex; gap: 12px; align-items: center; background: #fff; border: 2px solid var(--hk-accent-2-soft); border-radius: 16px; padding: 10px 12px; margin: 8px 0; }
+.hk-upload-rec-box b { font-size: 1.15rem; }
+.hk-upload-rec-art { width: 64px; height: 64px; border-radius: 10px; object-fit: cover; flex: 0 0 auto; }
+.hk-upload-rec-artist { color: var(--hk-text-dim); font-size: 0.9rem; }
+.hk-upload-rec-links { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+
+/* ===== Hayden the panda (flat, animated) ===== */
+.hk-panda { display: block; width: 100%; height: 100%; overflow: visible; }
+.hk-panda .hp-black { fill: #2a2a3a; }
+.hk-panda .hp-ear-in { fill: #4a4a5e; }
+.hk-panda .hp-pupil { fill: #2a2a3a; }
+.hk-panda .hp-cheek { fill: #f4a6c0; opacity: 0.75; }
+.hk-panda .hp-line { fill: none; stroke: #fff; stroke-width: 4; stroke-linecap: round; }
+.hk-panda .hp-head .hp-line:not(.hp-white-line) { stroke: #2a2a3a; }
+.hk-panda .hp-mouth-open { fill: #2a2a3a; }
+.hk-panda .hp-tongue { fill: #f07a9b; }
+.hk-panda .hp-bow path, .hk-panda .hp-bow circle { fill: #d9678f; }
+.hk-panda .hp-bow circle { fill: #b84d74; }
+.hk-panda .hp-sweat { fill: #8fd0f5; }
+.hk-panda .hp-sparkles path { fill: #f5c542; }
+.hk-panda .hp-notes text, .hk-panda .hp-zzz text { font: 800 22px system-ui, sans-serif; fill: #8a63d2; }
+.hk-panda .hp-zzz text { fill: #4a9bc9; font-size: 18px; }
+.hk-panda g, .hk-panda path, .hk-panda rect { transform-box: fill-box; }
+.hk-panda .hp-arm-l { transform-origin: 50% 10%; }
+.hk-panda .hp-arm-r { transform-origin: 50% 10%; }
+.hk-panda .hp-head { transform-origin: 50% 90%; }
+.hk-panda .hp-all { transform-origin: 50% 100%; transform-box: view-box; }
+.hk-panda .hp-eyes { transform-origin: 50% 50%; }
+
+/* Poses: where the paws are */
+.hp-wave .hp-arm-r { transform: rotate(-150deg); }
+.hp-cheer .hp-arm-l { transform: rotate(150deg); } .hp-cheer .hp-arm-r { transform: rotate(-150deg); }
+.hp-think .hp-arm-r { transform: rotate(-120deg) translateY(4px); } .hp-think .hp-head { transform: rotate(-7deg); }
+.hp-oops .hp-arm-l { transform: rotate(35deg); } .hp-oops .hp-arm-r { transform: rotate(-35deg); }
+.hp-play .hp-arm-l { transform: rotate(-20deg); } .hp-play .hp-arm-r { transform: rotate(20deg); }
+.hp-sing .hp-arm-l { transform: rotate(60deg); } .hp-sing .hp-arm-r { transform: rotate(-60deg); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .hk-panda .hp-all { animation: hp-bob 2.6s ease-in-out infinite; }
+  .hk-panda .hp-eyes { animation: hp-blink 4.5s infinite; }
+  .hp-wave .hp-arm-r { animation: hp-wave 1s ease-in-out infinite; }
+  .hp-cheer .hp-all { animation: hp-jump 0.7s ease-out infinite; }
+  .hp-cheer .hp-sparkles { animation: hp-twinkle 0.7s ease-in-out infinite alternate; transform-origin: center; }
+  .hp-think .hp-head { animation: hp-tilt 2.4s ease-in-out infinite; }
+  .hp-oops .hp-all { animation: hp-shake 0.5s ease-in-out 2; }
+  .hp-oops .hp-sweat { animation: hp-drip 1.2s ease-in infinite; }
+  .hp-play .hp-arm-l { animation: hp-tap-l 0.5s ease-in-out infinite; }
+  .hp-play .hp-arm-r { animation: hp-tap-r 0.5s ease-in-out 0.25s infinite; }
+  .hp-sing .hp-notes text { animation: hp-float 1.6s ease-out infinite; }
+  .hp-sing .hp-notes text:nth-child(2) { animation-delay: 0.6s; }
+  .hp-sleep .hp-all { animation: hp-breathe 3s ease-in-out infinite; }
+  .hp-sleep .hp-zzz text { animation: hp-float 2.4s ease-out infinite; }
+  .hp-sleep .hp-zzz text:nth-child(2) { animation-delay: 0.8s; } .hp-sleep .hp-zzz text:nth-child(3) { animation-delay: 1.6s; }
+}
+@keyframes hp-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@keyframes hp-blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+@keyframes hp-wave { 0%, 100% { transform: rotate(-150deg); } 50% { transform: rotate(-120deg); } }
+@keyframes hp-jump { 0%, 100% { transform: translateY(0) scale(1, 1); } 15% { transform: translateY(0) scale(1.04, 0.96); } 50% { transform: translateY(-16px) scale(0.98, 1.03); } }
+@keyframes hp-twinkle { from { opacity: 0.4; } to { opacity: 1; } }
+@keyframes hp-tilt { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(-2deg); } }
+@keyframes hp-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+@keyframes hp-drip { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(14px); opacity: 0; } }
+@keyframes hp-tap-l { 0%, 100% { transform: rotate(-20deg) translateY(0); } 50% { transform: rotate(-20deg) translateY(6px); } }
+@keyframes hp-tap-r { 0%, 100% { transform: rotate(20deg) translateY(0); } 50% { transform: rotate(20deg) translateY(6px); } }
+@keyframes hp-float { 0% { transform: translateY(6px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-14px); opacity: 0; } }
+@keyframes hp-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+/* New panda containers */
+.hk-logo { width: 64px; height: 70px; display: block; margin: 0 auto 8px; }
+.hk-chat-avatar, .hk-micro-avatar, .hk-mascot-avatar, .hk-today-mascot { background: none !important; border-radius: 0 !important; overflow: visible; }
+.hk-chat-avatar { width: 46px; height: 50px; }
+.hk-micro-avatar { width: 58px; height: 64px; }
+.hk-today-mascot { width: 72px; height: 78px; }
+.hk-about-hero { width: 180px; height: 200px; margin: 0 auto; }
+.hk-empty-mascot { width: 110px; height: 120px; margin: 0 auto; }
+.hk-speed-mascot { width: 40px; height: 44px; }
+.hk-mascot-avatar { width: 50px; height: 55px; }
+/* think: paw up near the chin */
+.hp-think .hp-arm-r { transform: rotate(-165deg) translate(14px, 4px); }
+/* Upload settings live below the piano */
+.hk-upload-settings { margin: 10px 0; border: 1px solid var(--hk-border); border-radius: 14px; background: var(--hk-panel); padding: 4px 12px; }
+.hk-upload-settings > summary { cursor: pointer; font-weight: 700; padding: 10px 0; list-style: none; }
+.hk-upload-settings > summary::-webkit-details-marker { display: none; }
+.hk-upload-guess { font-size: 1rem; font-weight: 700; }

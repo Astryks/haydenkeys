@@ -6,6 +6,19 @@
 // reply chip to send the next question; Hayden "types" and answers. The
 // lesson's keyboard and buttons appear once the chat reaches the end.
 
+import { pandaSvg } from "./panda.js";
+
+// Old image poses map to the new animated panda's poses.
+function poseFor(src) {
+  if (!src || !src.includes("/")) return src || "idle";
+  if (/conduct|composer|mozart|scores/.test(src)) return "cheer";
+  if (/metronome|music-stand|sheet/.test(src)) return "think";
+  if (/piano|harp/.test(src)) return "play";
+  if (/flute|trombone|violin|notes/.test(src)) return "sing";
+  if (/dozing|dreaming/.test(src)) return "sleep";
+  return "idle";
+}
+
 const DEFAULT_PROMPTS = ["Got it! What's next?", "Okay 👍 Then what?", "Makes sense. Tell me more!", "Cool! What else?", "Nice. Keep going!"];
 const TYPING_MS = 650;
 
@@ -53,7 +66,7 @@ function buildChat(el) {
   function reply(ex, instant) {
     const row = document.createElement("div");
     row.className = "hk-chat-msg hk-chat-them";
-    row.innerHTML = `<img src="${pose}" alt="" class="hk-chat-avatar"><div class="hk-chat-bubble"><span class="hk-chat-typing"><i></i><i></i><i></i></span></div>`;
+    row.innerHTML = `<div class="hk-chat-avatar">${pandaSvg(poseFor(pose))}</div><div class="hk-chat-bubble"><span class="hk-chat-typing"><i></i><i></i><i></i></span></div>`;
     thread.appendChild(row);
     scroll(row);
     const fill = () => {

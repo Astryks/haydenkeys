@@ -1,3 +1,4 @@
+import { pandaSvg } from "./panda.js";
 // "MIDI" tab — a fully playable on-screen keyboard driven by the
 // computer's physical keyboard, for anyone exploring Hayden Keys
 // without a real piano/keyboard nearby. Reuses the exact same
@@ -30,7 +31,7 @@ function initMidiTab(root) {
     <div class="hk-midi">
       <h2>MIDI: play with your computer keyboard</h2>
       <div class="hk-mascot-row">
-        <img src="assets/mascot-face.png" alt="" class="hk-mascot-avatar" />
+        <div class="hk-mascot-avatar">${pandaSvg("play")}</div>
         <div class="hk-mascot-bubble">
           <p>This is handy for exploring without a piano nearby, but your fingers won't build the real
              muscle memory they need this way. Practicing on an actual keyboard — even a cheap one, see

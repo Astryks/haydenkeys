@@ -2270,3 +2270,18 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
   - **"These songs use the same chords":** the heard chord loop is compared with every library song in any key, and tapping one opens the full song in Practice. It's a hint, not Shazam-style identification, which needs an online audio fingerprint service.
   - **Easy mode (just chords) is now the default,** next to Hard mode (every note). Easy mode follows the tempo (1 beat per chord on slow songs, 2 on fast), so it no longer merges chords. The test clip went from "2 chords" to the correct 4.
 - **Upload disclaimer:** now small bracketed text under the button: "(Hayden Keys is for entertainment and learning only. We don't support copying songs from YouTube or other links without the artist's permission…)". Build 11.
+
+## 2026-10-07: new panda, Shazam guessing, upload layout
+- **New mascot:**
+  - **The drawing:** Hayden the panda is redrawn as a flat, bold, logo-style character (like Duolingo's owl) in SVG (`js/panda.js`), crisp at any size.
+  - **8 animated poses:** idle (bob + blink), wave, cheer (jumps with sparkles), think, oops (sweat drop), play (taps piano keys), sing (floating notes) and sleep (z z z). They respect reduced-motion.
+  - **Where it's used:** header logo, Today, every lesson card (cheers on success, "oops" on a wrong key), chat lessons, About, Saved, Practice and MIDI.
+  - **App icon and favicons:** regenerated from the new panda.
+- **Upload layout:** Choose a song → big ▶ Play → falling chords on the piano. Everything else is in "⚙️ Customise" below the piano: seek bar, speed, Easy/Hard mode, sound, "Guess the song", same-chord songs, and the note-number hint. After processing, the page scrolls to Play.
+- **🔎 Guess the song (Shazam):**
+  - **Opt-in:** a button in Customise, iPhone/iPad app only.
+  - **How it works:** a native plugin (`ios/App/App/SongRecognizerPlugin.swift`, registered in `HKBridgeViewController.swift`) fingerprints about 12 seconds with Apple's ShazamKit and shows "We think this is…", with **Open in Apple Music** (required by Apple when showing results) and **Learn the whole song** if it's in the library.
+  - **Rules:** the Shazam logo isn't required. The privacy policy explains that only a fingerprint is sent to Apple.
+  - **Owner action:** enable the **ShazamKit** App Service for `com.haydenkeys.app` (developer.apple.com → Identifiers → com.haydenkeys.app → App Services → ShazamKit → Save). Matching won't work until this is on.
+  - **No slowdown:** it only runs when the button is pressed.
+- **A2/A3/C4 card:** every letter has its own colour, the same in every group.
