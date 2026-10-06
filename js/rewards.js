@@ -55,7 +55,13 @@ function applyRewards() {
   document.body.classList.toggle("hk-gold-keys", has("gold"));
 }
 
-// Full-screen "Day N complete!" card. Resolves when they tap Keep going.
+const LESSON_DONE_LINES = {
+  1: "4 chords are all you need to play over 100 songs. Try singing along! 🎤",
+  2: "Happy chords, sad chords, any chord in any key. You can play them all now! 🎹",
+  3: "Two hands at once, just like real pianists! 🙌",
+};
+
+// Full-screen "Lesson N complete!" card. Resolves when they tap Keep going.
 function showDayComplete(day, fresh) {
   return new Promise((resolve) => {
     const streak = getStreak().count;
@@ -65,7 +71,8 @@ function showDayComplete(day, fresh) {
     el.innerHTML = `
       <div class="hk-daydone-card">
         <div class="hk-daydone-panda">${pandaSvg(nextTrick("yay"))}</div>
-        <h2>Day ${day} complete!</h2>
+        <h2>Lesson ${day} complete!</h2>
+        ${LESSON_DONE_LINES[day] ? `<p class="hk-daydone-sub">${LESSON_DONE_LINES[day]}</p>` : ""}
         <div class="hk-daydone-streak">${icon("flame", 34)}<b>${streak}</b><span>day streak</span></div>
         ${fresh.length ? `<div class="hk-daydone-label">You unlocked</div>${fresh.map((r) => `<div class="hk-reward">${icon(r.icon, 36)}<div><b>${r.title}</b><span>${r.text}</span></div></div>`).join("")}` : ""}
         ${nxt ? `<div class="hk-daydone-next">${icon("gift", 22)} Come back tomorrow: a <b>${nxt.when.streak}-day streak</b> unlocks <b>${nxt.title.replace(/^New song: /, "")}</b></div>` : ""}

@@ -12,6 +12,8 @@ import { saveUpload } from "./my-uploads.js";
 import { icon } from "./icons.js";
 import { pandaSvg } from "./panda.js";
 import { shareButton } from "./share.js";
+import { videoHtml, wireVideos } from "./media.js";
+import { SONG_VIDEOS } from "./media-data.js";
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const TIERS = ["Beginner", "Intermediate", "Advanced"];
@@ -133,9 +135,11 @@ function initPracticeHome(root) {
         <div class="hk-song-prog-title">The chords in this song</div>
         ${progressionRows(song).map((r) => `<div class="hk-song-prog-row"><span>${esc(r.label)}</span><b>${r.chords.map((c) => `<i>${esc(c)}</i>`).join("")}</b></div>`).join("")}
       </div>
+      ${SONG_VIDEOS[song.title] ? `<div class="hk-player-video">${videoHtml(SONG_VIDEOS[song.title])}</div>` : ""}
       <div class="hk-player-tip">${icon("piano", 20)} Press Play, watch the chords fall and play along on your own piano.</div>
       <div class="hk-practice-simple" id="hk-player"></div>
       <div class="hk-player-share">${shareButton(song.title, "I learned it! Share")}</div>`;
+    wireVideos(root);
     songArt(song).then((art) => {
       const el = root.querySelector("#hk-song-art");
       if (!art || !el) return;

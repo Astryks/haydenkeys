@@ -273,7 +273,8 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
    etc.) shouldn't visually read as "that's the right hand" by accident. */
 .hk-key-highlight.hk-key-white { background: var(--hk-accent-2-soft); }
 .hk-key-highlight.hk-key-black { background: var(--hk-accent-2); }
-.hk-key-selectable { outline: 1px dashed var(--hk-accent-2); outline-offset: -2px; }
+.hk-key-selectable { outline: 3px dashed #8a63d2; outline-offset: -4px; }
+.hk-key-selectable:not(.hk-key-black) { background: #f1ebff; }
 /* Item 56: per-key note letter in a highlighted chord, and the
    permanent Middle C marker (a purple bar along the key's bottom edge). */
 .hk-key-letter {
@@ -1367,3 +1368,28 @@ body.hk-gold-keys .hk-key-black { background: linear-gradient(#5a4310, #2e2206) 
 .hk-switch { display: inline-block; min-width: 34px; margin-left: 4px; padding: 1px 8px; border-radius: 999px; background: #e6e1f2; color: #6b6585; font-size: 0.8rem; font-weight: 800; }
 .hk-switch-on { background: #3fb363; color: #fff; }
 .hk-drums-toggle { display: inline-flex; align-items: center; gap: 6px; }
+
+/* Same letter = same colour, in every octave (A1, A2, A3… all purple) */
+.hk-key.hk-letter-A { background: #c9b6f7 !important; } .hk-key.hk-letter-B { background: #f7a9a9 !important; }
+.hk-key.hk-letter-C { background: #fcc98a !important; } .hk-key.hk-letter-D { background: #f6e27f !important; }
+.hk-key.hk-letter-E { background: #b6e6a4 !important; } .hk-key.hk-letter-F { background: #9fdde3 !important; }
+.hk-key.hk-letter-G { background: #a9c4f7 !important; }
+/* A lit key keeps its letter colour; a purple ring shows it's the one to press */
+.hk-key[class*="hk-letter-"].hk-key-highlight { box-shadow: inset 0 0 0 4px #6a45b5, 0 0 0 2px #6a45b5 !important; filter: saturate(1.4); }
+.hk-daydone-sub { margin: -4px 0 10px; font-weight: 700; color: #6a45b5; }
+/* All 24 chords */
+.hk-chord-chart { margin: 8px 0 8px 64px; display: flex; flex-direction: column; gap: 8px; }
+.hk-chord-chart-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.hk-chord-chart-row span { width: 100%; font-weight: 800; font-size: 0.85rem; color: #6a45b5; }
+.hk-chord-chip { min-width: 44px; padding: 7px 8px; border-radius: 12px; border: 2px solid #d9d0f5; background: #fff; font-weight: 900; font-size: 0.95rem; cursor: pointer; }
+.hk-chord-chip-on { background: #8a63d2; border-color: #8a63d2; color: #fff; }
+/* Song cards and song lessons */
+.hk-micro-song { margin: 8px 0 8px 64px; display: flex; flex-direction: column; gap: 8px; }
+.hk-micro-song-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.hk-song-lesson { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+.hk-song-lesson-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.hk-song-lesson-head b { font-size: 1.25rem; }
+.hk-song-lesson-head span:not(.hk-song-key) { color: var(--hk-text-dim); }
+.hk-choose-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+@media (max-width: 520px) { .hk-chord-chart, .hk-micro-song { margin-left: 0; } }
+.hk-player-video { margin: 0 0 10px; }

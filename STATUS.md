@@ -2335,3 +2335,20 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
 - Audio: tap-to-unlock listeners stay active all session so sound recovers after iOS interrupts it.
 - Build 19: uploads decode natively on iPhone (AVFoundation, any format iOS plays incl. videos), web decoder as fallback; new upload disclaimer wording.
 - Build 20: intro says just "G, D, Em and C"; no Back button on lesson 1; Hear it only shown when there is something to hear; panda no longer waves (idle with props instead).
+
+## Next up (as of 2026-10-06)
+- After Hayden Keys and Jaxx Guitar, we are launching a **fitness app** and a **jiu jitsu app** next.
+
+## 2026-10-07 — iOS build 21
+- Numbers card: "Let's try something new: numbers instead of chord names!"
+- New card after "Make one key sing": how hard you press changes a song's emotion; listen to acoustic versions and follow the piano.
+- "Day N complete" → "Lesson N complete" (+ a line under it; Lesson 1: "4 chords are all you need to play over 100 songs. Try singing along!"). "Day N:" removed from lesson titles.
+- Key colours: every A is purple, every B red, C orange, D yellow, E green, F teal, G blue, in every octave; lit keys keep their colour (purple ring).
+- Happy/sad numbers now show the letters (key of G: 1 4 5 = G C D; 2 3 6 = Am Bm Em).
+- Lesson 2 now teaches every chord: major recipe (4 up, 3 up) with F and E major, minor recipe (3 up, 4 up) with D minor, a tap-to-hear chart of all 24 chords, an A major quiz, and "chords vs keys" before moving to the key of C.
+- Song cards (A Team, Perfect, Viva La Vida, Country Roads, Linger) have the official acoustic/live video and "Main part (4 chords)" / "Whole song" play-along. Videos verified via YouTube oEmbed, official channels only (js/media-data.js).
+- Choose your song rewritten: song list → song screen with key, chords by section, video, Main part / Whole song (Love Story plays start to finish incl. the key change).
+- Jazz trick rewritten: left hand loops G D Em C as falling blocks, outlined safe keys for the right hand, then Herbie Hancock's Cantaloupe Island as the real example; then "Speaking of jazz, let's learn some Chet Baker" → My Funny Valentine.
+- My Funny Valentine: the famous descending line, then the whole song simplified (A A B A, based on Chet Baker's 1954 recording), with the official audio. "Master: Linger" is skipped (Linger is taught in Lesson 3).
+- Falling blocks in lessons no longer freeze above the keys; they flow into the keys and disappear.
+- Practice song screen shows the song's official video too.

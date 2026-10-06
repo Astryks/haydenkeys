@@ -102,6 +102,8 @@ const PEOPLE = {
   "img": "assets/people/john-cage.webp"
  }
 };
+// Song videos (official artist / label / "Topic" channels only, each
+// checked with YouTube's oEmbed): acoustic versions where one exists.
 const VIDEOS = {
  "piano-action": {
   "id": "qRHK0hYcwlQ",
@@ -122,6 +124,33 @@ const VIDEOS = {
   "id": "9Wcgm-JLzM4",
   "title": "Grigory Sokolov – Chopin: Nocturne in A Flat Major, Op. 32 No. 2, Lento",
   "author_name": "Deutsche Grammophon - DG"
- }
+ },
+ "the-a-team": {"id": "xADSSBs34is", "title": "Ed Sheeran - The A Team (Acoustic Boat Sessions)", "author_name": "Ed Sheeran"},
+ "perfect": {"id": "9vDIzVuDzTs", "title": "Perfect (Acoustic)", "author_name": "Ed Sheeran - Topic"},
+ "viva-la-vida": {"id": "vUnWFsc5WBU", "title": "Chris Martin “Viva la Vida” (Acoustic) on the Howard Stern Show (2016)", "author_name": "The Howard Stern Show"},
+ "country-roads": {"id": "IUmnTfsY3hI", "title": "John Denver - Take Me Home, Country Roads (from The Wildlife Concert)", "author_name": "JohnDenverVEVO"},
+ "linger": {"id": "sDK0xdiHBcQ", "title": "The Cranberries - Linger (Acoustic Version)", "author_name": "TheCranberriesVEVO"},
+ "love-story": {"id": "8xg3vE8Ie_E", "title": "Taylor Swift - Love Story", "author_name": "Taylor Swift"},
+ "let-it-be": {"id": "CGj85pVzRJs", "title": "The Beatles - Let It Be (Official Music Video) [Remastered 2015]", "author_name": "TheBeatlesVEVO"},
+ "stand-by-me": {"id": "UiTwbwxbG2U", "title": "Stand by Me (Remastered 2015)", "author_name": "Ben E. King - Topic"},
+ "someone-like-you": {"id": "NAc83CF8Ejk", "title": "Adele - Someone Like You (Live in Her Home)", "author_name": "Adele"},
+ "no-woman-no-cry": {"id": "mZ6VezKMoRY", "title": "Bob Marley & The Wailers - No Woman, No Cry (Live At The Rainbow 4th June 1977)", "author_name": "BobMarleyVEVO"},
+ "dont-stop-believin": {"id": "VcjzHMhBtf0", "title": "Journey - Don't Stop Believin' (Escape Tour 1981: Live In Houston)", "author_name": "journeyVEVO"},
+ "my-funny-valentine": {"id": "tczRmxcEoow", "title": "Chet Baker - My Funny Valentine (Remastered 2004)", "author_name": "Chet Baker - Topic"},
+ "jazz-loop": {"id": "otFVFLtRF_s", "title": "Herbie Hancock - Cantaloupe Island (Remastered 1999)", "author_name": "Herbie Hancock - Topic"}
 };
-export { PEOPLE, VIDEOS };
+const SONG_VIDEOS = {
+ "The A Team": "the-a-team",
+ "Perfect": "perfect",
+ "Viva La Vida": "viva-la-vida",
+ "Take Me Home, Country Roads": "country-roads",
+ "Linger": "linger",
+ "Love Story": "love-story",
+ "Let It Be": "let-it-be",
+ "Stand By Me": "stand-by-me",
+ "Someone Like You": "someone-like-you",
+ "No Woman No Cry": "no-woman-no-cry",
+ "Don't Stop Believin'": "dont-stop-believin",
+ "My Funny Valentine": "my-funny-valentine"
+};
+export { PEOPLE, VIDEOS, SONG_VIDEOS };
