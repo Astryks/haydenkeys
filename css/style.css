@@ -973,3 +973,9 @@ body.hk-lesson-open main { padding-top: env(safe-area-inset-top, 0px); }
 .hk-roadmap-sub { display: block; font-size: 0.78rem; color: var(--hk-text-dim); font-weight: normal; }
 body.hk-lesson-open .hk-rotate-tip { display: none !important; }
 .hk-roadmap-page .hk-roadmap-here { position: static; margin-left: auto; align-self: center; }
+
+/* Song timeline: each chord label stays inside its own bar; bars too
+   narrow to read (lots of short chords on a phone) hide their label
+   instead of overlapping the next one. */
+.hk-timeline-chord { overflow: hidden; white-space: nowrap; font-size: 0.72rem; container-type: inline-size; }
+@container (max-width: 18px) { .hk-timeline-chord-label { display: none; } }

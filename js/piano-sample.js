@@ -18,6 +18,7 @@
 
 let pianoInstance = null;
 let loadPromise = null;
+let loadedSamples = 0;
 
 // Kicks off loading (idempotent — safe to call from multiple places,
 // e.g. once per tab that plays audio) and returns a promise that
@@ -45,11 +46,21 @@ function loadSampledPiano(ctx) {
         storage: {
           fetch: (url) => {
             const cut = url.lastIndexOf("/") + 1;
-            return fetch(url.slice(0, cut) + encodeURIComponent(decodeURIComponent(url.slice(cut))));
+            return fetch(url.slice(0, cut) + encodeURIComponent(decodeURIComponent(url.slice(cut)))).then((r) => {
+              if (r.status === 200) loadedSamples++;
+              return r;
+            });
           },
         },
       });
       return piano.load.then(() => {
+        // smplr resolves even if every sample failed to load — then every
+        // note would be silent. Only switch over from the synth if samples
+        // actually arrived.
+        if (!loadedSamples) {
+          console.warn("Hayden Keys: no piano samples loaded, staying on the synth tone.");
+          return null;
+        }
         pianoInstance = piano;
         return piano;
       });

@@ -216,7 +216,7 @@ function initPracticeTab(root, { initialSong } = {}) {
         <div class="hk-timeline" id="hk-timeline">
           <div class="hk-timeline-track"></div>
           <div class="hk-timeline-cursor" id="hk-timeline-cursor"></div>
-          ${songMeta.steps.map((s, i) => `<div class="hk-timeline-chord" style="left:${(songMeta.starts[i] / songMeta.totalBars) * 100}%; width:${(s.len / songMeta.totalBars) * 100}%">${s.chord}</div>`).join("")}
+          ${songMeta.steps.map((s, i) => `<div class="hk-timeline-chord" style="left:${(songMeta.starts[i] / songMeta.totalBars) * 100}%; width:${(s.len / songMeta.totalBars) * 100}%" title="${s.chord}"><span class="hk-timeline-chord-label">${s.chord}</span></div>`).join("")}
         </div>
         <div class="hk-practice-controls" id="hk-practice-controls"></div>
         <div id="hk-ear-status" class="hk-cal-status"></div>

@@ -14,6 +14,26 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 <meta name="apple-mobile-web-app-title" content="Hayden Keys" />
 <link rel="stylesheet" href="css/style.css" />
+  <script>
+    // Inside the iOS app, files are served by the app itself (capacitor://),
+    // and fetch() can report status 0 instead of 200 for them even though the
+    // file arrived. Libraries that insist on 200 (the piano samples, the
+    // transcription model) then silently skip the file. Treat a status-0
+    // response that has content as a normal 200.
+    (function () {
+      if (location.protocol !== "capacitor:" || !window.fetch) return;
+      var nativeFetch = window.fetch.bind(window);
+      window.fetch = function () {
+        return nativeFetch.apply(null, arguments).then(function (r) {
+          if (r.status !== 0) return r;
+          return r.blob().then(function (b) {
+            if (!b.size) return r;
+            return new Response(b, { status: 200, statusText: "OK", headers: { "Content-Type": b.type || "application/octet-stream" } });
+          });
+        });
+      };
+    })();
+  </script>
 </head>
 <body>
   <header class="hk-header">
