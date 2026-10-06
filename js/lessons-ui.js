@@ -504,7 +504,8 @@ function todayHtml() {
       ${icon("cassette", 44)}
       <span><b>Upload any song</b><span>and we'll find the chords for you</span></span>
       <span class="hk-home-upload-go">Upload</span>
-    </button></div>`;
+    </button>
+    <p class="hk-home-credit">Supported by the Astryks Group (<a href="https://astryks.com" target="_blank" rel="noopener">astryks.com</a>)</p></div>`;
 }
 
 // Roadmap tab: every topic, grouped; tap any one to open it.

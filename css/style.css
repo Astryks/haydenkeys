@@ -1503,3 +1503,6 @@ body.hk-lesson-open .hk-lesson-topbar { padding-top: 6px !important; }
 .hk-key.hk-letter-E { background: linear-gradient(to top, #b6e6a4 0 34%, #f5f3fa 34%) !important; }
 .hk-key.hk-letter-F { background: linear-gradient(to top, #9fdde3 0 34%, #f5f3fa 34%) !important; }
 .hk-key.hk-letter-G { background: linear-gradient(to top, #a9c4f7 0 34%, #f5f3fa 34%) !important; }
+
+.hk-home-credit { margin: 22px 0 8px; text-align: center; font-size: 0.75rem; color: var(--hk-text-dim); }
+.hk-home-credit a { color: inherit; }

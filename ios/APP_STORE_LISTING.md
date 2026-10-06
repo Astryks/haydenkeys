@@ -28,36 +28,34 @@ Alternatives that also fit: `Piano Lessons That Stick` (24),
 ## Promotional text (max 170 characters, editable anytime without a new review)
 
 ```
-Learn real songs fast — numbers first, falling notes, a Middle C tuner and a daily review. 180+ songs, 140+ lessons. No ads, no account, no subscription.
+Learn 4 chords that play 100+ songs in your first lesson. Falling notes, a Netflix-style song library, and "Wait for me" that listens to your real piano. Free.
 ```
 
-## Description (max 4000 characters) — as entered in App Store Connect, 2026-10-06
+## Description (max 4000 characters) — updated 2026-10-07
 
 ```
-Hayden Keys teaches piano the way guitar apps teach chords — numbers and shapes first, letter names second, real songs from day one.
+Hayden Keys teaches piano the fun way: one tiny step at a time, with real songs from your very first lesson.
 
-WHY IT'S DIFFERENT
+In about a minute you'll learn the 4 chords behind more than 100 popular songs: G, D, Em and C. Hayden the panda guides you through short, visual cards: find middle C on your own piano, learn the key names, play your first chord, and you're off.
 
-Most piano apps start with sheet music and scales. Hayden Keys starts with the four-chord pattern behind more pop songs than any other, teaches it as "the 1, the 5, the 6, the 4", and gets you playing real, recognizable songs within your first few lessons. Notes fall onto the keys as colored blocks, so you always know exactly what to press.
+WHAT YOU GET, FREE
+- 200+ bite-sized lessons: middle C, key names, chords, happy and sad chords, every major and minor chord, both hands, genres (pop, rock, blues, jazz, classical), scales, 7th chords and more
+- 180+ songs in a Netflix-style library, sorted by genre, with album covers. Tap a song and the chords fall onto the keys straight away
+- Every song shows its key and its chords section by section, with the official video to listen along
+- "Wait for me": the notes wait until you play them on your real piano. We use your phone's microphone only to hear your piano keys, nothing else
+- Upload any song: record a song you love, and the app finds the chords for you, right on your device
+- Chord Ear Gym: train your ears to name all 24 major and minor chords
+- Movie and jazz favourites, like the Interstellar theme and Chet Baker's My Funny Valentine, made simple
+- Streaks, rewards, a 2-minute daily review, and fun facts about the piano and the people who invented it
 
-WHAT'S INCLUDED, FREE
+MADE FOR REAL PIANOS
+Hayden Keys is a guide for your own piano or keyboard. The app shows you what to press; the real practice happens on your piano.
 
-- 140+ lessons, from finding Middle C on any size keyboard to scales, two hands, 7th chords, jazz, reading sheet music, and classical pieces by Bach and Beethoven
-- 180+ real songs — pop, rock, jazz standards, classical, and optional songs in 10 other languages — with chords checked against multiple sources
-- Wait mode: the music waits until you play the right notes. A harder "play in time" mode scores your timing
-- A Middle C sound check that turns green when your piano plays the right note, like a guitar tuner
-- Hands-separately practice and looping for the tricky bars
-- Upload your own recording: the app figures out the notes and plays them back with you, or shows simple chords in Easy mode — all on your device
-- A 2-minute daily review that brings back what you're about to forget
-- XP, levels, daily quests, streaks, stars and badges
+CHORDS YOU CAN TRUST
+Song chords are checked against several sources. No lyrics are included.
 
-HONEST, BY DESIGN
-
-Every song's chords are labeled "verified" or "needs verification" — we never present a guess as fact. There are no song lyrics and no streaming-audio import.
-
-NO ACCOUNT, NO ADS, NO COST
-
-Hayden Keys runs entirely on your device. No sign-up, no subscription, no ads, and no data collection — your progress is saved on your device and never leaves it.
+NO ACCOUNT, NO ADS
+No sign-up and no ads. Your progress is saved on your device.
 ```
 
 ## Keywords (max 100 characters, comma-separated, no spaces after commas)
@@ -125,6 +123,35 @@ Web Access" is "No" (correct — the only external network call the app
 makes is the iTunes Search API for album art, which isn't a web browser
 and isn't user-navigable).
 
+## App Privacy (App Store Connect → App Privacy)
+
+- **Data collection:** answer **"No, we do not collect data from this app."** Progress, uploads and settings are stored only on the device. The app has no accounts, analytics or ads.
+- Things that leave the device, all disclosed in the privacy policy and none of them collected by us:
+  - **Guess the song (optional):** an audio fingerprint, not the audio itself, goes to Apple's ShazamKit.
+  - **Cover art:** the song title and artist go to Apple's iTunes Search to fetch the picture.
+  - **Videos:** these open on YouTube only when the user taps them.
+
+## Notes for App Review (App Review Information → Notes)
+
+```
+Hayden Keys is a free piano-learning app. No account or sign-in is needed.
+
+The microphone is optional. It's used only to hear the user's real piano in "Wait for me", the Middle C sound check and lesson listening steps. Audio is analysed on the device and never recorded or sent.
+
+"Upload any song" lets users pick a recording from their own phone; it is transcribed on the device. The optional "Guess the song" button uses ShazamKit (an audio signature only).
+
+Song pages show chord progressions only (no lyrics). Album art comes from the iTunes Search API, and "Watch" buttons open official videos on YouTube.
+```
+
+## Content rights (App Store Connect → App Information)
+
+- **"Does your app contain, show, or access third-party content?"** Answer **Yes**: chord progressions of popular songs, album art from the iTunes Search API, and links to official YouTube videos.
+- **Checklist for "Do you have all the rights you need?"** (Sid to confirm):
+  - **Chord progressions** aren't copyrightable, and no lyrics or sheet music are included.
+  - **Album art** is used through Apple's iTunes Search API, as intended for linking to the store.
+  - **Videos** are links to the artists' own official uploads.
+  - **Melodies:** where a melody is copyrighted, the lessons teach its chords instead.
+
 ## What's New (for the first version)
 
 ```
@@ -132,3 +159,6 @@ Welcome to Hayden Keys! A free, gamified piano curriculum that starts
 with real songs, not just scales — 100+ lessons and a 100+ song library
 to get you playing right away.
 ```
+
+## Screenshots
+In `ios/screenshots/app-store/`: 6 for iPhone 6.9" (1320×2868) and 6 for iPad 13" (2064×2752). Order: 1 home, 2 middle C, 3 play-along, 4 song library, 5 two hands, 6 Chord Ear Gym.
