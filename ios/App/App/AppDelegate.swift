@@ -11,9 +11,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Play sound like a music app: audible even with the ringer switch
         // on silent (Web Audio in a web view follows the switch otherwise),
         // mixing politely with other audio.
-        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
-        try? AVAudioSession.sharedInstance().setActive(true)
+        AppDelegate.configureAudio()
+        // If something switches the sound to the quiet earpiece (it can
+        // happen after the microphone was used), send it back to the speaker.
+        NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: .main) { _ in
+            AppDelegate.keepSpeaker()
+        }
         return true
+    }
+
+    // Sound like a music app: plays even with the ringer switch on silent,
+    // mixes politely with other audio, always out of the loudspeaker (not
+    // the earpiece) — also while the microphone listens for Wait for me.
+    static func configureAudio() {
+        let session = AVAudioSession.sharedInstance()
+        try? session.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker, .mixWithOthers, .allowBluetoothA2DP])
+        try? session.setActive(true)
+        keepSpeaker()
+    }
+
+    static func keepSpeaker() {
+        let session = AVAudioSession.sharedInstance()
+        if session.currentRoute.outputs.contains(where: { $0.portType == .builtInReceiver }) {
+            try? session.overrideOutputAudioPort(.speaker)
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -31,7 +52,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        // Coming back (from Photos, a call, another app): switch the sound back on.
+        AppDelegate.configureAudio()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

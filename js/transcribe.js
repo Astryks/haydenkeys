@@ -233,11 +233,17 @@ async function decodeNatively(file, ctx) {
   if (!cap?.isNativePlatform?.()) return null;
   const plugin = cap.registerPlugin ? cap.registerPlugin("SongRecognizer") : cap.Plugins?.SongRecognizer;
   if (!plugin?.decodeAudio) return null;
-  const bytes = new Uint8Array(await readFileBuffer(file));
-  let bin = "";
-  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  // Send the file in 2 MB pieces: one huge message can fail for long songs or videos.
   const ext = (file.name.match(/\.([a-z0-9]+)$/i)?.[1] || (file.type.split("/")[1] || "m4a")).toLowerCase().replace("quicktime", "mov");
-  const res = await plugin.decodeAudio({ data: btoa(bin), ext, sampleRate: 22050, maxSeconds: 600 });
+  const { id } = await plugin.beginFile();
+  const PIECE = 2 * 1024 * 1024;
+  for (let at = 0; at < file.size; at += PIECE) {
+    const bytes = new Uint8Array(await readFileBuffer(file.slice(at, at + PIECE)));
+    let bin = "";
+    for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    await plugin.appendFile({ id, data: btoa(bin) });
+  }
+  const res = await plugin.decodeAudio({ id, ext, sampleRate: 22050, maxSeconds: 420 });
   const raw = Uint8Array.from(atob(res.pcm16), (c) => c.charCodeAt(0));
   const pcm = new Int16Array(raw.buffer, 0, Math.floor(raw.length / 2));
   const buf = ctx.createBuffer(1, pcm.length, res.sampleRate || 22050);
@@ -252,10 +258,12 @@ async function transcribeFile(file, onStatus = () => {}) {
   try {
     onStatus("Decoding audio...");
     let decoded = null;
+    var nativeError = null;
     try {
       decoded = await decodeNatively(file, audioCtx);
     } catch (nativeErr) {
       console.warn("Hayden Keys: native decode failed, trying the web decoder", nativeErr);
+      nativeError = nativeErr;
     }
     if (!decoded) try {
       decoded = await decodeWith(audioCtx, await readFileBuffer(file));
@@ -268,7 +276,8 @@ async function transcribeFile(file, onStatus = () => {}) {
     onStatus(`Resampling from ${decoded.sampleRate} Hz / ${decoded.numberOfChannels}ch to 22050 Hz mono...`);
     audioBuffer = await resampleToMono22050(decoded);
   } catch (err) {
-    throw new Error(`Couldn't read the audio in this file (${err && err.message ? err.message : "unsupported format"}). Try an mp3, m4a or wav file, or a video saved to Files.`);
+    const why = nativeError?.message || (err && err.message) || "unsupported format";
+    throw new Error(`Couldn't read the audio in this file (${why}). Try an mp3, m4a or wav file, or a video saved to Files.`);
   }
 
   // basic-pitch (code + model weights) is vendored locally in

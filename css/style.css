@@ -1467,3 +1467,30 @@ body[data-tab="lessons"] .hk-footer, body:not([data-tab]) .hk-footer, body[data-
 .hk-home-upload b { font-size: 1.1rem; color: #3a2d6b; }
 .hk-home-upload > span:nth-child(2) > span { font-size: 0.9rem; color: var(--hk-text-dim); }
 .hk-home-upload-go { padding: 8px 14px; border-radius: 999px; background: linear-gradient(135deg, var(--hk-accent), var(--hk-purple)); color: #fff; font-weight: 800; }
+
+/* ===== Song library: Netflix-style rows (scroll sideways in a row, down between genres) ===== */
+.hk-lib-row { margin: 6px 0 18px; }
+.hk-lib-row h3 { margin: 0 0 8px; padding: 0 2px; font-size: 1.15rem; font-weight: 900; color: #3a2d6b; }
+.hk-lib-scroll { display: flex; gap: 12px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; padding: 2px 2px 10px; margin: 0 -16px; padding-left: 16px; padding-right: 16px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.hk-lib-scroll::-webkit-scrollbar { display: none; }
+.hk-lib-card { flex: 0 0 auto; width: 138px; scroll-snap-align: start; display: flex; flex-direction: column; gap: 3px; text-align: left; background: none; border: none; padding: 0; cursor: pointer; }
+.hk-lib-art { position: relative; display: block; width: 138px; height: 138px; border-radius: 14px; overflow: hidden; background: linear-gradient(135deg, #a99cf5, #4a9bc9); box-shadow: 0 6px 16px rgba(42, 30, 80, 0.18); }
+.hk-lib-art img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.25s; }
+.hk-lib-card:active .hk-lib-art img, .hk-lib-card:hover .hk-lib-art img { transform: scale(1.05); }
+.hk-lib-initials { display: grid; place-items: center; width: 100%; height: 100%; color: #fff; font-size: 3rem; font-weight: 900; }
+.hk-lib-play { position: absolute; right: 8px; bottom: 8px; filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35)); }
+.hk-lib-tag { position: absolute; left: 6px; top: 6px; display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.92); font-size: 0.72rem; font-weight: 800; color: #3a2d6b; }
+.hk-lib-title { font-weight: 800; font-size: 0.95rem; line-height: 1.2; color: var(--hk-text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.hk-lib-artist { font-size: 0.8rem; color: var(--hk-text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (min-width: 768px) { .hk-lib-card, .hk-lib-art { width: 168px; } .hk-lib-art { height: 168px; } }
+
+/* "Hayden Keys" in our purple, everywhere it's written as a title */
+.hk-header h1, .hk-intro-title { background: none !important; -webkit-background-clip: border-box !important; background-clip: border-box !important; color: #8a63d2 !important; -webkit-text-fill-color: #8a63d2 !important; font-weight: 900; }
+
+/* Lesson screens: one safe-area gap (main already has it), and card text
+   sized so the keyboard stays on screen. */
+body.hk-lesson-open .hk-lesson-topbar { padding-top: 6px !important; }
+.hk-micro-bubble { font-size: 1.08rem !important; line-height: 1.42 !important; padding: 12px 16px !important; }
+.hk-micro-bubble .hk-keys-pic { max-width: 300px; margin: 6px auto 4px; }
+@media (min-width: 768px) { .hk-micro-bubble { font-size: 1.2rem !important; } }
+@media (max-width: 520px) { body.hk-lesson-open .hk-lesson-highway { height: 84px !important; } }

@@ -255,10 +255,10 @@ const WORLD_SONGS = [
     "year": 1963,
     "key": "G minor",
     "chords": [
-      "Gm",
+      "Gm7",
       "Cm7",
-      "Dm7",
-      "Gm"
+      "D7",
+      "Gm7"
     ],
     "degreeSequence": "i - iv7 - v7 - i",
     "confidence": "confirmed",
@@ -293,7 +293,7 @@ const WORLD_SONGS = [
     "genre": "World — Portuguese (Brazil)",
     "popularityRank": 212,
     "year": 2016,
-    "key": "A major",
+    "key": "A major (recorded in B major)",
     "chords": [
       "A",
       "D",
@@ -458,7 +458,7 @@ const WORLD_SONGS = [
     "genre": "World — German",
     "popularityRank": 220,
     "year": 1983,
-    "key": "D major",
+    "key": "D major (recorded in E major)",
     "chords": [
       "D",
       "Em",

@@ -14,9 +14,41 @@ import { pandaSvg } from "./panda.js";
 import { shareButton } from "./share.js";
 import { videoHtml, wireVideos } from "./media.js";
 import { SONG_VIDEOS } from "./media-data.js";
+import { SONG_ART } from "./song-art-data.js";
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const TIERS = ["Beginner", "Intermediate", "Advanced"];
+
+// The library, Netflix-style: one row per genre, each scrolling sideways.
+const GENRE_ROWS = [
+  ["Popular right now", null],
+  ["Pop", (g) => true],
+  ["Rock & alternative", (g) => /Rock|Britpop|Alternative|Indie/i.test(g)],
+  ["Folk & country", (g) => /Folk|Country|Traditional|Hymn|Ukulele/i.test(g)],
+  ["R&B, soul & disco", (g) => /R&B|Soul|Funk|Disco/i.test(g)],
+  ["Hip-hop", (g) => /Hip-Hop/i.test(g)],
+  ["Reggae & Latin", (g) => /Reggae|Dancehall|Latin/i.test(g)],
+  ["Jazz", (g) => /Jazz/i.test(g)],
+  ["Film & classical", (g) => /Classical|Film|Soundtrack|Contemporary Piano|Piano duet/i.test(g)],
+  ["Christmas", (g) => /Christmas|Holiday/i.test(g)],
+  ["Around the world", (g) => /^World/.test(g)],
+];
+// Each song goes in the first matching row, checked from the most specific
+// genre to the broadest ("Pop" catches the rest).
+function genreRow(song) {
+  const g = song.genre || "";
+  const order = ["Around the world", "Christmas", "Jazz", "Film & classical", "Hip-hop", "R&B, soul & disco", "Reggae & Latin", "Folk & country", "Rock & alternative", "Pop"];
+  return order.find((name) => GENRE_ROWS.find(([n]) => n === name)[1](g));
+}
+function libraryRows() {
+  const playable = SONGS.filter((s) => (s.chords || []).some((c) => /^[A-G]/.test(c)));
+  const byRank = (a, b) => (a.popularityRank || 999) - (b.popularityRank || 999);
+  const rows = GENRE_ROWS.map(([name]) => ({ name, songs: [] }));
+  rows[0].songs = playable.filter((s) => !s.genre?.startsWith("World")).sort(byRank).slice(0, 12);
+  playable.forEach((s) => rows.find((r) => r.name === genreRow(s)).songs.push(s));
+  rows.slice(1).forEach((r) => r.songs.sort(byRank));
+  return rows.filter((r) => r.songs.length);
+}
 
 // Songs worth practising: real chords, unlocked/saved ones first, then by level.
 function songList() {
@@ -37,6 +69,7 @@ function artCache() {
 }
 async function songArt(song) {
   const id = `${song.title}|${song.artist}`;
+  if (SONG_ART[id]) return SONG_ART[id];
   const cached = artCache()[id];
   if (cached) return cached;
   const term = encodeURIComponent(`${song.title} ${song.artist}`);
@@ -74,7 +107,9 @@ function initPracticeHome(root) {
   function showHome() {
     player?.suspend?.();
     player = null;
-    list = songList();
+    const rows = libraryRows();
+    // "Next song" walks the library in the order it's shown.
+    list = [...new Set(rows.flatMap((r) => r.songs))];
     const unlocked = new Set(unlockedSongs());
     const saved = getSavedSongs();
     root.innerHTML = `
@@ -89,17 +124,26 @@ function initPracticeHome(root) {
           <div id="hk-ph-playback"></div>
         </section>
         <h2 class="hk-ph-title">Or try these songs</h2>
-        <div class="hk-ph-list">
-          ${list.map((s, i) => `
-            <button class="hk-ph-song" data-i="${i}">
-              ${icon(unlocked.has(s.title) ? "gift" : saved[s.title]?.status === "completed" ? "check" : "song", 34)}
-              <span class="hk-ph-song-body"><b>${esc(s.title)}</b><span>${esc(s.artist)} · ${getDifficulty(s)}</span></span>
-              ${unlocked.has(s.title) ? '<span class="hk-ph-tag">Unlocked</span>' : ""}
-              ${icon("play", 30)}
-            </button>`).join("")}
-        </div>
+        ${rows.map((row, r) => `
+          <section class="hk-lib-row">
+            <h3>${esc(row.name)}</h3>
+            <div class="hk-lib-scroll">
+              ${row.songs.map((song) => {
+                const i = list.indexOf(song);
+                const art = SONG_ART[`${song.title}|${song.artist}`];
+                return `<button class="hk-lib-card" data-i="${i}" aria-label="${esc(song.title)} by ${esc(song.artist)}">
+                  <span class="hk-lib-art">${art ? `<img src="${art.img}" alt="" loading="lazy" />` : `<span class="hk-lib-initials">${esc(song.title.slice(0, 1))}</span>`}
+                    ${unlocked.has(song.title) ? '<span class="hk-lib-tag">Unlocked</span>' : saved[song.title]?.status === "completed" ? `<span class="hk-lib-tag">${icon("check", 14)} Learned</span>` : ""}
+                    <span class="hk-lib-play">${icon("play", 34)}</span></span>
+                  <span class="hk-lib-title">${esc(song.title)}</span>
+                  <span class="hk-lib-artist">${esc(song.artist)}</span>
+                </button>`;
+              }).join("")}
+            </div>
+          </section>`).join("")}
       </div>`;
-    root.querySelectorAll(".hk-ph-song").forEach((b) => b.addEventListener("click", () => openSong(Number(b.dataset.i))));
+    // Tap a song: the falling-notes player opens and starts right away.
+    root.querySelectorAll(".hk-lib-card").forEach((b) => b.addEventListener("click", () => openSong(Number(b.dataset.i), { autoplay: true })));
     const status = root.querySelector("#hk-ph-status");
     root.querySelector("#hk-ph-file").addEventListener("change", async (e) => {
       const file = e.target.files[0];

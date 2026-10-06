@@ -12,7 +12,9 @@ public class SongRecognizerPlugin: CAPPlugin, CAPBridgedPlugin {
     public let jsName = "SongRecognizer"
     public let pluginMethods: [CAPPluginMethod] = [
         CAPPluginMethod(name: "match", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "decodeAudio", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "decodeAudio", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "beginFile", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "appendFile", returnType: CAPPluginReturnPromise)
     ]
     private var session: SHSession?
     private var matchDelegate: MatchDelegate?
@@ -60,9 +62,52 @@ public class SongRecognizerPlugin: CAPPlugin, CAPBridgedPlugin {
 // of these (iPhone videos and some m4a files), so the app decodes here
 // first. The file stays on the device: it's written to a temporary file,
 // read, and deleted.
+// Big songs and videos arrive in pieces (one huge message can fail), so
+// the web side calls beginFile, then appendFile for each piece, then
+// decodeAudio with the file's id.
+private var uploadFiles: [String: URL] = [:]
+private let uploadLock = NSLock()
+
 extension SongRecognizerPlugin {
+    @objc func beginFile(_ call: CAPPluginCall) {
+        let id = UUID().uuidString
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("hk-part-\(id)")
+        FileManager.default.createFile(atPath: url.path, contents: nil)
+        uploadLock.lock(); uploadFiles[id] = url; uploadLock.unlock()
+        call.resolve(["id": id])
+    }
+
+    @objc func appendFile(_ call: CAPPluginCall) {
+        uploadLock.lock(); let url = uploadFiles[call.getString("id") ?? ""]; uploadLock.unlock()
+        guard let url = url, let b64 = call.getString("data"), let chunk = Data(base64Encoded: b64) else {
+            call.reject("Couldn't receive part of the file")
+            return
+        }
+        do {
+            let handle = try FileHandle(forWritingTo: url)
+            handle.seekToEndOfFile()
+            handle.write(chunk)
+            handle.closeFile()
+            call.resolve()
+        } catch {
+            call.reject(error.localizedDescription)
+        }
+    }
+
     @objc func decodeAudio(_ call: CAPPluginCall) {
-        guard let b64 = call.getString("data"), let data = Data(base64Encoded: b64), !data.isEmpty else {
+        var data = Data()
+        if let id = call.getString("id") {
+            uploadLock.lock(); let part = uploadFiles.removeValue(forKey: id); uploadLock.unlock()
+            guard let part = part, let d = try? Data(contentsOf: part), !d.isEmpty else {
+                call.reject("The file didn't arrive")
+                return
+            }
+            try? FileManager.default.removeItem(at: part)
+            data = d
+        } else if let b64 = call.getString("data"), let d = Data(base64Encoded: b64) {
+            data = d
+        }
+        guard !data.isEmpty else {
             call.reject("No file data")
             return
         }
