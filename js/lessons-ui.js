@@ -282,6 +282,7 @@ const PIC_ALL_AS = keysPic(21, 108, Object.fromEntries([
   ...[21, 33, 45, 57, 69, 81, 93, 105].map((m, i) => [m, { fill: "#c9b6f7", label: `A${i}` }]),
   [60, { fill: "#fcc98a", label: "C4", above: true, text: "#c2701a" }],
 ]), { w: 10, font: 20 });
+const PIC_BLACK = keysPic(60, 71, { 61: { fill: "#f4a6c0", label: "C♯", above: true }, 63: { fill: "#f4a6c0", label: "D♯", above: true }, 66: { fill: "#9ec9f2", label: "F♯", above: true }, 68: { fill: "#9ec9f2", label: "G♯", above: true }, 70: { fill: "#9ec9f2", label: "A♯", above: true } }, { w: 26, font: 14 });
 const PIC_A2_A3_C4 = keysPic(43, 62, { 45: { fill: "#c9b6f7", label: "A2" }, 57: { fill: "#c9b6f7", label: "A3" }, 60: { fill: "#fcc98a", label: "C4" } }, { w: 22 });
 
 // Moves a chord up or down whole octaves until it fits the keyboard shown.
@@ -315,36 +316,12 @@ const IS_AM = [45, 57, 60, 64], IS_F = [41, 57, 60, 64], IS_C = [48, 55, 60, 64]
 const C7 = [60, 64, 67, 70], F7 = [53, 57, 60, 63], G7 = [55, 59, 62, 65], DM7 = [62, 65, 69, 72], CMAJ7 = [60, 64, 67, 71];
 const F_MAJ = [65, 69, 72], E_MAJ = [64, 68, 71], D_MIN = [62, 65, 69];
 const MICRO_CARDS = {
-  "m-intro": { chat: `<h3>Welcome to Hayden Keys! 🎹</h3>
-      <p>Did you know just <b>4 chords</b> can play over <b>100</b> of the most popular songs? 🎶</p>
-      <p>Those chords are <b>G, D, Em and C</b>.</p>
-      <p>We'll get right into them, but first, <b>go to your piano</b> (or keyboard) 🎹 and let's find <b>middle C</b> on it, so your piano and this app match.</p>`,
-    say: "Sitting at your piano? Let's find <b>middle C</b> together! 🎹", want: { tap: true }, ok: "Let's go! 🚀", noKeys: true, done: "Here we go! 🎹" },
+  "m-intro": { say: "Welcome to Hayden Keys! 🎹<br>Just <b>4 chords</b> play <b>100+ songs</b>:<br><b>G · D · Em · C</b><br><br>First, <b>go to your piano</b> (or keyboard) 🎹", want: { tap: true }, ok: "I'm at my piano! 🎹", noKeys: true, done: "Let's find middle C! 🚀" },
   "m-black-keys": { say: "Look at the <b>black keys</b> 👀<br>They come in groups of <b>2</b> and <b>3</b>, again and again.<br>Press any black key in a group of <b>2</b>!", want: { pcs: [1, 3] }, labels: "groups", done: "That's your map! 🗺️ Every piano has it." },
   "m-any-piano": { say: "Pianos come in <b>all sizes</b> 🎹<br>Middle C isn't always in the exact middle!<br>🔎 Every <b>C</b> is just <b>left of the 2 black keys</b>.<br>Big piano (88 keys): the <b>4th C</b> from the left.<br>Smaller keyboard: usually the <b>3rd C</b>.", want: { tap: true }, ok: "Got it 👍", done: "Find the 2 black keys, go left. Easy! 🎉" },
-  "m-find-c": { chat: `<h3 data-q="What is middle C? 🤔">Middle C is home base 🏠</h3>
-      <p>It's the <b>C</b> closest to the <b>middle</b> of your piano. We find every other key from it.</p>
-      <h3 data-q="How do I find it?">Look for 2 black keys 👀</h3>
-      <p>Near the middle, find <b>2 black keys</b> side by side.</p>
-      <p>Middle C is the <b>white key just left</b> of them.</p>
-      ${PIC_MIDDLE_C}
-      <h3 data-q="My piano is a different size. Where is it?">Count from the left 👇</h3>
-      <p>🎹 <b>88 keys</b> (a full piano, the most common): the <b>40th</b> key.</p>
-      <p>🎹 <b>76 keys</b>: the <b>33rd</b> key.</p>
-      <p>🎹 <b>61 keys</b> (a popular keyboard): the <b>25th</b> key.</p>
-      <p>Count every key, white and black. Or just find the 2 black keys nearest the middle!</p>`,
-    say: "Your turn! The 2 black keys are pink 🩷<br>Press the <b>white key just left</b> of them.", labels: "groups", want: { notes: [60] }, help: [60], hideMiddleC: true, tip: "🎹 Now go to <b>your piano</b> and find middle C there: the white key just left of the 2 black keys nearest the middle. Put a finger on it!", done: "Yes! That's middle C 🎉" },
-  "m-white-black": { chat: `<h3 data-q="Do the keys have names? 🔤">Yes! Every white key is a letter 🔤</h3>
-      <p>The white keys go <b>A B C D E F G</b>… then start again with <b>A</b>.</p>
-      <h3 data-q="So there are lots of As?">Yes! So we add a number 🔢</h3>
-      <p>The first A on the left is <b>A0</b>, the next one up is <b>A1</b>, then <b>A2</b>, and so on. Here's a full 88-key piano with every A in purple:</p>
-      ${PIC_ALL_AS}
-      <p>The number goes up by one at each <b>C</b>. That's why middle C is called <b>C4</b>.</p>
-      <h3 data-q="Where is C4 on a big piano?">On a full 88-key piano 🎹</h3>
-      <p>Middle C (<b>C4</b>) is the <b>40th key</b> from the left, counting white and black keys.</p>
-      <h3 data-q="And the black keys? 🖤">They're the notes in between ♯♭</h3>
-      <p>Black keys are <b>sharps ♯</b> and <b>flats ♭</b>. They come in groups of <b>2</b> and <b>3</b>, again and again. That's your map! 🗺️</p>`,
-    say: "Press a <b>black key</b> in a group of <b>3</b> (they're blue 💙).", labels: "groups3", want: { pcs: [6, 8, 10] }, done: "That's a black key! ♯ 🎉" },
+  "m-find-c": { say: `This is <b>middle C</b> 🏠<br>The white key just <b>left</b> of the <b>2 black keys</b> near the middle.${PIC_MIDDLE_C}Find it on <b>your piano</b>!`, want: { tap: true }, ok: "Found it! ✅", cantFind: `<b>No problem! Count from the left</b> 👇<br>🎹 <b>88 keys</b> (full piano): the <b>40th</b> key<br>🎹 <b>76 keys</b>: the <b>33rd</b> key<br>🎹 <b>61 keys</b> (keyboard): the <b>25th</b> key<br><small>Count every key, white and black.</small>`, labels: "groups", show: [60], hideMiddleC: true, done: "That's middle C, home base! 🏠" },
+  "m-white-black": { say: `White keys are letters <b>A B C D E F G</b>, again and again 🔤<br>Each one gets a number: <b>A0, A1, A2</b>…${PIC_ALL_AS}Same letter, same colour. Middle C is <b>C4</b>.`, labels: "octave", want: { tap: true }, ok: "Got it 👍", done: "Letters + numbers = every key's name! 🔤" },
+  "m-black": { say: `Black keys are the notes <b>in between</b> ♯ ♭<br>They come in groups of <b>2</b> and <b>3</b>.${PIC_BLACK}Press a black key in a group of <b>3</b> 💙`, labels: "groups3", want: { pcs: [6, 8, 10] }, done: "That's a black key! ♯ 🎉" },
   "m-find-g": { say: "Our home key is <b>G</b> 🏠<br>From middle C, step <b>left</b>:<br><b>C → B → A → G</b><br>Press <b>G</b>!", labels: "letters", want: { notes: [55] }, help: [55], done: "That's G, our home! 🏠" },
   "m-chord-g": { say: "Let's make a <b>chord</b> on G!<br>Press <b>G</b>, skip one, <b>B</b>, skip one, <b>D</b>.<br>That's the <b>G chord</b>!<br><small>📱 Tricky on a phone? Tap the 3 keys one by one. Then play it on your own piano, where the real practice happens 🎹</small>", want: { notes: G }, show: G, tip: "🎹 Now play the G chord on <b>your piano</b> too!", done: "Your first chord! 🎹" },
   "m-letters": { say: "Every key has a <b>letter</b> 🔤<br>The white keys go <b>C D E F G A B</b>… then start again!<br>Find <b>G</b> and press it.", labels: "letters", want: { notes: [67] }, done: "There's G! 🎉" },
@@ -1027,6 +1004,7 @@ function initLessonsTab(root) {
     controls.innerHTML = `
       ${card.want.choice && card.options ? "" : card.soft ? `<button class="hk-btn" id="hk-micro-soft">${icon("soft", 20)} Soft</button><button class="hk-btn" id="hk-micro-strong">${icon("speaker", 20)} Strong</button>` : card.extra === "pop" || !(demoNotes.length || card.demoSeq) ? "" : `<button class="hk-btn" id="hk-micro-hear">${icon("speaker", 20)} Hear it</button>`}
       ${card.help ? `<button class="hk-btn" id="hk-micro-help">${icon("eye", 20)} Show me</button>` : ""}
+      ${card.cantFind ? `<button class="hk-btn" id="hk-micro-cant">I can't find it 🤔</button>` : ""}
       ${card.want.tap ? `<button class="hk-btn hk-btn-primary" id="hk-micro-ok">${card.ok || "Got it!"}</button>` : ""}
       ${card.want.choice ? (card.options || ["happy", "sad"]).map((o) => `<button class="hk-btn hk-micro-choice" data-choice="${o}">${o === "happy" ? "😀 Happy" : o === "sad" ? "🥲 Sad" : o}</button>`).join("") : ""}
       ${card.extra === "pop" ? `<button class="hk-btn" data-go-tab="practice">${icon("song", 20)} Find a song in Practice</button>` : ""}`;
@@ -1049,6 +1027,14 @@ function initLessonsTab(root) {
     controls.querySelector("#hk-micro-soft")?.addEventListener("click", () => playChord(demoNotes, { duration: 1.2, velocity: 35 }));
     controls.querySelector("#hk-micro-strong")?.addEventListener("click", () => playChord(demoNotes, { duration: 1.2, velocity: 120 }));
     controls.querySelector("#hk-micro-help")?.addEventListener("click", () => kb.highlightChord(card.help));
+    controls.querySelector("#hk-micro-cant")?.addEventListener("click", (e) => {
+      reply(card.cantFind);
+      kb.highlightChord([60]);
+      playTone(60, { duration: 1 });
+      e.currentTarget.remove();
+      const ok = controls.querySelector("#hk-micro-ok");
+      if (ok) ok.textContent = "Found it now! ✅";
+    });
 
     // All 24 chords: tap one to see it on the keys and hear it.
     if (card.chart) {
