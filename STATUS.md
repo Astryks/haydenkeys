@@ -2316,3 +2316,4 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
   - **Now:** toasts never block taps, and the popup sits below the lesson's top bar. Back walks lesson by lesson to Lesson 1, then to Today (it no longer jumps into the optional pre-lessons).
   - **Tested:** with real taps, including while a toast was showing.
 - **iOS build 14.**
+- **Auto-advance:** after a correct answer Hayden cheers, then the next lesson opens by itself after 2s (3s when there's a real-piano tip to read). The Next button fills up as a countdown and can be tapped to skip the wait. "Finish Day N" still waits for a tap. Build 15.

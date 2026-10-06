@@ -932,7 +932,16 @@ function initLessonsTab(root) {
       controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-micro-next" id="hk-micro-next">${dayEnd ? `Finish Day ${dayEnd[0]} 🏆` : "Next lesson →"}</button>`;
       markLessonComplete(id);
       if (dayEnd) dayEnd[1].forEach((l) => markLessonComplete(l));
-      controls.querySelector("#hk-micro-next").addEventListener("click", () => (dayEnd || !nextId ? showMap() : startLesson(nextId)));
+      const go = () => (dayEnd || !nextId ? showMap() : startLesson(nextId));
+      const nextBtn = controls.querySelector("#hk-micro-next");
+      nextBtn.addEventListener("click", go);
+      // Got it right: move on by itself (the button fills up as a countdown).
+      if (!dayEnd && nextId) {
+        const wait = card.tip ? 3200 : 2000;
+        nextBtn.classList.add("hk-micro-next-auto");
+        nextBtn.style.setProperty("--hk-auto", `${wait}ms`);
+        setTimeout(() => { if (content.isConnected) go(); }, wait);
+      }
     }
   }
 

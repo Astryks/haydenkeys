@@ -1205,3 +1205,7 @@ body.hk-intro-open { overflow: hidden; }
 body.hk-lesson-open #hk-toasts { top: calc(env(safe-area-inset-top, 0px) + 64px); }
 body.hk-lesson-open .hk-sideways { top: calc(env(safe-area-inset-top, 0px) + 64px); }
 .hk-lesson-topbar { position: relative; z-index: 10003; }
+/* Auto-advance countdown: the Next button fills from left to right */
+.hk-micro-next-auto { position: relative; overflow: hidden; }
+.hk-micro-next-auto::after { content: ""; position: absolute; left: 0; bottom: 0; height: 5px; width: 100%; background: rgba(255,255,255,0.75); transform-origin: left; animation: hk-countdown var(--hk-auto, 2s) linear forwards; }
+@keyframes hk-countdown { from { transform: scaleX(0); } to { transform: scaleX(1); } }
