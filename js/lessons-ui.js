@@ -27,6 +27,7 @@ import {
   CHOOSE_SONGS,
 } from "./lessons-data.js";
 import { SONGS, ONE_FIVE_SIX_FOUR_SONGS, WORLD_LANGUAGES } from "./songs-data.js";
+import { watchChats, chatHtml } from "./chat.js";
 import { isLessonComplete, markLessonComplete, getStreak, getDailyGoal, markSongStatus, getQuests, completeQuest, awardXp, starsFor, recordStars, getStreakFreezes, getLevel } from "./storage.js";
 import { checkBadges } from "./badges.js";
 import {
@@ -213,6 +214,64 @@ function timelineHtml() {
     </div>`;
 }
 
+
+// Today: the day's tasks as big full-width cards, one thing each.
+function todayHtml() {
+  const next = LESSONS.find((l) => !l.optional && !isLessonComplete(l.id));
+  const quests = getQuests();
+  const done = (id) => quests.find((q) => q.id === id)?.done;
+  const streak = getStreak();
+  const lv = getLevel();
+  const started = isLessonComplete("lesson-1");
+  const card = (icon, title, sub, attrs, isDone, cta) => `
+    <button class="hk-task ${isDone ? "hk-task-done" : ""}" ${attrs}>
+      <span class="hk-task-icon">${isDone ? "✅" : icon}</span>
+      <span class="hk-task-body"><strong>${title}</strong><span>${sub}</span></span>
+      <span class="hk-task-cta">${isDone ? "Done" : cta}</span>
+    </button>`;
+  return `
+    <div class="hk-today">
+      <div class="hk-today-head">
+        <img src="assets/mascot-face.png" alt="" class="hk-today-mascot">
+        <div><h2>${started ? "Today's piano time" : "Welcome to Hayden Keys!"}</h2>
+        <p class="hk-honest-note">${started ? `🔥 ${streak.count}-day streak · Level ${lv.level} ${lv.title}` : "Tap your first task to begin. One step at a time!"}</p></div>
+      </div>
+      ${next ? card("🎹", started ? "Today's lesson" : "Your first lesson", next.title, `data-lesson="${next.id}"`, done("lesson"), "Start") : card("🏆", "Every lesson done!", "Pick any topic again from the Roadmap", "data-go-roadmap", false, "Open")}
+      ${started ? card("🧠", "2-minute review", "A quick warm-up of what you've learned", 'data-lesson="daily-review"', reviewDoneToday(), "Start") : ""}
+      ${started ? card("🎵", "Play a song", "Practice any song for a few minutes", "data-go-practice", done("practice"), "Go") : ""}
+      ${started ? `<button class="hk-btn hk-funfact-open hk-today-fact" type="button">🎹 Did you know? A piano fun fact</button>` : ""}
+    </div>`;
+}
+
+// Roadmap tab: every topic, grouped; tap any one to open it.
+function roadmapPageHtml() {
+  const nextId = LESSONS.find((l) => !l.optional && !isLessonComplete(l.id))?.id;
+  const node = (lesson, i) => {
+    const done = isLessonComplete(lesson.id);
+    const num = lessonDisplayNumber(lesson, i);
+    return `<button class="hk-roadmap-node ${done ? "hk-roadmap-done" : ""} ${lesson.id === nextId ? "hk-roadmap-current" : ""}" data-lesson="${lesson.id}">
+        <span class="hk-roadmap-num">${done ? "&#10003;" : (num ?? "•")}</span>
+        <span class="hk-roadmap-label">${lesson.title}<span class="hk-roadmap-sub">${lesson.subtitle || ""}</span></span>
+        ${lesson.id === nextId ? '<span class="hk-roadmap-here">up next</span>' : ""}
+      </button>`;
+  };
+  const groups = [
+    ["Before you start", (l) => l.pre],
+    ["Lessons", (l) => !l.pre && !l.optional],
+    ["Optional: World songs", (l) => l.optional],
+  ];
+  return `<div class="hk-roadmap-page">
+      <h2>Your roadmap</h2>
+      <p class="hk-honest-note">${LESSONS.filter((l) => isLessonComplete(l.id)).length} of ${LESSONS.length} done. Tap any topic to open it.</p>
+      ${groups.map(([name, fn]) => `<h3 class="hk-roadmap-group">${name}</h3><div class="hk-roadmap-list">${LESSONS.map((l, i) => (fn(l) ? node(l, i) : "")).join("")}</div>`).join("")}
+    </div>`;
+}
+
+function renderRoadmapTab(panel, onOpen) {
+  panel.innerHTML = roadmapPageHtml();
+  panel.querySelectorAll("[data-lesson]").forEach((b) => b.addEventListener("click", () => onOpen(b.dataset.lesson)));
+}
+
 // Item 56: real Back support for the counter-driven lessons (Lessons
 // 2-37, scale/seventh/two-hand templates, the early previews) — the
 // remaining screens that only had item 42's history-based Back on
@@ -274,6 +333,7 @@ function initLessonsTab(root) {
     </div>`;
   const main = root.querySelector("#hk-lesson-main");
   const sidebarEl = root.querySelector("#hk-lesson-sidebar");
+  watchChats(main);
 
   function renderSidebar() {
     sidebarEl.innerHTML = timelineHtml();
@@ -295,12 +355,17 @@ function initLessonsTab(root) {
     exitCleanups.splice(0).forEach((fn) => fn());
   }
 
+  // The Lessons tab is "Today": a short, full-screen list of today's
+  // tasks, one big card each. The full course lives in the Roadmap tab.
   function showMap() {
     runLessonExitCleanups();
-    main.innerHTML = lessonMapHtml();
+    document.body.classList.remove("hk-lesson-open");
+    main.innerHTML = todayHtml();
     main.querySelectorAll("[data-lesson]").forEach((btn) => {
       btn.addEventListener("click", () => startLesson(btn.dataset.lesson));
     });
+    main.querySelector("[data-go-practice]")?.addEventListener("click", () => document.querySelector('[data-tab="practice"]')?.click());
+    main.querySelector("[data-go-roadmap]")?.addEventListener("click", () => document.querySelector('[data-tab="roadmap"]')?.click());
     renderSidebar();
   }
 
@@ -392,17 +457,15 @@ function initLessonsTab(root) {
     runLessonExitCleanups();
     main.innerHTML = `
       <div class="hk-lesson-player">
-        <button class="hk-lesson-exit" id="hk-lesson-exit">&larr; Lessons</button>
-        ${!reviewDoneToday() && isLessonComplete("lesson-1") && title !== DAILY_REVIEW_TITLE
-          ? `<button class="hk-review-banner" id="hk-review-banner">🧠 Your 2-minute daily review is ready</button>` : ""}
-        <h2>${title}</h2>
+        <div class="hk-lesson-topbar"><button class="hk-lesson-exit" id="hk-lesson-exit" aria-label="Close lesson">✕</button><h2>${title}</h2></div>
         <div class="hk-lesson-content" id="hk-lesson-content"></div>
         <div id="hk-lesson-highway" class="hk-lesson-highway hk-hidden"></div>
         <div id="hk-lesson-keyboard" class="hk-keyboard-wrap"></div>
         <div class="hk-lesson-controls" id="hk-lesson-controls"></div>
       </div>`;
     main.querySelector("#hk-lesson-exit").addEventListener("click", showMap);
-    main.querySelector("#hk-review-banner")?.addEventListener("click", () => startLesson("daily-review"));
+    document.body.classList.add("hk-lesson-open");
+    window.scrollTo(0, 0);
     return {
       content: main.querySelector("#hk-lesson-content"),
       keyboardWrap: main.querySelector("#hk-lesson-keyboard"),
@@ -580,10 +643,7 @@ function initLessonsTab(root) {
   // primary brand mark (header/favicon/app icon) intentionally stays
   // fixed on the main piano pose — only these narrator moments vary.
   function mascotSay(html, pose = "assets/mascot-face.png") {
-    return `<div class="hk-mascot-row">
-      <img src="${pose}" alt="" class="hk-mascot-avatar" />
-      <div class="hk-mascot-bubble">${html}</div>
-    </div>`;
+    return chatHtml(html, pose);
   }
 
   // A small, stable-per-song pool of fun poses for the many "Master this
@@ -612,23 +672,23 @@ function initLessonsTab(root) {
     const { content, keyboardWrap, controls } = lessonShell("Get yourself a piano");
     keyboardWrap.innerHTML = "";
     content.innerHTML = mascotSay(`
-      <h3>You don't need a fancy piano to start.</h3>
-      <p>A basic 61-key keyboard is enough. You can get a nicer one later, once you know you'll stick with it.</p>
-      <h3>Where to find one, cheap or free</h3>
+      <h3 data-q="Hi Hayden! Where do I begin learning piano? 🎹">First step: get yourself a piano!</h3>
+      <p>You don't need a fancy one. A basic 61-key keyboard is enough. You can get a nicer one later, once you know you'll stick with it.</p>
+      <h3 data-q="Where can I find one cheap?">Where to find one, cheap or free</h3>
       <p>Check <strong>Facebook Marketplace</strong>. Also look for <strong>"free" listings</strong>, not just "for
          sale" ones — people often give pianos away for free, because moving a real piano is expensive and hard.</p>
       <p>Or borrow access to one: ask your <strong>school</strong> (music rooms often sit empty during free
          periods) or a local <strong>church or community center</strong> — many have a piano you can use.</p>
-      <h3>What to check before you take one home</h3>
+      <h3 data-q="What should I check before I take it home?">What to check before you take one home</h3>
       <p>Press <strong>every single key</strong>, not just a few — old keyboards often have one or two that stick
          or stay silent.</p>
       <p>Make sure the <strong>power adapter</strong> is included — some used keyboards are sold without one.</p>
       <p>A <strong>sustain pedal</strong> (or a spot to plug one in) is nice to have, but not required to start.</p>
-      <h3>"Weighted" vs. "unweighted" keys</h3>
+      <h3 data-q="What are weighted keys?">"Weighted" vs. "unweighted" keys</h3>
       <p><strong>Weighted</strong> keys push back like a real piano, which helps build finger strength over time.</p>
       <p><strong>Unweighted</strong> keys (most cheap keyboards) are lighter and easier to press — totally fine for
          starting out. Don't let this stop you today.</p>
-      <h3>Budget, honestly</h3>
+      <h3 data-q="How much will it cost?">Budget, honestly</h3>
       <p>A basic new keyboard usually costs around <strong>$100</strong>. A used one can often be much less —
          sometimes free.</p>
       <p class="hk-honest-note">One caution: a free <em>real, acoustic</em> piano can hide expensive problems
@@ -3844,7 +3904,7 @@ function initLessonsTab(root) {
     else showMap(); // everything complete — show the full map instead
   }
 
-  startNextLesson();
+  showMap();
 
   // Exposed so the tab router can refresh the streak/daily-goal/badges
   // display when returning to this tab — but only if the user is
@@ -3852,8 +3912,11 @@ function initLessonsTab(root) {
   // shouldn't yank someone back out of an in-progress lesson).
   return {
     refresh() {
-      if (root.querySelector(".hk-lesson-map")) showMap();
+      if (root.querySelector(".hk-today")) showMap();
       else renderSidebar();
+    },
+    open(id) {
+      startLesson(id);
     },
     // Item 56: called when another tab is shown — pauses a running jazz
     // backing loop (through its own Pause button, so the button label
@@ -3865,4 +3928,4 @@ function initLessonsTab(root) {
   };
 }
 
-export { initLessonsTab };
+export { renderRoadmapTab, initLessonsTab };

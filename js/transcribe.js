@@ -101,17 +101,97 @@ async function resampleToMono22050(audioBuffer) {
 // however fits their UI. Returns the note array, or throws with a
 // message already distinguishing decode/model-load/transcription
 // failures (callers should catch and display `err.message` as-is).
+// Reads a File into an ArrayBuffer (File.arrayBuffer is missing on
+// older iOS; FileReader works everywhere).
+function readFileBuffer(file) {
+  if (file.arrayBuffer) return file.arrayBuffer();
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = () => reject(r.error || new Error("couldn't read the file"));
+    r.readAsArrayBuffer(file);
+  });
+}
+
+// decodeAudioData, in the callback form older WebKit needs as well as
+// the promise form.
+function decodeWith(ctx, buf) {
+  return new Promise((resolve, reject) => {
+    const p = ctx.decodeAudioData(buf, resolve, (e) => reject(e || new Error("unsupported format")));
+    if (p && p.then) p.then(resolve, reject);
+  });
+}
+
+// Last resort for files the decoder can't open directly (common on
+// iPhone for videos from the photo library: Safari plays them fine but
+// decodeAudioData rejects the container). Plays the file silently
+// through a media element and records the audio as it plays — so it
+// takes as long as the clip itself.
+function captureViaMediaElement(file, ctx, onStatus) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const el = document.createElement(file.type.startsWith("video") ? "video" : "audio");
+    el.src = url;
+    el.playsInline = true;
+    el.setAttribute("playsinline", "");
+    el.preload = "auto";
+    const chunks = [];
+    let node = null;
+    let src = null;
+    const cleanup = () => {
+      try { node && node.disconnect(); src && src.disconnect(); } catch (e) { /* ignore */ }
+      el.pause();
+      URL.revokeObjectURL(url);
+    };
+    el.onerror = () => { cleanup(); reject(new Error("this file type can't be played here")); };
+    el.onloadedmetadata = async () => {
+      try {
+        src = ctx.createMediaElementSource(el);
+        node = ctx.createScriptProcessor(4096, 1, 1);
+        const mute = ctx.createGain();
+        mute.gain.value = 0; // record it without playing it out loud
+        node.onaudioprocess = (e) => chunks.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+        src.connect(node);
+        node.connect(mute).connect(ctx.destination);
+        const total = el.duration;
+        const tick = setInterval(() => onStatus(`Listening to your file… ${Math.round(el.currentTime)}s of ${Math.round(total)}s`), 500);
+        el.onended = () => {
+          clearInterval(tick);
+          cleanup();
+          const len = chunks.reduce((a, c) => a + c.length, 0);
+          if (!len) return reject(new Error("no audio was heard in this file"));
+          const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+          const out = buf.getChannelData(0);
+          let o = 0;
+          chunks.forEach((c) => { out.set(c, o); o += c.length; });
+          resolve(buf);
+        };
+        await ctx.resume?.();
+        await el.play();
+      } catch (err) {
+        cleanup();
+        reject(err);
+      }
+    };
+  });
+}
+
 async function transcribeFile(file, onStatus = () => {}) {
   let audioBuffer;
+  const audioCtx = getAudioContext();
   try {
     onStatus("Decoding audio...");
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const arrayBuffer = await file.arrayBuffer();
-    const decoded = await audioCtx.decodeAudioData(arrayBuffer);
+    let decoded;
+    try {
+      decoded = await decodeWith(audioCtx, await readFileBuffer(file));
+    } catch (firstErr) {
+      onStatus("This file needs to be played through once to read its audio — listening now (it stays silent)...");
+      decoded = await captureViaMediaElement(file, audioCtx, onStatus);
+    }
     onStatus(`Resampling from ${decoded.sampleRate} Hz / ${decoded.numberOfChannels}ch to 22050 Hz mono...`);
     audioBuffer = await resampleToMono22050(decoded);
   } catch (err) {
-    throw new Error(`Couldn't decode this file: ${err.message}. Try a standard mp3, wav, or mp4/mov file.`);
+    throw new Error(`Couldn't read the audio in this file (${err && err.message ? err.message : "unsupported format"}). Try an mp3, m4a or wav file, or a video saved to Files.`);
   }
 
   // basic-pitch (code + model weights) is vendored locally in

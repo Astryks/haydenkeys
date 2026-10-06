@@ -914,3 +914,62 @@ main { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
 .hk-video-frame { position: relative; width: min(480px, 100%); aspect-ratio: 16 / 9; }
 .hk-video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: 10px; }
 .hk-video .hk-note { font-size: 0.8rem; color: var(--hk-text-dim); }
+
+/* ===== Lessons as a chat (WhatsApp-style) ===== */
+.hk-lesson-sidebar { display: none !important; }
+.hk-lessons-layout { display: block; }
+.hk-chat { max-width: 720px; margin: 6px auto; }
+.hk-chat-thread { display: flex; flex-direction: column; gap: 10px; padding: 6px 0; }
+.hk-chat-msg { display: flex; align-items: flex-end; gap: 8px; animation: hk-chat-in 0.25s ease-out; }
+.hk-chat-them { justify-content: flex-start; }
+.hk-chat-me { justify-content: flex-end; }
+.hk-chat-avatar { width: 40px; height: 40px; border-radius: 50%; flex: 0 0 auto; background: var(--hk-bg-2); object-fit: cover; }
+.hk-chat-bubble { max-width: min(560px, 82%); padding: 10px 14px; border-radius: 18px; line-height: 1.45; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+.hk-chat-them .hk-chat-bubble { background: var(--hk-panel); border: 1px solid var(--hk-border); border-bottom-left-radius: 4px; }
+.hk-chat-me .hk-chat-bubble { background: var(--hk-accent); color: #fff; border-bottom-right-radius: 4px; font-weight: 500; }
+.hk-chat-bubble h3 { margin: 0 0 6px; font-size: 1.02rem; }
+.hk-chat-bubble p { margin: 6px 0; }
+.hk-chat-bubble > :last-child { margin-bottom: 0; }
+.hk-chat-typing { display: inline-flex; gap: 4px; padding: 4px 2px; }
+.hk-chat-typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--hk-text-dim); opacity: 0.4; animation: hk-typing 1s infinite; }
+.hk-chat-typing i:nth-child(2) { animation-delay: 0.15s; }
+.hk-chat-typing i:nth-child(3) { animation-delay: 0.3s; }
+.hk-chat-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; margin: 10px 0 4px; }
+.hk-chat-chip { border: 2px solid var(--hk-accent); background: var(--hk-panel); color: var(--hk-accent); border-radius: 999px; padding: 9px 16px; font-size: 1rem; font-weight: 600; cursor: pointer; min-height: 44px; }
+.hk-chat-chip:active { background: var(--hk-accent); color: #fff; }
+.hk-chat-skip { border: none; background: none; color: var(--hk-text-dim); font-size: 0.85rem; cursor: pointer; min-height: 44px; }
+/* While the conversation is still going, keep the keyboard and buttons out of the way */
+.hk-chat-holding #hk-lesson-keyboard, .hk-chat-holding #hk-lesson-highway, .hk-chat-holding #hk-lesson-controls, .hk-chat-holding .hk-chat ~ * { display: none !important; }
+@keyframes hk-chat-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes hk-typing { 0%, 100% { opacity: 0.3; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+
+/* ===== Full-screen lesson ===== */
+body.hk-lesson-open .hk-header, body.hk-lesson-open .hk-tabs, body.hk-lesson-open .hk-footer, body.hk-lesson-open footer { display: none !important; }
+body.hk-lesson-open main { padding-top: env(safe-area-inset-top, 0px); }
+.hk-lesson-topbar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 10px; padding: 8px 0; background: linear-gradient(var(--hk-bg) 80%, transparent); }
+.hk-lesson-topbar h2 { margin: 0; font-size: 1.1rem; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hk-lesson-topbar .hk-lesson-exit { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--hk-border); background: var(--hk-panel); font-size: 1.1rem; cursor: pointer; padding: 0; flex: 0 0 auto; }
+
+/* ===== Today ===== */
+.hk-today { max-width: 640px; margin: 10px auto; display: flex; flex-direction: column; gap: 12px; }
+.hk-today-head { display: flex; align-items: center; gap: 12px; }
+.hk-today-head h2 { margin: 0; }
+.hk-today-mascot { width: 64px; height: 64px; border-radius: 50%; background: var(--hk-bg-2); }
+.hk-task { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; padding: 18px; border-radius: 18px; border: 1px solid var(--hk-border); background: var(--hk-panel); cursor: pointer; min-height: 84px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); color: var(--hk-text); font-size: 1rem; }
+.hk-task:hover { border-color: var(--hk-accent); }
+.hk-task-icon { font-size: 1.8rem; flex: 0 0 auto; }
+.hk-task-body { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.hk-task-body span { color: var(--hk-text-dim); font-size: 0.9rem; }
+.hk-task-cta { background: var(--hk-accent); color: #fff; border-radius: 999px; padding: 8px 16px; font-weight: 600; }
+.hk-task-done { opacity: 0.7; }
+.hk-task-done .hk-task-cta { background: var(--hk-bg-2); color: var(--hk-text-dim); }
+.hk-today-fact { align-self: flex-start; }
+
+/* ===== Roadmap tab ===== */
+.hk-roadmap-page { max-width: 720px; margin: 10px auto; }
+.hk-roadmap-group { margin: 18px 0 6px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--hk-text-dim); }
+.hk-roadmap-page .hk-roadmap-list { display: flex; flex-direction: column; gap: 6px; max-height: none; }
+.hk-roadmap-page .hk-roadmap-node { min-height: 52px; }
+.hk-roadmap-sub { display: block; font-size: 0.78rem; color: var(--hk-text-dim); font-weight: normal; }
+body.hk-lesson-open .hk-rotate-tip { display: none !important; }
+.hk-roadmap-page .hk-roadmap-here { position: static; margin-left: auto; align-self: center; }

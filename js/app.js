@@ -1,7 +1,7 @@
 import { initDiscoverTab } from "./discover.js";
 import { initPracticeTab } from "./practice.js";
 import { initSavedTab } from "./saved.js";
-import { initLessonsTab } from "./lessons-ui.js";
+import { initLessonsTab, renderRoadmapTab } from "./lessons-ui.js";
 import { initHowItWorksTab } from "./how-it-works.js";
 import { initAboutTab } from "./about.js";
 import { initMidiTab } from "./midi.js";
@@ -13,7 +13,7 @@ import { maybeShowFunFact, showFunFact } from "./fun-facts.js";
 // empty until Sid creates one in his own Stripe dashboard.
 const STRIPE_PAYMENT_LINK = "";
 
-const TABS = ["discover", "practice", "saved", "lessons", "how", "about", "midi"];
+const TABS = ["discover", "practice", "saved", "lessons", "roadmap", "how", "about", "midi"];
 const panels = {};
 let savedApi = null;
 let discoverApi = null;
@@ -31,6 +31,13 @@ function showTab(name) {
   // Saved) — refresh it every time the tab is shown so lock status is
   // never stale.
   if (name === "discover" && discoverApi) discoverApi.refresh();
+  if (name === "roadmap" && lessonsApi) {
+    renderRoadmapTab(panels.roadmap, (id) => {
+      showTab("lessons");
+      lessonsApi.open(id);
+    });
+  }
+  if (name !== "lessons") document.body.classList.remove("hk-lesson-open");
   if (name === "lessons" && lessonsApi) lessonsApi.refresh();
   else if (lessonsApi) lessonsApi.suspend();
   // Item 56: leaving Practice stops its audio, mic and camera (they used

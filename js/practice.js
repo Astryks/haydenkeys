@@ -229,7 +229,7 @@ function initPracticeTab(root, { initialSong } = {}) {
              (Apache-2.0, via TensorFlow.js), vendored directly in this repo
              — no CDN, nothing uploaded to a server. See
              THIRD_PARTY_NOTICES.md for license details.</p>
-          <input type="file" id="hk-audio-upload" accept="audio/*" />
+          <input type="file" id="hk-audio-upload" accept="audio/*,video/*" />
           <div id="hk-upload-status" class="hk-cal-status"></div>
           <div id="hk-upload-playback"></div>
         </section>
