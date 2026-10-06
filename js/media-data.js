@@ -137,9 +137,11 @@ const VIDEOS = {
  "no-woman-no-cry": {"id": "mZ6VezKMoRY", "title": "Bob Marley & The Wailers - No Woman, No Cry (Live At The Rainbow 4th June 1977)", "author_name": "BobMarleyVEVO"},
  "dont-stop-believin": {"id": "VcjzHMhBtf0", "title": "Journey - Don't Stop Believin' (Escape Tour 1981: Live In Houston)", "author_name": "journeyVEVO"},
  "my-funny-valentine": {"id": "tczRmxcEoow", "title": "Chet Baker - My Funny Valentine (Remastered 2004)", "author_name": "Chet Baker - Topic"},
- "jazz-loop": {"id": "otFVFLtRF_s", "title": "Herbie Hancock - Cantaloupe Island (Remastered 1999)", "author_name": "Herbie Hancock - Topic"}
+ "jazz-loop": {"id": "otFVFLtRF_s", "title": "Herbie Hancock - Cantaloupe Island (Remastered 1999)", "author_name": "Herbie Hancock - Topic"},
+ "creep": {"id": "XFkzRNyygfk", "title": "Radiohead - Creep", "author_name": "Radiohead"}
 };
 const SONG_VIDEOS = {
+ "Creep": "creep",
  "The A Team": "the-a-team",
  "Perfect": "perfect",
  "Viva La Vida": "viva-la-vida",
