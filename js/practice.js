@@ -287,7 +287,7 @@ function initPracticeTab(root, { initialSong } = {}) {
         <section class="hk-upload-section">
           <h3>${icon("song", 26)} Upload any song and we'll find the chords for you!</h3>
           <p>Pick a song from your phone (a few seconds is enough). We'll show the notes falling onto the piano, the easy chords to play, and songs that use the same chords.</p>
-          <label class="hk-upload-pick" for="hk-audio-upload">${icon("folder", 24)} Choose a song</label>
+          <label class="hk-upload-pick" for="hk-audio-upload">${icon("cassette", 24)} Choose a song</label>
           <p class="hk-upload-fine">(Hayden Keys is for entertainment and learning only. We've added this feature for you to record any song from your phone and upload it, only for the purpose of learning the songs you love and support the artists who create beautiful things in this world. The real fun begins when you get inspired and create your own original music! Our model runs on your device only, we don't store any data.)</p>
           <input type="file" id="hk-audio-upload" class="hk-upload-input" accept="audio/*,video/*" />
           <div id="hk-upload-status" class="hk-cal-status"></div>

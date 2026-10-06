@@ -21,7 +21,7 @@ function initMySongs(root, { openSong }) {
         <h3 class="hk-ph-title">Your uploads</h3>
         ${uploads.length ? `<div class="hk-ph-list">${uploads.map((u) => `
           <div class="hk-ph-song hk-ms-upload" data-up="${u.id}">
-            ${icon("folder", 34)}
+            ${icon("cassette", 34)}
             <span class="hk-ph-song-body"><b>${esc(u.name)}</b><span>${new Date(u.date).toLocaleDateString()} · ${u.notes.length} notes</span></span>
             <button class="hk-btn hk-btn-small hk-ms-del" data-del="${u.id}" aria-label="Delete">Delete</button>
             ${icon("play", 30)}

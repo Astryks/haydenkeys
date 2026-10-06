@@ -117,7 +117,7 @@ function initPracticeHome(root) {
         <section class="hk-ph-upload">
           <div class="hk-ph-upload-head"><div class="hk-ph-panda">${pandaSvg("sing")}</div>
             <div><h2>Upload any song</h2><p>We'll find the chords for you and show them falling onto the piano.</p></div></div>
-          <label class="hk-upload-pick" for="hk-ph-file">${icon("folder", 24)} Choose a song</label>
+          <label class="hk-upload-pick" for="hk-ph-file">${icon("cassette", 24)} Choose a song</label>
           <input type="file" id="hk-ph-file" class="hk-upload-input" accept="audio/*,video/*" />
           <p class="hk-upload-fine">(Hayden Keys is for entertainment and learning only. We've added this feature for you to record any song from your phone and upload it, only for the purpose of learning the songs you love and support the artists who create beautiful things in this world. The real fun begins when you get inspired and create your own original music! Our model runs on your device only, we don't store any data.)</p>
           <div id="hk-ph-status" class="hk-cal-status"></div>
