@@ -88,12 +88,14 @@ function playTone(midi, opts = {}) {
   const ctx = getAudioContext();
   loadSampledPiano(ctx);
   const piano = getSampledPianoIfReady();
+  // velocity 1-127 (default 100): how hard the key is pressed.
+  const velocity = opts.velocity ?? 100;
   if (piano) {
     const { duration = 0.6, delay = 0 } = opts;
-    piano.start({ note: midi, duration, time: ctx.currentTime + delay });
+    piano.start({ note: midi, duration, time: ctx.currentTime + delay, velocity });
     return;
   }
-  playSynthTone(midi, opts);
+  playSynthTone(midi, { ...opts, gain: (opts.gain ?? 0.18) * (velocity / 100) });
 }
 
 function playChord(midiNotes, opts = {}) {

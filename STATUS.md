@@ -2151,3 +2151,42 @@ the existing 🥁 Beat.
 - **Photos:** 11 "Did you know?" facts show a photo of the person. They're freely licensed Wikimedia Commons images bundled in `assets/people/`, with author and licence under each photo and in THIRD_PARTY_NOTICES.
 - **Videos:** 4 facts have click-to-load videos from official channels (Steinway & Sons, Deutsche Grammophon, Neuma Records). On the web they play from youtube-nocookie.com; in the iOS app they open in YouTube. The privacy policy is updated to match.
 - **iOS:** build 2 (portrait, text size, zoom, sound) is on TestFlight. These latest changes need build 3 before submitting.
+
+## 2026-10-07: Day 1 rebuilt as tiny lessons, plus the iOS sound/upload fix
+
+### Simpler lessons ("too much text, I'm already lost")
+Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one thing to press, a 🔊 **Hear it** button, and a **Next lesson →** button once it's right. It works by tapping the screen, a MIDI keyboard or the microphone. Chord keys can be pressed together or one after another, which is easier on a phone.
+
+| # | Lesson | What you do |
+|---|---|---|
+| 1 | Find middle C | Press middle C (the keyboard is centred on it; 👀 Show me helps) |
+| 2 | Find G | Count C D E F G, press G |
+| 3 | Your first chord: G | Press G · B · D |
+| 4 | Another G? | Keys repeat: press a different G |
+| 5 | Back to G | Middle C, then the G chord again |
+| 6 | Chord 2: E minor | E · G · B ("a little sad") |
+| 7 | Chord 3: C | C · E · G from middle C |
+| 8 | Chord 4: D | D · F♯ · A (F♯ is the black key) |
+| 9 | Why numbers? | G = 1, D = 5, Em = 6, C = 4; Hear it plays them with number badges |
+| 10 | Boom! 4 chords | Play G → D → Em → C in a row |
+| 11 | Soft and strong | Play G softly, then strongly (Soft/Strong demo buttons) |
+| 12 | Make one key sing | Play C with the top key a bit harder (demo) |
+| 13 | Another song | G → Em → C → D, the shape of songs like *Perfect* |
+
+- The lesson keyboard is centred on middle C (C3 to E5) so "the 2 black keys in the middle" is unambiguous.
+- Finishing Day 1 also completes the old long Lesson 1, so Today moves straight on to "Major or minor?". The old lesson stays in the Roadmap.
+- "Get yourself a piano" and "Get Started" are optional pre-lessons (in the Roadmap). Today starts at "Find middle C".
+- Day 1 steps celebrate with falling notes only; the fun-fact card waits until the end of Day 1.
+- The piano can now play softer or louder (velocity), used by the Soft/Strong and "sing" demos.
+- **Still to do:** apply the same one-message, one-action style to the lessons after Day 1. They're chat-style now, but still wordier than Day 1.
+
+### Silent piano and failing upload inside the iOS app (found in the iOS Simulator)
+- **Cause:** inside the app, fetch() of bundled files reported status 0 even though the file arrived. The piano library skips any sample whose status isn't 200, so it dropped all of them and played silence. The transcription model was rejected the same way.
+- **Fix:** status-0 responses with content are treated as 200, and the app only switches from the synth to the sampled piano if samples actually loaded.
+- **Verified in the simulator:**
+  - Samples and model load with status 200.
+  - The audio engine runs.
+  - The upload test transcribes notes.
+  - Tabs, buttons and keys respond to touch.
+- **Not testable in the simulator:** rotation. The build allows all orientations.
+- **TestFlight builds:** Hayden Keys builds 5 and 6, Jaxx Guitar build 4.

@@ -102,6 +102,24 @@ const MINUET_IN_G_OPENING = [74, 67, 69, 71, 72, 74, 67, 67];
 // everything else's *positional* number in the on-screen timeline
 // shifts by 2 — their ids are untouched, so saved progress/badges tied
 // to "lesson-1" etc. keep working exactly as before.
+// Day 1, one tiny step per lesson: one short message, one thing to press.
+// Played by runMicroLesson() in lessons-ui.js (cards in MICRO_CARDS).
+const MICRO_LESSONS = [
+  { id: "m-find-c", title: "Find middle C", subtitle: "Your first key", description: "Find middle C on your piano." },
+  { id: "m-find-g", title: "Find G", subtitle: "Count up from C", description: "Count up from middle C to G." },
+  { id: "m-chord-g", title: "Your first chord: G", subtitle: "3 keys together", description: "Press G, B and D together." },
+  { id: "m-another-g", title: "Another G?", subtitle: "Keys repeat", description: "There's a G in every group of keys." },
+  { id: "m-back-g", title: "Back to G", subtitle: "Middle C, then G", description: "Back to middle C, then play the G chord." },
+  { id: "m-chord-em", title: "Chord 2: E minor", subtitle: "A sad sound", description: "Press E, G and B." },
+  { id: "m-chord-c", title: "Chord 3: C", subtitle: "Start on middle C", description: "Press C, E and G." },
+  { id: "m-chord-d", title: "Chord 4: D", subtitle: "One black key", description: "Press D, F sharp and A." },
+  { id: "m-numbers", title: "Why numbers?", subtitle: "1, 5, 6, 4", description: "Why the chords have numbers." },
+  { id: "m-boom", title: "Boom! 4 chords", subtitle: "Play them in a row", description: "Play G, D, Em and C in a row." },
+  { id: "m-soft-strong", title: "Soft and strong", subtitle: "Press gently, then harder", description: "The same chord feels different soft and strong." },
+  { id: "m-sing", title: "Make one key sing", subtitle: "Press the top key a bit harder", description: "Let the top key of a chord stand out." },
+  { id: "m-another-song", title: "Another song", subtitle: "Same 4 chords, new order", description: "G, Em, C, D: the shape of songs like Perfect." },
+];
+
 const PRE_LESSONS = [
   {
     id: "lesson-piano",
@@ -497,6 +515,7 @@ const SPECIAL_POSITIONS = {
 };
 
 const numbered = [
+  ...MICRO_LESSONS,
   theoryById["lesson-1"],
   theoryById["lesson-2"],
   ...NEW_FRONT_LESSONS,
@@ -545,13 +564,16 @@ const WORLD_LESSONS = [
   })),
 ];
 
-const LESSONS = [...PRE_LESSONS, ...withReservedPositions(numbered, SPECIAL_POSITIONS), ...WORLD_LESSONS];
+// The special showcase lessons keep their places after the Day 1 steps.
+const SHIFTED_POSITIONS = Object.fromEntries(Object.entries(SPECIAL_POSITIONS).map(([k, v]) => [Number(k) + MICRO_LESSONS.length, v]));
+const LESSONS = [...PRE_LESSONS, ...withReservedPositions(numbered, SHIFTED_POSITIONS), ...WORLD_LESSONS];
 
 // Honest final count: every entry above, real and clickable — nothing
 // padded to hit a round number.
 const TOTAL_LESSON_COUNT = LESSONS.length;
 
 export {
+  MICRO_LESSONS,
   PRE_LESSONS,
   THEORY_LESSONS,
   MASTERABLE_SONGS,

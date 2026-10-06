@@ -979,3 +979,12 @@ body.hk-lesson-open .hk-rotate-tip { display: none !important; }
    instead of overlapping the next one. */
 .hk-timeline-chord { overflow: hidden; white-space: nowrap; font-size: 0.72rem; container-type: inline-size; }
 @container (max-width: 18px) { .hk-timeline-chord-label { display: none; } }
+
+/* ===== Day 1 micro-lessons: one message, one action ===== */
+.hk-micro { display: flex; align-items: flex-end; gap: 10px; max-width: 640px; margin: 10px auto; }
+.hk-micro-avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--hk-bg-2); flex: 0 0 auto; }
+.hk-micro-bubble { background: var(--hk-panel); border: 1px solid var(--hk-border); border-radius: 20px; border-bottom-left-radius: 4px; padding: 14px 18px; font-size: 1.25rem; line-height: 1.5; box-shadow: 0 2px 6px rgba(0,0,0,0.06); animation: hk-chat-in 0.25s ease-out; }
+.hk-micro-bubble small { font-size: 0.8rem; color: var(--hk-text-dim); }
+.hk-micro-progress { margin-top: 6px; font-size: 1.1rem; color: var(--hk-accent); letter-spacing: 4px; }
+.hk-micro-done { font-size: 1.5rem; font-weight: 700; color: var(--hk-accent-2); }
+.hk-micro-next { font-size: 1.15rem; padding: 14px 26px; min-height: 52px; }

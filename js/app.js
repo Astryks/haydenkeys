@@ -170,9 +170,11 @@ window.addEventListener("hk-toast", (e) => toast(e.detail.text, { big: e.detail.
 document.addEventListener("click", (e) => {
   if (e.target.closest(".hk-funfact-open")) showFunFact();
 });
-window.addEventListener("hk-celebrate", () => {
+window.addEventListener("hk-celebrate", (e) => {
   confetti();
-  maybeShowFunFact();
+  // Day 1's tiny steps celebrate with notes only; a fun fact at the end.
+  const id = e.detail?.lessonId || "";
+  if (!id.startsWith("m-") || id === "m-another-song") maybeShowFunFact();
 });
 
 document.addEventListener("DOMContentLoaded", init);
