@@ -3176,8 +3176,10 @@ function initLessonsTab(root) {
           <p>Quick check: press the <strong>1st, 3rd, and 5th</strong> degrees of the C major scale, in any order —
              the three notes that make up the C major chord.</p>
           <p id="hk-quiz-status"></p>`;
-        controls.innerHTML = "";
         const targets = new Set([cMajor.notes[0], cMajor.notes[2], cMajor.notes[4]]);
+        // A way forward for anyone stuck: light up the three keys.
+        controls.innerHTML = `<button class="hk-btn" id="hk-show-135">Show me</button>`;
+        controls.querySelector("#hk-show-135").addEventListener("click", () => kb.highlightChord([...targets]));
         const pressed = new Set();
         kb.onKeyPress((midi) => {
           if (targets.has(midi)) {
