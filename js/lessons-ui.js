@@ -270,8 +270,8 @@ const MICRO_CARDS = {
   "m-intro": { chat: `<h3>Welcome to Hayden Keys! 🎹</h3>
       <p>Did you know just <b>4 chords</b> can play over <b>100</b> of the most popular songs? 🎶</p>
       <p>Those chords are <b>G, D, Em and C</b>.</p>
-      <p>We'll get right into them, but first, let's make sure your piano and this app agree where <b>middle C</b> is.</p>`,
-    say: "Ready? Let's find <b>middle C</b> together! 🎹", want: { tap: true }, ok: "Let's go! 🚀", noKeys: true, done: "Here we go! 🎹" },
+      <p>We'll get right into them, but first, <b>go to your piano</b> (or keyboard) 🎹 and let's find <b>middle C</b> on it, so your piano and this app match.</p>`,
+    say: "Sitting at your piano? Let's find <b>middle C</b> together! 🎹", want: { tap: true }, ok: "Let's go! 🚀", noKeys: true, done: "Here we go! 🎹" },
   "m-black-keys": { say: "Look at the <b>black keys</b> 👀<br>They come in groups of <b>2</b> and <b>3</b>, again and again.<br>Press any black key in a group of <b>2</b>!", want: { pcs: [1, 3] }, labels: "groups", done: "That's your map! 🗺️ Every piano has it." },
   "m-any-piano": { say: "Pianos come in <b>all sizes</b> 🎹<br>Middle C isn't always in the exact middle!<br>🔎 Every <b>C</b> is just <b>left of the 2 black keys</b>.<br>Big piano (88 keys): the <b>4th C</b> from the left.<br>Smaller keyboard: usually the <b>3rd C</b>.", want: { tap: true }, ok: "Got it 👍", done: "Find the 2 black keys, go left. Easy! 🎉" },
   "m-find-c": { chat: `<h3 data-q="What is middle C? 🤔">Middle C is home base 🏠</h3>
@@ -284,7 +284,7 @@ const MICRO_CARDS = {
       <p>🎹 <b>76 keys</b>: the <b>33rd</b> key.</p>
       <p>🎹 <b>61 keys</b> (a popular keyboard): the <b>25th</b> key.</p>
       <p>Count every key, white and black. Or just find the 2 black keys nearest the middle!</p>`,
-    say: "Your turn! The 2 black keys are pink 🩷<br>Press the <b>white key just left</b> of them.", labels: "groups", want: { notes: [60] }, help: [60], hideMiddleC: true, tip: "🎹 Now find middle C on your <b>real piano</b> too!", done: "Yes! That's middle C 🎉" },
+    say: "Your turn! The 2 black keys are pink 🩷<br>Press the <b>white key just left</b> of them.", labels: "groups", want: { notes: [60] }, help: [60], hideMiddleC: true, tip: "🎹 Now go to <b>your piano</b> and find middle C there: the white key just left of the 2 black keys nearest the middle. Put a finger on it!", done: "Yes! That's middle C 🎉" },
   "m-white-black": { chat: `<h3 data-q="Do the keys have names? 🔤">Yes! Every white key is a letter 🔤</h3>
       <p>The white keys go <b>A B C D E F G</b>… then start again with <b>A</b>.</p>
       <h3 data-q="So there are lots of As?">Yes! So we add a number 🔢</h3>
@@ -296,7 +296,7 @@ const MICRO_CARDS = {
       <p>Black keys are <b>sharps ♯</b> and <b>flats ♭</b>. They come in groups of <b>2</b> and <b>3</b>, again and again. That's your map! 🗺️</p>`,
     say: "Press a <b>black key</b> in a group of <b>3</b> (they're blue 💙).", labels: "groups3", want: { pcs: [6, 8, 10] }, done: "That's a black key! ♯ 🎉" },
   "m-find-g": { say: "Our home key is <b>G</b> 🏠<br>From middle C, step <b>left</b>:<br><b>C → B → A → G</b><br>Press <b>G</b>!", labels: "letters", want: { notes: [55] }, help: [55], done: "That's G, our home! 🏠" },
-  "m-chord-g": { say: "Let's make a <b>chord</b> on G!<br>Press <b>G</b>, skip one, <b>B</b>, skip one, <b>D</b>.<br>That's the <b>G chord</b>!<br><small>📱 Tricky on a phone? Tap the 3 keys one by one. The real practice is on your real piano 🎹</small>", want: { notes: G }, show: G, tip: "🎹 Try the G chord on your <b>real piano</b> too!", done: "Your first chord! 🎹" },
+  "m-chord-g": { say: "Let's make a <b>chord</b> on G!<br>Press <b>G</b>, skip one, <b>B</b>, skip one, <b>D</b>.<br>That's the <b>G chord</b>!<br><small>📱 Tricky on a phone? Tap the 3 keys one by one. Then play it on your own piano, where the real practice happens 🎹</small>", want: { notes: G }, show: G, tip: "🎹 Now play the G chord on <b>your piano</b> too!", done: "Your first chord! 🎹" },
   "m-letters": { say: "Every key has a <b>letter</b> 🔤<br>The white keys go <b>C D E F G A B</b>… then start again!<br>Find <b>G</b> and press it.", labels: "letters", want: { notes: [67] }, done: "There's G! 🎉" },
   "m-jargon": { chat: `<h3 data-q="Wait, is G a key or a chord? 🤯">Good question! Both, kind of 😄</h3>
       <p>🎹 The <b>G key</b> is just one key.</p>
@@ -372,9 +372,16 @@ const MICRO_CARDS = {
       <p>Move a song to a new key and the letters change, but the numbers <b>1 · 5 · 6 · 4</b> stay the same. Let's try it!</p>`,
     say: "Ready to play in a new key? 🚀", want: { tap: true }, ok: "Let's go! 🚀", noKeys: true, done: "Same numbers, new letters 🎉" },
   "d2-key-c": { say: "Same 4 chords, new <b>key</b> (C):<br><b>C → G → Am → F</b><br>Songs like <i>Let It Be</i>!", want: { seq: [KC_C, KC_G, KC_AM, KC_F] }, demoSeq: [[KC_C, "C"], [KC_G, "G"], [KC_AM, "Am"], [KC_F, "F"]], done: "Same numbers, new key! 🏆" },
-  "d3-left": { say: "Your <b>left hand</b> plays the <b>low</b> notes 👈<br>Press the low <b>G</b> (far left) with your left hand.", want: { notes: [43] }, show: [43], done: "Left hand ready! 👈" },
-  "d3-together": { say: "Now <b>both hands</b>! 🙌<br>Left: low <b>G</b><br>Right: the <b>G chord</b>", want: { notes: H_G }, show: H_G, done: "Two hands! 🙌" },
-  "d3-walk": { say: "Left hand plays each chord's <b>letter</b>, down low.<br><b>G → D → E → C</b><br>Right hand plays the chords.", want: { seq: [H_G, H_D, H_EM, H_C] }, demoSeq: [[H_G, "G"], [H_D, "D"], [H_EM, "Em"], [H_C, "C"]], done: "Your bass is walking! 🚶" },
+  "d3-left": { chat: `<h3 data-q="Where does my left hand go? 👈">Further left, lower down the piano 👈</h3>
+      <p>Remember the numbers? <b>Middle C is C4</b>. A <b>smaller number</b> means further <b>left</b> (lower and deeper). A <b>bigger number</b> means further <b>right</b> (higher).</p>
+      <p>🖐️ <b>Right hand</b> stays near middle C. Its G chord is <b>G3 · B3 · D4</b>.</p>
+      <p>👈 <b>Left hand</b> goes one group further left, to <b>G2</b>. Same letter G, one number smaller, so it sounds deeper.</p>
+      <h3 data-q="How do I find G2 on my piano?">Count the Gs going left 🔎</h3>
+      <p>Put your right thumb on middle C. Go left: the first G you reach is <b>G3</b>. Keep going left to the next G: that's <b>G2</b>, for your left hand.</p>
+      <p>Same letter, same colour: every G here is <b>blue</b> 💙</p>`,
+    say: "Press <b>G2</b> with your <b>left hand</b> 👈<br>(the blue key marked G 2)", labels: "octave", want: { notes: [43] }, show: [43], tip: "🎹 On your piano: right thumb on middle C, go left past G3 to <b>G2</b>, and press it with your left hand.", done: "Left hand on G2! 👈" },
+  "d3-together": { say: "Now <b>both hands</b>! 🙌<br>👈 Left hand, low: <b>G2</b><br>🖐️ Right hand, near middle C: <b>G3 · B3 · D4</b>", want: { notes: H_G }, show: H_G, done: "Two hands! 🙌" },
+  "d3-walk": { say: "👈 Left hand plays each chord's <b>letter</b>, down low:<br><b>G2 → D3 → E3 → C3</b><br>🖐️ Right hand plays the chords near middle C.", want: { seq: [H_G, H_D, H_EM, H_C] }, demoSeq: [[H_G, "G"], [H_D, "D"], [H_EM, "Em"], [H_C, "C"]], done: "Your bass is walking! 🚶" },
   "d3-ear-1": { say: "Use your ears 👂<br>Tap <b>🔊 Hear it</b>.<br>Is it <b>happy</b> or <b>sad</b>?", want: { choice: "sad" }, demo: AM, done: "Yes, sad! That was A minor 🥲" },
   "d3-ear-2": { say: "One more 👂<br>Happy or sad?", want: { choice: "happy" }, demo: D, done: "Yes, happy! That was D major 😀" },
   "d3-linger": { chat: `<h3 data-q="Can I play a real song now? 🎶">Yes! "Linger" by The Cranberries 💜</h3>
@@ -385,10 +392,10 @@ const MICRO_CARDS = {
       <p>The theme from the film <b>Interstellar</b> (2014) by <b>Hans Zimmer</b> is in <b>A minor</b>: dreamy and a little sad.</p>
       <p>Zimmer keeps one high note, <b>E</b>, ticking on top like a clock ⏱️ while the chords change underneath.</p>
       <h3 data-q="What do my two hands do?">Left hand low, right hand keeps the E 🙌</h3>
-      <p><b>Left hand:</b> one low note per chord: <b>A → F → C → G</b>.</p>
-      <p><b>Right hand:</b> three notes, and the top one is <b>always E</b>. Only the bottom notes move.</p>
+      <p>👈 <b>Left hand</b>, low down: one note per chord: <b>A2 → F2 → C3 → G2</b>.</p>
+      <p>🖐️ <b>Right hand</b>, around middle C: three notes, and the top one is <b>always E4</b> (the E just right of middle C). Only the bottom notes move.</p>
       <p><small>This is a simple version of the chords and that ticking E, not the full film score.</small></p>`,
-    say: "Both hands! 🚀<br>Left: <b>A → F → C → G</b> (low)<br>Right: keep <b>E</b> on top", want: { seq: [IS_AM, IS_F, IS_C, IS_G] }, demoSeq: [[IS_AM, "Am"], [IS_F, "F"], [IS_C, "C"], [IS_G, "G"]], range: [41, 76], along: "interstellar", tip: "🎹 On your real piano, tap the top <b>E</b> softly again and again, like a clock ⏱️", done: "Hello, space! 🚀✨" },
+    say: "Both hands! 🚀<br>👈 Left, low: <b>A2 → F2 → C3 → G2</b><br>🖐️ Right: keep <b>E4</b> on top", want: { seq: [IS_AM, IS_F, IS_C, IS_G] }, demoSeq: [[IS_AM, "Am"], [IS_F, "F"], [IS_C, "C"], [IS_G, "G"]], range: [41, 76], along: "interstellar", tip: "🎹 On your real piano, tap the top <b>E</b> softly again and again, like a clock ⏱️", done: "Hello, space! 🚀✨" },
   "d3-song": { say: "Two hands, 4 chords! 🎹🎹<br><b>G → D → Em → C</b>", want: { seq: [H_G, H_D, H_EM, H_C] }, demoSeq: [[H_G, "G"], [H_D, "D"], [H_EM, "Em"], [H_C, "C"]], done: "You played a song with two hands! 🏆" },
   "d4-genres": { chat: `<h3 data-q="What's Lesson 4 about? 🤔">Music has flavours 🍦</h3>
       <p>They're called <b>genres</b> (say "zhon-ruhs"): <b>pop</b>, <b>rock</b>, <b>blues</b>, <b>jazz</b>, <b>classical</b>, and many more like reggae, country and R&amp;B.</p>
@@ -1202,7 +1209,7 @@ function initLessonsTab(root) {
     keyboardWrap.innerHTML = "";
     content.innerHTML = `
       ${mascotSay(`<h3>Hi! I'm your guide for Hayden Keys.</h3>
-        <p>Before we play any songs, let's make sure your piano and this app agree on where Middle C is.</p>`)}
+        <p>Before we play any songs, go to your piano (or keyboard) and let's find Middle C on it, so your piano and this app match.</p>`)}
       <div id="hk-getstarted-cal"></div>`;
     controls.innerHTML = `<button class="hk-btn" id="hk-skip-cal">Skip — I already know where Middle C is</button>`;
     controls.querySelector("#hk-skip-cal").addEventListener("click", finish);
