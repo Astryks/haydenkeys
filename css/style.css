@@ -1506,3 +1506,22 @@ body.hk-lesson-open .hk-lesson-topbar { padding-top: 6px !important; }
 
 .hk-home-credit { margin: 22px 0 8px; text-align: center; font-size: 0.75rem; color: var(--hk-text-dim); }
 .hk-home-credit a { color: inherit; }
+
+/* How it works: technology tour + tip jar */
+.hk-tech h2 { margin-bottom: 2px; color: #8a63d2; }
+.hk-tech-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; margin: 12px 0 18px; }
+.hk-tech-card { background: #fff; border: 2px solid #ece6fb; border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 4px 12px rgba(90, 60, 160, 0.08); }
+.hk-tech-card b { font-size: 1.1rem; color: #3a2d6b; }
+.hk-tech-card p { margin: 0; font-size: 0.92rem; color: var(--hk-text-dim); line-height: 1.45; }
+.hk-tipjar { margin: 4px 0 24px; padding: 16px; border-radius: 20px; background: linear-gradient(135deg, #fff1f7, #f1ecff); border: 2px solid #e6dcfb; }
+.hk-tipjar h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; color: #3a2d6b; }
+.hk-tipjar p { margin: 0 0 10px; }
+.hk-tip-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.hk-tip { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 12px 6px; border-radius: 16px; border: none; background: linear-gradient(135deg, var(--hk-accent), var(--hk-purple)); color: #fff; cursor: pointer; }
+.hk-tip b { font-size: 1.2rem; }
+.hk-tip span { font-size: 0.78rem; opacity: 0.95; }
+.hk-tip:disabled { opacity: 0.6; }
+.hk-tip-status, .hk-tip-note { font-size: 0.85rem; color: var(--hk-text-dim); }
+.hk-home-how { display: inline-flex; align-items: center; gap: 6px; margin: 18px auto 0; padding: 8px 14px; border-radius: 999px; border: 1px solid #e6dcfb; background: #fff; color: #6a45b5; font-weight: 700; font-size: 0.9rem; cursor: pointer; }
+.hk-today-clean { text-align: center; }
+.hk-today-clean > button:not(.hk-home-how) { text-align: left; }

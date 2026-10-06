@@ -1,3 +1,5 @@
+import { icon } from "./icons.js";
+import { renderTipJar } from "./tipjar.js";
 // "How It Works" — a fun-but-real explanation of how the own-audio-
 // upload feature (basic-pitch) figures out notes/chords from a sound
 // file. Every technical idea here is real and substantive; only the
@@ -6,9 +8,25 @@
 // make the two hardest ideas (waves have a frequency; a real note is a
 // stack of frequencies, not one) visible rather than just described.
 
+// The page opens with a short, visual tour of the technology and the tip
+// jar (app only), then the full explanation of how the app hears notes.
+const TECH = [
+  ["song", "Upload any song", "A music AI from Spotify, called Basic Pitch, runs right on your phone. It listens to your recording and writes down every note it hears. Then we group the notes into the chords you can play."],
+  ["search", "Guess the song", "Apple's ShazamKit turns a few seconds of the song into a tiny audio fingerprint and finds its name. Only the fingerprint is sent, never the recording."],
+  ["hand", "Wait for me", "The microphone listens only for your piano keys. It works out the pitch of a single note, and for a chord it checks how strong each of the 12 notes is in the sound, many times a second."],
+  ["piano", "A real grand piano", "Every note you hear is a real recording of a Steinway grand piano, key by key, built into the app."],
+  ["star", "All on your phone", "No servers and no account. Your progress, your uploads and the AI all stay on your device."],
+];
+
 function initHowItWorksTab(root) {
   root.innerHTML = `
     <div class="hk-how">
+      <section class="hk-tech">
+        <h2>How Hayden Keys works</h2>
+        <p class="hk-how-sub">Some amazing technology, packed into a free app.</p>
+        <div class="hk-tech-grid">${TECH.map(([ic, t, d]) => `<div class="hk-tech-card">${icon(ic, 40)}<b>${t}</b><p>${d}</p></div>`).join("")}</div>
+      </section>
+      <div id="hk-tipjar-slot"></div>
       <h2>How does the app know what notes you played?</h2>
       <p class="hk-how-sub">A real, honest explanation of the "upload your own recording" feature — no jargon, no substance cut.</p>
 
@@ -81,6 +99,7 @@ function initHowItWorksTab(root) {
          in wording only. See THIRD_PARTY_NOTICES.md for exactly which model is running and under what
          license.</p>
     </div>`;
+  renderTipJar(root.querySelector("#hk-tipjar-slot"));
 
   initWaveDemo();
   initOvertoneDiagram();

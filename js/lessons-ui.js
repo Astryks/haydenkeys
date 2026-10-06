@@ -505,6 +505,7 @@ function todayHtml() {
       <span><b>Upload any song</b><span>and we'll find the chords for you</span></span>
       <span class="hk-home-upload-go">Upload</span>
     </button>
+    <button class="hk-home-how" data-home-how type="button">${icon("star", 18)} How it works &amp; support us</button>
     <p class="hk-home-credit">Supported by the Astryks Group (<a href="https://astryks.com" target="_blank" rel="noopener">astryks.com</a>)</p></div>`;
 }
 
@@ -630,6 +631,7 @@ function initLessonsTab(root) {
       btn.addEventListener("click", () => startLesson(btn.dataset.lesson));
     });
     main.querySelector("[data-go-practice]")?.addEventListener("click", () => document.querySelector('[data-tab="practice"]')?.click());
+    main.querySelector("[data-home-how]")?.addEventListener("click", () => window.dispatchEvent(new CustomEvent("hk-show-tab", { detail: "how" })));
     // Home "Upload any song": open Practice and the file picker in the same tap.
     main.querySelector("[data-home-upload]")?.addEventListener("click", () => {
       document.querySelector('[data-tab="practice"]')?.click();
