@@ -36,7 +36,7 @@ async function prep(page, progressUpTo) {
     const day = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     localStorage.setItem("hk_streak", JSON.stringify({ count: 6, lastDay: day }));
     localStorage.setItem("hk_xp", JSON.stringify(640));
-    localStorage.setItem("hk_quests", JSON.stringify({ date: day, done: { lesson: true } }));
+    localStorage.setItem("hk_quests", JSON.stringify({ date: day, done: { review: true } }));
   }, progressUpTo);
   await page.reload({ waitUntil: "networkidle0" });
   await page.evaluate(() => document.documentElement.classList.add("hk-native"));
@@ -54,55 +54,75 @@ for (const dev of DEVICES) {
   const click = (sel) => page.evaluate((s) => document.querySelector(s)?.click(), sel);
   const scrollTo = (sel, block = "start") => page.evaluate((s, b) => document.querySelector(s)?.scrollIntoView({ block: b }), sel, block);
 
-  // 1. Lesson 1, the G chord with blocks landed on the keys
-  await prep(page, 2);
-  for (let i = 0; i < 5; i++) await click("#hk-next");
+  // 1. Today: the day's tasks
+  await prep(page, 16);
   await sleep(300);
-  await page.evaluate(() => window.scrollTo(0, document.querySelector(".hk-lesson-player").offsetTop - 4));
-  await shot("lesson-first-chords");
+  await shot("today");
 
-  // 2. Lesson map with quests, level, streak
-  await prep(page, 30);
+  // 2. Day 1: find middle C, with "Show me" lighting the key
+  await prep(page, 0);
+  await click(".hk-task");
+  await sleep(300);
+  await click("#hk-micro-help");
+  await sleep(700);
+  await shot("find-middle-c");
+
+  // 3. Day 1: your first chord, blocks landed on G B D
   await click("#hk-lesson-exit");
+  await page.evaluate(async () => { (await import("/js/lessons-ui.js")); });
+  await page.evaluate(() => document.querySelector('[data-tab="roadmap"]').click());
   await sleep(300);
-  await scrollTo(".hk-streak", "start");
-  await shot("roadmap-quests");
+  await click('#panel-roadmap [data-lesson="m-chord-g"]');
+  await sleep(900);
+  await shot("first-chord");
 
-  // 3. Song play-along with falling blocks mid-song
-  await click('[data-lesson="song-1"]');
+  // 4. A lesson as a chat
+  await prep(page, 16);
+  await page.evaluate(() => document.querySelector('[data-tab="roadmap"]').click());
   await sleep(300);
+  await click('#panel-roadmap [data-lesson="lesson-piano"]');
+  await sleep(900);
+  for (let i = 0; i < 2; i++) { await click(".hk-chat-chip"); await sleep(1000); }
+  await shot("chat-lesson");
+
+  // 5. Roadmap
+  await click("#hk-lesson-exit");
+  await page.evaluate(() => document.querySelector('[data-tab="roadmap"]').click());
+  await sleep(400);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await shot("roadmap");
+
+  // 6. Song play-along with falling blocks
+  await click('#panel-roadmap [data-lesson="song-1"]');
+  await sleep(500);
+  await click(".hk-chat-skip");
+  await sleep(500);
   await page.evaluate(() => [...document.querySelectorAll("#hk-lesson-controls button")].find((b) => /Play along/.test(b.textContent))?.click());
   await sleep(4200);
-  await page.evaluate(() => window.scrollTo(0, document.querySelector(".hk-lesson-player").offsetTop - 4));
+  await page.evaluate(() => document.querySelector("#hk-lesson-highway")?.scrollIntoView({ block: "start" }));
+  await page.evaluate(() => window.scrollBy(0, -60));
   await shot("play-along-blocks");
 
-  // 4. Sheet music: Bach Prelude, wait mode running
-  await prep(page, 140);
-  await click('[data-lesson="lesson-sheet-bach"]');
+  // 7. Sheet music: Bach Prelude, wait mode running
+  await prep(page, 160);
+  await page.evaluate(() => document.querySelector('[data-tab="roadmap"]').click());
   await sleep(300);
+  await click('#panel-roadmap [data-lesson="lesson-sheet-bach"]');
+  await sleep(500);
+  await click(".hk-chat-skip");
+  await sleep(500);
   await click("[data-pstart]");
   await sleep(2600);
   await scrollTo("[data-pstaff]", "start");
   await page.evaluate(() => window.scrollBy(0, -50));
   await shot("sheet-music-wait-mode");
 
-  // 5. Middle C tuner in Get Started (static, before listening)
-  await prep(page, 1);
-  await sleep(200);
-  await scrollTo("#hk-cal-tuner", "center");
-  await shot("middle-c-check");
-
-  // 6. Discover library
+  // 8. Discover library
+  await click("#hk-lesson-exit");
   await click('[data-tab="discover"]');
   await sleep(2500);
   await scrollTo(".hk-discover-controls", "start");
   await shot("discover-library");
-
-  // 7. MIDI tab
-  await click('[data-tab="midi"]');
-  await sleep(400);
-  await scrollTo(".hk-midi-layout-picker", "start");
-  await shot("midi-keyboard");
 
   await page.close();
 }
