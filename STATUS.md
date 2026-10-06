@@ -2352,3 +2352,4 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
 - My Funny Valentine: the famous descending line, then the whole song simplified (A A B A, based on Chet Baker's 1954 recording), with the official audio. "Master: Linger" is skipped (Linger is taught in Lesson 3).
 - Falling blocks in lessons no longer freeze above the keys; they flow into the keys and disappear.
 - Practice song screen shows the song's official video too.
+- Build 22: Lesson 3 adds "Interstellar" (Hans Zimmer): left hand A F C G low, right hand keeps the ticking high E on top (Am, Fmaj7, C, G6 sounds); a simple version, not the film score.

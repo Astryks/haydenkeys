@@ -260,6 +260,9 @@ function voicingsToEvents(voicings, barSec = 2.2) {
   return events;
 }
 
+// Interstellar (simple version): left hand A, F, C, G low; right hand keeps
+// E on top (Am, Fmaj7, C, G6 sounds — the high E is the film's ticking pedal).
+const IS_AM = [45, 57, 60, 64], IS_F = [41, 57, 60, 64], IS_C = [48, 55, 60, 64], IS_G = [43, 55, 59, 64];
 const F_MAJ = [65, 69, 72], E_MAJ = [64, 68, 71], D_MIN = [62, 65, 69];
 const MICRO_CARDS = {
   "m-intro": { chat: `<h3>Welcome to Hayden Keys! 🎹</h3>
@@ -376,6 +379,14 @@ const MICRO_CARDS = {
       <p>The whole song loops just <b>4 chords</b>: <b>D → A → C → G</b>.</p>
       <p>You know the shape! Press · skip · press · skip · press. Only <b>D</b> and <b>A</b> use one black key each.</p>`,
     say: "Play the loop: <b>D → A → C → G</b> 🎹", want: { seq: [LG_D, LG_A, LG_C, LG_G] }, demoSeq: [[LG_D, "D"], [LG_A, "A"], [LG_C, "C"], [LG_G, "G"]], tip: "🎹 Play along with the real song on your piano!", done: "That's Linger! 🎉💜", video: "linger", song: "Linger", shareSong: "Linger" },
+  "d3-interstellar": { chat: `<h3 data-q="Can I play some movie music? 🎬">Yes! Hans Zimmer's Interstellar 🚀</h3>
+      <p>The theme from the film <b>Interstellar</b> (2014) by <b>Hans Zimmer</b> is in <b>A minor</b>: dreamy and a little sad.</p>
+      <p>Zimmer keeps one high note, <b>E</b>, ticking on top like a clock ⏱️ while the chords change underneath.</p>
+      <h3 data-q="What do my two hands do?">Left hand low, right hand keeps the E 🙌</h3>
+      <p><b>Left hand:</b> one low note per chord: <b>A → F → C → G</b>.</p>
+      <p><b>Right hand:</b> three notes, and the top one is <b>always E</b>. Only the bottom notes move.</p>
+      <p><small>This is a simple version of the chords and that ticking E, not the full film score.</small></p>`,
+    say: "Both hands! 🚀<br>Left: <b>A → F → C → G</b> (low)<br>Right: keep <b>E</b> on top", want: { seq: [IS_AM, IS_F, IS_C, IS_G] }, demoSeq: [[IS_AM, "Am"], [IS_F, "F"], [IS_C, "C"], [IS_G, "G"]], range: [41, 76], along: "interstellar", tip: "🎹 On your real piano, tap the top <b>E</b> softly again and again, like a clock ⏱️", done: "Hello, space! 🚀✨" },
   "d3-song": { say: "Two hands, 4 chords! 🎹🎹<br><b>G → D → Em → C</b>", want: { seq: [H_G, H_D, H_EM, H_C] }, demoSeq: [[H_G, "G"], [H_D, "D"], [H_EM, "Em"], [H_C, "C"]], done: "You played a song with two hands! 🏆" },
 };
 
@@ -889,7 +900,7 @@ function initLessonsTab(root) {
     };
     // C3 to E5: middle C sits right in the middle of the screen.
     // Narrow range = bigger keys. Day 3 adds the low bass notes.
-    const [lo, hi] = id.startsWith("d3-") || id === "d2-octave" ? [43, 72] : [53, 72];
+    const [lo, hi] = card.range || (id.startsWith("d3-") || id === "d2-octave" ? [43, 72] : [53, 72]);
     const kb = lessonKeyboard(keyboardWrap, { startMidi: lo, endMidi: hi, markMiddleC: !card.hideMiddleC });
     if (card.noKeys) { keyboardWrap.style.display = "none"; main.querySelector("#hk-lesson-highway")?.classList.add("hk-hidden"); }
     // Labels on the keys: every white key's letter, or numbers counted from G.
@@ -960,6 +971,26 @@ function initLessonsTab(root) {
         playChord(notes, { duration: 1.2 });
         thread.querySelectorAll(".hk-chord-chip").forEach((c) => c.classList.toggle("hk-chord-chip-on", c === b));
       }));
+    }
+
+    // Interstellar: the chords held, with the high E ticking in eighths.
+    if (card.along === "interstellar") {
+      thread.insertAdjacentHTML("beforeend", `<div class="hk-micro-song"><div class="hk-micro-song-btns"><button class="hk-btn" id="hk-along-is">${icon("play", 20)} Hear both hands in time</button></div></div>`);
+      const btn = thread.querySelector("#hk-along-is");
+      const label = btn.innerHTML;
+      btn.addEventListener("click", () => {
+        if (btn.dataset.running) { kb.stopPlayAlong(); return; }
+        btn.dataset.running = "1";
+        btn.innerHTML = "■ Stop";
+        const events = [];
+        const BAR = 2.4;
+        [IS_AM, IS_F, IS_C, IS_G, IS_AM, IS_F, IS_C, IS_G].forEach((ch, i) => {
+          events.push({ midi: ch[0], start: i * BAR, dur: BAR * 0.95, hand: "left" });
+          ch.slice(1, -1).forEach((m) => events.push({ midi: m, start: i * BAR, dur: BAR * 0.95, hand: "right" }));
+          for (let k = 0; k < 8; k++) events.push({ midi: 64, start: i * BAR + k * (BAR / 8), dur: BAR / 8 * 0.6, hand: "right" });
+        });
+        kb.playTimeline(events, { onDone: () => { delete btn.dataset.running; btn.innerHTML = label; } });
+      });
     }
 
     // Song cards: the real song (official video) and the chords in time,
