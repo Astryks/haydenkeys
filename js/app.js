@@ -103,6 +103,15 @@ function init() {
     },
   });
   lessonsApi = initLessonsTab(panels.lessons);
+  // "These songs use the same chords" (upload) → open that song in Practice.
+  window.addEventListener("hk-open-song", async (e) => {
+    const { SONGS } = await import("./songs-data.js");
+    const song = SONGS.find((s) => s.title === e.detail.title);
+    if (!song) return;
+    practiceApi = initPracticeTab(panels.practice, { initialSong: song });
+    showTab("practice");
+    window.scrollTo(0, 0);
+  });
   initHowItWorksTab(panels.how);
   initAboutTab(panels.about);
   initMidiTab(panels.midi);

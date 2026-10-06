@@ -12,6 +12,8 @@ import { renderKeyboard, playTone, midiToName } from "./keyboard.js";
 import { renderNoteHighway } from "./note-highway.js";
 import { playBeat } from "./drums.js";
 import { getAudioContext } from "./keyboard.js";
+import { SONGS } from "./songs-data.js";
+import { parseChordSymbol } from "./chord-utils.js";
 
 // Item 44: a short cleanup pass on basic-pitch's raw note output.
 //
@@ -364,6 +366,49 @@ function estimateBeat(notes) {
   return { beatSec: best.lag * BIN, offsetSec: bestOffset * BIN, bpm: Math.round(60 / (best.lag * BIN)) };
 }
 
+// "Which song might this be?" A few seconds of audio can't be identified
+// like Shazam does (that needs a huge online fingerprint database). What
+// we CAN do offline: compare the chord loop we heard with every song in
+// the library, in any key, and suggest the songs that use the same loop.
+function chordLoopShape(chords) {
+  // Intervals between consecutive roots plus major/minor: key-independent.
+  const parsed = chords.map((c) => parseChordSymbol(c)).filter(Boolean);
+  return parsed.map((p, i) => {
+    const next = parsed[(i + 1) % parsed.length];
+    const minor = p.intervals.includes(3) && !p.intervals.includes(4);
+    return `${minor ? "m" : "M"}${(next.root - p.root + 12) % 12}`;
+  });
+}
+function songMatches(easyNotes) {
+  const seq = [];
+  easyNotes.filter((n) => n.hand === "left").forEach((n) => { if (seq[seq.length - 1] !== n.chord) seq.push(n.chord); });
+  if (seq.length < 3) return [];
+  const heard = chordLoopShape(seq).join(",");
+  const out = [];
+  SONGS.forEach((song) => {
+    const ch = (song.chords || []).filter((c) => /^[A-G]/.test(c)).map((c) => c.replace(/\/.*$/, "").replace(/maj7$/, "").replace(/m7$/, "m").replace(/(7|sus\d|add9|6)$/, ""));
+    if (ch.length < 3) return;
+    const loop = chordLoopShape(ch);
+    // Every rotation of the song's loop, found anywhere in what we heard.
+    for (let r = 0; r < loop.length; r++) {
+      const rot = loop.slice(r).concat(loop.slice(0, r)).join(",");
+      if (rot && heard.includes(rot)) { out.push(song); break; }
+    }
+  });
+  return out.sort((a, b) => (b.confidence === "confirmed") - (a.confidence === "confirmed") || (a.popularityRank || 999) - (b.popularityRank || 999));
+}
+function showSongMatches(el, easyNotes) {
+  if (!el) return;
+  const m = songMatches(easyNotes);
+  if (!m.length) { el.innerHTML = ""; return; }
+  el.innerHTML = `<div class="hk-upload-match-box">🔎 <b>These songs use the same chords:</b>
+    <div class="hk-upload-match-list">${m.slice(0, 6).map((s) => `<button class="hk-btn hk-btn-small" data-match="${s.title.replace(/"/g, "&quot;")}">${s.title} <span>· ${s.artist}</span></button>`).join("")}</div>
+    <small>Lots of songs share the same chords, so this is a hint, not an exact match. Tap one to learn the whole song.</small></div>`;
+  el.querySelectorAll("[data-match]").forEach((b) => b.addEventListener("click", () => {
+    window.dispatchEvent(new CustomEvent("hk-open-song", { detail: { title: b.dataset.match } }));
+  }));
+}
+
 function formatClock(sec) {
   const s = Math.max(0, Math.floor(sec));
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
@@ -415,8 +460,11 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
   const beatGuess = estimateBeat(detailedNotes);
   // Easy chords change at most every 2 beats when the tempo is known
   // (every second otherwise) — about as fast as a beginner can follow.
+  // Slow songs (a beat of 0.75s or more) can change chord every beat;
+  // faster ones get two beats per chord so it stays playable.
+  const chordWindow = beatGuess ? (beatGuess.beatSec >= 0.75 ? beatGuess.beatSec : beatGuess.beatSec * 2) : 1;
   const easyNotes = simplifyToChords(detailedNotes, beatGuess
-    ? { windowSec: beatGuess.beatSec * 2, offsetSec: beatGuess.offsetSec }
+    ? { windowSec: chordWindow, offsetSec: beatGuess.offsetSec }
     : {});
   const SPEEDS = [0.5, 0.75, 1];
   const beat = beatGuess;
@@ -445,7 +493,8 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
   let drumsOn = false;
   let lastBeatSlot = null;
 
-  let highwayNotes = detailedNotes;
+  // Easy mode (just chords) is the default; Hard mode shows every note.
+  let highwayNotes = easyNotes.length ? easyNotes : detailedNotes;
   let totalDuration = 0;
   function computeTotal() {
     totalDuration = Math.max(...highwayNotes.map((n) => n.time + n.duration)) + 0.5;
@@ -459,9 +508,8 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
         <span class="hk-speed-label">Speed:</span>
         ${SPEEDS.map((s) => `<button class="hk-speed-btn ${s === 1 ? "hk-speed-active" : ""}" data-speed="${s}">${s}×${s === 1 ? " (normal)" : s === 0.5 ? " (slow)" : ""}</button>`).join("")}
         <span class="hk-speed-label hk-upload-mode-label">View:</span>
-        <button class="hk-speed-btn hk-speed-active" data-mode="detailed">Detailed</button>
-        <button class="hk-speed-btn" data-mode="easy" title="The song's chords as simple, playable shapes">Easy (chords)</button>
-        <button class="hk-btn hk-btn-primary" id="hk-upload-playpause">Play</button>
+        <button class="hk-speed-btn ${easyNotes.length ? "hk-speed-active" : ""}" data-mode="easy" title="The song's chords as simple, playable shapes">😊 Easy mode (just chords)</button>
+        <button class="hk-speed-btn ${easyNotes.length ? "" : "hk-speed-active"}" data-mode="detailed" title="Every note we heard">🔥 Hard mode (every note)</button>
       </div>
       <div class="hk-speed-picker">
         <span class="hk-speed-label">Hear:</span>
@@ -476,7 +524,10 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
         <input type="range" id="hk-upload-seek" class="hk-upload-seek-range" min="0" step="0.05" value="0" aria-label="Playback position" />
         <span class="hk-upload-clock" id="hk-upload-total">0:00</span>
       </div>
+      <div class="hk-upload-match" id="hk-upload-match"></div>
+      <button class="hk-upload-bigplay" id="hk-upload-playpause" aria-label="Play">▶ Play</button>
       <p class="hk-upload-now" id="hk-upload-now" aria-live="off">&nbsp;</p>
+      <p class="hk-upload-legend">💡 <b>C4</b> = middle C. The number says which group of keys: <b>smaller = further left</b> (lower), bigger = further right. So <b>A3</b> is the A just left of middle C, and <b>A2</b> is the A one group further left.</p>
       <div class="hk-upload-highway" id="hk-upload-highway"></div>
       <div id="hk-upload-kb" class="hk-keyboard-wrap"></div>
     </div>`;
@@ -490,12 +541,14 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
 
   function updateSummary() {
     container.querySelector("#hk-upload-summary").textContent = highwayNotes === easyNotes
-      ? `Easy mode: the song as ${new Set(easyNotes.map((n) => n.chord)).size} simple chords (${easyNotes.filter((n) => n.hand === "left").length} chord changes) — left hand plays the root, right hand the 3-note chord near Middle C. A best guess from the recording; switch to Detailed for every detected note.`
-      : `Detected ${detailedNotes.length} notes. This plays back exactly what was detected — try Easy for a simpler view. Turning it into a full lesson (chords, structure, etc.) is still a Phase 2 item.`;
+      ? `Easy mode: the song as ${new Set(easyNotes.map((n) => n.chord)).size} simple chords (${easyNotes.filter((n) => n.hand === "left").length} chord changes) — left hand plays the root, right hand the 3-note chord near Middle C. A best guess from the recording; switch to Hard mode for every note.`
+      : `Detected ${detailedNotes.length} notes. This plays back exactly what was detected — try Easy mode for just the chords. Turning it into a full lesson (chords, structure, etc.) is still a Phase 2 item.`;
     seek.max = String(totalDuration);
     container.querySelector("#hk-upload-total").textContent = formatClock(totalDuration);
   }
   updateSummary();
+  // Finer chord windows (one beat) for matching than for playing.
+  showSongMatches(container.querySelector("#hk-upload-match"), simplifyToChords(detailedNotes, { windowSec: beatGuess ? beatGuess.beatSec : 0.5, offsetSec: beatGuess ? beatGuess.offsetSec : 0 }));
 
   let speed = 1;
   let playing = false;
@@ -605,7 +658,7 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
       originalEl.play().catch(() => {});
     }
     scheduleAudioFrom(pausedAt);
-    playBtn.textContent = "Pause";
+    playBtn.textContent = "⏸ Pause";
     raf = requestAnimationFrame(loop);
   }
 
@@ -616,7 +669,7 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
     if (originalEl) originalEl.pause();
     if (raf) cancelAnimationFrame(raf);
     raf = null;
-    playBtn.textContent = "Play";
+    playBtn.textContent = "▶ Play";
   }
   container._hkStopPlayback = pause;
 

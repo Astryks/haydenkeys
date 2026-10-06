@@ -199,10 +199,10 @@ function initDiscoverTab(root, { onStartSong } = {}) {
   root.innerHTML = `
     <div class="hk-discover">
       <div class="hk-upload-banner hk-upload-banner-top">
-        <h2>🎵 Upload any song and learn it!</h2>
-        <p>Got a song that's not in the library below? Upload your own recording and Hayden Keys will
-           figure out the notes, right in your browser.</p>
-        <input type="file" id="hk-discover-upload" accept="audio/*,video/*" />
+        <h2>🎵 Upload any song and we'll find the chords for you!</h2>
+        <p>Not in the library? Pick a song from your phone. We'll work out the notes and easy chords, and show songs that use the same chords.</p>
+        <label class="hk-upload-pick" for="hk-discover-upload">📂 Choose a song</label>
+        <input type="file" id="hk-discover-upload" class="hk-upload-input" accept="audio/*,video/*" />
         <div id="hk-discover-upload-status" class="hk-cal-status"></div>
         <div id="hk-discover-upload-playback"></div>
         <p class="hk-scope-note">

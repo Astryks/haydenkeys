@@ -2248,3 +2248,24 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
 - **Real-piano nudges:** after middle C, the first G chord and the 4-chord loop.
 - **Removed:** separate black-keys, any-size-piano, letters and "back to middle C" cards that broke the flow. Their content is folded into the cards above.
 - **Tested:** all 30 Day 1–3 cards on a phone-sized screen, no errors.
+
+## 2026-10-07: fact check, note numbers, upload improvements
+- **Fact check, songs:**
+  - **Automated checks across all 184 songs:** every chord is a real chord, the chords fit the stated key, the number patterns match the chords, and the 1-5-6-4 labels are true.
+  - **Corrected:**
+    - **Viva La Vida:** IV–V–I–vi, so C D G Em in G (was G D Em C).
+    - **Just the Way You Are:** I–vi–IV–I, so C Am F C (was C G Am F).
+    - **Hey Soul Sister:** E B C#m A (was an inconsistent Em7 C G D).
+    - **Shallow:** verse Em D G, C G D (was G D Em C).
+    - **Let It Be:** chorus second line C G F C (was F C F C).
+    - **Perfect:** chorus Em C G D.
+  - **Downgraded to "close version":** Can You Feel the Love Tonight and Mr. Brightside.
+  - **Key labels:** 12 songs whose chords are written in an easier teaching key now say so, e.g. "G major (original recording in Ab major)", instead of showing the original key next to G chords.
+- **Fact check, lessons:** every Day 1–3 card re-read. Fixed "1 4 5 happy" to say "in every major key".
+- **New Day 2 card "A2, A3, C4?":** the letter is the key and the number is which group. Middle C = C4, and smaller numbers are further left. Press A3 then A2; the As and Cs are labelled with their numbers.
+- **Upload:**
+  - **Heading:** "Upload any song and we'll find the chords for you!" with a big 📂 Choose a song button.
+  - **Play/Pause:** a big button above the piano.
+  - **Note names:** a hint explains them (C4 = middle C, A3 = the A just left of it).
+  - **"These songs use the same chords":** the heard chord loop is compared with every library song in any key, and tapping one opens the full song in Practice. It's a hint, not Shazam-style identification, which needs an online audio fingerprint service.
+  - **Easy mode (just chords) is now the default,** next to Hard mode (every note). Easy mode follows the tempo (1 beat per chord on slow songs, 2 on fast), so it no longer merges chords. The test clip went from "2 chords" to the correct 4.

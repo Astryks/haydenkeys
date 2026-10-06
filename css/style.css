@@ -1052,3 +1052,14 @@ body.hk-lesson-open .hk-rotate-tip { display: none !important; }
 /* Day 1 cards: taller keys in portrait for small fingers */
 @media (orientation: portrait) { body.hk-lesson-open .hk-micro-thread ~ * .hk-keyboard, body.hk-lesson-open #hk-lesson-keyboard .hk-keyboard { height: 190px; } }
 @media (orientation: landscape) and (max-height: 500px) { .hk-lesson-back { height: 32px; padding: 0 10px; font-size: 0.8rem; } }
+
+/* Upload: big Play/Pause above the piano, note-number legend, song hints */
+.hk-upload-bigplay { display: block; width: 100%; margin: 10px 0 6px; min-height: 60px; font-size: 1.4rem; font-weight: 800; border: none; border-radius: 16px; color: #fff; cursor: pointer; background: linear-gradient(135deg, var(--hk-accent), var(--hk-purple)); box-shadow: 0 6px 16px rgba(138, 99, 210, 0.3); }
+.hk-upload-bigplay:active { transform: scale(0.98); }
+.hk-upload-legend { font-size: 0.85rem; color: var(--hk-text-dim); background: var(--hk-panel); border: 1px solid var(--hk-border); border-radius: 12px; padding: 8px 12px; margin: 6px 0; }
+.hk-upload-match-box { background: #f3eeff; border: 1px solid var(--hk-purple-soft); border-radius: 14px; padding: 10px 12px; margin: 8px 0; }
+.hk-upload-match-list { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+.hk-upload-match-list span { color: var(--hk-text-dim); font-weight: normal; }
+.hk-upload-match-box small { color: var(--hk-text-dim); }
+.hk-upload-input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.hk-upload-pick { display: inline-block; margin: 6px 0; padding: 14px 24px; border-radius: 999px; font-size: 1.15rem; font-weight: 800; color: #fff; cursor: pointer; background: linear-gradient(135deg, var(--hk-accent), var(--hk-purple)); box-shadow: 0 6px 16px rgba(138, 99, 210, 0.3); }

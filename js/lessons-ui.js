@@ -252,11 +252,12 @@ const MICRO_CARDS = {
   "m-sing": { say: "Play <b>C</b> and press the <b>top key</b> a bit <b>harder</b>.<br>Now it sings! 🎶", want: { notes: C }, show: C, sing: true, done: "Beautiful! 🎶" },
   "m-another-song": { say: "Same 4 chords, <b>new order</b>:<br><b>G → Em → C → D</b><br>That's the shape of songs like <i>Perfect</i>!", want: { seq: [G, EM, C, D] }, demoSeq: [[G, "G"], [EM, "Em"], [C, "C"], [D, "D"]], done: "Two songs' worth of chords! 🏆" },
   "d2-note": { say: "Each key plays a <b>note</b> 🎵<br>Notes are letters: <b>A B C D E F G</b>… then they start again!<br>Press <b>E</b>.", want: { notes: [64] }, help: [64], done: "That's E! 🎉" },
+  "d2-octave": { say: "Notes have <b>numbers</b> too: <b>A2</b>, <b>A3</b>, <b>C4</b> 🔢<br>The letter is the key. The number is <b>which group</b>.<br><b>Middle C = C4</b>. Smaller number = further <b>left</b>.<br>Press <b>A3</b> (just left of middle C), then <b>A2</b>!", labels: "octave", want: { seq: [[57], [45]] }, done: "A3 then A2: same letter, one group lower! 🎉" },
   "d2-song-key": { say: "Songs have a <b>key</b> too! 🏠<br>It's the song's <b>home</b> chord.<br>Play <b>G → D → G</b>. Back home!", want: { seq: [G, D, G] }, demoSeq: [[G, "home"], [D, "away"], [G, "home"]], done: "This song is in the key of G 🏠" },
   "d2-major": { say: "This is <b>C major</b>: <b>C · E · G</b><br>It sounds <b>happy</b> 😀", want: { notes: C }, show: C, done: "Happy! 😀" },
   "d2-minor": { say: "Now move the middle key <b>one step down</b> to the black key: <b>C · E♭ · G</b><br>It sounds <b>sad</b> 🥲 That's <b>C minor</b>!", want: { notes: CMIN }, show: CMIN, done: "Sad! 🥲 One key changed it." },
   "d2-am": { say: "<b>A minor</b>: <b>A · C · E</b><br>All white keys, and it's sad 🥲", want: { notes: AM }, show: AM, done: "That's A minor! 🎉" },
-  "d2-pattern": { say: "A secret 🤫 In <b>every</b> key:<br>Chords <b>1 · 4 · 5</b> are happy 😀<br>Chords <b>2 · 3 · 6</b> are sad 🥲<br>That's why Em (chord 6) sounded sad!", want: { tap: true }, demoSeq: [[G, "1 😀"], [C, "4 😀"], [D, "5 😀"], [EM, "6 🥲"]], done: "1 4 5 happy · 2 3 6 sad 👍" },
+  "d2-pattern": { say: "A secret 🤫 In every <b>major</b> key:<br>Chords <b>1 · 4 · 5</b> are happy 😀<br>Chords <b>2 · 3 · 6</b> are sad 🥲<br>That's why Em (chord 6) sounded sad!", want: { tap: true }, demoSeq: [[G, "1 😀"], [C, "4 😀"], [D, "5 😀"], [EM, "6 🥲"]], done: "1 4 5 happy · 2 3 6 sad 👍" },
   "d2-key-c": { say: "Same 4 chords, new <b>key</b> (C):<br><b>C → G → Am → F</b><br>Songs like <i>Let It Be</i>!", want: { seq: [KC_C, KC_G, KC_AM, KC_F] }, demoSeq: [[KC_C, "C"], [KC_G, "G"], [KC_AM, "Am"], [KC_F, "F"]], done: "Same numbers, new key! 🏆" },
   "d3-left": { say: "Your <b>left hand</b> plays the <b>low</b> notes 👈<br>Press the low <b>G</b> (far left) with your left hand.", want: { notes: [43] }, show: [43], done: "Left hand ready! 👈" },
   "d3-together": { say: "Now <b>both hands</b>! 🙌<br>Left: low <b>G</b><br>Right: the <b>G chord</b>", want: { notes: H_G }, show: H_G, done: "Two hands! 🙌" },
@@ -741,7 +742,7 @@ function initLessonsTab(root) {
     };
     // C3 to E5: middle C sits right in the middle of the screen.
     // Narrow range = bigger keys. Day 3 adds the low bass notes.
-    const [lo, hi] = id.startsWith("d3-") ? [43, 72] : [53, 72];
+    const [lo, hi] = id.startsWith("d3-") || id === "d2-octave" ? [43, 72] : [53, 72];
     const kb = lessonKeyboard(keyboardWrap, { startMidi: lo, endMidi: hi, markMiddleC: !card.hideMiddleC });
     if (card.noKeys) { keyboardWrap.style.display = "none"; main.querySelector("#hk-lesson-highway")?.classList.add("hk-hidden"); }
     // Labels on the keys: every white key's letter, or numbers counted from G.
@@ -752,7 +753,7 @@ function initLessonsTab(root) {
         kb.keyElements.forEach((el, m) => { if ([1, 3].includes(m % 12)) el.classList.add("hk-key-group2");  });
         return;
       }
-      const map = card.labels === "fromG" ? FROM_G : Object.fromEntries([...kb.keyElements.keys()].filter((m) => ![1, 3, 6, 8, 10].includes(m % 12)).map((m) => [m, midiToName(m).replace(/-?\d+$/, "")]));
+      const map = card.labels === "fromG" ? FROM_G : card.labels === "octave" ? Object.fromEntries([...kb.keyElements.keys()].filter((m) => m % 12 === 0 || m % 12 === 9).map((m) => [m, midiToName(m)])) : Object.fromEntries([...kb.keyElements.keys()].filter((m) => ![1, 3, 6, 8, 10].includes(m % 12)).map((m) => [m, midiToName(m).replace(/-?\d+$/, "")]));
       Object.entries(map).forEach(([m, label]) => {
         const el = kb.keyElements.get(Number(m));
         if (!el || el.querySelector(".hk-key-notename")) return;

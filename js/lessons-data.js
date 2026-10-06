@@ -124,6 +124,7 @@ const MICRO_LESSONS = [
   { id: "m-another-song", title: "Another song", subtitle: "Same 4 chords, new order", description: "G, Em, C, D: the shape of songs like Perfect." },
   // Day 2: words musicians use, happy vs sad, a new key
   { id: "d2-note", title: "Keys make notes", subtitle: "Day 2", description: "Each key plays a note with a letter name." },
+  { id: "d2-octave", title: "A2, A3, C4?", subtitle: "Notes have numbers", description: "The number says which group of keys a note is in." },
   { id: "d2-song-key", title: "A song's home", subtitle: "The other kind of key", description: "A song's key is its home chord." },
   { id: "d2-major", title: "Happy chord", subtitle: "Major", description: "Major chords sound happy." },
   { id: "d2-minor", title: "Sad chord", subtitle: "Minor", description: "Move one key down: now it's sad." },

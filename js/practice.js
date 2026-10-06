@@ -223,13 +223,11 @@ function initPracticeTab(root, { initialSong } = {}) {
         <div id="hk-camera-panel" class="hk-camera-panel hk-hidden"></div>
         <div id="hk-calibration-panel" class="hk-calibration-panel hk-hidden"></div>
         <section class="hk-upload-section">
-          <h3>Practice with your own recording</h3>
-          <p>Upload a recording you made or legally own. Transcription runs
-             locally in your browser using Spotify's <code>basic-pitch</code>
-             (Apache-2.0, via TensorFlow.js), vendored directly in this repo
-             — no CDN, nothing uploaded to a server. See
-             THIRD_PARTY_NOTICES.md for license details.</p>
-          <input type="file" id="hk-audio-upload" accept="audio/*,video/*" />
+          <h3>🎵 Upload any song and we'll find the chords for you!</h3>
+          <p>Pick a song from your phone (a few seconds is enough). We'll show the notes falling onto the piano, the easy chords to play, and songs that use the same chords.</p>
+          <p class="hk-honest-note">Use a recording you made or own. It's worked out right on your device; nothing is uploaded anywhere.</p>
+          <label class="hk-upload-pick" for="hk-audio-upload">📂 Choose a song</label>
+          <input type="file" id="hk-audio-upload" class="hk-upload-input" accept="audio/*,video/*" />
           <div id="hk-upload-status" class="hk-cal-status"></div>
           <div id="hk-upload-playback"></div>
         </section>
