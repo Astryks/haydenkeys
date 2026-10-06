@@ -117,6 +117,14 @@ function watchChats(root) {
 }
 
 function chatHtml(html, pose) {
+  // A single message (no follow-up questions) is drawn straight away, so
+  // lessons can wire up the buttons and widgets inside it immediately.
+  // Conversations with several questions still play out one tap at a time.
+  const exchanges = (html.match(/<h3/g) || []).length;
+  if (exchanges <= 1 && !/data-q=/.test(html)) {
+    const p = poseFor(pose);
+    return `<div class="hk-chat" data-ready="1"><div class="hk-chat-thread"><div class="hk-chat-msg hk-chat-them"><div class="hk-chat-avatar">${pandaSvg(p, { item: p === "idle" ? "surprise" : undefined })}</div><div class="hk-chat-bubble">${html}</div></div></div></div>`;
+  }
   return `<div class="hk-chat" data-pose="${pose}"><template>${html}</template></div>`;
 }
 

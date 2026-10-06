@@ -1433,3 +1433,37 @@ body.hk-gold-keys .hk-key-black { background: linear-gradient(#5a4310, #2e2206) 
 @keyframes hk-chip-nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
 /* Little keyboard pictures inside chat bubbles */
 .hk-keys-pic { display: block; width: 100%; height: auto; margin: 8px 0 4px; }
+
+/* Key letters: always centred on their own key, never on the line between
+   two keys, and on white keys always below the black keys, on a small
+   white badge so they read clearly on any key colour. */
+.hk-key .hk-key-notename-big { left: 50% !important; right: auto !important; transform: translateX(-50%) !important; }
+.hk-key-white .hk-key-letter { top: auto; bottom: 14%; }
+.hk-key-white .hk-key-notename, .hk-key-white .hk-key-letter {
+  background: rgba(255, 255, 255, 0.92); border-radius: 7px; padding: 1px 4px; min-width: 1.1em; text-align: center;
+  box-shadow: 0 1px 2px rgba(42, 42, 58, 0.18); color: #2a2a3a;
+}
+.hk-phone-note { display: flex; gap: 8px; align-items: flex-start; margin: 6px 0 6px 64px; padding: 8px 12px; border-radius: 14px; background: #fff7e0; border: 1px dashed #f2b630; font-size: 0.88rem; color: #5a4a2a; }
+.hk-phone-note .hk-icon { flex: 0 0 auto; margin-top: 1px; }
+@media (max-width: 520px) { .hk-phone-note { margin-left: 0; } }
+
+/* ===== Clean home ===== */
+.hk-level-chip { display: none !important; }
+.hk-tagline { margin: 2px 0 0; font-size: 1rem; font-weight: 600; color: var(--hk-text-dim); }
+.hk-header h1 { margin: 2px 0 0; font-size: 1.6rem; }
+.hk-header .hk-logo { width: 56px; height: 62px; }
+.hk-tabs { display: grid !important; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 16px; margin: 10px auto 14px; max-width: 560px; }
+.hk-tab { display: flex !important; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 92px; padding: 10px 6px !important;
+  border-radius: 20px !important; border: 2px solid #e6e0f7 !important; background: #fff !important; box-shadow: 0 6px 16px rgba(90, 60, 160, 0.10);
+  font-size: 1rem !important; font-weight: 800 !important; color: #3a2d6b !important; }
+.hk-tab .hk-icon { width: 38px; height: 38px; }
+.hk-tab-active { border-color: #8a63d2 !important; background: linear-gradient(160deg, #f4efff, #fff) !important; box-shadow: 0 8px 22px rgba(138, 99, 210, 0.28); }
+.hk-today-clean { max-width: 560px; margin: 0 auto; padding: 0 16px; }
+.hk-today-clean .hk-hero { width: 100%; }
+/* Footer links (privacy, credits) only on My songs, not on the home screen */
+body[data-tab="lessons"] .hk-footer, body:not([data-tab]) .hk-footer, body[data-tab="practice"] .hk-footer { display: none; }
+.hk-home-upload { display: flex; align-items: center; gap: 12px; width: 100%; margin-top: 14px; padding: 14px 16px; border-radius: 20px; border: 2px dashed #c9b6f7; background: #fff; text-align: left; cursor: pointer; box-shadow: 0 4px 12px rgba(90, 60, 160, 0.08); }
+.hk-home-upload > span:nth-child(2) { flex: 1; display: flex; flex-direction: column; }
+.hk-home-upload b { font-size: 1.1rem; color: #3a2d6b; }
+.hk-home-upload > span:nth-child(2) > span { font-size: 0.9rem; color: var(--hk-text-dim); }
+.hk-home-upload-go { padding: 8px 14px; border-radius: 999px; background: linear-gradient(135deg, var(--hk-accent), var(--hk-purple)); color: #fff; font-weight: 800; }

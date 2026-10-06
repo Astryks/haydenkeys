@@ -105,8 +105,7 @@ const MINUET_IN_G_OPENING = [74, 67, 69, 71, 72, 74, 67, 67];
 // Day 1, one tiny step per lesson: one short message, one thing to press.
 // Played by runMicroLesson() in lessons-ui.js (cards in MICRO_CARDS).
 const MICRO_LESSONS = [
-  { id: "m-intro", title: "4 chords, 100+ songs", subtitle: "Step 1: find middle C", description: "4 chords play over 100 songs. First, let's get to know your piano." },
-  { id: "m-find-c", title: "Find middle C", subtitle: "Your first key", description: "Find middle C on your piano." },
+  { id: "m-find-c", title: "4 chords, 100+ songs: find middle C", subtitle: "Step 1: middle C", description: "In a minute you'll learn 4 chords that play 100+ songs. First, find middle C on your piano." },
   { id: "m-white-black", title: "Key names: A0, A1, A2…", subtitle: "Letters and numbers", description: "White keys are letters A to G, and each gets a number." },
   { id: "m-black", title: "Black keys", subtitle: "Groups of 2 and 3", description: "The notes in between: sharps and flats." },
   { id: "m-find-g", title: "Find G", subtitle: "Just left of middle C", description: "From middle C, step left to G." },

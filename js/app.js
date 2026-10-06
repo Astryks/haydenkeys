@@ -1,3 +1,4 @@
+import { icon } from "./icons.js";
 import { initDiscoverTab } from "./discover.js";
 import { initPracticeTab } from "./practice.js";
 import { initPracticeHome } from "./practice-home.js";
@@ -29,7 +30,12 @@ let mySongsApi = null;
 
 // Pages without a tab button (Roadmap, Discover…) are opened by name.
 window.addEventListener("hk-show-tab", (e) => showTab(e.detail));
+const TAB_ICONS = { lessons: "piano", practice: "play", mysongs: "song" };
+document.querySelectorAll(".hk-tab[data-tab]").forEach((b) => {
+  if (TAB_ICONS[b.dataset.tab] && !b.querySelector(".hk-icon")) b.innerHTML = `${icon(TAB_ICONS[b.dataset.tab], 36)}<span>${b.textContent.trim()}</span>`;
+});
 function showTab(name) {
+  document.body.dataset.tab = name;
   TABS.forEach((t) => {
     panels[t].classList.toggle("hk-hidden", t !== name);
     document.querySelector(`.hk-tab[data-tab="${t}"]`)?.classList.toggle("hk-tab-active", t === name);

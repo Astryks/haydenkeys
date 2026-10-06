@@ -2338,6 +2338,7 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
 
 ## Next up (as of 2026-10-06)
 - After Hayden Keys and Jaxx Guitar, we are launching a **fitness app** and a **jiu jitsu app** next.
+- More app ideas after those: **public speaking**, **singing**, **investing and markets**, and **dance**.
 
 ## 2026-10-07 — iOS build 21
 - Numbers card: "Let's try something new: numbers instead of chord names!"
@@ -2365,3 +2366,10 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
 - Chats: the "learn more" bubble is solid purple, pulsing, with an arrow and a "Tap the purple bubble to keep going 👇" hint; "Skip to the end" is a small link.
 - Pictures in chats: middle C with the 2 black keys (and the group of 3 for contrast); a full 88-key piano with every A (A0–A7) in purple and C4 marked; A2, A3 and C4 in Lesson 2.
 - Lesson 1 opening made visual and short: welcome ("go to your piano"), then "This is middle C" with the picture and "Found it! ✅" / "I can't find it 🤔" (88 keys → 40th, 76 → 33rd, 61 → 25th), then A0–A7 as a picture with same-letter colours on the keys, then a new Black keys card (picture of the 2 and 3 groups with sharps), then straight to G and chords.
+- Build 24:
+  - First card merged: welcome ("in about a minute you'll learn 4 chords… bear with us for the basics") + "Let's start by finding middle C" with the picture and Found it / I can't find it, all in one card.
+  - Key letters centred on their own key (a CSS rule had shifted big labels half a key left, onto the line between keys), on a white badge, below the black keys.
+  - Chord cards: "I know it's hard to press 3 keys at once on the app… tap them one at a time; on your piano play them together."
+  - Home page cleaned up: tagline "Learn any song in the piano for free!", three big tiles (Lessons / Practice / My songs) with icons, one Continue card, and "Upload any song and we'll find the chords for you" (opens Practice + the file picker). Footer links only on My songs.
+  - Single-message chat bubbles render instantly, fixing older lessons whose buttons/widgets inside the bubble weren't wired (e.g. Pedals, Tom & Jerry, the original Lesson 1 tuner step). Three "Next lesson →" buttons went back to the map; now they go to the next lesson.
+  - Full curriculum smoke test (scripted, every lesson): 140/157 complete automatically; the rest need real key presses/quiz answers the script can't make (checked individually).

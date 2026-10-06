@@ -316,14 +316,14 @@ const IS_AM = [45, 57, 60, 64], IS_F = [41, 57, 60, 64], IS_C = [48, 55, 60, 64]
 const C7 = [60, 64, 67, 70], F7 = [53, 57, 60, 63], G7 = [55, 59, 62, 65], DM7 = [62, 65, 69, 72], CMAJ7 = [60, 64, 67, 71];
 const F_MAJ = [65, 69, 72], E_MAJ = [64, 68, 71], D_MIN = [62, 65, 69];
 const MICRO_CARDS = {
-  "m-intro": { say: "Welcome to Hayden Keys! 🎹<br>Just <b>4 chords</b> play <b>100+ songs</b>:<br><b>G · D · Em · C</b><br><br>First, <b>go to your piano</b> (or keyboard) 🎹", want: { tap: true }, ok: "I'm at my piano! 🎹", noKeys: true, done: "Let's find middle C! 🚀" },
+  "m-intro": { say: "Welcome to Hayden Keys! 🎹<br>In about <b>a minute</b> you'll learn <b>4 chords</b> that play <b>100+ songs</b>:<br><b>G · D · Em · C</b> 🎶<br><br>But bear with us while we cover the <b>basics</b> first. It'll only take a few seconds! ⏱️<br><br>Go to <b>your piano</b> (or keyboard) 🎹", want: { tap: true }, ok: "I'm at my piano! 🎹", noKeys: true, done: "Let's find middle C! 🚀" },
   "m-black-keys": { say: "Look at the <b>black keys</b> 👀<br>They come in groups of <b>2</b> and <b>3</b>, again and again.<br>Press any black key in a group of <b>2</b>!", want: { pcs: [1, 3] }, labels: "groups", done: "That's your map! 🗺️ Every piano has it." },
   "m-any-piano": { say: "Pianos come in <b>all sizes</b> 🎹<br>Middle C isn't always in the exact middle!<br>🔎 Every <b>C</b> is just <b>left of the 2 black keys</b>.<br>Big piano (88 keys): the <b>4th C</b> from the left.<br>Smaller keyboard: usually the <b>3rd C</b>.", want: { tap: true }, ok: "Got it 👍", done: "Find the 2 black keys, go left. Easy! 🎉" },
-  "m-find-c": { say: `This is <b>middle C</b> 🏠<br>The white key just <b>left</b> of the <b>2 black keys</b> near the middle.${PIC_MIDDLE_C}Find it on <b>your piano</b>!`, want: { tap: true }, ok: "Found it! ✅", cantFind: `<b>No problem! Count from the left</b> 👇<br>🎹 <b>88 keys</b> (full piano): the <b>40th</b> key<br>🎹 <b>76 keys</b>: the <b>33rd</b> key<br>🎹 <b>61 keys</b> (keyboard): the <b>25th</b> key<br><small>Count every key, white and black.</small>`, labels: "groups", show: [60], hideMiddleC: true, done: "That's middle C, home base! 🏠" },
+  "m-find-c": { say: `Welcome to Hayden Keys! 🎹<br>In about <b>a minute</b> you'll learn <b>4 chords</b> that play <b>100+ songs</b>: <b>G · D · Em · C</b> 🎶<br>But bear with us while we cover the <b>basics</b> first. It'll only take a few seconds! ⏱️<br><br><b>Let's start by finding middle C</b> 🏠<br>It's the white key just <b>left</b> of the <b>2 black keys</b> near the middle.${PIC_MIDDLE_C}Go to <b>your piano</b> (or keyboard) and find it!`, want: { tap: true }, ok: "Found it! ✅", cantFind: `<b>No problem! Count from the left</b> 👇<br>🎹 <b>88 keys</b> (full piano): the <b>40th</b> key<br>🎹 <b>76 keys</b>: the <b>33rd</b> key<br>🎹 <b>61 keys</b> (keyboard): the <b>25th</b> key<br><small>Count every key, white and black.</small>`, labels: "groups", show: [60], hideMiddleC: true, done: "That's middle C, home base! 🏠" },
   "m-white-black": { say: `White keys are letters <b>A B C D E F G</b>, again and again 🔤<br>Each one gets a number: <b>A0, A1, A2</b>…${PIC_ALL_AS}Same letter, same colour. Middle C is <b>C4</b>.`, labels: "octave", want: { tap: true }, ok: "Got it 👍", done: "Letters + numbers = every key's name! 🔤" },
   "m-black": { say: `Black keys are the notes <b>in between</b> ♯ ♭<br>They come in groups of <b>2</b> and <b>3</b>.${PIC_BLACK}Press a black key in a group of <b>3</b> 💙`, labels: "groups3", want: { pcs: [6, 8, 10] }, done: "That's a black key! ♯ 🎉" },
   "m-find-g": { say: "Our home key is <b>G</b> 🏠<br>From middle C, step <b>left</b>:<br><b>C → B → A → G</b><br>Press <b>G</b>!", labels: "letters", want: { notes: [55] }, help: [55], done: "That's G, our home! 🏠" },
-  "m-chord-g": { say: "Let's make a <b>chord</b> on G!<br>Press <b>G</b>, skip one, <b>B</b>, skip one, <b>D</b>.<br>That's the <b>G chord</b>!<br><small>📱 Tricky on a phone? Tap the 3 keys one by one. Then play it on your own piano, where the real practice happens 🎹</small>", want: { notes: G }, show: G, tip: "🎹 Now play the G chord on <b>your piano</b> too!", done: "Your first chord! 🎹" },
+  "m-chord-g": { say: "Let's make a <b>chord</b> on G!<br>Press <b>G</b>, skip one, <b>B</b>, skip one, <b>D</b>.<br>That's the <b>G chord</b>!", want: { notes: G }, show: G, tip: "🎹 Now play the G chord on <b>your piano</b> too!", done: "Your first chord! 🎹" },
   "m-letters": { say: "Every key has a <b>letter</b> 🔤<br>The white keys go <b>C D E F G A B</b>… then start again!<br>Find <b>G</b> and press it.", labels: "letters", want: { notes: [67] }, done: "There's G! 🎉" },
   "m-jargon": { chat: `<h3 data-q="Wait, is G a key or a chord? 🤯">Good question! Both, kind of 😄</h3>
       <p>🎹 The <b>G key</b> is just one key.</p>
@@ -486,31 +486,22 @@ function todayHtml() {
       <button class="hk-hero" data-lesson="${next.id}">
         <div class="hk-hero-panda">${pandaSvg(started ? "idle" : "cheer")}</div>
         <div class="hk-hero-body">
-          <div class="hk-hero-kicker">${started ? `Lesson ${number} of ${total}` : "Your piano journey starts here"}</div>
+          <div class="hk-hero-kicker">${started ? `Lesson ${number} of ${total}` : "Start here"}</div>
           <div class="hk-hero-title">${next.title}</div>
           <div class="hk-hero-bar"><span style="width:${Math.max(3, pct)}%"></span></div>
-          <div class="hk-hero-meta">${started ? `${doneCount} done${streak.count ? ` · ${icon("flame", 16)} ${streak.count}-day streak` : ""} · Level ${lv.level}` : "One tiny step at a time · 5 minutes a day"}</div>
+          ${streak.count ? `<div class="hk-hero-meta">${icon("flame", 16)} ${streak.count}-day streak</div>` : ""}
           <span class="hk-hero-cta">${started ? "Continue ▶" : "Start now ▶"}</span>
         </div>
       </button>`
     : card("trophy", "Every lesson done!", "Pick any topic again from the Roadmap", "data-go-roadmap", false, "Open");
-  const songs = unlockedSongs();
-  const nxt = nextReward();
-  const extras = `
-      ${songs.length ? card("song", `Your unlocked song: ${songs[songs.length - 1]}`, "A reward for your streak. Play it now!", `data-unlocked-song="${songs[songs.length - 1]}"`, false, "Play") : ""}
-      ${nxt ? `<div class="hk-next-reward">${icon(nxt.icon, 34)}<div><b>Next reward: ${nxt.title.replace(/^New song: /, "")}</b><span>${icon("flame", 14)} Keep a <b>${nxt.when.streak}-day streak</b> to unlock it (you're on ${streak.count}).</span></div></div>` : ""}`;
-  return `
-    <div class="hk-today">
-      ${hero}
-      ${extras}
-      ${started ? `<h3 class="hk-today-sub">Also today</h3>` : ""}
-      ${started ? card("review", "2-minute review", "A quick warm-up of what you've learned", 'data-lesson="daily-review"', reviewDoneToday(), "Start") : ""}
-      ${started ? card("song", "Play a song", "Practice any song for a few minutes", "data-go-practice", done("practice"), "Go") : ""}
-      <div class="hk-today-links">
-        <button class="hk-btn" data-go-roadmap type="button">${icon("piano", 22)} See all lessons</button>
-        ${started ? `<button class="hk-btn hk-funfact-open" type="button">${icon("fact", 22)} Did you know?</button>` : ""}
-      </div>
-    </div>`;
+  // Home: just the one big "continue" card. Everything else lives in the
+  // tabs (and the lesson list opens from the lesson screen).
+  return `<div class="hk-today hk-today-clean">${hero}
+    <button class="hk-home-upload" data-home-upload type="button">
+      ${icon("folder", 40)}
+      <span><b>Upload any song</b><span>and we'll find the chords for you</span></span>
+      <span class="hk-home-upload-go">Upload</span>
+    </button></div>`;
 }
 
 // Roadmap tab: every topic, grouped; tap any one to open it.
@@ -635,6 +626,12 @@ function initLessonsTab(root) {
       btn.addEventListener("click", () => startLesson(btn.dataset.lesson));
     });
     main.querySelector("[data-go-practice]")?.addEventListener("click", () => document.querySelector('[data-tab="practice"]')?.click());
+    // Home "Upload any song": open Practice and the file picker in the same tap.
+    main.querySelector("[data-home-upload]")?.addEventListener("click", () => {
+      document.querySelector('[data-tab="practice"]')?.click();
+      const input = document.querySelector("#hk-ph-file");
+      if (input) input.click();
+    });
     main.querySelector("[data-unlocked-song]")?.addEventListener("click", (e) => window.dispatchEvent(new CustomEvent("hk-open-song", { detail: { title: e.currentTarget.dataset.unlockedSong } })));
     main.querySelectorAll("[data-go-roadmap]").forEach((b) => b.addEventListener("click", () => window.dispatchEvent(new CustomEvent("hk-show-tab", { detail: "roadmap" }))));
     renderSidebar();
@@ -962,6 +959,11 @@ function initLessonsTab(root) {
     content.innerHTML = (card.chat ? chatHtml(card.chat, "idle") : "") + `<div class="hk-micro-thread" id="hk-micro-thread"><div class="hk-micro"><div class="hk-micro-avatar">${pandaSvg(card.want.choice ? "think" : card.sing ? "sing" : card.want.tap ? "idle" : "play", { item: card.want.tap ? "surprise" : undefined })}</div><div class="hk-micro-bubble" id="hk-micro-say"><span class="hk-chat-typing"><i></i><i></i><i></i></span></div></div></div>`;
     const thread = content.querySelector("#hk-micro-thread");
     setTimeout(() => { if (!finished) say.innerHTML = card.say; }, 550);
+    // Chord cards: pressing 3 keys at once on a phone is hard; say so.
+    const w0 = card.want;
+    if ((w0.notes && w0.notes.length >= 3) || (w0.seq && w0.seq.some((c) => c.length >= 3))) {
+      thread.insertAdjacentHTML("beforeend", `<div class="hk-phone-note">${icon("piano", 20)}<span>I know it's hard to press 3 keys at once on the app! On your phone you can tap them <b>one at a time</b>. The real practice is on <b>your piano</b>: there, play them <b>together</b>.</span></div>`);
+    }
     const reply = (html, cls = "") => {
       thread.querySelector(".hk-micro-oops")?.remove();
       thread.insertAdjacentHTML("beforeend", `<div class="hk-micro hk-micro-reply ${cls}"><div class="hk-micro-avatar">${pandaSvg(cls.includes("yay") ? nextTrick("yay") : cls.includes("oops") ? nextTrick("try") : "idle", { item: cls.includes("yay") || cls.includes("oops") ? undefined : "surprise" })}</div><div class="hk-micro-bubble">${html}</div></div>`);
@@ -1853,7 +1855,7 @@ function initLessonsTab(root) {
     controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Next lesson →</button>`;
     controls.querySelector("#hk-done").addEventListener("click", () => {
       markLessonComplete("lesson-chopin");
-      showMap();
+      startNextLesson();
     });
   }
 
@@ -2924,12 +2926,16 @@ function initLessonsTab(root) {
       <p class="hk-honest-note">(Not a real pedal simulation — just the notes held short vs. held long enough
          to overlap, which is the actual audible effect.)</p>`,
       "assets/mascot-poses/grand-piano.png");
-    controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Fun, got it — back to lessons</button>`;
-    content.querySelector("#hk-pedal-off").addEventListener("click", () => playPhrase(false));
-    content.querySelector("#hk-pedal-on").addEventListener("click", () => playPhrase(true));
+    controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Fun, got it! Next lesson →</button>`;
+    // The buttons live inside the chat bubble, which is built a moment
+    // later, so listen on the container.
+    content.addEventListener("click", (e) => {
+      if (e.target.closest("#hk-pedal-off")) playPhrase(false);
+      if (e.target.closest("#hk-pedal-on")) playPhrase(true);
+    });
     controls.querySelector("#hk-done").addEventListener("click", () => {
       markLessonComplete("lesson-pedals");
-      showMap();
+      startNextLesson();
     });
   }
 
@@ -3276,7 +3282,7 @@ function initLessonsTab(root) {
     controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Next lesson →</button>`;
     controls.querySelector("#hk-done").addEventListener("click", () => {
       markLessonComplete("lesson-20");
-      showMap();
+      startNextLesson();
     });
   }
 
@@ -4454,13 +4460,15 @@ function initLessonsTab(root) {
           </div>
           <p class="hk-honest-note">A true virtuoso showpiece — years beyond this course — so here you hear its two
              home chords rather than a simplified "version" that wouldn't be the real thing.</p>`, "assets/mascot-poses/grand-piano.png");
-        el.querySelector('[data-hear="lassan"]').addEventListener("click", () => {
-          kb.highlightHands({ left: [C_SHARP_MINOR[0]], right: C_SHARP_MINOR.slice(1), rightLabel: "C#m" });
-          playChord(C_SHARP_MINOR, { duration: 2 });
-        });
-        el.querySelector('[data-hear="friska"]').addEventListener("click", () => {
-          kb.highlightHands({ left: [F_SHARP_MAJOR[0]], right: F_SHARP_MAJOR.slice(1), rightLabel: "F#" });
-          playChord(F_SHARP_MAJOR, { duration: 2 });
+        el.addEventListener("click", (e) => {
+          const which = e.target.closest("[data-hear]")?.dataset.hear;
+          if (which === "lassan") {
+            kb.highlightHands({ left: [C_SHARP_MINOR[0]], right: C_SHARP_MINOR.slice(1), rightLabel: "C#m" });
+            playChord(C_SHARP_MINOR, { duration: 2 });
+          } else if (which === "friska") {
+            kb.highlightHands({ left: [F_SHARP_MAJOR[0]], right: F_SHARP_MAJOR.slice(1), rightLabel: "F#" });
+            playChord(F_SHARP_MAJOR, { duration: 2 });
+          }
         });
       },
       (el, kb) => {
