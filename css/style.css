@@ -988,3 +988,20 @@ body.hk-lesson-open .hk-rotate-tip { display: none !important; }
 .hk-micro-progress { margin-top: 6px; font-size: 1.1rem; color: var(--hk-accent); letter-spacing: 4px; }
 .hk-micro-done { font-size: 1.5rem; font-weight: 700; color: var(--hk-accent-2); }
 .hk-micro-next { font-size: 1.15rem; padding: 14px 26px; min-height: 52px; }
+
+/* ===== Playful chat cards ===== */
+.hk-micro-thread { max-width: 640px; margin: 8px auto; display: flex; flex-direction: column; gap: 10px; }
+.hk-micro-thread .hk-micro { margin: 0; animation: hk-pop 0.35s cubic-bezier(.2,1.4,.4,1); }
+.hk-micro-bubble { font-size: 1.3rem; border-radius: 22px; border-bottom-left-radius: 6px; background: #fff; border: 2px solid var(--hk-accent-soft); }
+.hk-micro-bubble b { color: var(--hk-accent); font-weight: 800; }
+.hk-micro-yay .hk-micro-bubble { background: linear-gradient(135deg, #fff3f8, #eef7ff); border-color: var(--hk-accent-2-soft); }
+.hk-micro-yay .hk-micro-avatar { animation: hk-hop 0.6s ease-out 2; }
+.hk-micro-oops .hk-micro-bubble { font-size: 1.1rem; background: #fff8e8; border-color: #f3d58a; animation: hk-wiggle 0.4s ease-in-out; }
+.hk-micro-done { font-size: 1.45rem; font-weight: 800; background: linear-gradient(90deg, var(--hk-accent-2), var(--hk-purple)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hk-micro-next { font-size: 1.2rem; font-weight: 800; padding: 14px 30px; min-height: 56px; border-radius: 999px; border: none; color: #fff; background: linear-gradient(135deg, var(--hk-accent), var(--hk-purple)); box-shadow: 0 6px 16px rgba(138, 99, 210, 0.35); animation: hk-pop 0.4s cubic-bezier(.2,1.4,.4,1), hk-nudge 1.6s ease-in-out 0.6s infinite; }
+.hk-micro-choice { font-size: 1.15rem; padding: 12px 22px; border-radius: 999px; min-height: 52px; }
+@keyframes hk-pop { from { opacity: 0; transform: scale(0.85) translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes hk-hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } }
+@keyframes hk-wiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-2deg); } 75% { transform: rotate(2deg); } }
+@keyframes hk-nudge { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@media (prefers-reduced-motion: reduce) { .hk-micro-thread .hk-micro, .hk-micro-next, .hk-micro-yay .hk-micro-avatar, .hk-micro-oops .hk-micro-bubble { animation: none; } }

@@ -220,10 +220,19 @@ function timelineHtml() {
 // One short message, one thing to press, a "Hear it" button. The card
 // moves on when the learner plays it (screen, MIDI keyboard or mic).
 const G = [67, 71, 74], D = [62, 66, 69], EM = [64, 67, 71], C = [60, 64, 67];
+const CMIN = [60, 63, 67], AM = [57, 60, 64];
+// The same loop in the key of C, kept close to middle C.
+const KC_C = [60, 64, 67], KC_G = [55, 59, 62], KC_AM = [57, 60, 64], KC_F = [53, 57, 60];
+// Two hands: a low left-hand note (the chord's letter) under the right-hand chord.
+const H_G = [55, ...G], H_D = [50, ...D], H_EM = [52, ...EM], H_C = [48, ...C];
+// The last card of each day also completes the older, wordier lessons it
+// replaces, so Today moves straight on (they stay in the Roadmap).
+const DAY_ENDS = { "m-another-song": [1, ["lesson-1"]], "d2-key-c": [2, ["lesson-2", "lesson-4"]], "d3-song": [3, ["lesson-twohand-preview", "lesson-eartraining"]] };
 const MICRO_CARDS = {
   "m-find-c": { say: "Let's find <b>middle C</b> 🎹<br>See the <b>2 black keys</b> in the middle?<br>Middle C is just <b>left</b> of them. Press it!", want: { notes: [60] }, help: [60], hideMiddleC: true, done: "Yes! That's middle C 🎉" },
   "m-find-g": { say: "From middle C, count the white keys:<br><b>C · D · E · F · G</b><br>Press <b>G</b>!", want: { notes: [67] }, help: [67], done: "That's G! 🎉" },
   "m-chord-g": { say: "Press <b>3 keys</b>: <b>G · B · D</b><br>That's the <b>G chord</b>!", want: { notes: G }, show: G, done: "Your first chord! 🎹" },
+  "m-jargon": { say: "🚨 <b>Jargon alert!</b><br>A <b>key</b> = one thing you press.<br>A <b>chord</b> = 3 keys together.<br>You just played the <b>G chord</b>!", want: { tap: true }, demoSeq: [[[67], "key"], [G, "chord"]], done: "Key 🎹 vs chord 🎹🎹🎹 👍" },
   "m-another-g": { say: "Wait… is there <b>another G</b>? 🤔<br>Yes! The keys repeat. Press a <b>different G</b>.", want: { pc: 7, not: 67 }, help: [55], done: "There's a G in every group! 🎉" },
   "m-back-g": { say: "Back to <b>middle C</b>…<br>now play the <b>G chord</b> again.", want: { notes: G }, show: G, done: "Nice! 👏" },
   "m-chord-em": { say: "Chord 2: <b>E minor</b><br>Press <b>E · G · B</b>. It sounds a little sad 🥲", want: { notes: EM }, show: EM, done: "That's E minor! 🎉" },
@@ -234,6 +243,19 @@ const MICRO_CARDS = {
   "m-soft-strong": { say: "Play <b>G</b> <b>softly</b>… then <b>strong</b> 💪<br>It feels different!<br><small>(Best on a real piano.)</small>", want: { times: 2, notes: G }, show: G, soft: true, done: "Soft and strong. Nice! 🎉" },
   "m-sing": { say: "Play <b>C</b> and press the <b>top key</b> a bit <b>harder</b>.<br>Now it sings! 🎶", want: { notes: C }, show: C, sing: true, done: "Beautiful! 🎶" },
   "m-another-song": { say: "Same 4 chords, <b>new order</b>:<br><b>G → Em → C → D</b><br>That's the shape of songs like <i>Perfect</i>!", want: { seq: [G, EM, C, D] }, demoSeq: [[G, "G"], [EM, "Em"], [C, "C"], [D, "D"]], done: "Two songs' worth of chords! 🏆" },
+  "d2-note": { say: "Each key plays a <b>note</b> 🎵<br>Notes are letters: <b>A B C D E F G</b>… then they start again!<br>Press <b>E</b>.", want: { notes: [64] }, help: [64], done: "That's E! 🎉" },
+  "d2-song-key": { say: "Songs have a <b>key</b> too! 🏠<br>It's the song's <b>home</b> chord.<br>Play <b>G → D → G</b>. Back home!", want: { seq: [G, D, G] }, demoSeq: [[G, "home"], [D, "away"], [G, "home"]], done: "This song is in the key of G 🏠" },
+  "d2-major": { say: "This is <b>C major</b>: <b>C · E · G</b><br>It sounds <b>happy</b> 😀", want: { notes: C }, show: C, done: "Happy! 😀" },
+  "d2-minor": { say: "Now move the middle key <b>one step down</b> to the black key: <b>C · E♭ · G</b><br>It sounds <b>sad</b> 🥲 That's <b>C minor</b>!", want: { notes: CMIN }, show: CMIN, done: "Sad! 🥲 One key changed it." },
+  "d2-am": { say: "<b>A minor</b>: <b>A · C · E</b><br>All white keys, and it's sad 🥲", want: { notes: AM }, show: AM, done: "That's A minor! 🎉" },
+  "d2-pattern": { say: "A secret 🤫 In <b>every</b> key:<br>Chords <b>1 · 4 · 5</b> are happy 😀<br>Chords <b>2 · 3 · 6</b> are sad 🥲<br>That's why Em (chord 6) sounded sad!", want: { tap: true }, demoSeq: [[G, "1 😀"], [C, "4 😀"], [D, "5 😀"], [EM, "6 🥲"]], done: "1 4 5 happy · 2 3 6 sad 👍" },
+  "d2-key-c": { say: "Same 4 chords, new <b>key</b> (C):<br><b>C → G → Am → F</b><br>Songs like <i>Let It Be</i>!", want: { seq: [KC_C, KC_G, KC_AM, KC_F] }, demoSeq: [[KC_C, "C"], [KC_G, "G"], [KC_AM, "Am"], [KC_F, "F"]], done: "Same numbers, new key! 🏆" },
+  "d3-left": { say: "Your <b>left hand</b> plays the <b>low</b> notes 👈<br>Press the low <b>G</b> with your left hand.", want: { notes: [55] }, show: [55], done: "Left hand ready! 👈" },
+  "d3-together": { say: "Now <b>both hands</b>! 🙌<br>Left: low <b>G</b><br>Right: the <b>G chord</b>", want: { notes: H_G }, show: H_G, done: "Two hands! 🙌" },
+  "d3-walk": { say: "Left hand plays each chord's <b>letter</b>, down low.<br><b>G → D → E → C</b><br>Right hand plays the chords.", want: { seq: [H_G, H_D, H_EM, H_C] }, demoSeq: [[H_G, "G"], [H_D, "D"], [H_EM, "Em"], [H_C, "C"]], done: "Your bass is walking! 🚶" },
+  "d3-ear-1": { say: "Use your ears 👂<br>Tap <b>🔊 Hear it</b>.<br>Is it <b>happy</b> or <b>sad</b>?", want: { choice: "sad" }, demo: AM, done: "Yes, sad! That was A minor 🥲" },
+  "d3-ear-2": { say: "One more 👂<br>Happy or sad?", want: { choice: "happy" }, demo: D, done: "Yes, happy! That was D major 😀" },
+  "d3-song": { say: "Two hands, 4 chords! 🎹🎹<br><b>G → D → Em → C</b>", want: { seq: [H_G, H_D, H_EM, H_C] }, demoSeq: [[H_G, "G"], [H_D, "D"], [H_EM, "Em"], [H_C, "C"]], done: "You played a song with two hands! 🏆" },
 };
 
 // Today: the day's tasks as big full-width cards, one thing each.
@@ -692,16 +714,25 @@ function initLessonsTab(root) {
     const card = MICRO_CARDS[id];
     const lesson = LESSONS.find((l) => l.id === id);
     const { content, keyboardWrap, controls } = lessonShell(lesson.title);
-    content.innerHTML = `<div class="hk-micro"><img src="assets/mascot-face.png" alt="" class="hk-micro-avatar"><div class="hk-micro-bubble" id="hk-micro-say">${card.say}</div></div>`;
+    // Chat style: Hayden "types" for a moment, then the message pops in.
+    content.innerHTML = `<div class="hk-micro-thread" id="hk-micro-thread"><div class="hk-micro"><img src="assets/mascot-face.png" alt="" class="hk-micro-avatar"><div class="hk-micro-bubble" id="hk-micro-say"><span class="hk-chat-typing"><i></i><i></i><i></i></span></div></div></div>`;
+    const thread = content.querySelector("#hk-micro-thread");
+    setTimeout(() => { if (!finished) say.innerHTML = card.say; }, 550);
+    const reply = (html, cls = "") => {
+      thread.querySelector(".hk-micro-oops")?.remove();
+      thread.insertAdjacentHTML("beforeend", `<div class="hk-micro hk-micro-reply ${cls}"><img src="assets/mascot-face.png" alt="" class="hk-micro-avatar"><div class="hk-micro-bubble">${html}</div></div>`);
+      thread.lastElementChild.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
+    };
     // C3 to E5: middle C sits right in the middle of the screen.
     const kb = lessonKeyboard(keyboardWrap, { startMidi: 48, endMidi: 76, markMiddleC: !card.hideMiddleC });
     if (card.show) kb.highlightChord(card.show);
     const say = content.querySelector("#hk-micro-say");
-    const demoNotes = card.show || card.help || (card.want.notes || []);
+    const demoNotes = card.demo || card.show || card.help || (card.want.notes || []);
     controls.innerHTML = `
       ${card.demoSeq ? '<button class="hk-btn" id="hk-micro-hear">🔊 Hear it</button>' : card.soft ? '<button class="hk-btn" id="hk-micro-soft">🔈 Soft</button><button class="hk-btn" id="hk-micro-strong">🔊 Strong</button>' : '<button class="hk-btn" id="hk-micro-hear">🔊 Hear it</button>'}
       ${card.help ? '<button class="hk-btn" id="hk-micro-help">👀 Show me</button>' : ""}
-      ${card.want.tap ? '<button class="hk-btn hk-btn-primary" id="hk-micro-ok">Got it!</button>' : ""}`;
+      ${card.want.tap ? '<button class="hk-btn hk-btn-primary" id="hk-micro-ok">Got it!</button>' : ""}
+      ${card.want.choice ? '<button class="hk-btn hk-micro-choice" data-choice="happy">😀 Happy</button><button class="hk-btn hk-micro-choice" data-choice="sad">🥲 Sad</button>' : ""}`;
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     async function playSeq(seq) {
       for (const [notes, label] of seq) {
@@ -735,6 +766,11 @@ function initLessonsTab(root) {
       const w = card.want;
       if (w.pc !== undefined) {
         if (((midi % 12) + 12) % 12 === w.pc && midi !== w.not) return success();
+        if (midi === w.not) reply("That's the same G 😄 Find a <b>different</b> one!", "hk-micro-oops");
+        return;
+      }
+      if (w.notes && w.notes.length === 1 && midi !== w.notes[0]) {
+        reply(`Oops! That's <b>${midiToName(midi).replace(/\d+$/, "")}</b> 🙈 Try again!`, "hk-micro-oops");
         return;
       }
       if (w.seq) {
@@ -759,18 +795,25 @@ function initLessonsTab(root) {
     onLessonExit(unsub);
     if (card.want.seq) kb.highlightChord(card.want.seq[0]);
     if (card.want.tap) controls.querySelector("#hk-micro-ok").addEventListener("click", success);
+    controls.querySelectorAll(".hk-micro-choice").forEach((b) => b.addEventListener("click", () => {
+      if (b.dataset.choice === card.want.choice) return success();
+      say.innerHTML = card.say + '<div class="hk-micro-progress">Listen again 👂</div>';
+      playChord(demoNotes, { duration: 1.2 });
+    }));
 
     function success() {
       if (finished) return;
       finished = true;
       unsub();
-      say.innerHTML = `<div class="hk-micro-done">${card.done}</div>`;
+      say.innerHTML = card.say;
+      reply(`<div class="hk-micro-done">${card.done}</div>`, "hk-micro-yay");
       const ids = MICRO_LESSONS.map((l) => l.id);
       const nextId = ids[ids.indexOf(id) + 1];
-      controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-micro-next" id="hk-micro-next">${nextId ? "Next lesson →" : "Finish Day 1 🏆"}</button>`;
+      const dayEnd = DAY_ENDS[id];
+      controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-micro-next" id="hk-micro-next">${dayEnd ? `Finish Day ${dayEnd[0]} 🏆` : "Next lesson →"}</button>`;
       markLessonComplete(id);
-      if (!nextId) markLessonComplete("lesson-1");
-      controls.querySelector("#hk-micro-next").addEventListener("click", () => (nextId ? startLesson(nextId) : showMap()));
+      if (dayEnd) dayEnd[1].forEach((l) => markLessonComplete(l));
+      controls.querySelector("#hk-micro-next").addEventListener("click", () => (dayEnd || !nextId ? showMap() : startLesson(nextId)));
     }
   }
 

@@ -2190,3 +2190,29 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
   - Tabs, buttons and keys respond to touch.
 - **Not testable in the simulator:** rotation. The build allows all orientations.
 - **TestFlight builds:** Hayden Keys builds 5 and 6, Jaxx Guitar build 4.
+
+## 2026-10-07 (later): Days 2 and 3 as tiny lessons; playful chat style
+- **Jargon alert card (Day 1, after the first chord):** "A key = one thing you press. A chord = 3 keys together. You just played the G chord!"
+- **Day 2, words, happy and sad:**
+  - Keys make notes (A–G repeat).
+  - A song's key is its home chord (G → D → G).
+  - Happy C major, and sad C minor (move one key down).
+  - A minor.
+  - "1 4 5 happy, 2 3 6 sad".
+  - The same 4 chords in the key of C (C G Am F, like *Let It Be*).
+  - Finishing Day 2 also completes the old Lessons 2 and 4.
+- **Day 3, two hands and ears:**
+  - Left hand low G.
+  - Both hands.
+  - The bass walking G D E C under the chords.
+  - Two happy-or-sad listening quizzes.
+  - A two-hand song.
+  - Finishing Day 3 also completes the old two-hands preview and ear-training lessons.
+- **Playful chat style:**
+  - Hayden types for a moment ("…"), then the message pops in.
+  - A wrong key gets a friendly "Oops! That's D 🙈 Try again!".
+  - Success arrives as a colourful reply bubble while the panda hops.
+  - Bold coloured keywords, and a big bouncy gradient Next button.
+  - Each day ends with "Finish Day N 🏆".
+- **Tested:** all 27 cards (Days 1–3) in a phone-sized browser, including wrong keys and quiz answers. No errors.
+- **Next:** later lessons (from "Major or minor?" onward in the Roadmap) are still chat-style rather than tiny cards.

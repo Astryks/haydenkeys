@@ -174,7 +174,7 @@ window.addEventListener("hk-celebrate", (e) => {
   confetti();
   // Day 1's tiny steps celebrate with notes only; a fun fact at the end.
   const id = e.detail?.lessonId || "";
-  if (!id.startsWith("m-") || id === "m-another-song") maybeShowFunFact();
+  if (!/^(m|d\d)-/.test(id) || ["m-another-song", "d2-key-c", "d3-song"].includes(id)) maybeShowFunFact();
 });
 
 document.addEventListener("DOMContentLoaded", init);

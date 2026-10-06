@@ -108,6 +108,7 @@ const MICRO_LESSONS = [
   { id: "m-find-c", title: "Find middle C", subtitle: "Your first key", description: "Find middle C on your piano." },
   { id: "m-find-g", title: "Find G", subtitle: "Count up from C", description: "Count up from middle C to G." },
   { id: "m-chord-g", title: "Your first chord: G", subtitle: "3 keys together", description: "Press G, B and D together." },
+  { id: "m-jargon", title: "Jargon alert: key or chord?", subtitle: "Two words, quickly", description: "A key is one thing you press. A chord is 3 keys together." },
   { id: "m-another-g", title: "Another G?", subtitle: "Keys repeat", description: "There's a G in every group of keys." },
   { id: "m-back-g", title: "Back to G", subtitle: "Middle C, then G", description: "Back to middle C, then play the G chord." },
   { id: "m-chord-em", title: "Chord 2: E minor", subtitle: "A sad sound", description: "Press E, G and B." },
@@ -118,6 +119,21 @@ const MICRO_LESSONS = [
   { id: "m-soft-strong", title: "Soft and strong", subtitle: "Press gently, then harder", description: "The same chord feels different soft and strong." },
   { id: "m-sing", title: "Make one key sing", subtitle: "Press the top key a bit harder", description: "Let the top key of a chord stand out." },
   { id: "m-another-song", title: "Another song", subtitle: "Same 4 chords, new order", description: "G, Em, C, D: the shape of songs like Perfect." },
+  // Day 2: words musicians use, happy vs sad, a new key
+  { id: "d2-note", title: "Keys make notes", subtitle: "Day 2", description: "Each key plays a note with a letter name." },
+  { id: "d2-song-key", title: "A song's home", subtitle: "The other kind of key", description: "A song's key is its home chord." },
+  { id: "d2-major", title: "Happy chord", subtitle: "Major", description: "Major chords sound happy." },
+  { id: "d2-minor", title: "Sad chord", subtitle: "Minor", description: "Move one key down: now it's sad." },
+  { id: "d2-am", title: "A minor", subtitle: "All white keys", description: "A · C · E." },
+  { id: "d2-pattern", title: "Happy and sad numbers", subtitle: "1 4 5 happy · 2 3 6 sad", description: "In every key, chords 1, 4 and 5 are major; 2, 3 and 6 are minor." },
+  { id: "d2-key-c", title: "Same 4 chords, key of C", subtitle: "C · G · Am · F", description: "The 1-5-6-4 loop, moved to the key of C." },
+  // Day 3: two hands, and your ears
+  { id: "d3-left", title: "Your left hand", subtitle: "Day 3", description: "The left hand plays the low notes." },
+  { id: "d3-together", title: "Both hands", subtitle: "Low G + G chord", description: "Left hand low G, right hand G chord." },
+  { id: "d3-walk", title: "Bass walks with the chords", subtitle: "G · D · E · C", description: "Left hand plays each chord's first note." },
+  { id: "d3-ear-1", title: "Use your ears", subtitle: "Happy or sad?", description: "Listen: major or minor?" },
+  { id: "d3-ear-2", title: "Ears again", subtitle: "Happy or sad?", description: "One more: major or minor?" },
+  { id: "d3-song", title: "Two-hand song", subtitle: "Both hands, 4 chords", description: "Play the 4-chord loop with both hands." },
 ];
 
 const PRE_LESSONS = [
