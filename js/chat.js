@@ -86,7 +86,8 @@ function buildChat(el) {
       return;
     }
     const prompt = exchanges[i].q || DEFAULT_PROMPTS[(i - 1) % DEFAULT_PROMPTS.length];
-    chips.innerHTML = `<button class="hk-chat-chip" type="button">${prompt}</button><button class="hk-chat-skip" type="button">Show me everything ⏭</button>`;
+    // Make the next step obvious: a hint, then one big pulsing bubble.
+    chips.innerHTML = `<div class="hk-chat-hint">Tap the purple bubble to keep going 👇</div><button class="hk-chat-chip" type="button">${prompt} <span class="hk-chat-chip-go">›</span></button><button class="hk-chat-skip" type="button">Skip to the end</button>`;
     chips.querySelector(".hk-chat-chip").addEventListener("click", step);
     chips.querySelector(".hk-chat-skip").addEventListener("click", () => {
       chips.innerHTML = "";

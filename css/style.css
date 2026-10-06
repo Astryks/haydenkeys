@@ -1418,3 +1418,18 @@ body.hk-gold-keys .hk-key-black { background: linear-gradient(#5a4310, #2e2206) 
 .hk-gym-yes { text-align: center; font-weight: 800; color: #2f8a4b; }
 .hk-gym-no { text-align: center; font-weight: 700; }
 .hk-gym-compare { display: flex; justify-content: center; gap: 8px; }
+
+/* The "learn more" bubble: impossible to miss */
+.hk-chat-chips { flex-direction: column; align-items: flex-end; }
+.hk-chat-hint { font-size: 0.85rem; font-weight: 700; color: #8a63d2; }
+.hk-chat-chip { background: linear-gradient(135deg, #a99cf5, #8a63d2) !important; color: #fff !important; border: none !important; font-size: 1.05rem; font-weight: 800; padding: 12px 18px; border-radius: 22px 22px 6px 22px; box-shadow: 0 6px 16px rgba(138, 99, 210, 0.35); }
+.hk-chat-chip-go { display: inline-block; margin-left: 6px; font-size: 1.3rem; line-height: 1; }
+.hk-chat-skip { background: none; border: none; color: var(--hk-text-dim); font-size: 0.8rem; text-decoration: underline; cursor: pointer; padding: 2px 4px; }
+@media (prefers-reduced-motion: no-preference) {
+  .hk-chat-chip { animation: hk-chip-pulse 1.6s ease-in-out infinite; }
+  .hk-chat-chip-go { animation: hk-chip-nudge 1.6s ease-in-out infinite; }
+}
+@keyframes hk-chip-pulse { 0%, 100% { transform: scale(1); box-shadow: 0 6px 16px rgba(138, 99, 210, 0.35); } 50% { transform: scale(1.04); box-shadow: 0 8px 22px rgba(138, 99, 210, 0.55); } }
+@keyframes hk-chip-nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
+/* Little keyboard pictures inside chat bubbles */
+.hk-keys-pic { display: block; width: 100%; height: auto; margin: 8px 0 4px; }

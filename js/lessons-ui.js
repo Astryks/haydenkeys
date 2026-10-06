@@ -236,6 +236,54 @@ const H_G = [43, ...G], H_D = [50, ...D], H_EM = [52, ...EM], H_C = [48, ...C];
 // The last card of each day also completes the older, wordier lessons it
 // replaces, so Today moves straight on (they stay in the Roadmap).
 const DAY_ENDS = { "m-pop-song": [1, ["lesson-1"]], "d2-key-c": [2, ["lesson-2", "lesson-4"]], "d3-song": [3, ["lesson-twohand-preview", "lesson-eartraining", "song-1"]], "d4-your-style": [4, []] };
+// A little picture of piano keys for chat bubbles. `marks` colours keys
+// and labels them: { midi: { fill, label, above } }.
+function keysPic(lo, hi, marks = {}, { w = 20, font = 0, captions = [] } = {}) {
+  const isBlack = (m) => [1, 3, 6, 8, 10].includes(((m % 12) + 12) % 12);
+  const whites = [];
+  for (let m = lo; m <= hi; m++) if (!isBlack(m)) whites.push(m);
+  const H = 80, BH = 50, bw = w * 0.6;
+  const fs = font || Math.max(10, w * 0.65);
+  const width = whites.length * w;
+  let white = "", black = "", labels = "";
+  const label = (x, m, mk) => {
+    if (!mk.label) return "";
+    return `<text x="${x}" y="${mk.above ? -8 : H + fs + 4}" text-anchor="middle" font-size="${fs}" font-weight="800" fill="${mk.text || "#3a2d6b"}">${mk.label}</text>`;
+  };
+  whites.forEach((m, i) => {
+    const mk = marks[m] || {};
+    white += `<rect x="${i * w}" y="0" width="${w}" height="${H}" rx="${w * 0.15}" fill="${mk.fill || "#fff"}" stroke="#2a2a3a" stroke-width="1.2"/>`;
+    labels += label(i * w + w / 2, m, mk);
+  });
+  for (let m = lo; m <= hi; m++) {
+    if (!isBlack(m)) continue;
+    const i = whites.filter((x) => x < m).length;
+    const mk = marks[m] || {};
+    const x = i * w - bw / 2;
+    black += `<rect x="${x}" y="0" width="${bw}" height="${BH}" rx="${bw * 0.15}" fill="${mk.fill || "#2a2a3a"}" stroke="#2a2a3a" stroke-width="1"/>`;
+    labels += label(x + bw / 2, m, mk);
+  }
+  // Captions centred over a group of keys, e.g. "2 black keys".
+  const xOf = (m) => {
+    const i = whites.filter((x) => x < m).length;
+    return isBlack(m) ? i * w : i * w + w / 2;
+  };
+  captions.forEach((c) => {
+    labels += `<text x="${(xOf(c.from) + xOf(c.to)) / 2}" y="-8" text-anchor="middle" font-size="${fs}" font-weight="800" fill="${c.color || "#3a2d6b"}">${c.text}</text>`;
+  });
+  return `<svg class="hk-keys-pic" viewBox="${-fs} ${-fs - 12} ${width + fs * 2} ${H + fs * 2 + 20}" role="img" aria-label="Piano keys">${white}${black}${labels}</svg>`;
+}
+const PIC_MIDDLE_C = keysPic(53, 65, {
+  60: { fill: "#fcc98a", label: "Middle C" },
+  61: { fill: "#f4a6c0" },
+  63: { fill: "#f4a6c0" },
+}, { w: 26, font: 15, captions: [{ from: 54, to: 58, text: "3 black", color: "#8a8399" }, { from: 61, to: 63, text: "2 black", color: "#c2457a" }] });
+const PIC_ALL_AS = keysPic(21, 108, Object.fromEntries([
+  ...[21, 33, 45, 57, 69, 81, 93, 105].map((m, i) => [m, { fill: "#c9b6f7", label: `A${i}` }]),
+  [60, { fill: "#fcc98a", label: "C4", above: true, text: "#c2701a" }],
+]), { w: 10, font: 20 });
+const PIC_A2_A3_C4 = keysPic(43, 62, { 45: { fill: "#c9b6f7", label: "A2" }, 57: { fill: "#c9b6f7", label: "A3" }, 60: { fill: "#fcc98a", label: "C4" } }, { w: 22 });
+
 // Moves a chord up or down whole octaves until it fits the keyboard shown.
 function voiceIn(notes, lo, hi) {
   let n = [...notes];
@@ -279,6 +327,7 @@ const MICRO_CARDS = {
       <h3 data-q="How do I find it?">Look for 2 black keys 👀</h3>
       <p>Near the middle, find <b>2 black keys</b> side by side.</p>
       <p>Middle C is the <b>white key just left</b> of them.</p>
+      ${PIC_MIDDLE_C}
       <h3 data-q="My piano is a different size. Where is it?">Count from the left 👇</h3>
       <p>🎹 <b>88 keys</b> (a full piano, the most common): the <b>40th</b> key.</p>
       <p>🎹 <b>76 keys</b>: the <b>33rd</b> key.</p>
@@ -288,7 +337,8 @@ const MICRO_CARDS = {
   "m-white-black": { chat: `<h3 data-q="Do the keys have names? 🔤">Yes! Every white key is a letter 🔤</h3>
       <p>The white keys go <b>A B C D E F G</b>… then start again with <b>A</b>.</p>
       <h3 data-q="So there are lots of As?">Yes! So we add a number 🔢</h3>
-      <p>The first A on the left is <b>A0</b>, the next one up is <b>A1</b>, then <b>A2</b>, and so on.</p>
+      <p>The first A on the left is <b>A0</b>, the next one up is <b>A1</b>, then <b>A2</b>, and so on. Here's a full 88-key piano with every A in purple:</p>
+      ${PIC_ALL_AS}
       <p>The number goes up by one at each <b>C</b>. That's why middle C is called <b>C4</b>.</p>
       <h3 data-q="Where is C4 on a big piano?">On a full 88-key piano 🎹</h3>
       <p>Middle C (<b>C4</b>) is the <b>40th key</b> from the left, counting white and black keys.</p>
@@ -341,7 +391,8 @@ const MICRO_CARDS = {
       <p>The <b>letter</b> is the key. The <b>number</b> says which group of keys it's in.</p>
       <p><b>Middle C is C4.</b> Smaller numbers are further <b>left</b> (lower). Bigger numbers are further <b>right</b>.</p>
       <h3 data-q="So A3 and A2 are both A?">Yes! Same letter, same colour 🎨</h3>
-      <p><b>A3</b> is the A just left of middle C. <b>A2</b> is the A one group further left.</p>`,
+      <p><b>A3</b> is the A just left of middle C. <b>A2</b> is the A one group further left.</p>
+      ${PIC_A2_A3_C4}`,
     say: "Press <b>A3</b>, then <b>A2</b>!", labels: "octave", want: { seq: [[57], [45]] }, done: "Same colour, same letter, one group lower! 🎉" },
   "d2-song-key": { say: "Songs have a <b>key</b> too! 🏠<br>It's the song's <b>home</b> chord.<br>Play <b>G → D → G</b>. Back home!", want: { seq: [G, D, G] }, demoSeq: [[G, "home"], [D, "away"], [G, "home"]], done: "This song is in the key of G 🏠" },
   "d2-major": { say: "This is <b>C major</b>: <b>C · E · G</b><br>It sounds <b>happy</b> 😀", want: { notes: C }, show: C, done: "Happy! 😀" },
