@@ -1047,3 +1047,8 @@ body.hk-lesson-open .hk-rotate-tip { display: none !important; }
 .hk-key-notename-big { white-space: pre-line; line-height: 1.05; text-align: center; left: 0; right: 0; }
 .hk-key-group2 { box-shadow: inset 0 -10px 0 #ec8fb5 !important; }
 .hk-key-group3 { box-shadow: inset 0 -10px 0 #7fb8e6 !important; }
+.hk-lesson-back { border: 1px solid var(--hk-border); background: var(--hk-panel); border-radius: 999px; padding: 0 14px; height: 40px; font-size: 0.95rem; cursor: pointer; flex: 0 0 auto; color: var(--hk-text); }
+.hk-micro-bubble small { display: block; margin-top: 6px; font-size: 0.85rem; line-height: 1.35; }
+/* Day 1 cards: taller keys in portrait for small fingers */
+@media (orientation: portrait) { body.hk-lesson-open .hk-micro-thread ~ * .hk-keyboard, body.hk-lesson-open #hk-lesson-keyboard .hk-keyboard { height: 190px; } }
+@media (orientation: landscape) and (max-height: 500px) { .hk-lesson-back { height: 32px; padding: 0 10px; font-size: 0.8rem; } }

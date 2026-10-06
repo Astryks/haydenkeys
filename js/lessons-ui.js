@@ -219,34 +219,35 @@ function timelineHtml() {
 // ----- Day 1: one tiny step per lesson ----------------------------------
 // One short message, one thing to press, a "Hear it" button. The card
 // moves on when the learner plays it (screen, MIDI keyboard or mic).
-const G = [67, 71, 74], D = [62, 66, 69], EM = [64, 67, 71], C = [60, 64, 67];
+// G sits just left of middle C, so every chord after it is to the right.
+const G = [55, 59, 62], D = [62, 66, 69], EM = [64, 67, 71], C = [60, 64, 67];
 const CMIN = [60, 63, 67], AM = [57, 60, 64];
 // The same loop in the key of C, kept close to middle C.
 const KC_C = [60, 64, 67], KC_G = [55, 59, 62], KC_AM = [57, 60, 64], KC_F = [53, 57, 60];
 // Two hands: a low left-hand note (the chord's letter) under the right-hand chord.
-const H_G = [55, ...G], H_D = [50, ...D], H_EM = [52, ...EM], H_C = [48, ...C];
+const H_G = [43, ...G], H_D = [50, ...D], H_EM = [52, ...EM], H_C = [48, ...C];
 // The last card of each day also completes the older, wordier lessons it
 // replaces, so Today moves straight on (they stay in the Roadmap).
 const DAY_ENDS = { "m-another-song": [1, ["lesson-1"]], "d2-key-c": [2, ["lesson-2", "lesson-4"]], "d3-song": [3, ["lesson-twohand-preview", "lesson-eartraining"]] };
 const MICRO_CARDS = {
-  "m-intro": { say: "Fun fact: just <b>4 chords</b> play over <b>100 songs</b>! 🎶<br>We'll learn them soon.<br>But first… let's get to know <b>your piano</b> 🎹", want: { tap: true }, ok: "Let's go! 🚀", demoSeq: [[G, ""], [D, ""], [EM, ""], [C, ""]], done: "Let's meet your piano! 🎹" },
+  "m-intro": { say: "Fun fact: just <b>4 chords</b> play over <b>100 songs</b>! 🎶<br>Let's learn them, one tiny step at a time.<br><b>Step 1:</b> find <b>middle C</b> 🎹", want: { tap: true }, ok: "Let's go! 🚀", noKeys: true, done: "Here we go! 🎹" },
   "m-black-keys": { say: "Look at the <b>black keys</b> 👀<br>They come in groups of <b>2</b> and <b>3</b>, again and again.<br>Press any black key in a group of <b>2</b>!", want: { pcs: [1, 3] }, labels: "groups", done: "That's your map! 🗺️ Every piano has it." },
   "m-any-piano": { say: "Pianos come in <b>all sizes</b> 🎹<br>Middle C isn't always in the exact middle!<br>🔎 Every <b>C</b> is just <b>left of the 2 black keys</b>.<br>Big piano (88 keys): the <b>4th C</b> from the left.<br>Smaller keyboard: usually the <b>3rd C</b>.", want: { tap: true }, ok: "Got it 👍", done: "Find the 2 black keys, go left. Easy! 🎉" },
-  "m-find-c": { say: "Let's find <b>middle C</b> 🎹<br>See the <b>2 black keys</b> in the middle?<br>Middle C is just <b>left</b> of them. Press it!", want: { notes: [60] }, help: [60], hideMiddleC: true, tip: "🎹 Now find middle C on your <b>real piano</b> too!", done: "Yes! That's middle C 🎉" },
-  "m-find-g": { say: "From middle C, count the white keys:<br><b>C · D · E · F · G</b><br>Press <b>G</b>!", want: { notes: [67] }, help: [67], done: "That's G! 🎉" },
-  "m-chord-g": { say: "Press <b>3 keys</b>: <b>G · B · D</b><br>That's the <b>G chord</b>!", want: { notes: G }, show: G, tip: "🎹 Try the G chord on your <b>real piano</b> too!", done: "Your first chord! 🎹" },
+  "m-find-c": { say: "Look for <b>2 black keys</b> together (they're pink 🩷).<br>The white key just <b>left</b> of them is a <b>C</b>.<br>Press the C in the <b>middle</b>!", labels: "groups", want: { notes: [60] }, help: [60], hideMiddleC: true, tip: "🎹 On your <b>real piano</b>: it's the C nearest the <b>middle</b> (often under the brand name). Try it!", done: "Yes! That's middle C 🎉" },
+  "m-find-g": { say: "Our home key is <b>G</b> 🏠<br>From middle C, step <b>left</b>:<br><b>C → B → A → G</b><br>Press <b>G</b>!", labels: "letters", want: { notes: [55] }, help: [55], done: "That's G, our home! 🏠" },
+  "m-chord-g": { say: "Let's make a <b>chord</b> on G!<br>Press <b>G</b>, skip one, <b>B</b>, skip one, <b>D</b>.<br>That's the <b>G chord</b>!<br><small>📱 Tricky on a phone? Tap the 3 keys one by one. The real practice is on your real piano 🎹</small>", want: { notes: G }, show: G, tip: "🎹 Try the G chord on your <b>real piano</b> too!", done: "Your first chord! 🎹" },
   "m-letters": { say: "Every key has a <b>letter</b> 🔤<br>The white keys go <b>C D E F G A B</b>… then start again!<br>Find <b>G</b> and press it.", labels: "letters", want: { notes: [67] }, done: "There's G! 🎉" },
-  "m-jargon": { say: "🚨 <b>Jargon alert!</b> Two different things:<br>🎹 <b>G key</b> = just one key<br>🎹🎹🎹 <b>G chord</b> = G + 2 friends (B, D)<br>Press the <b>G key</b>… then the <b>G chord</b>!", labels: "letters", want: { seq: [[67], G] }, demoSeq: [[[67], "key"], [G, "chord"]], done: "G key 👆 G chord ✋ Got it!" },
-  "m-key-of-g": { say: "One more word 🏠<br>A song can be <b>in the key of G</b>. That just means <b>G is home</b>.<br>We'll keep it simple: <b>home = G</b>, and we play <b>4 chords</b>!", want: { tap: true }, demoSeq: [[G, "home"], [D, ""], [G, "home"]], done: "Home is G 🏠" },
-  "m-another-g": { say: "Wait… is there <b>another G</b>? 🤔<br>Yes! The keys repeat. Press a <b>different G</b>.", want: { pc: 7, not: 67 }, help: [55], done: "There's a G in every group! 🎉" },
+  "m-jargon": { say: "🚨 <b>Jargon alert!</b><br>🎹 <b>G key</b> = just one key<br>🎹🎹🎹 <b>G chord</b> = G + 2 friends (B, D)<br>Press the <b>G key</b>… then the <b>G chord</b>!", labels: "letters", want: { seq: [[55], G] }, demoSeq: [[[55], "key"], [G, "chord"]], done: "G key 👆 G chord ✋ Got it!" },
+  "m-key-of-g": { say: "One more word 🏠<br>A song can be <b>in the key of G</b>. That just means <b>G is home</b>.<br>We'll keep it simple: home = <b>G</b>, and we play <b>4 chords</b>!", want: { tap: true }, noKeys: true, demoSeq: [[G, "home"], [D, ""], [G, "home"]], done: "Home is G 🏠 Now chord 2!" },
+  "m-another-g": { say: "Every key has a <b>letter</b>: <b>C D E F G A B</b>… then they start again!<br>So there's more than one G. Press <b>another G</b>!", labels: "letters", want: { pc: 7, not: 55 }, help: [67], done: "Letters repeat! 🔁" },
   "m-back-g": { say: "Back to <b>middle C</b>…<br>now play the <b>G chord</b> again.", want: { notes: G }, show: G, done: "Nice! 👏" },
-  "m-chord-em": { say: "Chord 2: <b>E minor</b><br>Press <b>E · G · B</b>. It sounds a little sad 🥲", want: { notes: EM }, show: EM, done: "That's E minor! 🎉" },
-  "m-chord-c": { say: "Chord 3: <b>C</b><br>Start on middle C: <b>C · E · G</b>", want: { notes: C }, show: C, done: "That's C! 🎉" },
-  "m-chord-d": { say: "Chord 4: <b>D</b><br>Press <b>D · F♯ · A</b><br>F♯ is the <b>black</b> key.", want: { notes: D }, show: D, done: "That's D! 🎉" },
-  "m-num-home": { say: "<b>G</b> is our <b>home</b> 🏠<br>So G gets the number <b>1</b>.<br>Now count up the white keys: <b>1 2 3 4 5 6</b>", labels: "fromG", want: { notes: [67] }, show: [67], done: "G = 1 🏠" },
-  "m-numbers": { say: "Count from G 👆<br><b>D</b> is the <b>5th</b> key → <b>5</b><br><b>E</b> is the <b>6th</b> → <b>6</b><br><b>C</b> is the <b>4th</b> → <b>4</b><br>Press <b>1 · 5 · 6 · 4</b>: G, D, E, C", labels: "fromG", want: { seq: [[67], [74], [76], [72]] }, demoSeq: [[[67], "1"], [[74], "5"], [[76], "6"], [[72], "4"]], done: "1 · 5 · 6 · 4 = G · D · Em · C 🎉" },
-  "m-num-shape": { say: "Chords are <b>easy</b> ✋<br>Every chord is the <b>same shape</b>:<br><b>press · skip · press · skip · press</b><br>Play <b>G</b>, then slide the same shape to <b>C</b>!", want: { seq: [G, C] }, demoSeq: [[G, "G"], [C, "C"], [EM, "Em"], [D, "D ⚫"]], tip: "The only twist: <b>D</b> uses one <b>black key</b> (F♯) ⚫", done: "Same shape, any chord! ✋🎉" },
-  "m-boom": { say: "<b>Boom!</b> You know 4 chords 💥<br>Play them in a row:<br><b>G → D → Em → C</b>", want: { seq: [G, D, EM, C] }, demoSeq: [[G, "G"], [D, "D"], [EM, "Em"], [C, "C"]], done: "That's the loop in hundreds of songs! 🎉" },
+  "m-chord-em": { say: "Chord 2: <b>E minor</b> (Em)<br>Same shape, starting on <b>E</b> (right of middle C):<br><b>E · G · B</b> 🥲 a little sad", want: { notes: EM }, show: EM, done: "That's E minor! 🎉" },
+  "m-chord-c": { say: "Chord 3: <b>C</b><br>Same shape, starting on <b>middle C</b>:<br><b>C · E · G</b>", want: { notes: C }, show: C, done: "That's C! 🎉" },
+  "m-chord-d": { say: "Chord 4: <b>D</b><br>Same shape, starting on <b>D</b>:<br><b>D · F♯ · A</b><br>F♯ is the <b>black</b> key ⚫", want: { notes: D }, show: D, done: "That's D! You know 4 chords! 🎉" },
+  "m-num-home": { say: "Why do chords have <b>numbers</b>? 🔢<br><b>G</b> is home, so G = <b>1</b>.<br>Press G, then count up the white keys to the right!", labels: "fromG", want: { notes: [55] }, show: [55], done: "G = 1 🏠" },
+  "m-numbers": { say: "Counting from G:<br><b>C</b> is the <b>4th</b> key → 4<br><b>D</b> is the <b>5th</b> → 5<br><b>E</b> is the <b>6th</b> → 6<br>Press <b>1 · 5 · 6 · 4</b>: G, D, E, C", labels: "fromG", want: { seq: [[55], [62], [64], [60]] }, demoSeq: [[[55], "1"], [[62], "5"], [[64], "6"], [[60], "4"]], done: "1 · 5 · 6 · 4 = G · D · Em · C 🎉" },
+  "m-num-shape": { say: "See the pattern? ✋<br>Every chord is the <b>same shape</b>:<br><b>press · skip · press · skip · press</b><br>Play <b>G</b>, then slide the shape to <b>C</b>!", want: { seq: [G, C] }, demoSeq: [[G, "G"], [C, "C"], [EM, "Em"], [D, "D ⚫"]], tip: "The only twist: <b>D</b> uses one <b>black key</b> (F♯) ⚫", done: "Same shape, any chord! ✋🎉" },
+  "m-boom": { say: "<b>Boom!</b> You know 4 chords 💥<br>Play them in a row:<br><b>G → D → Em → C</b>", want: { seq: [G, D, EM, C] }, demoSeq: [[G, "G"], [D, "D"], [EM, "Em"], [C, "C"]], tip: "🎹 Now play the loop on your <b>real piano</b>!", done: "That's the loop in 100+ songs! 🎉" },
   "m-soft-strong": { say: "Play <b>G</b> <b>softly</b>… then <b>strong</b> 💪<br>It feels different!<br><small>(Best on a real piano.)</small>", want: { times: 2, notes: G }, show: G, soft: true, done: "Soft and strong. Nice! 🎉" },
   "m-sing": { say: "Play <b>C</b> and press the <b>top key</b> a bit <b>harder</b>.<br>Now it sings! 🎶", want: { notes: C }, show: C, sing: true, done: "Beautiful! 🎶" },
   "m-another-song": { say: "Same 4 chords, <b>new order</b>:<br><b>G → Em → C → D</b><br>That's the shape of songs like <i>Perfect</i>!", want: { seq: [G, EM, C, D] }, demoSeq: [[G, "G"], [EM, "Em"], [C, "C"], [D, "D"]], done: "Two songs' worth of chords! 🏆" },
@@ -257,7 +258,7 @@ const MICRO_CARDS = {
   "d2-am": { say: "<b>A minor</b>: <b>A · C · E</b><br>All white keys, and it's sad 🥲", want: { notes: AM }, show: AM, done: "That's A minor! 🎉" },
   "d2-pattern": { say: "A secret 🤫 In <b>every</b> key:<br>Chords <b>1 · 4 · 5</b> are happy 😀<br>Chords <b>2 · 3 · 6</b> are sad 🥲<br>That's why Em (chord 6) sounded sad!", want: { tap: true }, demoSeq: [[G, "1 😀"], [C, "4 😀"], [D, "5 😀"], [EM, "6 🥲"]], done: "1 4 5 happy · 2 3 6 sad 👍" },
   "d2-key-c": { say: "Same 4 chords, new <b>key</b> (C):<br><b>C → G → Am → F</b><br>Songs like <i>Let It Be</i>!", want: { seq: [KC_C, KC_G, KC_AM, KC_F] }, demoSeq: [[KC_C, "C"], [KC_G, "G"], [KC_AM, "Am"], [KC_F, "F"]], done: "Same numbers, new key! 🏆" },
-  "d3-left": { say: "Your <b>left hand</b> plays the <b>low</b> notes 👈<br>Press the low <b>G</b> with your left hand.", want: { notes: [55] }, show: [55], done: "Left hand ready! 👈" },
+  "d3-left": { say: "Your <b>left hand</b> plays the <b>low</b> notes 👈<br>Press the low <b>G</b> (far left) with your left hand.", want: { notes: [43] }, show: [43], done: "Left hand ready! 👈" },
   "d3-together": { say: "Now <b>both hands</b>! 🙌<br>Left: low <b>G</b><br>Right: the <b>G chord</b>", want: { notes: H_G }, show: H_G, done: "Two hands! 🙌" },
   "d3-walk": { say: "Left hand plays each chord's <b>letter</b>, down low.<br><b>G → D → E → C</b><br>Right hand plays the chords.", want: { seq: [H_G, H_D, H_EM, H_C] }, demoSeq: [[H_G, "G"], [H_D, "D"], [H_EM, "Em"], [H_C, "C"]], done: "Your bass is walking! 🚶" },
   "d3-ear-1": { say: "Use your ears 👂<br>Tap <b>🔊 Hear it</b>.<br>Is it <b>happy</b> or <b>sad</b>?", want: { choice: "sad" }, demo: AM, done: "Yes, sad! That was A minor 🥲" },
@@ -419,7 +420,9 @@ function initLessonsTab(root) {
     renderSidebar();
   }
 
+  let currentLessonId = null;
   function startLesson(id) {
+    currentLessonId = id;
     const runners = {
       "lesson-piano": runPianoIntro,
       "lesson-getstarted": runGetStarted,
@@ -508,13 +511,19 @@ function initLessonsTab(root) {
     runLessonExitCleanups();
     main.innerHTML = `
       <div class="hk-lesson-player">
-        <div class="hk-lesson-topbar"><button class="hk-lesson-exit" id="hk-lesson-exit" aria-label="Close lesson">✕</button><h2>${title}</h2></div>
+        <div class="hk-lesson-topbar"><button class="hk-lesson-exit" id="hk-lesson-exit" aria-label="Close lesson">✕</button><button class="hk-lesson-back" id="hk-lesson-back" aria-label="Previous lesson">← Back</button><h2>${title}</h2></div>
         <div class="hk-lesson-content" id="hk-lesson-content"></div>
         <div id="hk-lesson-highway" class="hk-lesson-highway hk-hidden"></div>
         <div id="hk-lesson-keyboard" class="hk-keyboard-wrap"></div>
         <div class="hk-lesson-controls" id="hk-lesson-controls"></div>
       </div>`;
     main.querySelector("#hk-lesson-exit").addEventListener("click", showMap);
+    // ← Back: the lesson before this one in the course.
+    const order = LESSONS.filter((l) => !l.optional);
+    const at = order.findIndex((l) => l.id === currentLessonId);
+    const backBtn = main.querySelector("#hk-lesson-back");
+    if (at > 0) backBtn.addEventListener("click", () => startLesson(order[at - 1].id));
+    else backBtn.style.visibility = "hidden";
     document.body.classList.add("hk-lesson-open");
     window.scrollTo(0, 0);
     return {
@@ -731,13 +740,16 @@ function initLessonsTab(root) {
       thread.lastElementChild.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
     };
     // C3 to E5: middle C sits right in the middle of the screen.
-    const kb = lessonKeyboard(keyboardWrap, { startMidi: 48, endMidi: 76, markMiddleC: !card.hideMiddleC });
+    // Narrow range = bigger keys. Day 3 adds the low bass notes.
+    const [lo, hi] = id.startsWith("d3-") ? [43, 72] : [53, 72];
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: lo, endMidi: hi, markMiddleC: !card.hideMiddleC });
+    if (card.noKeys) { keyboardWrap.style.display = "none"; main.querySelector("#hk-lesson-highway")?.classList.add("hk-hidden"); }
     // Labels on the keys: every white key's letter, or numbers counted from G.
-    const FROM_G = { 67: "1\nG", 69: "2\nA", 71: "3\nB", 72: "4\nC", 74: "5\nD", 76: "6\nE" };
+    const FROM_G = { 55: "1\nG", 57: "2\nA", 59: "3\nB", 60: "4\nC", 62: "5\nD", 64: "6\nE" };
     const relabel = () => {
       if (!card.labels) return;
       if (card.labels === "groups") {
-        kb.keyElements.forEach((el, m) => { if ([1, 3].includes(m % 12)) el.classList.add("hk-key-group2"); else if ([6, 8, 10].includes(m % 12)) el.classList.add("hk-key-group3"); });
+        kb.keyElements.forEach((el, m) => { if ([1, 3].includes(m % 12)) el.classList.add("hk-key-group2");  });
         return;
       }
       const map = card.labels === "fromG" ? FROM_G : Object.fromEntries([...kb.keyElements.keys()].filter((m) => ![1, 3, 6, 8, 10].includes(m % 12)).map((m) => [m, midiToName(m).replace(/-?\d+$/, "")]));
@@ -802,6 +814,7 @@ function initLessonsTab(root) {
       if (w.pc !== undefined) {
         if (((midi % 12) + 12) % 12 === w.pc && midi !== w.not) return success();
         if (midi === w.not) reply("That's the same G 😄 Find a <b>different</b> one!", "hk-micro-oops");
+        else reply(`That's <b>${midiToName(midi).replace(/\d+$/, "")}</b> 🙈 Look for the letter <b>G</b>!`, "hk-micro-oops");
         return;
       }
       if (w.notes && w.notes.length === 1 && midi !== w.notes[0]) {

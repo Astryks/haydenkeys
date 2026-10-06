@@ -2235,3 +2235,16 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
   - **New "Turn your phone sideways!" popup:** appears when a piano shows in portrait (once per session). It auto-hides after 7s or when you rotate.
 - **Landscape phones:** the lesson fits on one screen, with title and Next lesson in the top bar, a short message, and a slim falling-notes strip over a full-height keyboard. Next is always visible, with no scrolling.
 - **Tested:** all 34 Day 1–3 cards (phone portrait), the popup swipe, and the landscape fit (Next visible, page doesn't scroll).
+
+## 2026-10-07 (night): Day 1 flows step by step; Back button; bigger keys
+- **← Back button** in every lesson's top bar. It goes to the previous lesson in the course.
+- **Day 1 reordered so each card follows from the last:** 4 chords fun fact (no keyboard yet) → find middle C → step left to G → build the G chord on G → G key vs G chord → letters repeat (find another G) → "key of G" = home is G → Em, C, D chords → numbers (G = 1, then count right: 4 C, 5 D, 6 E) → same shape every time → Boom, 4 chords → soft/strong → sing → another song.
+- **Everything moves rightward from G:**
+  - **G is now just left of middle C,** so counting 1–6 and all the chords (D, Em, C) sit to the right of G. Nothing jumps the other way anymore.
+- **Middle C made simple:** the 2-black-key groups are highlighted pink, and middle C is the white key just left of the middle pair. A tip adds that on a real piano it's the C nearest the middle, often under the brand name.
+- **Easier to press:**
+  - **Bigger keys:** Day 1–2 cards show fewer keys (F3–C5), so each key is bigger, and the keyboard is taller in portrait.
+  - **Phone tip on the first chord:** "Tricky on a phone? Tap the 3 keys one by one. The real practice is on your real piano 🎹". Taps one-by-one are accepted.
+- **Real-piano nudges:** after middle C, the first G chord and the 4-chord loop.
+- **Removed:** separate black-keys, any-size-piano, letters and "back to middle C" cards that broke the flow. Their content is folded into the cards above.
+- **Tested:** all 30 Day 1–3 cards on a phone-sized screen, no errors.

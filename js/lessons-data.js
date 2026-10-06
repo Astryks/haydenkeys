@@ -105,17 +105,13 @@ const MINUET_IN_G_OPENING = [74, 67, 69, 71, 72, 74, 67, 67];
 // Day 1, one tiny step per lesson: one short message, one thing to press.
 // Played by runMicroLesson() in lessons-ui.js (cards in MICRO_CARDS).
 const MICRO_LESSONS = [
-  { id: "m-intro", title: "4 chords, 100+ songs", subtitle: "But first, your piano", description: "4 chords play over 100 songs. First, let's get to know your piano." },
-  { id: "m-black-keys", title: "Black keys in 2s and 3s", subtitle: "Your map", description: "Black keys come in groups of 2 and 3, on every piano." },
-  { id: "m-any-piano", title: "Middle C on any piano", subtitle: "Big or small", description: "How to find middle C whatever size your piano is." },
+  { id: "m-intro", title: "4 chords, 100+ songs", subtitle: "Step 1: find middle C", description: "4 chords play over 100 songs. First, let's get to know your piano." },
   { id: "m-find-c", title: "Find middle C", subtitle: "Your first key", description: "Find middle C on your piano." },
-  { id: "m-find-g", title: "Find G", subtitle: "Count up from C", description: "Count up from middle C to G." },
+  { id: "m-find-g", title: "Find G", subtitle: "Just left of middle C", description: "From middle C, step left to G." },
   { id: "m-chord-g", title: "Your first chord: G", subtitle: "3 keys together", description: "Press G, B and D together." },
-  { id: "m-letters", title: "Every key has a letter", subtitle: "C D E F G A B", description: "The white keys are named with letters that repeat." },
   { id: "m-jargon", title: "G key or G chord?", subtitle: "Jargon alert", description: "A key is one thing you press. A chord is 3 keys together." },
+  { id: "m-another-g", title: "Another G?", subtitle: "Letters repeat", description: "Every key has a letter, and they repeat." },
   { id: "m-key-of-g", title: "In the key of G", subtitle: "A song's home", description: "A song in the key of G keeps coming home to G." },
-  { id: "m-another-g", title: "Another G?", subtitle: "Keys repeat", description: "There's a G in every group of keys." },
-  { id: "m-back-g", title: "Back to G", subtitle: "Middle C, then G", description: "Back to middle C, then play the G chord." },
   { id: "m-chord-em", title: "Chord 2: E minor", subtitle: "A sad sound", description: "Press E, G and B." },
   { id: "m-chord-c", title: "Chord 3: C", subtitle: "Start on middle C", description: "Press C, E and G." },
   { id: "m-chord-d", title: "Chord 4: D", subtitle: "One black key", description: "Press D, F sharp and A." },
