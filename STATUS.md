@@ -2317,3 +2317,11 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
   - **Tested:** with real taps, including while a toast was showing.
 - **iOS build 14.**
 - **Auto-advance:** after a correct answer Hayden cheers, then the next lesson opens by itself after 2s (3s when there's a real-piano tip to read). The Next button fills up as a countdown and can be tapped to skip the wait. "Finish Day N" still waits for a tap. Build 15.
+
+## 2026-10-06 — iOS build 16
+- Tabs: Lessons / Practice / My songs. Practice = "Upload any song" on top, "Or try these songs" below; tapping a song opens the piano and auto-plays the falling chords (← All songs / Next song →). My songs = uploads (saved on device, IndexedDB, max 12) + practiced songs.
+- Lessons never stop: day ends show a "Day N complete" card (streak + unlocks) and continue. Song cards after the 4 chords (The A Team, Perfect, Viva La Vida, Country Roads), "any pop song" card, quizzes that must be answered correctly.
+- Rewards: streak/day unlocks (songs, party hat, golden keys, streak freeze, crown). Next-reward teaser on Today.
+- Custom drawn icons everywhere (emoji only inside chats). New flat panda logo with animated poses. Intro screen (Start now / Continue, Lesson N of total).
+- Share: "I just learned <song> on Hayden Keys! Check it out haydenkeys.com" (native share sheet).
+- Header respects the notch / Dynamic Island (verified in simulator).

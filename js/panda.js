@@ -38,9 +38,18 @@ function props(pose) {
   return "";
 }
 
+// Accessories unlocked by streaks (see rewards.js): a crown beats a hat.
+function accessory() {
+  let u = {};
+  try { u = JSON.parse(localStorage.getItem("hk_unlocks") || "{}"); } catch (e) { /* ignore */ }
+  if (u.crown) return `<g class="hp-crown"><path d="M70 30 L80 44 L100 22 L120 44 L130 30 L126 56 L74 56 Z" fill="#f2b630" stroke="#d99a12" stroke-width="2"/><circle cx="100" cy="46" r="5" fill="#d9678f"/><circle cx="84" cy="50" r="3.5" fill="#4a9bc9"/><circle cx="116" cy="50" r="3.5" fill="#4a9bc9"/></g>`;
+  if (u.hat) return `<g class="hp-hat"><path d="M100 0 L122 46 L78 46 Z" fill="#d9678f"/><path d="M88 22 h24 M83 34 h34" stroke="#f2b630" stroke-width="4"/><circle cx="100" cy="2" r="7" fill="#f2b630"/></g>`;
+  return "";
+}
+
 function pandaSvg(pose = "idle", { label = "Hayden the panda" } = {}) {
   if (!POSES.includes(pose)) pose = "idle";
-  return `<svg class="hk-panda hp-${pose}" viewBox="0 0 200 220" role="img" aria-label="${label}">
+  return `<svg class="hk-panda hp-${pose}" viewBox="0 -10 200 230" role="img" aria-label="${label}">
     <g class="hp-all">
       <g class="hp-body">
         <ellipse cx="100" cy="178" rx="58" ry="40" class="hp-black"/>
@@ -58,6 +67,7 @@ function pandaSvg(pose = "idle", { label = "Hayden the panda" } = {}) {
         <ellipse cx="58" cy="118" rx="11" ry="7" class="hp-cheek"/><ellipse cx="142" cy="118" rx="11" ry="7" class="hp-cheek"/>
         <path d="M91 108 Q100 104 109 108 Q106 117 100 118 Q94 117 91 108Z" class="hp-black"/>
         ${mouth(pose)}
+        ${accessory()}
       </g>
       <g class="hp-bow"><path d="M100 152 L82 142 Q78 152 82 162 Z"/><path d="M100 152 L118 142 Q122 152 118 162 Z"/><circle cx="100" cy="152" r="6"/></g>
       ${props(pose)}

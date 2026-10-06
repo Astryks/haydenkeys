@@ -1,7 +1,7 @@
 {
   "name": "haydenkeys",
   "version": "1.0.0",
-  "description": "Hayden Keys \u2014 a free, gamified, Duolingo-style piano learning web app. Pure static site, no build step for the web itself; this package.json exists only to scaffold the Capacitor iOS wrapper project for later native App Store submission.",
+  "description": "Hayden Keys — a free, gamified, Duolingo-style piano learning web app. Pure static site, no build step for the web itself; this package.json exists only to scaffold the Capacitor iOS wrapper project for later native App Store submission.",
   "private": true,
   "scripts": {
     "build:www": "sh scripts/build-www.sh",
@@ -16,7 +16,8 @@
   "homepage": "https://github.com/Astryks/haydenkeys#readme",
   "dependencies": {
     "@capacitor/core": "^8.5.2",
-    "@capacitor/ios": "^8.5.2"
+    "@capacitor/ios": "^8.5.2",
+    "@capacitor/share": "^8.0.3"
   },
   "devDependencies": {
     "@capacitor/cli": "^8.5.2"

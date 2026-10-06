@@ -1,3 +1,4 @@
+import { icon } from "./icons.js";
 import { SONGS, getDifficulty } from "./songs-data.js";
 import { markSongStatus, getSavedSongs } from "./storage.js";
 import { transcribeFile, renderTranscribedPlayback } from "./transcribe.js";
@@ -199,9 +200,9 @@ function initDiscoverTab(root, { onStartSong } = {}) {
   root.innerHTML = `
     <div class="hk-discover">
       <div class="hk-upload-banner hk-upload-banner-top">
-        <h2>🎵 Upload any song and we'll find the chords for you!</h2>
+        <h2>${icon("song", 28)} Upload any song and we'll find the chords for you!</h2>
         <p>Not in the library? Pick a song from your phone. We'll work out the notes and easy chords, and show songs that use the same chords.</p>
-        <label class="hk-upload-pick" for="hk-discover-upload">📂 Choose a song</label>
+        <label class="hk-upload-pick" for="hk-discover-upload">${icon("folder", 24)} Choose a song</label>
         <p class="hk-upload-fine">(Hayden Keys is for entertainment and learning only. We don't support copying songs from YouTube or other links without the artist's permission. This feature is here so you can learn the songs you love, and support the artists who create beautiful things in our world. It all runs on your device; nothing is uploaded.)</p>
         <input type="file" id="hk-discover-upload" class="hk-upload-input" accept="audio/*,video/*" />
         <div id="hk-discover-upload-status" class="hk-cal-status"></div>

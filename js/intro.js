@@ -12,7 +12,7 @@ function showIntro({ total, done, next, number }) {
     <div class="hk-intro-notes" aria-hidden="true"><span>♪</span><span>♫</span><span>♩</span><span>♬</span><span>♪</span></div>
     <div class="hk-intro-panda">${pandaSvg(started ? "wave" : "cheer", { label: "Hayden the panda" })}</div>
     <h1 class="hk-intro-title">Hayden Keys</h1>
-    <p class="hk-intro-tag">${started ? "Welcome back! Ready to play? 🎹" : "Learn piano, one tiny step at a time 🎹"}</p>
+    <p class="hk-intro-tag">${started ? "Welcome back! Ready to play?" : "Learn piano, one tiny step at a time"}</p>
     ${started && next ? `<div class="hk-intro-progress"><div class="hk-hero-bar"><span style="width:${Math.max(3, Math.round((100 * done) / total))}%"></span></div><div>Lesson ${number} of ${total}</div></div>` : ""}
     <button class="hk-intro-go" type="button">${started ? (next ? "Continue ▶" : "Let's play ▶") : "Start now ▶"}</button>`;
   document.body.appendChild(el);

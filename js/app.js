@@ -1,5 +1,7 @@
 import { initDiscoverTab } from "./discover.js";
 import { initPracticeTab } from "./practice.js";
+import { initPracticeHome } from "./practice-home.js";
+import { initMySongs } from "./my-songs.js";
 import { initSavedTab } from "./saved.js";
 import { initLessonsTab, renderRoadmapTab, courseProgress } from "./lessons-ui.js";
 import { showIntro } from "./intro.js";
@@ -10,25 +12,30 @@ import { checkBadges } from "./badges.js";
 import { getLevel } from "./storage.js";
 import { maybeShowFunFact, showFunFact } from "./fun-facts.js";
 import { initPopups } from "./popups.js";
+import { applyRewards } from "./rewards.js";
 import { pandaSvg } from "./panda.js";
 
 // Stripe Payment Link for the footer's "Support Hayden Keys" link —
 // empty until Sid creates one in his own Stripe dashboard.
 const STRIPE_PAYMENT_LINK = "";
 
-const TABS = ["discover", "practice", "saved", "lessons", "roadmap", "how", "about", "midi"];
+const TABS = ["discover", "practice", "saved", "lessons", "roadmap", "mysongs", "how", "about", "midi"];
 const panels = {};
 let savedApi = null;
 let discoverApi = null;
 let lessonsApi = null;
 let practiceApi = null;
+let mySongsApi = null;
 
+// Pages without a tab button (Roadmap, Discover…) are opened by name.
+window.addEventListener("hk-show-tab", (e) => showTab(e.detail));
 function showTab(name) {
   TABS.forEach((t) => {
     panels[t].classList.toggle("hk-hidden", t !== name);
-    document.querySelector(`[data-tab="${t}"]`).classList.toggle("hk-tab-active", t === name);
+    document.querySelector(`.hk-tab[data-tab="${t}"]`)?.classList.toggle("hk-tab-active", t === name);
   });
   if (name === "saved" && savedApi) savedApi.refresh();
+  if (name === "mysongs" && mySongsApi) mySongsApi.refresh();
   // Discover's tier-gating (locked/unlocked Intermediate/Advanced songs)
   // depends on completion state that can change elsewhere (Practice,
   // Saved) — refresh it every time the tab is shown so lock status is
@@ -65,6 +72,7 @@ function init() {
     panels[t] = document.getElementById(`panel-${t}`);
   });
   initPopups();
+  applyRewards();
   showIntro(courseProgress());
   const logo = document.getElementById("hk-logo-panda");
   if (logo) logo.innerHTML = pandaSvg("wave", { label: "Hayden Keys" });
@@ -96,15 +104,15 @@ function init() {
 
   discoverApi = initDiscoverTab(panels.discover, {
     onStartSong: (song) => {
-      practiceApi = initPracticeTab(panels.practice, { initialSong: song });
       showTab("practice");
+      practiceApi.openByTitle(song.title);
     },
   });
-  practiceApi = initPracticeTab(panels.practice, {});
+  practiceApi = initPracticeHome(panels.practice);
   savedApi = initSavedTab(panels.saved, {
     onOpenSong: (song) => {
-      practiceApi = initPracticeTab(panels.practice, { initialSong: song });
       showTab("practice");
+      practiceApi.openByTitle(song.title);
     },
   });
   lessonsApi = initLessonsTab(panels.lessons);
@@ -113,10 +121,10 @@ function init() {
     const { SONGS } = await import("./songs-data.js");
     const song = SONGS.find((s) => s.title === e.detail.title);
     if (!song) return;
-    practiceApi = initPracticeTab(panels.practice, { initialSong: song });
     showTab("practice");
-    window.scrollTo(0, 0);
+    practiceApi.openByTitle(song.title);
   });
+  mySongsApi = initMySongs(panels.mysongs, { openSong: (title) => { showTab("practice"); practiceApi.openByTitle(title); } });
   initHowItWorksTab(panels.how);
   initAboutTab(panels.about);
   initMidiTab(panels.midi);
@@ -190,7 +198,7 @@ window.addEventListener("hk-celebrate", (e) => {
   confetti();
   // Day 1's tiny steps celebrate with notes only; a fun fact at the end.
   const id = e.detail?.lessonId || "";
-  if (!/^(m|d\d)-/.test(id) || ["m-another-song", "d2-key-c", "d3-song"].includes(id)) maybeShowFunFact();
+  if (!/^(m|d\d|q)-/.test(id) && !["lesson-1", "lesson-2", "lesson-4", "lesson-twohand-preview", "lesson-eartraining"].includes(id)) maybeShowFunFact();
 });
 
 document.addEventListener("DOMContentLoaded", init);

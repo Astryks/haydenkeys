@@ -13,6 +13,7 @@ import { renderNoteHighway } from "./note-highway.js";
 import { playBeat } from "./drums.js";
 import { getAudioContext } from "./keyboard.js";
 import { SONGS } from "./songs-data.js";
+import { icon } from "./icons.js";
 import { parseChordSymbol } from "./chord-utils.js";
 
 // Item 44: a short cleanup pass on basic-pitch's raw note output.
@@ -447,7 +448,7 @@ function songMatches(easyNotes) {
 function showSongMatches(el, easyNotes) {
   if (!el) return;
   const m = songMatches(easyNotes);
-  el.innerHTML = `<div class="hk-upload-recognized" id="hk-upload-recognized"></div>` + (m.length ? `<div class="hk-upload-match-box">🔎 <b>These songs use the same chords:</b>
+  el.innerHTML = `<div class="hk-upload-recognized" id="hk-upload-recognized"></div>` + (m.length ? `<div class="hk-upload-match-box">${icon("song", 20)} <b>These songs use the same chords:</b>
     <div class="hk-upload-match-list">${m.slice(0, 6).map((s) => `<button class="hk-btn hk-btn-small" data-match="${s.title.replace(/"/g, "&quot;")}">${s.title} <span>· ${s.artist}</span></button>`).join("")}</div>
     <small>Lots of songs share the same chords, so this is a hint, not an exact match. Tap one to learn the whole song.</small></div>` : "");
   const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
@@ -462,7 +463,7 @@ function showRecognition(box, btn) {
   const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
   box.innerHTML = `<div class="hk-upload-rec-box">🎧 Listening for the song name…</div>`;
   lastRecognition.then((r) => {
-    if (btn) { btn.disabled = false; btn.textContent = "🔎 Guess the song (Shazam)"; }
+    if (btn) { btn.disabled = false; btn.innerHTML = `${icon("search", 20)} Guess the song (Shazam)`; }
     if (!box.isConnected) return;
     if (!r || !r.found) { box.innerHTML = `<div class="hk-upload-rec-box">🤔 Couldn't find this song. Try a clearer part of it.</div>`; return; }
     const inLib = SONGS.find((s) => s.title.toLowerCase() === String(r.title).toLowerCase());
@@ -579,7 +580,7 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
         <span class="hk-upload-clock" id="hk-upload-total">0:00</span>
       </div>
       <details class="hk-upload-settings">
-        <summary>⚙️ Customise: speed, easy or hard, sound, guess the song</summary>
+        <summary>${icon("gear", 22)} Customise: speed, easy or hard, sound, guess the song</summary>
       <div class="hk-speed-picker">
         <span class="hk-speed-label">Speed:</span>
         ${SPEEDS.map((s) => `<button class="hk-speed-btn ${s === 1 ? "hk-speed-active" : ""}" data-speed="${s}">${s}×${s === 1 ? " (normal)" : s === 0.5 ? " (slow)" : ""}</button>`).join("")}
@@ -595,10 +596,10 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
           <button class="hk-speed-btn" data-sound="both" title="The notes on piano, on top of your recording">🎵+🎹 Piano + song</button>` : `<span class="hk-speed-label">🎹 Piano notes</span>`}
         ${beat ? `<button class="hk-speed-btn" data-toggle="drums" title="A simple beat at the song's estimated tempo">🥁 Beat (~${beat.bpm} BPM)</button>` : ""}
       </div>
-        ${window.Capacitor?.isNativePlatform?.() ? `<div class="hk-speed-picker"><button class="hk-btn hk-upload-guess" id="hk-upload-guess">🔎 Guess the song (Shazam)</button></div>` : ""}
+        ${window.Capacitor?.isNativePlatform?.() ? `<div class="hk-speed-picker"><button class="hk-btn hk-upload-guess" id="hk-upload-guess">${icon("search", 20)} Guess the song (Shazam)</button></div>` : ""}
         <div class="hk-upload-match" id="hk-upload-match"></div>
         <p class="hk-honest-note" id="hk-upload-summary"></p>
-        <p class="hk-upload-legend">💡 <b>C4</b> = middle C. The number says which group of keys: <b>smaller = further left</b> (lower), bigger = further right. So <b>A3</b> is the A just left of middle C, and <b>A2</b> is the A one group further left.</p>
+        <p class="hk-upload-legend">${icon("fact", 18)} <b>C4</b> = middle C. The number says which group of keys: <b>smaller = further left</b> (lower), bigger = further right. So <b>A3</b> is the A just left of middle C, and <b>A2</b> is the A one group further left.</p>
       </details>
     </div>`;
 

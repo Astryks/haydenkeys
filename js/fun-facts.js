@@ -6,6 +6,7 @@
 // rather than repeated.
 
 import { peopleHtml, videoHtml, wireVideos } from "./media.js";
+import { icon } from "./icons.js";
 
 const FACTS = [
   // --- Inventing the piano ---
@@ -134,7 +135,7 @@ function showFunFact(fact = nextFact()) {
   card.setAttribute("aria-label", "Did you know?");
   card.innerHTML = `
     <div class="hk-funfact-card">
-      <div class="hk-funfact-kicker">🎹 Did you know?</div>
+      <div class="hk-funfact-kicker">${icon("fact", 22)} Did you know?</div>
       <h3>${fact.title}</h3>
       <p>${fact.text}</p>
       ${peopleHtml(fact.people)}

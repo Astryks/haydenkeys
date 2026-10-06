@@ -1209,3 +1209,67 @@ body.hk-lesson-open .hk-sideways { top: calc(env(safe-area-inset-top, 0px) + 64p
 .hk-micro-next-auto { position: relative; overflow: hidden; }
 .hk-micro-next-auto::after { content: ""; position: absolute; left: 0; bottom: 0; height: 5px; width: 100%; background: rgba(255,255,255,0.75); transform-origin: left; animation: hk-countdown var(--hk-auto, 2s) linear forwards; }
 @keyframes hk-countdown { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* ===== Custom icons ===== */
+.hk-icon { display: inline-block; vertical-align: -0.2em; flex: 0 0 auto; }
+.hk-btn .hk-icon, .hk-upload-pick .hk-icon { margin-right: 4px; }
+.hk-task-icon .hk-icon { display: block; }
+.hk-micro-wrong { opacity: 0.45; text-decoration: line-through; }
+.hk-micro-choice { min-width: 110px; }
+.hk-next-reward { display: flex; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 18px; background: #fff8e6; border: 2px dashed #f2b630; }
+.hk-next-reward > div > b { display: block; }
+.hk-next-reward span { display: block; }
+.hk-next-reward span { font-size: 0.85rem; color: var(--hk-text-dim); }
+
+/* ===== Day complete + rewards ===== */
+.hk-daydone { position: fixed; inset: 0; z-index: 20001; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(42, 30, 80, 0.45); transition: opacity 0.3s; }
+.hk-daydone-out { opacity: 0; }
+.hk-daydone-card { width: min(420px, 100%); max-height: 92vh; overflow-y: auto; text-align: center; background: linear-gradient(160deg, #fff, #f6f0ff); border-radius: 28px; padding: 22px 20px; box-shadow: 0 20px 50px rgba(60, 40, 120, 0.35); animation: hk-pop 0.45s cubic-bezier(.2,1.4,.4,1); }
+.hk-daydone-panda { width: 140px; height: 160px; margin: -10px auto 0; }
+.hk-daydone-card h2 { margin: 4px 0; font-size: 1.8rem; font-weight: 900; background: linear-gradient(90deg, var(--hk-accent), var(--hk-purple)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hk-daydone-streak { display: inline-flex; align-items: center; gap: 6px; margin: 6px 0 10px; padding: 6px 16px; border-radius: 999px; background: #fff1e4; color: #c45a10; font-weight: 800; }
+.hk-daydone-streak b { font-size: 1.6rem; }
+.hk-daydone-label { margin: 6px 0; font-size: 0.8rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--hk-purple); }
+.hk-reward { display: flex; gap: 12px; align-items: center; text-align: left; margin: 6px 0; padding: 10px 12px; border-radius: 16px; background: #fff; border: 2px solid var(--hk-purple-soft); animation: hk-pop 0.5s 0.2s cubic-bezier(.2,1.4,.4,1) both; }
+.hk-reward b { display: block; } .hk-reward span { font-size: 0.85rem; color: var(--hk-text-dim); }
+.hk-daydone-next { margin: 10px 0; font-size: 0.9rem; color: var(--hk-text-dim); }
+.hk-daydone-go { margin-top: 8px; min-width: 220px; min-height: 56px; border: none; border-radius: 999px; font-size: 1.25rem; font-weight: 900; color: #fff; cursor: pointer; background: linear-gradient(135deg, var(--hk-accent), var(--hk-purple)); box-shadow: 0 10px 24px rgba(138, 99, 210, 0.35); }
+
+/* Reward: golden piano keys */
+body.hk-gold-keys .hk-key-white { background: linear-gradient(#fff9e3, #f6dd8f) !important; border-color: #e6c562 !important; }
+body.hk-gold-keys .hk-key-black { background: linear-gradient(#5a4310, #2e2206) !important; }
+
+/* ===== Practice home + song player ===== */
+.hk-ph { max-width: 720px; margin: 10px auto; }
+.hk-ph-upload { background: linear-gradient(135deg, #f3eeff, #fbe7f0); border-radius: 22px; padding: 16px; }
+.hk-ph-upload-head { display: flex; align-items: center; gap: 12px; }
+.hk-ph-upload-head h2 { margin: 0; }
+.hk-ph-upload-head p { margin: 4px 0; color: var(--hk-text-dim); }
+.hk-ph-panda { width: 80px; height: 90px; flex: 0 0 auto; }
+.hk-ph-title { margin: 20px 0 8px; }
+.hk-ph-list { display: flex; flex-direction: column; gap: 8px; }
+.hk-ph-song { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 12px 14px; border-radius: 16px; border: 1px solid var(--hk-border); background: var(--hk-panel); cursor: pointer; color: var(--hk-text); min-height: 64px; }
+.hk-ph-song:hover { border-color: var(--hk-purple); }
+.hk-ph-song-body { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.hk-ph-song-body span { font-size: 0.85rem; color: var(--hk-text-dim); }
+.hk-ph-tag { font-size: 0.72rem; font-weight: 800; color: #b07800; background: #fff3cc; border-radius: 999px; padding: 3px 8px; }
+.hk-player-bar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 8px; padding: calc(env(safe-area-inset-top, 0px) + 6px) 0 8px; background: var(--hk-bg); }
+.hk-player-title { flex: 1; min-width: 0; text-align: center; display: flex; flex-direction: column; }
+.hk-player-title span { font-size: 0.8rem; color: var(--hk-text-dim); }
+.hk-player-tip { font-size: 0.85rem; color: var(--hk-text-dim); margin: 4px 0 8px; }
+/* Player: just the falling chords, piano and Play. Extra options stay out of the way. */
+.hk-practice-simple .hk-practice-header, .hk-practice-simple .hk-mode-picker, .hk-practice-simple .hk-mode-desc,
+.hk-practice-simple .hk-upload-section, .hk-practice-simple .hk-playbyear-section, .hk-practice-simple #hk-camera-panel,
+.hk-practice-simple #hk-calibration-panel, .hk-practice-simple #hk-ear-status { display: none !important; }
+.hk-practice-simple .hk-practice { display: flex; flex-direction: column; }
+.hk-practice-simple #hk-practice-controls { order: -1; }
+.hk-practice-simple #hk-playpause { width: 100%; min-height: 58px; font-size: 1.3rem; font-weight: 900; border: none; border-radius: 16px; color: #fff; background: linear-gradient(135deg, var(--hk-accent), var(--hk-purple)); }
+.hk-practice-simple .hk-speed-picker { order: 10; }
+.hk-ms-upload { cursor: pointer; }
+.hk-today-links { display: flex; gap: 8px; flex-wrap: wrap; }
+.hk-share-btn { border-color: #d8d0fb; color: #7b68e0; font-weight: 700; }
+.hk-player-share { margin: 0 0 8px; }
+.hk-daydone-share { margin: 8px 0 0; }
+.hk-share-pop { position: fixed; inset: 0; z-index: 20005; background: rgba(42,30,80,0.4); display: flex; align-items: flex-end; justify-content: center; padding: 16px; }
+.hk-share-card { width: min(420px, 100%); background: #fff; border-radius: 22px; padding: 16px; animation: hk-pop 0.3s ease-out; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+.hk-share-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }

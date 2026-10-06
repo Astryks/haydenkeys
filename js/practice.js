@@ -1,3 +1,4 @@
+import { icon } from "./icons.js";
 import { pandaSvg } from "./panda.js";
 import { SONGS, SONG_STRUCTURES, ONE_FIVE_SIX_FOUR_SONGS } from "./songs-data.js";
 import { renderKeyboard, playChord, playTone } from "./keyboard.js";
@@ -224,9 +225,9 @@ function initPracticeTab(root, { initialSong } = {}) {
         <div id="hk-camera-panel" class="hk-camera-panel hk-hidden"></div>
         <div id="hk-calibration-panel" class="hk-calibration-panel hk-hidden"></div>
         <section class="hk-upload-section">
-          <h3>🎵 Upload any song and we'll find the chords for you!</h3>
+          <h3>${icon("song", 26)} Upload any song and we'll find the chords for you!</h3>
           <p>Pick a song from your phone (a few seconds is enough). We'll show the notes falling onto the piano, the easy chords to play, and songs that use the same chords.</p>
-          <label class="hk-upload-pick" for="hk-audio-upload">📂 Choose a song</label>
+          <label class="hk-upload-pick" for="hk-audio-upload">${icon("folder", 24)} Choose a song</label>
           <p class="hk-upload-fine">(Hayden Keys is for entertainment and learning only. We don't support copying songs from YouTube or other links without the artist's permission. This feature is here so you can learn the songs you love, and support the artists who create beautiful things in our world. It all runs on your device; nothing is uploaded.)</p>
           <input type="file" id="hk-audio-upload" class="hk-upload-input" accept="audio/*,video/*" />
           <div id="hk-upload-status" class="hk-cal-status"></div>
