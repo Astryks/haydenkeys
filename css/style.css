@@ -1188,3 +1188,20 @@ body.hk-intro-open { overflow: hidden; }
 .hk-hero-cta { align-self: flex-start; margin-top: 4px; padding: 10px 22px; border-radius: 999px; font-weight: 900; font-size: 1.05rem; color: #fff; background: linear-gradient(135deg, var(--hk-accent), var(--hk-purple)); animation: hk-nudge 1.6s ease-in-out infinite; }
 .hk-today-sub { margin: 10px 0 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--hk-text-dim); }
 .hk-rotate-tip { display: none !important; }
+
+/* Light purple chat bubbles (instead of blue) */
+.hk-chat-me .hk-chat-bubble { background: #a99cf5; color: #fff; }
+.hk-chat-chip { border-color: #a99cf5; color: #7b68e0; }
+.hk-chat-chip:active { background: #a99cf5; color: #fff; }
+.hk-micro-bubble { border-color: #d8d0fb; }
+.hk-micro-bubble b, .hk-chat-bubble b { color: #7b68e0; }
+.hk-chat-me .hk-chat-bubble b { color: #fff; }
+.hk-chat-them .hk-chat-bubble { border-color: #e4defc; }
+.hk-chat-bubble p { margin: 8px 0; }
+
+/* Back button must always be tappable: toasts never block taps, and the
+   sideways popup sits below the lesson's top bar. */
+#hk-toasts, .hk-toast { pointer-events: none !important; }
+body.hk-lesson-open #hk-toasts { top: calc(env(safe-area-inset-top, 0px) + 64px); }
+body.hk-lesson-open .hk-sideways { top: calc(env(safe-area-inset-top, 0px) + 64px); }
+.hk-lesson-topbar { position: relative; z-index: 10003; }

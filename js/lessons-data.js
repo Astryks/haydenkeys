@@ -107,6 +107,7 @@ const MINUET_IN_G_OPENING = [74, 67, 69, 71, 72, 74, 67, 67];
 const MICRO_LESSONS = [
   { id: "m-intro", title: "4 chords, 100+ songs", subtitle: "Step 1: find middle C", description: "4 chords play over 100 songs. First, let's get to know your piano." },
   { id: "m-find-c", title: "Find middle C", subtitle: "Your first key", description: "Find middle C on your piano." },
+  { id: "m-white-black", title: "Key names: A, B, C… and A1, A2", subtitle: "White keys, black keys", description: "White keys are letters; black keys are in between." },
   { id: "m-find-g", title: "Find G", subtitle: "Just left of middle C", description: "From middle C, step left to G." },
   { id: "m-chord-g", title: "Your first chord: G", subtitle: "3 keys together", description: "Press G, B and D together." },
   { id: "m-jargon", title: "G key or G chord?", subtitle: "Jargon alert", description: "A key is one thing you press. A chord is 3 keys together." },
@@ -137,6 +138,7 @@ const MICRO_LESSONS = [
   { id: "d3-walk", title: "Bass walks with the chords", subtitle: "G · D · E · C", description: "Left hand plays each chord's first note." },
   { id: "d3-ear-1", title: "Use your ears", subtitle: "Happy or sad?", description: "Listen: major or minor?" },
   { id: "d3-ear-2", title: "Ears again", subtitle: "Happy or sad?", description: "One more: major or minor?" },
+  { id: "d3-linger", title: "Song: Linger", subtitle: "The Cranberries · D A C G", description: "Play the 4-chord loop of Linger." },
   { id: "d3-song", title: "Two-hand song", subtitle: "Both hands, 4 chords", description: "Play the 4-chord loop with both hands." },
 ];
 

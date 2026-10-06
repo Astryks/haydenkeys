@@ -2296,3 +2296,23 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
 - **Lesson numbers:** every lesson's top bar shows a "6/173" counter.
 - **Notch fix:** the header (and lesson top bar) sits below the iPhone notch / Dynamic Island, so the panda isn't cut off. The old rotate tip that covered it is removed; the sideways popup appears when a piano shows.
 - **iOS build 13.**
+
+## 2026-10-07: chat-style Day 1, middle C on any piano, Linger, Back fixed
+- **WhatsApp-style chats on the wordy cards:** you tap the question, Hayden answers, then the action card and keyboard appear. Your bubbles are now a light purple.
+  - **Lesson 1 intro:** "Welcome to Hayden Keys!" Then three spaced-out lines: 4 chords play over 100 of the most popular songs. They're G, D, Em and C (people often say "G A C D"). First, let's make sure your piano and this app agree where middle C is.
+  - **Find middle C:**
+    - **What is it:** the C nearest the middle of your piano.
+    - **How to find it:** the white key just left of the 2 black keys.
+    - **On different sizes:** the 40th key on an 88-key piano, the 33rd on 76 keys, the 25th on 61 keys.
+  - **New "Key names: A, B, C… and A1, A2" card:**
+    - **Letters:** white keys are letters A–G that repeat, numbered A0, A1, A2…, with the number going up at each C. So middle C is C4, the 40th key on a full 88-key piano.
+    - **Black keys:** they're sharps and flats in groups of 2 and 3; press one in a group of 3.
+  - **Also chat-style:** G key or G chord, "in the key of G", A2/A3/C4, and happy vs sad numbers.
+- **"Linger" by The Cranberries:**
+  - **As a lesson:** near the end of the beginner days (Day 3). The whole song loops D → A → C → G in D major ([songnotes](https://songnotes.net/lessons/562/)).
+  - **In the library:** added as a Beginner song.
+- **Back button fixed:**
+  - **What was wrong:** XP toasts and the sideways popup sat on top of it and swallowed taps.
+  - **Now:** toasts never block taps, and the popup sits below the lesson's top bar. Back walks lesson by lesson to Lesson 1, then to Today (it no longer jumps into the optional pre-lessons).
+  - **Tested:** with real taps, including while a toast was showing.
+- **iOS build 14.**

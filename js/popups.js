@@ -2,7 +2,7 @@
 // tapped ✕) to dismiss. Also shows a one-time "turn your phone sideways"
 // popup whenever a piano keyboard appears while the phone is upright.
 
-const SWIPEABLE = ".hk-rotate-tip, .hk-funfact-card, .hk-toast, .hk-sideways";
+const SWIPEABLE = ".hk-rotate-tip, .hk-funfact-card, .hk-sideways";
 
 function dismiss(el) {
   const target = el.classList.contains("hk-funfact-card") ? el.closest(".hk-funfact") || el : el;

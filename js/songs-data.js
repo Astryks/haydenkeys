@@ -54,6 +54,21 @@ import { WORLD_SONGS, WORLD_LANGUAGES, WORLD_ALSO } from "./world-songs.js";
 
 const SONGS = [
   {
+    title: "Linger",
+    artist: "The Cranberries",
+    genre: "Alternative/Rock",
+    popularityRank: 122,
+    year: 1993,
+    key: "D major",
+    chords: ["D", "A", "C", "G"],
+    degreeSequence: "I - V - bVII - IV",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    difficulty: "Beginner",
+    notes:
+      "The whole song loops D-A-C-G in D major (the C is a borrowed bVII chord), at around 90 BPM. Taught in the Day 3 'Song: Linger' lesson.",
+  },
+  {
     title: "Love Story",
     artist: "Taylor Swift",
     genre: "Pop/Country",
