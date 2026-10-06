@@ -29,7 +29,9 @@ function getAudioContext() {
   if (!sharedAudioCtx) {
     sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
   }
-  if (sharedAudioCtx.state === "suspended") sharedAudioCtx.resume();
+  // iOS also has an "interrupted" state (after a call, Siri, or switching
+  // apps) — resume from anything that isn't running.
+  if (sharedAudioCtx.state !== "running") sharedAudioCtx.resume?.().catch?.(() => {});
   return sharedAudioCtx;
 }
 
@@ -52,6 +54,7 @@ function unlockAudio() {
   if (c.state !== "running") c.resume?.();
   else ["touchend", "pointerdown", "keydown"].forEach((t) => window.removeEventListener(t, unlockAudio, true));
 }
+if (typeof document !== "undefined") document.addEventListener("visibilitychange", () => { if (!document.hidden) getAudioContext(); });
 if (typeof window !== "undefined") ["touchend", "pointerdown", "keydown"].forEach((t) => window.addEventListener(t, unlockAudio, true));
 
 function freqFromMidi(midi) {
