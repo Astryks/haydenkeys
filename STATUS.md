@@ -2285,3 +2285,14 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
   - **Owner action:** enable the **ShazamKit** App Service for `com.haydenkeys.app` (developer.apple.com → Identifiers → com.haydenkeys.app → App Services → ShazamKit → Save). Matching won't work until this is on.
   - **No slowdown:** it only runs when the button is pressed.
 - **A2/A3/C4 card:** every letter has its own colour, the same in every group.
+
+## 2026-10-07: intro screen, Today hero, lesson numbers, notch fix
+- **Intro screen** every time the app opens:
+  - Hayden waves (or cheers for new learners) with floating notes.
+  - New learners get "Learn piano, one tiny step at a time" and **Start now ▶**.
+  - Returning learners get "Welcome back!", a progress bar, "Lesson 6 of 173" and **Continue ▶**.
+- **Picks up where you left off:** progress is saved on the device, and Today and the intro always open the next unfinished lesson, even days later.
+- **Today hero card:** big panda, "LESSON 6 OF 173", lesson title, progress bar, "5 done · streak · level", and a bouncing **Start now / Continue** button. "Also today" lists the review and a song.
+- **Lesson numbers:** every lesson's top bar shows a "6/173" counter.
+- **Notch fix:** the header (and lesson top bar) sits below the iPhone notch / Dynamic Island, so the panda isn't cut off. The old rotate tip that covered it is removed; the sideways popup appears when a piano shows.
+- **iOS build 13.**

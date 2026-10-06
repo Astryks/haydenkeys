@@ -269,27 +269,45 @@ const MICRO_CARDS = {
 };
 
 // Today: the day's tasks as big full-width cards, one thing each.
+// Where the learner is in the course: "Lesson 6 of 150".
+function courseProgress() {
+  const core = LESSONS.filter((l) => !l.optional && !l.pre);
+  const doneCount = core.filter((l) => isLessonComplete(l.id)).length;
+  const next = core.find((l) => !isLessonComplete(l.id)) || null;
+  return { total: core.length, done: doneCount, next, number: next ? core.indexOf(next) + 1 : core.length };
+}
+
+// Today: the day's tasks as big full-width cards, one thing each.
 function todayHtml() {
-  const next = LESSONS.find((l) => !l.optional && !l.pre && !isLessonComplete(l.id));
+  const { total, done: doneCount, next, number } = courseProgress();
   const quests = getQuests();
   const done = (id) => quests.find((q) => q.id === id)?.done;
   const streak = getStreak();
   const lv = getLevel();
-  const started = isLessonComplete("lesson-1");
+  const started = doneCount > 0;
+  const pct = Math.round((100 * doneCount) / Math.max(1, total));
   const card = (icon, title, sub, attrs, isDone, cta) => `
     <button class="hk-task ${isDone ? "hk-task-done" : ""}" ${attrs}>
       <span class="hk-task-icon">${isDone ? "✅" : icon}</span>
       <span class="hk-task-body"><strong>${title}</strong><span>${sub}</span></span>
       <span class="hk-task-cta">${isDone ? "Done" : cta}</span>
     </button>`;
+  const hero = next ? `
+      <button class="hk-hero" data-lesson="${next.id}">
+        <div class="hk-hero-panda">${pandaSvg(started ? "wave" : "cheer")}</div>
+        <div class="hk-hero-body">
+          <div class="hk-hero-kicker">${started ? `Lesson ${number} of ${total}` : "Your piano journey starts here"}</div>
+          <div class="hk-hero-title">${next.title}</div>
+          <div class="hk-hero-bar"><span style="width:${Math.max(3, pct)}%"></span></div>
+          <div class="hk-hero-meta">${started ? `${doneCount} done${streak.count ? ` · 🔥 ${streak.count}-day streak` : ""} · Level ${lv.level}` : "One tiny step at a time · 5 minutes a day"}</div>
+          <span class="hk-hero-cta">${started ? "Continue ▶" : "Start now ▶"}</span>
+        </div>
+      </button>`
+    : card("🏆", "Every lesson done!", "Pick any topic again from the Roadmap", "data-go-roadmap", false, "Open");
   return `
     <div class="hk-today">
-      <div class="hk-today-head">
-        <div class="hk-today-mascot">${pandaSvg("wave")}</div>
-        <div><h2>${started ? "Today's piano time" : "Welcome to Hayden Keys!"}</h2>
-        <p class="hk-honest-note">${started ? `🔥 ${streak.count}-day streak · Level ${lv.level} ${lv.title}` : "Tap your first task to begin. One step at a time!"}</p></div>
-      </div>
-      ${next ? card("🎹", started ? "Today's lesson" : "Your first lesson", next.title, `data-lesson="${next.id}"`, done("lesson"), "Start") : card("🏆", "Every lesson done!", "Pick any topic again from the Roadmap", "data-go-roadmap", false, "Open")}
+      ${hero}
+      ${started ? `<h3 class="hk-today-sub">Also today</h3>` : ""}
       ${started ? card("🧠", "2-minute review", "A quick warm-up of what you've learned", 'data-lesson="daily-review"', reviewDoneToday(), "Start") : ""}
       ${started ? card("🎵", "Play a song", "Practice any song for a few minutes", "data-go-practice", done("practice"), "Go") : ""}
       ${started ? `<button class="hk-btn hk-funfact-open hk-today-fact" type="button">🎹 Did you know? A piano fun fact</button>` : ""}
@@ -513,7 +531,7 @@ function initLessonsTab(root) {
     runLessonExitCleanups();
     main.innerHTML = `
       <div class="hk-lesson-player">
-        <div class="hk-lesson-topbar"><button class="hk-lesson-exit" id="hk-lesson-exit" aria-label="Close lesson">✕</button><button class="hk-lesson-back" id="hk-lesson-back" aria-label="Previous lesson">← Back</button><h2>${title}</h2></div>
+        <div class="hk-lesson-topbar"><button class="hk-lesson-exit" id="hk-lesson-exit" aria-label="Close lesson">✕</button><button class="hk-lesson-back" id="hk-lesson-back" aria-label="Previous lesson">← Back</button><h2>${title}</h2><span class="hk-lesson-count" id="hk-lesson-count"></span></div>
         <div class="hk-lesson-content" id="hk-lesson-content"></div>
         <div id="hk-lesson-highway" class="hk-lesson-highway hk-hidden"></div>
         <div id="hk-lesson-keyboard" class="hk-keyboard-wrap"></div>
@@ -525,6 +543,9 @@ function initLessonsTab(root) {
     const at = order.findIndex((l) => l.id === currentLessonId);
     const backBtn = main.querySelector("#hk-lesson-back");
     if (at > 0) backBtn.addEventListener("click", () => startLesson(order[at - 1].id));
+    const core = LESSONS.filter((l) => !l.optional && !l.pre);
+    const ci = core.findIndex((l) => l.id === currentLessonId);
+    if (ci >= 0) main.querySelector("#hk-lesson-count").textContent = `${ci + 1}/${core.length}`;
     else backBtn.style.visibility = "hidden";
     document.body.classList.add("hk-lesson-open");
     window.scrollTo(0, 0);
@@ -4135,4 +4156,4 @@ function initLessonsTab(root) {
   };
 }
 
-export { renderRoadmapTab, initLessonsTab };
+export { renderRoadmapTab, initLessonsTab, courseProgress };

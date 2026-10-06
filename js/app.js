@@ -1,7 +1,8 @@
 import { initDiscoverTab } from "./discover.js";
 import { initPracticeTab } from "./practice.js";
 import { initSavedTab } from "./saved.js";
-import { initLessonsTab, renderRoadmapTab } from "./lessons-ui.js";
+import { initLessonsTab, renderRoadmapTab, courseProgress } from "./lessons-ui.js";
+import { showIntro } from "./intro.js";
 import { initHowItWorksTab } from "./how-it-works.js";
 import { initAboutTab } from "./about.js";
 import { initMidiTab } from "./midi.js";
@@ -64,6 +65,7 @@ function init() {
     panels[t] = document.getElementById(`panel-${t}`);
   });
   initPopups();
+  showIntro(courseProgress());
   const logo = document.getElementById("hk-logo-panda");
   if (logo) logo.innerHTML = pandaSvg("wave", { label: "Hayden Keys" });
 

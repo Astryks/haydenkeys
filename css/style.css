@@ -1155,3 +1155,36 @@ body.hk-lesson-open .hk-rotate-tip { display: none !important; }
 .hk-upload-settings > summary { cursor: pointer; font-weight: 700; padding: 10px 0; list-style: none; }
 .hk-upload-settings > summary::-webkit-details-marker { display: none; }
 .hk-upload-guess { font-size: 1rem; font-weight: 700; }
+
+/* Keep the header below the iPhone notch / Dynamic Island */
+.hk-header { padding-top: calc(env(safe-area-inset-top, 0px) + 12px) !important; }
+body.hk-lesson-open .hk-lesson-topbar { padding-top: calc(env(safe-area-inset-top, 0px) + 6px); }
+.hk-lesson-count { flex: 0 0 auto; font-size: 0.8rem; font-weight: 800; color: var(--hk-purple); background: var(--hk-purple-soft); border-radius: 999px; padding: 4px 10px; }
+
+/* ===== Intro screen ===== */
+.hk-intro { position: fixed; inset: 0; z-index: 20000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: calc(env(safe-area-inset-top, 0px) + 20px) 24px calc(env(safe-area-inset-bottom, 0px) + 24px); text-align: center; background: linear-gradient(160deg, #e3f3fb 0%, #fbe7f0 60%, #efe7fb 100%); transition: opacity 0.35s, transform 0.35s; overflow: hidden; }
+.hk-intro-out { opacity: 0; transform: scale(1.04); }
+body.hk-intro-open { overflow: hidden; }
+.hk-intro-panda { width: min(230px, 55vw); height: min(255px, 61vw); animation: hk-pop 0.6s cubic-bezier(.2,1.4,.4,1); }
+.hk-intro-title { margin: 4px 0 0; font-size: 2.6rem; font-weight: 900; background: linear-gradient(90deg, var(--hk-accent), var(--hk-accent-2), var(--hk-purple)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hk-intro-tag { margin: 0; font-size: 1.15rem; color: var(--hk-text); max-width: 320px; }
+.hk-intro-progress { width: min(300px, 80vw); font-weight: 700; color: var(--hk-purple); }
+.hk-intro-go { margin-top: 10px; min-width: 240px; min-height: 60px; border: none; border-radius: 999px; font-size: 1.35rem; font-weight: 900; color: #fff; cursor: pointer; background: linear-gradient(135deg, var(--hk-accent), var(--hk-purple)); box-shadow: 0 10px 24px rgba(138, 99, 210, 0.35); animation: hk-pop 0.5s 0.2s cubic-bezier(.2,1.4,.4,1) both, hk-nudge 1.6s ease-in-out 1s infinite; }
+.hk-intro-notes span { position: absolute; font-size: 28px; color: var(--hk-accent-2); opacity: 0.5; animation: hk-intro-float 6s linear infinite; }
+.hk-intro-notes span:nth-child(1) { left: 10%; animation-delay: 0s; } .hk-intro-notes span:nth-child(2) { left: 30%; animation-delay: 1.2s; color: var(--hk-accent); }
+.hk-intro-notes span:nth-child(3) { left: 55%; animation-delay: 2.4s; color: var(--hk-purple); } .hk-intro-notes span:nth-child(4) { left: 75%; animation-delay: 3.6s; } .hk-intro-notes span:nth-child(5) { left: 90%; animation-delay: 4.8s; color: var(--hk-accent); }
+@keyframes hk-intro-float { from { top: 105%; transform: rotate(-10deg); } to { top: -10%; transform: rotate(10deg); } }
+@media (orientation: landscape) and (max-height: 500px) { .hk-intro { flex-direction: row; flex-wrap: wrap; gap: 4px 24px; } .hk-intro-panda { width: 150px; height: 165px; } .hk-intro-title { font-size: 2rem; } }
+
+/* ===== Today hero ===== */
+.hk-hero { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; border: none; cursor: pointer; border-radius: 24px; padding: 18px; color: var(--hk-text); background: linear-gradient(135deg, #e3f3fb, #fbe7f0); box-shadow: 0 8px 22px rgba(74, 155, 201, 0.18); }
+.hk-hero-panda { width: 110px; height: 122px; flex: 0 0 auto; }
+.hk-hero-body { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.hk-hero-kicker { font-size: 0.85rem; font-weight: 800; color: var(--hk-purple); text-transform: uppercase; letter-spacing: 0.5px; }
+.hk-hero-title { font-size: 1.35rem; font-weight: 900; }
+.hk-hero-bar { height: 10px; border-radius: 999px; background: rgba(255,255,255,0.8); overflow: hidden; }
+.hk-hero-bar span { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--hk-accent), var(--hk-purple)); }
+.hk-hero-meta { font-size: 0.82rem; color: var(--hk-text-dim); }
+.hk-hero-cta { align-self: flex-start; margin-top: 4px; padding: 10px 22px; border-radius: 999px; font-weight: 900; font-size: 1.05rem; color: #fff; background: linear-gradient(135deg, var(--hk-accent), var(--hk-purple)); animation: hk-nudge 1.6s ease-in-out infinite; }
+.hk-today-sub { margin: 10px 0 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--hk-text-dim); }
+.hk-rotate-tip { display: none !important; }
