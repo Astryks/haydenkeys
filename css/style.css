@@ -1396,7 +1396,7 @@ body.hk-gold-keys .hk-key-black { background: linear-gradient(#5a4310, #2e2206) 
 
 /* Wait for me */
 .hk-wait-panel { margin: 8px 0; padding: 12px 14px; border-radius: 16px; background: #f4efff; border: 2px solid #d9d0f5; }
-.hk-wait-panel b { display: flex; align-items: center; gap: 6px; font-size: 1.05rem; }
+.hk-wait-panel > b { display: flex; align-items: center; gap: 6px; font-size: 1.05rem; }
 .hk-wait-panel p { margin: 6px 0; }
 .hk-wait-mic-note { display: flex; gap: 6px; align-items: flex-start; font-size: 0.92rem; }
 .hk-wait-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
@@ -1525,3 +1525,47 @@ body.hk-lesson-open .hk-lesson-topbar { padding-top: 6px !important; }
 .hk-home-how { display: inline-flex; align-items: center; gap: 6px; margin: 18px auto 0; padding: 8px 14px; border-radius: 999px; border: 1px solid #e6dcfb; background: #fff; color: #6a45b5; font-weight: 700; font-size: 0.9rem; cursor: pointer; }
 .hk-today-clean { text-align: center; }
 .hk-today-clean > button:not(.hk-home-how) { text-align: left; }
+.hk-part-pick { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 10px; }
+.hk-part { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 6px; border-radius: 16px; border: 2px solid #e6dcfb; background: #fff; font-weight: 800; color: #3a2d6b; cursor: pointer; }
+.hk-part small { font-weight: 600; color: var(--hk-text-dim); font-size: 0.78rem; }
+.hk-part-on { border-color: #8a63d2; background: #f4efff; }
+.hk-part:disabled { opacity: 0.5; cursor: default; }
+
+/* Song player order: falling notes, piano, chords timeline, then Play/Pause,
+   then the settings with Wait for me and its microphone choice together. */
+.hk-practice-simple #hk-highway { order: 1; }
+.hk-practice-simple #hk-practice-keyboard { order: 2; }
+.hk-practice-simple #hk-sections { order: 3; }
+.hk-practice-simple #hk-timeline { order: 4; }
+.hk-practice-simple #hk-wait-status { order: 5; }
+.hk-practice-simple #hk-practice-controls { order: 6 !important; margin-top: 10px; }
+.hk-practice-simple .hk-speed-picker { order: 10 !important; }
+.hk-practice-simple #hk-wait-panel { order: 11; }
+
+/* Swiping up/down on the keyboard (or the falling notes) scrolls the page;
+   tapping a key still plays it. */
+.hk-keyboard, .hk-highway-wrap { touch-action: pan-y !important; }
+
+/* Portrait tip: turn sideways. Hidden in landscape. */
+.hk-rotate-hint { display: flex; gap: 8px; align-items: flex-start; margin: 0 0 10px; padding: 10px 12px; border-radius: 14px; background: #f4efff; border: 1px dashed #c9b6f7; font-size: 0.9rem; color: #3a2d6b; }
+@media (orientation: landscape) { .hk-rotate-hint { display: none; } }
+
+/* Landscape song player: one screen with falling notes, piano, chords and Play. */
+@media (orientation: landscape) and (max-height: 520px) {
+  body.hk-song-open .hk-header, body.hk-song-open .hk-tabs, body.hk-song-open .hk-footer { display: none !important; }
+  body.hk-song-open main { padding: env(safe-area-inset-top, 0px) max(10px, env(safe-area-inset-right, 0px)) 0 max(10px, env(safe-area-inset-left, 0px)); }
+  body.hk-song-open #panel-practice { display: flex; flex-direction: column; }
+  body.hk-song-open .hk-player-bar { order: 0; padding: 4px 0 !important; position: static; }
+  body.hk-song-open .hk-player-bar .hk-btn { padding: 6px 12px; min-height: 0; font-size: 0.9rem; }
+  body.hk-song-open #hk-player { order: 1; }
+  body.hk-song-open .hk-part-pick { order: 2; margin-top: 8px; }
+  body.hk-song-open .hk-song-card, body.hk-song-open .hk-song-prog, body.hk-song-open .hk-player-tip { order: 3; }
+  body.hk-song-open .hk-player-video, body.hk-song-open .hk-player-share { order: 4; }
+  .hk-practice-simple #hk-highway { height: 72px !important; }
+  .hk-practice-simple #hk-highway .hk-highway-wrap, .hk-practice-simple .hk-highway-wrap { height: 72px !important; }
+  .hk-practice-simple .hk-keyboard { height: 128px !important; }
+  .hk-practice-simple #hk-sections { display: none; }
+  .hk-practice-simple #hk-timeline { height: 30px !important; margin: 4px 0 !important; }
+  .hk-practice-simple #hk-practice-controls { margin-top: 4px !important; display: flex; gap: 8px; }
+  .hk-practice-simple #hk-playpause { min-height: 42px !important; font-size: 1.05rem !important; flex: 1; }
+}

@@ -34,9 +34,11 @@ const MODE_LABELS = {
 // timeline, played nothing, and left Ear Check waiting forever for a
 // root note that doesn't exist. Same filter idea as Discover's
 // realChords().
-function getSongSteps(song) {
+// part "whole": the song start to finish from its section map (verses,
+// bridge, solos, key changes); part "main": just the main chords, looping.
+function getSongSteps(song, part = "whole") {
   const isReal = (c) => parseChordSymbol(c) !== null;
-  const structure = SONG_STRUCTURES[song.title];
+  const structure = part === "main" ? null : SONG_STRUCTURES[song.title];
   if (structure) {
     const steps = [];
     // Item 57: each chord gets its real share of the section's length
@@ -83,7 +85,7 @@ function stepIndexAtBars(meta, bars) {
 // starting a new one tears the previous one down first.
 let activePractice = null;
 
-function initPracticeTab(root, { initialSong } = {}) {
+function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
   if (activePractice) activePractice.destroy();
   let currentSong = initialSong || SONGS[0];
   let mode = "follow";
@@ -95,7 +97,7 @@ function initPracticeTab(root, { initialSong } = {}) {
   let kb = null;
   let highway = null;
   let highwayNotes = [];
-  let songMeta = getSongSteps(currentSong);
+  let songMeta = getSongSteps(currentSong, part);
   let ended = false; // true once a non-looping structured song finishes
   let playbackSpeed = 1;
   // Item 45: optional drum layer under Follow Along playback, default
@@ -230,7 +232,7 @@ function initPracticeTab(root, { initialSong } = {}) {
   }
 
   function render() {
-    songMeta = getSongSteps(currentSong);
+    songMeta = getSongSteps(currentSong, part);
     ended = false;
     root.innerHTML = `
       <div class="hk-practice">
@@ -366,7 +368,7 @@ function initPracticeTab(root, { initialSong } = {}) {
       panel.innerHTML = `
         <b>${icon("hand", 22)} Wait for me</b>
         <p>Play along on your real piano. Each chord waits at the line until you play it.</p>
-        <p class="hk-wait-mic-note">${icon("speaker", 18)} We'll use your phone's microphone <b>only to hear your piano keys, nothing else</b>. Nothing is recorded or saved.</p>
+        <p class="hk-wait-mic-note">${icon("speaker", 18)}<span>We'll use your phone's microphone <b>only to hear your piano keys, nothing else</b>. Nothing is recorded or saved.</span></p>
         <div class="hk-wait-actions">
           <button class="hk-btn hk-btn-primary" id="hk-wait-mic">Use my microphone</button>
           <button class="hk-btn" id="hk-wait-tap">I'll tap the screen or use a MIDI keyboard</button>
@@ -378,7 +380,10 @@ function initPracticeTab(root, { initialSong } = {}) {
           if (!micOn()) await enableMic();
           setWait(true, { mic: true });
         } catch (e) {
-          panel.querySelector("#hk-wait-err").textContent = "The microphone isn't available. You can still tap the screen or use a MIDI keyboard.";
+          console.warn("Hayden Keys: microphone failed", e?.name, e?.message);
+          panel.querySelector("#hk-wait-err").textContent = e?.name === "NotAllowedError"
+            ? "Microphone access is turned off. Turn it on in Settings → Hayden Keys → Microphone, then try again."
+            : `The microphone isn't available (${e?.message || e}). You can still tap the screen or use a MIDI keyboard.`;
         }
       });
       panel.querySelector("#hk-wait-tap").addEventListener("click", () => setWait(true));

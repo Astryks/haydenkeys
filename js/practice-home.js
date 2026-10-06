@@ -3,7 +3,7 @@
 // like Tetris blocks and the learner follows along on their own piano
 // (no need to touch the screen). ← All songs / Next song → move between them.
 
-import { SONGS, SONG_STRUCTURES, getDifficulty } from "./songs-data.js";
+import { SONGS, SONG_STRUCTURES, APPROX_STRUCTURES, getDifficulty } from "./songs-data.js";
 import { initPracticeTab } from "./practice.js";
 import { transcribeFile, renderTranscribedPlayback } from "./transcribe.js";
 import { unlockedSongs } from "./rewards.js";
@@ -105,6 +105,7 @@ function initPracticeHome(root) {
   let player = null;
 
   function showHome() {
+    document.body.classList.remove("hk-song-open");
     player?.suspend?.();
     player = null;
     const rows = libraryRows();
@@ -162,6 +163,7 @@ function initPracticeHome(root) {
   function openSong(i, { autoplay = false } = {}) {
     const song = list[i];
     if (!song) return showHome();
+    document.body.classList.add("hk-song-open");
     root.innerHTML = `
       <div class="hk-player-bar">
         <button class="hk-btn hk-player-back">← All songs</button>
@@ -179,9 +181,14 @@ function initPracticeHome(root) {
         <div class="hk-song-prog-title">The chords in this song</div>
         ${progressionRows(song).map((r) => `<div class="hk-song-prog-row"><span>${esc(r.label)}</span><b>${r.chords.map((c) => `<i>${esc(c)}</i>`).join("")}</b></div>`).join("")}
       </div>
-      ${SONG_VIDEOS[song.title] ? `<div class="hk-player-video">${videoHtml(SONG_VIDEOS[song.title])}</div>` : ""}
+      <div class="hk-part-pick" role="group" aria-label="What to play">
+        <button class="hk-part" data-part="main">${icon("play", 18)} Main chords<small>${esc([...new Set(song.chords.filter((c) => /^[A-G]/.test(c)))].slice(0, 4).join(" · "))}</small></button>
+        <button class="hk-part" data-part="whole" ${SONG_STRUCTURES[song.title] ? "" : "disabled"}>${icon("song", 18)} Whole song<small>${SONG_STRUCTURES[song.title] ? (APPROX_STRUCTURES.has(song.title) ? "start to finish (our best guide)" : "every section, start to finish") : "coming soon"}</small></button>
+      </div>
+      <div class="hk-rotate-hint">${icon("piano", 20)}<span><b>Tip:</b> turn off <b>rotation lock</b> and turn your phone <b>sideways</b>. The keys get bigger and everything fits on one screen.</span></div>
       <div class="hk-player-tip">${icon("piano", 20)} Press Play, watch the chords fall and play along on your own piano.</div>
       <div class="hk-practice-simple" id="hk-player"></div>
+      ${SONG_VIDEOS[song.title] ? `<div class="hk-player-video">${videoHtml(SONG_VIDEOS[song.title])}</div>` : ""}
       <div class="hk-player-share">${shareButton(song.title, "I learned it! Share")}</div>`;
     wireVideos(root);
     songArt(song).then((art) => {
@@ -192,7 +199,18 @@ function initPracticeHome(root) {
     }).catch(() => {});
     root.querySelector(".hk-player-back").addEventListener("click", showHome);
     root.querySelector(".hk-player-next").addEventListener("click", () => openSong((i + 1) % list.length));
-    player = initPracticeTab(root.querySelector("#hk-player"), { initialSong: song });
+    // Whole song when we have its section map, otherwise the main chords.
+    const startPart = SONG_STRUCTURES[song.title] ? "whole" : "main";
+    const mountPlayer = (part) => {
+      player?.suspend?.();
+      root.querySelectorAll(".hk-part").forEach((b) => b.classList.toggle("hk-part-on", b.dataset.part === part));
+      player = initPracticeTab(root.querySelector("#hk-player"), { initialSong: song, part });
+    };
+    mountPlayer(startPart);
+    root.querySelectorAll(".hk-part:not([disabled])").forEach((b) => b.addEventListener("click", () => {
+      mountPlayer(b.dataset.part);
+      setTimeout(() => root.querySelector("#hk-playpause")?.click(), 300);
+    }));
     if (!getSavedSongs()[song.title]) markSongStatus(song.title, "started");
     window.scrollTo(0, 0);
     if (autoplay) setTimeout(() => root.querySelector("#hk-playpause")?.click(), 300);

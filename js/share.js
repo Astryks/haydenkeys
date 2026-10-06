@@ -43,7 +43,7 @@ function showShareLinks(text) {
 }
 
 function shareButton(song, label = "Share") {
-  return `<button class="hk-btn hk-share-btn" data-share-song="${String(song || "").replace(/"/g, "&quot;")}">${icon("gift", 20)} ${label}</button>`;
+  return `<button class="hk-btn hk-share-btn" data-share-song="${String(song || "").replace(/"/g, "&quot;")}">${icon("piano", 20)} ${label}</button>`;
 }
 
 // One listener for every share button in the app.
