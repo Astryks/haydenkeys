@@ -11,7 +11,8 @@ public class SongRecognizerPlugin: CAPPlugin, CAPBridgedPlugin {
     public let identifier = "SongRecognizerPlugin"
     public let jsName = "SongRecognizer"
     public let pluginMethods: [CAPPluginMethod] = [
-        CAPPluginMethod(name: "match", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "match", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "decodeAudio", returnType: CAPPluginReturnPromise)
     ]
     private var session: SHSession?
     private var matchDelegate: MatchDelegate?
@@ -50,6 +51,76 @@ public class SongRecognizerPlugin: CAPPlugin, CAPBridgedPlugin {
         self.session = session
         self.matchDelegate = delegate
         session.match(generator.signature())
+    }
+}
+
+// Reads the audio out of any file iOS can play (mp3, m4a, wav, aiff, caf,
+// and the audio track of mov/mp4 videos) with AVFoundation, as mono 16-bit
+// PCM at the requested sample rate. The web view's own decoder rejects some
+// of these (iPhone videos and some m4a files), so the app decodes here
+// first. The file stays on the device: it's written to a temporary file,
+// read, and deleted.
+extension SongRecognizerPlugin {
+    @objc func decodeAudio(_ call: CAPPluginCall) {
+        guard let b64 = call.getString("data"), let data = Data(base64Encoded: b64), !data.isEmpty else {
+            call.reject("No file data")
+            return
+        }
+        let ext = (call.getString("ext") ?? "m4a").lowercased().filter { $0.isLetter || $0.isNumber }
+        let rate = Double(call.getInt("sampleRate") ?? 22050)
+        let maxSeconds = Double(call.getInt("maxSeconds") ?? 600)
+        DispatchQueue.global(qos: .userInitiated).async {
+            let url = FileManager.default.temporaryDirectory.appendingPathComponent("hk-upload-\(UUID().uuidString).\(ext.isEmpty ? "m4a" : ext)")
+            defer { try? FileManager.default.removeItem(at: url) }
+            do {
+                try data.write(to: url)
+                let asset = AVURLAsset(url: url)
+                let tracks = asset.tracks(withMediaType: .audio)
+                guard !tracks.isEmpty else {
+                    call.reject("There's no audio in this file")
+                    return
+                }
+                let reader = try AVAssetReader(asset: asset)
+                let settings: [String: Any] = [
+                    AVFormatIDKey: kAudioFormatLinearPCM,
+                    AVSampleRateKey: rate,
+                    AVNumberOfChannelsKey: 1,
+                    AVLinearPCMBitDepthKey: 16,
+                    AVLinearPCMIsFloatKey: false,
+                    AVLinearPCMIsBigEndianKey: false,
+                    AVLinearPCMIsNonInterleaved: false,
+                ]
+                let output = AVAssetReaderAudioMixOutput(audioTracks: tracks, audioSettings: settings)
+                reader.add(output)
+                reader.timeRange = CMTimeRange(start: .zero, duration: CMTime(seconds: maxSeconds, preferredTimescale: 600))
+                guard reader.startReading() else {
+                    call.reject(reader.error?.localizedDescription ?? "Couldn't read the audio")
+                    return
+                }
+                var pcm = Data()
+                while let sample = output.copyNextSampleBuffer() {
+                    if let block = CMSampleBufferGetDataBuffer(sample) {
+                        let length = CMBlockBufferGetDataLength(block)
+                        var chunk = Data(count: length)
+                        chunk.withUnsafeMutableBytes { raw in
+                            _ = CMBlockBufferCopyDataBytes(block, atOffset: 0, dataLength: length, destination: raw.baseAddress!)
+                        }
+                        pcm.append(chunk)
+                    }
+                }
+                if reader.status == .failed {
+                    call.reject(reader.error?.localizedDescription ?? "Couldn't read the audio")
+                    return
+                }
+                guard pcm.count > 2 else {
+                    call.reject("There's no audio in this file")
+                    return
+                }
+                call.resolve(["pcm16": pcm.base64EncodedString(), "sampleRate": rate])
+            } catch {
+                call.reject(error.localizedDescription)
+            }
+        }
     }
 }
 

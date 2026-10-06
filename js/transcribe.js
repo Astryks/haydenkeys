@@ -224,13 +224,40 @@ async function recognizeSong(decoded) {
   }
 }
 
+// iPhone/iPad app: decode with AVFoundation (SongRecognizer.decodeAudio),
+// which opens every format iOS plays, including iPhone videos and m4a
+// files the web view's decoder rejects. Returns an AudioBuffer (mono,
+// 22050 Hz), or null on the website / if the native decoder isn't there.
+async function decodeNatively(file, ctx) {
+  const cap = window.Capacitor;
+  if (!cap?.isNativePlatform?.()) return null;
+  const plugin = cap.registerPlugin ? cap.registerPlugin("SongRecognizer") : cap.Plugins?.SongRecognizer;
+  if (!plugin?.decodeAudio) return null;
+  const bytes = new Uint8Array(await readFileBuffer(file));
+  let bin = "";
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  const ext = (file.name.match(/\.([a-z0-9]+)$/i)?.[1] || (file.type.split("/")[1] || "m4a")).toLowerCase().replace("quicktime", "mov");
+  const res = await plugin.decodeAudio({ data: btoa(bin), ext, sampleRate: 22050, maxSeconds: 600 });
+  const raw = Uint8Array.from(atob(res.pcm16), (c) => c.charCodeAt(0));
+  const pcm = new Int16Array(raw.buffer, 0, Math.floor(raw.length / 2));
+  const buf = ctx.createBuffer(1, pcm.length, res.sampleRate || 22050);
+  const out = buf.getChannelData(0);
+  for (let i = 0; i < pcm.length; i++) out[i] = pcm[i] / 32768;
+  return buf;
+}
+
 async function transcribeFile(file, onStatus = () => {}) {
   let audioBuffer;
   const audioCtx = getAudioContext();
   try {
     onStatus("Decoding audio...");
-    let decoded;
+    let decoded = null;
     try {
+      decoded = await decodeNatively(file, audioCtx);
+    } catch (nativeErr) {
+      console.warn("Hayden Keys: native decode failed, trying the web decoder", nativeErr);
+    }
+    if (!decoded) try {
       decoded = await decodeWith(audioCtx, await readFileBuffer(file));
     } catch (firstErr) {
       onStatus("This file needs to be played through once to read its audio — listening now (it stays silent)...");
