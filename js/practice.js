@@ -11,6 +11,7 @@ import { renderNoteHighway, stepsToHighwayNotes } from "./note-highway.js";
 import { transcribeFile, renderTranscribedPlayback } from "./transcribe.js";
 import { playBeat } from "./drums.js";
 import { getAudioContext } from "./keyboard.js";
+import { onNoteOn, onChroma, enableMic, disableMic, micOn } from "./input-hub.js";
 
 const BASE_CHORD_DURATION_SEC = 1.6; // duration per chord at 1x (normal) speed
 const SPEEDS = [0.5, 0.75, 1];
@@ -115,6 +116,59 @@ function initPracticeTab(root, { initialSong } = {}) {
   let tappedBpm = null;
   let tapTimes = [];
 
+  // "Wait for me": the falling chords stop at the line until the learner
+  // plays that chord — on the screen, a MIDI keyboard, or their real piano
+  // through the microphone (only used to hear the piano keys).
+  let waitOn = false;
+  let holding = false;
+  let waitIdx = -1;
+  let heard = [];
+  let chromaHits = 0;
+  let micForWait = false;
+  let micPaused = false;
+  const targetPcs = () => {
+    const step = songMeta.steps[waitIdx];
+    return step ? [...new Set(chordSymbolToMidi(step.chord).map((m) => ((m % 12) + 12) % 12))] : [];
+  };
+  function waitSatisfied() {
+    if (!holding) return;
+    holding = false;
+    heard = [];
+    chromaHits = 0;
+    playStartedAt = performance.now();
+    showWait(`${icon("check", 20)} Nice!`, true);
+  }
+  function showWait(html, ok = false) {
+    const el = root.querySelector("#hk-wait-status");
+    if (!el) return;
+    el.classList.toggle("hk-hidden", !waitOn);
+    el.classList.toggle("hk-wait-ok", ok);
+    el.innerHTML = html;
+  }
+  const unsubWaitNote = onNoteOn((midi, source) => {
+    if (!waitOn || !holding) return;
+    const now = performance.now();
+    heard = heard.filter((h) => now - h.t < 3000);
+    heard.push({ pc: ((midi % 12) + 12) % 12, t: now });
+    const want = targetPcs();
+    const got = new Set(heard.map((h) => h.pc).filter((pc) => want.includes(pc)));
+    // The microphone hears one clear note at a time; for a chord, its root
+    // or any two of its notes count (the chord check below hears the rest).
+    const enough = source === "mic" ? got.has(want[0]) || got.size >= 2 : got.size >= want.length;
+    if (enough) waitSatisfied();
+  });
+  const unsubWaitChroma = onChroma((chroma, level) => {
+    if (!waitOn || !holding || level < 0.004) { chromaHits = 0; return; }
+    const want = targetPcs();
+    const inside = want.map((pc) => chroma[pc]);
+    const outside = chroma.filter((_, pc) => !want.includes(pc));
+    const inMean = inside.reduce((a, b) => a + b, 0) / inside.length;
+    const outMean = outside.reduce((a, b) => a + b, 0) / outside.length;
+    const match = Math.min(...inside) > 0.25 && inMean > outMean * 2.2;
+    chromaHits = match ? chromaHits + 1 : 0;
+    if (chromaHits >= 3) waitSatisfied();
+  });
+
   // Ear Check mode state
   let stopListening = null;
   let earCheckIndex = 0;
@@ -171,7 +225,7 @@ function initPracticeTab(root, { initialSong } = {}) {
   }
 
   function currentTime() {
-    if (!playing) return pausedAt;
+    if (!playing || holding) return pausedAt;
     return pausedAt + (performance.now() - playStartedAt) / 1000;
   }
 
@@ -207,11 +261,17 @@ function initPracticeTab(root, { initialSong } = {}) {
                   title="Tap along with the real recording (4+ taps, one per beat) to practice at its actual tempo">
             ${icon("tap", 18)} Tap tempo${tappedBpm ? ` (♩ = ${tappedBpm})` : ""}
           </button>
+          <button class="hk-btn hk-btn-small hk-drums-toggle hk-wait-toggle" id="hk-wait-toggle"
+                  title="The notes wait at the line until you play them">
+            ${waitLabel()}
+          </button>
           <button class="hk-btn hk-btn-small hk-drums-toggle ${bassOn ? "hk-drums-on" : ""}" id="hk-bass-toggle"
                   title="Adds a low bass note (each chord's root) while the song plays">
             ${bassLabel()}
           </button>
         </div>
+        <div id="hk-wait-panel" class="hk-wait-panel hk-hidden"></div>
+        <div id="hk-wait-status" class="hk-wait-status hk-hidden"></div>
         <div id="hk-highway" class="hk-highway-slot ${mode === "follow" ? "" : "hk-hidden"}"></div>
         <div id="hk-practice-keyboard" class="hk-keyboard-wrap"></div>
         <div id="hk-sections" class="hk-sections"></div>
@@ -300,6 +360,29 @@ function initPracticeTab(root, { initialSong } = {}) {
       btn.innerHTML = bassLabel();
       btn.classList.toggle("hk-drums-on", bassOn);
     });
+    root.querySelector("#hk-wait-toggle").addEventListener("click", () => {
+      if (waitOn) return setWait(false);
+      const panel = root.querySelector("#hk-wait-panel");
+      panel.innerHTML = `
+        <b>${icon("hand", 22)} Wait for me</b>
+        <p>Play along on your real piano. Each chord waits at the line until you play it.</p>
+        <p class="hk-wait-mic-note">${icon("speaker", 18)} We'll use your phone's microphone <b>only to hear your piano keys, nothing else</b>. Nothing is recorded or saved.</p>
+        <div class="hk-wait-actions">
+          <button class="hk-btn hk-btn-primary" id="hk-wait-mic">Use my microphone</button>
+          <button class="hk-btn" id="hk-wait-tap">I'll tap the screen or use a MIDI keyboard</button>
+        </div>
+        <div class="hk-cal-status" id="hk-wait-err"></div>`;
+      panel.classList.remove("hk-hidden");
+      panel.querySelector("#hk-wait-mic").addEventListener("click", async () => {
+        try {
+          if (!micOn()) await enableMic();
+          setWait(true, { mic: true });
+        } catch (e) {
+          panel.querySelector("#hk-wait-err").textContent = "The microphone isn't available. You can still tap the screen or use a MIDI keyboard.";
+        }
+      });
+      panel.querySelector("#hk-wait-tap").addEventListener("click", () => setWait(true));
+    });
     root.querySelector("#hk-drums-toggle").addEventListener("click", () => {
       drumsOn = !drumsOn;
       lastBeatSlot = -1;
@@ -323,6 +406,20 @@ function initPracticeTab(root, { initialSong } = {}) {
   // Backing band toggles: a clear on/off switch with our own icons.
   function drumLabel() {
     return `${icon("drum", 20)} Drum beat <span class="hk-switch ${drumsOn ? "hk-switch-on" : ""}">${drumsOn ? "On" : "Off"}</span>`;
+  }
+  function waitLabel() {
+    return `${icon("hand", 20)} Wait for me <span class="hk-switch ${waitOn ? "hk-switch-on" : ""}">${waitOn ? "On" : "Off"}</span>`;
+  }
+  function setWait(on, { mic = false } = {}) {
+    waitOn = on;
+    holding = false;
+    if (!on && micForWait) { disableMic(); micForWait = false; }
+    if (on && mic) micForWait = true;
+    const btn = root.querySelector("#hk-wait-toggle");
+    if (btn) btn.innerHTML = waitLabel();
+    root.querySelector("#hk-wait-panel")?.classList.add("hk-hidden");
+    showWait(on ? `${icon("hand", 20)} The chords will wait for you. Press Play!` : "");
+    if (!on && playing) playStartedAt = performance.now();
   }
   function bassLabel() {
     return `${icon("bass", 20)} Bass line <span class="hk-switch ${bassOn ? "hk-switch-on" : ""}">${bassOn ? "On" : "Off"}</span>`;
@@ -569,7 +666,16 @@ function initPracticeTab(root, { initialSong } = {}) {
       const midiNotes = chordSymbolToMidi(step.chord);
       if (kb && midiNotes.length) {
         kb.highlightHands({ left: [midiNotes[0] - 12], right: midiNotes, rightLabel: step.chord });
-        playChord(midiNotes, { duration: chordDuration() * step.len * 0.9 });
+        if (!waitOn) playChord(midiNotes, { duration: chordDuration() * step.len * 0.9 });
+      }
+      if (waitOn && mode === "follow") {
+        pausedAt = t;
+        holding = true;
+        waitIdx = chordIndex;
+        heard = [];
+        chromaHits = 0;
+        const names = [...new Set(midiNotes.map((m) => ["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "A♭", "A", "B♭", "B"][((m % 12) + 12) % 12]))];
+        showWait(`${icon("hand", 20)} Your turn: play <b>${step.chord}</b> <span>(${names.join(" · ")})</span>`);
       }
       highlightActiveSection(step.section);
     }
@@ -767,6 +873,9 @@ function initPracticeTab(root, { initialSong } = {}) {
 
   activePractice = {
     destroy() {
+      unsubWaitNote();
+      unsubWaitChroma();
+      if (micForWait) disableMic();
       stopAll();
       if (highway) highway.destroy();
       if (activePractice === this) activePractice = null;
@@ -777,6 +886,7 @@ function initPracticeTab(root, { initialSong } = {}) {
       if (suspended) return;
       suspended = true;
       if (playing) togglePlay();
+      if (micForWait) { disableMic(); micPaused = true; }
       stopEarCheck();
       stopCameraMode();
       closeCalibration();
@@ -787,6 +897,7 @@ function initPracticeTab(root, { initialSong } = {}) {
     resume() {
       if (!suspended) return;
       suspended = false;
+      if (micPaused) { micPaused = false; enableMic().catch(() => {}); }
       if (mode === "ear") startEarCheck();
       if (mode === "camera") startCameraMode();
     },

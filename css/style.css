@@ -1393,3 +1393,28 @@ body.hk-gold-keys .hk-key-black { background: linear-gradient(#5a4310, #2e2206) 
 .hk-choose-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
 @media (max-width: 520px) { .hk-chord-chart, .hk-micro-song { margin-left: 0; } }
 .hk-player-video { margin: 0 0 10px; }
+
+/* Wait for me */
+.hk-wait-panel { margin: 8px 0; padding: 12px 14px; border-radius: 16px; background: #f4efff; border: 2px solid #d9d0f5; }
+.hk-wait-panel b { display: flex; align-items: center; gap: 6px; font-size: 1.05rem; }
+.hk-wait-panel p { margin: 6px 0; }
+.hk-wait-mic-note { display: flex; gap: 6px; align-items: flex-start; font-size: 0.92rem; }
+.hk-wait-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.hk-wait-status { display: flex; align-items: center; gap: 6px; margin: 6px 0; padding: 10px 12px; border-radius: 14px; background: #fff7e0; border: 2px solid #f2b630; font-size: 1.05rem; }
+.hk-wait-status span { color: var(--hk-text-dim); font-size: 0.9rem; }
+.hk-wait-status.hk-wait-ok { background: #e6f7ea; border-color: #3fb363; }
+
+/* Chord Ear Gym */
+.hk-gym-head { display: flex; align-items: center; gap: 10px; font-size: 0.95rem; }
+.hk-gym-head b { flex: 1; color: #6a45b5; }
+.hk-gym-streak { display: inline-flex; align-items: center; gap: 2px; font-weight: 900; }
+.hk-gym-panda { width: 110px; height: 124px; margin: 6px auto 0; }
+.hk-gym-ask { text-align: center; font-size: 1.3rem; font-weight: 900; margin: 6px 0 10px; }
+.hk-gym-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.hk-gym-choice { padding: 16px 8px; border-radius: 16px; border: 3px solid #d9d0f5; background: #fff; font-size: 1.4rem; font-weight: 900; cursor: pointer; }
+.hk-gym-choice:disabled { cursor: default; opacity: 0.7; }
+.hk-gym-right { border-color: #3fb363 !important; background: #e6f7ea !important; opacity: 1 !important; }
+.hk-gym-wrong { border-color: #e4573d !important; background: #fde8e4 !important; opacity: 1 !important; }
+.hk-gym-yes { text-align: center; font-weight: 800; color: #2f8a4b; }
+.hk-gym-no { text-align: center; font-weight: 700; }
+.hk-gym-compare { display: flex; justify-content: center; gap: 8px; }

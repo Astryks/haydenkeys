@@ -84,6 +84,13 @@ function onMidiStatus(cb) {
 // A note counts once the same pitch is heard on 3 consecutive analysis
 // frames (≈50ms) and in tune within ±40 cents; it can't fire again until
 // the pitch changes or there's a gap, so one held note is one press.
+// Chroma frames for chord recognition (see pitch.js): cb(chroma[12], level).
+const chromaListeners = new Set();
+function onChroma(cb) {
+  chromaListeners.add(cb);
+  return () => chromaListeners.delete(cb);
+}
+
 let stopMic = null;
 async function enableMic() {
   if (stopMic) return true;
@@ -107,7 +114,7 @@ async function enableMic() {
         lastEmitted = candidate;
         emitNoteOn(candidate, "mic");
       }
-    });
+    }, { onChroma: (c, level) => chromaListeners.forEach((cb) => cb(c, level)) });
     return true;
   } catch (e) {
     stopMic = null;
@@ -126,6 +133,7 @@ function micOn() {
 
 export {
   onNoteOn,
+  onChroma,
   emitNoteOn,
   midiSupported,
   enableMidi,

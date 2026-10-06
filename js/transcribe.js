@@ -490,7 +490,7 @@ function showRecognition(box, btn) {
   const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
   box.innerHTML = `<div class="hk-upload-rec-box">🎧 Listening for the song name…</div>`;
   lastRecognition.then((r) => {
-    if (btn) { btn.disabled = false; btn.innerHTML = `${icon("search", 20)} Guess the song (Shazam)`; }
+    if (btn) { btn.disabled = false; btn.innerHTML = `${icon("search", 20)} Guess the song`; }
     if (!box.isConnected) return;
     if (!r || !r.found) { box.innerHTML = `<div class="hk-upload-rec-box">🤔 Couldn't find this song. Try a clearer part of it.</div>`; return; }
     const inLib = SONGS.find((s) => s.title.toLowerCase() === String(r.title).toLowerCase());
@@ -612,18 +612,18 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
         <span class="hk-speed-label">Speed:</span>
         ${SPEEDS.map((s) => `<button class="hk-speed-btn ${s === 1 ? "hk-speed-active" : ""}" data-speed="${s}">${s}×${s === 1 ? " (normal)" : s === 0.5 ? " (slow)" : ""}</button>`).join("")}
         <span class="hk-speed-label hk-upload-mode-label">View:</span>
-        <button class="hk-speed-btn ${easyNotes.length ? "hk-speed-active" : ""}" data-mode="easy" title="The song's chords as simple, playable shapes">😊 Easy mode (just chords)</button>
-        <button class="hk-speed-btn ${easyNotes.length ? "" : "hk-speed-active"}" data-mode="detailed" title="Every note we heard">🔥 Hard mode (every note)</button>
+        <button class="hk-speed-btn ${easyNotes.length ? "hk-speed-active" : ""}" data-mode="easy" title="The song's chords as simple, playable shapes">${icon("star", 18)} Easy mode (just chords)</button>
+        <button class="hk-speed-btn ${easyNotes.length ? "" : "hk-speed-active"}" data-mode="detailed" title="Every note we heard">${icon("trophy", 18)} Hard mode (every note)</button>
       </div>
       <div class="hk-speed-picker">
         <span class="hk-speed-label">Hear:</span>
         ${originalEl ? `
-          <button class="hk-speed-btn hk-speed-active" data-sound="original" title="Your recording, in sync with the falling notes">🎵 Original song</button>
-          <button class="hk-speed-btn" data-sound="piano" title="Mutes the recording — only the notes on piano">🎹 Piano only</button>
-          <button class="hk-speed-btn" data-sound="both" title="The notes on piano, on top of your recording">🎵+🎹 Piano + song</button>` : `<span class="hk-speed-label">🎹 Piano notes</span>`}
-        ${beat ? `<button class="hk-speed-btn" data-toggle="drums" title="A simple beat at the song's estimated tempo">🥁 Beat (~${beat.bpm} BPM)</button>` : ""}
+          <button class="hk-speed-btn hk-speed-active" data-sound="original" title="Your recording, in sync with the falling notes">${icon("song", 18)} Original song</button>
+          <button class="hk-speed-btn" data-sound="piano" title="Mutes the recording — only the notes on piano">${icon("piano", 18)} Piano only</button>
+          <button class="hk-speed-btn" data-sound="both" title="The notes on piano, on top of your recording">${icon("piano", 18)} Piano + song</button>` : `<span class="hk-speed-label">${icon("piano", 18)} Piano notes</span>`}
+        ${beat ? `<button class="hk-speed-btn" data-toggle="drums" title="A simple beat at the song's estimated tempo">${icon("drum", 18)} Beat (~${beat.bpm} BPM)</button>` : ""}
       </div>
-        ${window.Capacitor?.isNativePlatform?.() ? `<div class="hk-speed-picker"><button class="hk-btn hk-upload-guess" id="hk-upload-guess">${icon("search", 20)} Guess the song (Shazam)</button></div>` : ""}
+        ${window.Capacitor?.isNativePlatform?.() ? `<div class="hk-speed-picker"><button class="hk-btn hk-upload-guess" id="hk-upload-guess">${icon("search", 20)} Guess the song</button></div>` : ""}
         <div class="hk-upload-match" id="hk-upload-match"></div>
         <p class="hk-honest-note" id="hk-upload-summary"></p>
         <p class="hk-upload-legend">${icon("fact", 18)} <b>C4</b> = middle C. The number says which group of keys: <b>smaller = further left</b> (lower), bigger = further right. So <b>A3</b> is the A just left of middle C, and <b>A2</b> is the A one group further left.</p>

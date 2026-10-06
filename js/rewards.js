@@ -59,6 +59,7 @@ const LESSON_DONE_LINES = {
   1: "4 chords are all you need to play over 100 songs. Try singing along! 🎤",
   2: "Happy chords, sad chords, any chord in any key. You can play them all now! 🎹",
   3: "Two hands at once, just like real pianists! 🙌",
+  4: "Pop, rock, blues, jazz, classical: now you can hear the difference! 🎶",
 };
 
 // Full-screen "Lesson N complete!" card. Resolves when they tap Keep going.

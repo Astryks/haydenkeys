@@ -235,7 +235,7 @@ const LG_D = [62, 66, 69], LG_A = [57, 61, 64], LG_C = [60, 64, 67], LG_G = [55,
 const H_G = [43, ...G], H_D = [50, ...D], H_EM = [52, ...EM], H_C = [48, ...C];
 // The last card of each day also completes the older, wordier lessons it
 // replaces, so Today moves straight on (they stay in the Roadmap).
-const DAY_ENDS = { "m-pop-song": [1, ["lesson-1"]], "d2-key-c": [2, ["lesson-2", "lesson-4"]], "d3-song": [3, ["lesson-twohand-preview", "lesson-eartraining", "song-1"]] };
+const DAY_ENDS = { "m-pop-song": [1, ["lesson-1"]], "d2-key-c": [2, ["lesson-2", "lesson-4"]], "d3-song": [3, ["lesson-twohand-preview", "lesson-eartraining", "song-1"]], "d4-your-style": [4, []] };
 // Moves a chord up or down whole octaves until it fits the keyboard shown.
 function voiceIn(notes, lo, hi) {
   let n = [...notes];
@@ -263,6 +263,8 @@ function voicingsToEvents(voicings, barSec = 2.2) {
 // Interstellar (simple version): left hand A, F, C, G low; right hand keeps
 // E on top (Am, Fmaj7, C, G6 sounds — the high E is the film's ticking pedal).
 const IS_AM = [45, 57, 60, 64], IS_F = [41, 57, 60, 64], IS_C = [48, 55, 60, 64], IS_G = [43, 55, 59, 64];
+// Lesson 4: 7th chords for blues and jazz, in reach of the lesson keyboard.
+const C7 = [60, 64, 67, 70], F7 = [53, 57, 60, 63], G7 = [55, 59, 62, 65], DM7 = [62, 65, 69, 72], CMAJ7 = [60, 64, 67, 71];
 const F_MAJ = [65, 69, 72], E_MAJ = [64, 68, 71], D_MIN = [62, 65, 69];
 const MICRO_CARDS = {
   "m-intro": { chat: `<h3>Welcome to Hayden Keys! 🎹</h3>
@@ -388,6 +390,37 @@ const MICRO_CARDS = {
       <p><small>This is a simple version of the chords and that ticking E, not the full film score.</small></p>`,
     say: "Both hands! 🚀<br>Left: <b>A → F → C → G</b> (low)<br>Right: keep <b>E</b> on top", want: { seq: [IS_AM, IS_F, IS_C, IS_G] }, demoSeq: [[IS_AM, "Am"], [IS_F, "F"], [IS_C, "C"], [IS_G, "G"]], range: [41, 76], along: "interstellar", tip: "🎹 On your real piano, tap the top <b>E</b> softly again and again, like a clock ⏱️", done: "Hello, space! 🚀✨" },
   "d3-song": { say: "Two hands, 4 chords! 🎹🎹<br><b>G → D → Em → C</b>", want: { seq: [H_G, H_D, H_EM, H_C] }, demoSeq: [[H_G, "G"], [H_D, "D"], [H_EM, "Em"], [H_C, "C"]], done: "You played a song with two hands! 🏆" },
+  "d4-genres": { chat: `<h3 data-q="What's Lesson 4 about? 🤔">Music has flavours 🍦</h3>
+      <p>They're called <b>genres</b> (say "zhon-ruhs"): <b>pop</b>, <b>rock</b>, <b>blues</b>, <b>jazz</b>, <b>classical</b>, and many more like reggae, country and R&amp;B.</p>
+      <p>Same piano, same keys. What changes is <b>which chords</b> they love and <b>how</b> they play them.</p>`,
+    say: "Let's taste 5 flavours! 🎶", want: { tap: true }, ok: "Let's go! 🚀", noKeys: true, done: "Here we go! 🎹" },
+  "d4-pop": { chat: `<h3 data-q="What makes a song pop? 🎤">Catchy chords, round and round 🎤</h3>
+      <p><b>Pop</b> loves a short loop of 4 chords that repeats, so you can sing along. You already know the most famous one: <b>1 · 5 · 6 · 4</b>!</p>`,
+    say: "Pop! Play <b>G → D → Em → C</b> 🎤", want: { seq: [G, D, EM, C] }, demoSeq: [[G, "1"], [D, "5"], [EM, "6"], [C, "4"]], done: "That's pop! 🎤 (Perfect, Let It Be…)" },
+  "d4-rock": { chat: `<h3 data-q="And rock? 🎸">Big, simple, strong chords 🎸</h3>
+      <p><b>Rock</b> plays simple chords <b>strong</b>, with a driving beat. A rock favourite is <b>1 · ♭7 · 4</b>.</p>
+      <p>That's <i>Sweet Home Alabama</i> by Lynyrd Skynyrd: <b>D · C · G</b>.</p>`,
+    say: "Rock it! Play <b>D → C → G</b>, strong 💪", want: { seq: [D, C, G] }, demoSeq: [[D, "D"], [C, "C"], [G, "G"]], done: "That's rock! 🎸" },
+  "d4-blues": { chat: `<h3 data-q="What's the blues? 🎺">The parent of rock and jazz 🎺</h3>
+      <p>The <b>blues</b> came from African American musicians in the southern United States in the late 1800s. Rock and jazz both grew out of it.</p>
+      <h3 data-q="How do I play it?">3 chords, 12 bars 🔢</h3>
+      <p>The famous <b>12-bar blues</b> uses just chords <b>1, 4 and 5</b>. In C: <b>C, F and G</b>, in this order:</p>
+      <p><b>C C C C · F F C C · G F C G</b></p>
+      <p>For that bluesy sound, add a 4th key on top: a <b>7th chord</b> (C7, F7, G7). Songs like <i>Johnny B. Goode</i> use it.</p>`,
+    say: "Play the blues chords: <b>C7 → F7 → G7</b> 🎺", want: { seq: [C7, F7, G7] }, demoSeq: [[C7, "C7"], [F7, "F7"], [G7, "G7"]], along: "blues", done: "You've got the blues! 🎺😎" },
+  "d4-jazz": { chat: `<h3 data-q="And jazz? 🎷">Rich chords and a famous move 🎷</h3>
+      <p><b>Jazz</b> grew out of the blues in <b>New Orleans</b> in the early 1900s. It loves rich <b>4-note chords</b> and making things up as you go.</p>
+      <p>Its most famous move is <b>2 · 5 · 1</b>. In C: <b>Dm7 → G7 → Cmaj7</b>. You'll hear it in <i>Autumn Leaves</i> and <i>Fly Me to the Moon</i>.</p>`,
+    say: "Play <b>2 · 5 · 1</b>: <b>Dm7 → G7 → Cmaj7</b> 🎷", want: { seq: [DM7, G7, CMAJ7] }, demoSeq: [[DM7, "2"], [G7, "5"], [CMAJ7, "1"]], done: "Smooth! That's jazz 🎷" },
+  "d4-classical": { chat: `<h3 data-q="What about classical? 🎻">One note at a time 🎻</h3>
+      <p><b>Classical</b> music (Bach, Mozart, Beethoven) often plays a chord <b>one key at a time</b>, called a <b>broken chord</b>.</p>
+      <p>Bach's famous <i>Prelude in C</i> is broken chords all the way through!</p>`,
+    say: "Play a broken C chord: <b>C → E → G</b>, one at a time 🎻", want: { seq: [[60], [64], [67]] }, demoSeq: [[[60], "C"], [[64], "E"], [[67], "G"]], done: "Beautiful. That's classical 🎻" },
+  "q-genre": { say: "Quick quiz! 🧠<br>Which style is famous for the <b>12-bar</b> pattern?", want: { choice: "Blues" }, options: ["Pop", "Blues", "Classical"], noKeys: true, done: "Yes! The 12-bar blues 🎺" },
+  "d4-your-style": { chat: `<h3 data-q="Which style should I play? 🤔">The one you love most 💜</h3>
+      <p>Every style uses the same piano and the chords you know. Pick songs from the style you love and you'll practise more.</p>
+      <p>Find them in <b>Practice</b>, or upload any song and we'll find the chords.</p>`,
+    say: "Which flavour is yours? 🍦", want: { tap: true }, ok: "I know my style! 🎶", noKeys: true, done: "Now go play it! 🎉" },
 };
 
 // Today: the day's tasks as big full-width cards, one thing each.
@@ -627,6 +660,7 @@ function initLessonsTab(root) {
       "lesson-vivaldi": runVivaldiAttempt,
       "lesson-chopin": runChopinShowcase,
       "lesson-chordquiz": runChordQuizLesson,
+      "lesson-ear-gym": runEarGym,
       "lesson-pedals": runPedalFunLesson,
       "lesson-technique": runTechniqueLesson,
       "lesson-waitmode": runWaitModeLesson,
@@ -971,6 +1005,20 @@ function initLessonsTab(root) {
         playChord(notes, { duration: 1.2 });
         thread.querySelectorAll(".hk-chord-chip").forEach((c) => c.classList.toggle("hk-chord-chip-on", c === b));
       }));
+    }
+
+    // The 12-bar blues, in time.
+    if (card.along === "blues") {
+      thread.insertAdjacentHTML("beforeend", `<div class="hk-micro-song"><div class="hk-micro-song-btns"><button class="hk-btn" id="hk-along-blues">${icon("play", 20)} Hear the 12-bar blues</button></div></div>`);
+      const btn = thread.querySelector("#hk-along-blues");
+      const label = btn.innerHTML;
+      btn.addEventListener("click", () => {
+        if (btn.dataset.running) { kb.stopPlayAlong(); return; }
+        btn.dataset.running = "1";
+        btn.innerHTML = "■ Stop";
+        const bars = [C7, C7, C7, C7, F7, F7, C7, C7, G7, F7, C7, G7];
+        kb.playTimeline(voicingsToEvents(bars, 2.0).map((e) => ({ ...e, hand: "right" })), { onDone: () => { delete btn.dataset.running; btn.innerHTML = label; } });
+      });
     }
 
     // Interstellar: the chords held, with the high E ticking in eighths.
@@ -2551,6 +2599,137 @@ function initLessonsTab(root) {
   // LESSON2_DEGREES' real chord data (already taught back in Lesson 2)
   // rather than inventing a separate chord pool.
   const QUIZ_CHORD_POOL = LESSON2_DEGREES.filter((d) => d.quality !== "diminished");
+
+  // ----- Chord Ear Gym: the final section -----------------------------------
+  // Train your ear to name chords. Three rounds: happy or sad (major or
+  // minor), then all 24 chords one by one with 4 choices, then the same
+  // chords anywhere on the piano (low, high, notes in a different order),
+  // the way they turn up in real songs. A wrong answer plays both chords
+  // so you can hear the difference.
+  function runEarGym() {
+    const { content, keyboardWrap, controls } = lessonShell("Chord Ear Gym");
+    const kb = lessonKeyboard(keyboardWrap, { startMidi: 36, endMidi: 84 });
+    const ROOTS = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
+    const ALL = [...ROOTS, ...ROOTS.map((r) => r + "m")];
+    const nice = (sym) => sym.replace("#", "♯").replace(/^([A-G])b/, "$1♭");
+    const shuffle = (a) => a.map((v) => [Math.random(), v]).sort((x, y) => x[0] - y[0]).map((x) => x[1]);
+    const STAGES = [
+      { id: "mood", title: "Round 1: Happy or sad?", intro: "I'll play a chord. Is it <b>happy</b> (major) or <b>sad</b> (minor)? Listen to the feeling, not the notes.", chords: shuffle(ALL).slice(0, 8) },
+      { id: "name", title: "Round 2: Which chord?", intro: "Now all <b>24 chords</b>, one by one. Listen, then pick the right one of 4. Tip: first decide happy or sad, then the letter.", chords: shuffle(ALL) },
+      { id: "anywhere", title: "Round 3: Anywhere on the piano", intro: "Real songs play chords <b>low, high</b> and with the notes in a <b>different order</b>. Same chord, same name! Can you still tell?", chords: shuffle(ALL).slice(0, 12) },
+    ];
+    let stage = 0, round = 0, streak = 0, best = 0;
+    const scores = STAGES.map(() => 0);
+    let current = null;
+
+    function voicing(sym, anywhere) {
+      let notes = chordSymbolToMidi(sym);
+      if (!anywhere) return notes;
+      const shift = [-24, -12, 0, 12][Math.floor(Math.random() * 4)];
+      notes = notes.map((m) => m + shift);
+      const inversions = Math.floor(Math.random() * 3);
+      for (let i = 0; i < inversions; i++) notes = [...notes.slice(1), notes[0] + 12];
+      while (Math.max(...notes) > 84) notes = notes.map((m) => m - 12);
+      while (Math.min(...notes) < 36) notes = notes.map((m) => m + 12);
+      return notes;
+    }
+    function options(sym) {
+      const minor = sym.endsWith("m");
+      const root = minor ? sym.slice(0, -1) : sym;
+      const twin = minor ? root : root + "m";
+      const others = shuffle(ALL.filter((c) => c !== sym && c !== twin)).slice(0, 2);
+      return shuffle([sym, twin, ...others]);
+    }
+    const hear = (notes) => playChord(notes, { duration: 1.6 });
+
+    function startStage() {
+      round = 0;
+      const st = STAGES[stage];
+      kb.clearHighlights();
+      content.innerHTML = chatHtml(`<h3>${st.title}</h3><p>${st.intro}</p><p>${st.chords.length} chords. Ready?</p>`, stage === 0 ? "think" : "idle");
+      controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-gym-go">${icon("play", 20)} Start</button>`;
+      controls.querySelector("#hk-gym-go").addEventListener("click", ask);
+    }
+    function ask() {
+      const st = STAGES[stage];
+      const sym = st.chords[round];
+      current = { sym, notes: voicing(sym, st.id === "anywhere") };
+      kb.clearHighlights();
+      const choices = st.id === "mood" ? [["major", "Happy (major)"], ["minor", "Sad (minor)"]] : options(sym).map((c) => [c, nice(c)]);
+      content.innerHTML = `
+        <div class="hk-gym-head"><b>${st.title}</b><span>${round + 1} / ${st.chords.length}</span><span class="hk-gym-streak">${icon("flame", 18)} ${streak}</span></div>
+        <div class="hk-gym-panda">${pandaSvg("idle", { item: "headphones" })}</div>
+        <p class="hk-gym-ask">${st.id === "mood" ? "Happy or sad?" : "Which chord is this?"}</p>
+        <div class="hk-gym-choices">${choices.map(([v, label]) => `<button class="hk-gym-choice" data-v="${v}">${label}</button>`).join("")}</div>
+        <div id="hk-gym-reply"></div>`;
+      controls.innerHTML = `<button class="hk-btn" id="hk-gym-again">${icon("speaker", 20)} Play it again</button>`;
+      controls.querySelector("#hk-gym-again").addEventListener("click", () => hear(current.notes));
+      content.querySelectorAll(".hk-gym-choice").forEach((b) => b.addEventListener("click", () => answer(b)));
+      setTimeout(() => hear(current.notes), 250);
+    }
+    function answer(btn) {
+      const st = STAGES[stage];
+      const right = st.id === "mood" ? (current.sym.endsWith("m") ? "minor" : "major") : current.sym;
+      content.querySelectorAll(".hk-gym-choice").forEach((b) => {
+        b.disabled = true;
+        if (b.dataset.v === right) b.classList.add("hk-gym-right");
+      });
+      kb.highlightChord(current.notes, { letter: nice(current.sym), rootMidi: current.notes[0] });
+      const reply = content.querySelector("#hk-gym-reply");
+      const last = round + 1 >= st.chords.length;
+      if (btn.dataset.v === right) {
+        scores[stage]++;
+        streak++;
+        best = Math.max(best, streak);
+        content.querySelector(".hk-gym-panda").innerHTML = pandaSvg(nextTrick("yay"));
+        reply.innerHTML = `<p class="hk-gym-yes">Yes! <b>${nice(current.sym)}</b>${streak >= 3 ? ` · ${icon("flame", 18)} ${streak} in a row!` : ""}</p>`;
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-gym-next">${last ? "Finish round →" : "Next chord →"}</button>`;
+        const t = setTimeout(next, 1400);
+        controls.querySelector("#hk-gym-next").addEventListener("click", () => { clearTimeout(t); next(); });
+      } else {
+        streak = 0;
+        btn.classList.add("hk-gym-wrong");
+        content.querySelector(".hk-gym-panda").innerHTML = pandaSvg(nextTrick("try"));
+        const picked = btn.dataset.v;
+        const pickedNotes = st.id === "mood" ? null : chordSymbolToMidi(picked);
+        reply.innerHTML = `<p class="hk-gym-no">It was <b>${nice(current.sym)}</b> ${current.sym.endsWith("m") ? "(sad, minor)" : "(happy, major)"}.${pickedNotes ? " Hear the difference:" : ""}</p>
+          ${pickedNotes ? `<div class="hk-gym-compare"><button class="hk-btn" data-hear="right">${icon("speaker", 18)} ${nice(current.sym)}</button><button class="hk-btn" data-hear="picked">${icon("speaker", 18)} ${nice(picked)}</button></div>` : ""}`;
+        reply.querySelector('[data-hear="right"]')?.addEventListener("click", () => { kb.highlightChord(current.notes, { letter: nice(current.sym), rootMidi: current.notes[0] }); hear(current.notes); });
+        reply.querySelector('[data-hear="picked"]')?.addEventListener("click", () => { kb.highlightChord(pickedNotes, { letter: nice(picked), rootMidi: pickedNotes[0] }); hear(pickedNotes); });
+        hear(current.notes);
+        controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-gym-next">${last ? "Finish round →" : "Next chord →"}</button>`;
+        controls.querySelector("#hk-gym-next").addEventListener("click", next);
+      }
+    }
+    function next() {
+      if (!content.isConnected) return;
+      round++;
+      if (round < STAGES[stage].chords.length) return ask();
+      const st = STAGES[stage];
+      const pct = scores[stage] / st.chords.length;
+      kb.clearHighlights();
+      stage++;
+      const done = stage >= STAGES.length;
+      content.innerHTML = chatHtml(`<h3>${st.title.split(":")[0]} done! ${pct >= 0.8 ? "🏆" : pct >= 0.5 ? "🎉" : "💪"}</h3>
+        <p>You got <b>${scores[stage - 1]} of ${st.chords.length}</b> right. ${pct >= 0.8 ? "Amazing ears!" : pct >= 0.5 ? "Your ears are getting sharp!" : "Ears get better with practice. Try this round again any time!"}</p>
+        ${done ? `<p>Best streak: <b>${best}</b> in a row. Come back and play the Ear Gym again: a few minutes a day makes a big difference.</p>` : ""}`, pct >= 0.5 ? "cheer" : "idle");
+      if (done) {
+        markLessonComplete("lesson-ear-gym");
+        controls.innerHTML = `<button class="hk-btn" id="hk-gym-replay">Play again</button><button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-gym-done">Next lesson →</button>`;
+        controls.querySelector("#hk-gym-replay").addEventListener("click", runEarGym);
+        controls.querySelector("#hk-gym-done").addEventListener("click", startNextLesson);
+      } else {
+        controls.innerHTML = `<button class="hk-btn" id="hk-gym-redo">Try that round again</button><button class="hk-btn hk-btn-primary" id="hk-gym-on">Next round →</button>`;
+        controls.querySelector("#hk-gym-redo").addEventListener("click", () => { stage--; scores[stage] = 0; startStage(); });
+        controls.querySelector("#hk-gym-on").addEventListener("click", startStage);
+      }
+    }
+    content.innerHTML = chatHtml(`<h3 data-q="What's the Ear Gym? 🎧">Train your ears to name chords 🎧</h3>
+      <p>Great musicians can hear a chord and know its name. That's how they play songs <b>by ear</b>.</p>
+      <p>3 rounds: <b>happy or sad</b>, then <b>all 24 chords</b> one by one, then chords <b>anywhere on the piano</b>.</p>`, "idle");
+    controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-gym-begin">Let's train! →</button>`;
+    controls.querySelector("#hk-gym-begin").addEventListener("click", startStage);
+  }
 
   function runChordQuizLesson() {
     const { content, controls } = lessonShell("Can you guess the chord?");

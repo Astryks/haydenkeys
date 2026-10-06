@@ -157,6 +157,15 @@ const MICRO_LESSONS = [
   { id: "d3-linger", title: "Song: Linger", subtitle: "The Cranberries · D A C G", description: "Play the 4-chord loop of Linger." },
   { id: "d3-interstellar", title: "Interstellar", subtitle: "Hans Zimmer · both hands", description: "Left hand A F C G low, right hand keeps a ticking E on top." },
   { id: "d3-song", title: "Two-hand song", subtitle: "Both hands, 4 chords", description: "Play the 4-chord loop with both hands." },
+  // Lesson 4: genres
+  { id: "d4-genres", title: "Music has flavours", subtitle: "Lesson 4: genres", description: "Pop, rock, blues, jazz, classical and more." },
+  { id: "d4-pop", title: "Pop", subtitle: "1 · 5 · 6 · 4", description: "A catchy 4-chord loop." },
+  { id: "d4-rock", title: "Rock", subtitle: "D · C · G", description: "Big, strong chords, like Sweet Home Alabama." },
+  { id: "d4-blues", title: "Blues", subtitle: "The 12-bar blues", description: "Chords 1, 4 and 5 over 12 bars, with 7th chords." },
+  { id: "d4-jazz", title: "Jazz", subtitle: "2 · 5 · 1", description: "Rich 4-note chords: Dm7, G7, Cmaj7." },
+  { id: "d4-classical", title: "Classical", subtitle: "Broken chords", description: "A chord played one key at a time." },
+  { id: "q-genre", title: "Quiz: which style?", subtitle: "Quick check", description: "Which style is famous for the 12-bar pattern?" },
+  { id: "d4-your-style", title: "Find your style", subtitle: "Play what you love", description: "Pick songs from the style you love most." },
 ];
 
 const PRE_LESSONS = [
@@ -605,7 +614,11 @@ const WORLD_LESSONS = [
 
 // The special showcase lessons keep their places after the Day 1 steps.
 const SHIFTED_POSITIONS = Object.fromEntries(Object.entries(SPECIAL_POSITIONS).map(([k, v]) => [Number(k) + MICRO_LESSONS.length, v]));
-const LESSONS = [...PRE_LESSONS, ...withReservedPositions(numbered, SHIFTED_POSITIONS), ...WORLD_LESSONS];
+// The final section: train your ear to name every chord.
+const EAR_GYM_LESSONS = [
+  { id: "lesson-ear-gym", title: "Chord Ear Gym", subtitle: "Guess the chord by ear", description: "All 24 major and minor chords one by one: listen and pick from 4, then hear them anywhere on the piano." },
+];
+const LESSONS = [...PRE_LESSONS, ...withReservedPositions(numbered, SHIFTED_POSITIONS), ...EAR_GYM_LESSONS, ...WORLD_LESSONS];
 
 // Honest final count: every entry above, real and clickable — nothing
 // padded to hit a round number.

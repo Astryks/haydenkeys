@@ -88,7 +88,11 @@ function refineLag(correlations, index, minLag) {
 // note, cents})` repeatedly while listening, or `onPitch(null)` when no
 // confident pitch is present in the current frame. Returns a `stop()`
 // function to release the mic.
-async function startLivePitchDetection(onPitch, { fftSize = 2048 } = {}) {
+// `onChroma` (optional) also gets a 12-number "chroma" every ~100ms: how
+// strong each pitch class (C, C#, D … B) is in the sound right now, from
+// a larger FFT. That's what lets "Wait for me" recognise a whole chord,
+// which a single-pitch detector can't. Nothing is recorded or kept.
+async function startLivePitchDetection(onPitch, { fftSize = 2048, onChroma = null } = {}) {
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   // Item 56: created after the permission prompt, i.e. outside the tap
@@ -102,10 +106,38 @@ async function startLivePitchDetection(onPitch, { fftSize = 2048 } = {}) {
 
   const buffer = new Float32Array(analyser.fftSize);
   let running = true;
+  let chromaAnalyser = null;
+  let spectrum = null;
+  let tickCount = 0;
+  if (onChroma) {
+    chromaAnalyser = audioCtx.createAnalyser();
+    chromaAnalyser.fftSize = 8192;
+    chromaAnalyser.smoothingTimeConstant = 0.4;
+    source.connect(chromaAnalyser);
+    spectrum = new Float32Array(chromaAnalyser.frequencyBinCount);
+  }
+  function emitChroma(level) {
+    chromaAnalyser.getFloatFrequencyData(spectrum);
+    const binHz = audioCtx.sampleRate / chromaAnalyser.fftSize;
+    const chroma = new Array(12).fill(0);
+    for (let k = Math.ceil(60 / binHz); k < Math.min(spectrum.length, 2100 / binHz); k++) {
+      const mag = Math.pow(10, spectrum[k] / 20);
+      if (!isFinite(mag) || mag <= 0) continue;
+      const pc = ((Math.round(12 * Math.log2((k * binHz) / 440) + 69) % 12) + 12) % 12;
+      chroma[pc] += mag * mag;
+    }
+    const max = Math.max(...chroma);
+    onChroma(max > 0 ? chroma.map((c) => c / max) : chroma, level);
+  }
 
   function tick() {
     if (!running) return;
     analyser.getFloatTimeDomainData(buffer);
+    if (chromaAnalyser && ++tickCount % 6 === 0) {
+      let sum = 0;
+      for (let i = 0; i < buffer.length; i++) sum += buffer[i] * buffer[i];
+      emitChroma(Math.sqrt(sum / buffer.length));
+    }
     const freq = detectPitchInFrame(buffer, audioCtx.sampleRate);
     if (freq) {
       const midi = midiFromFreq(freq);

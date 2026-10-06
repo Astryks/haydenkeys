@@ -29,7 +29,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Hayden Keys uses your camera in the Practice tab's Camera Overlay mode to show which key to press next, projected right onto a live view of your real keyboard. Nothing is recorded or uploaded — the video is only used live, on your device.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Hayden Keys listens through your microphone only when you start keyboard calibration, Ear Check practice, or a lesson's "Tune this note" button, to check which note you played on your real piano. It all happens on your device; audio is never recorded, stored, or sent anywhere.</string>
+	<string>Hayden Keys uses your microphone only to hear your piano keys, nothing else: when you turn on Wait for me, calibrate your keyboard, or use a listening step in a lesson. It works out which notes you played on your device. Nothing is recorded, saved or sent anywhere.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

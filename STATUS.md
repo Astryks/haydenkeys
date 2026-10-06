@@ -2353,3 +2353,8 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
 - Falling blocks in lessons no longer freeze above the keys; they flow into the keys and disappear.
 - Practice song screen shows the song's official video too.
 - Build 22: Lesson 3 adds "Interstellar" (Hans Zimmer): left hand A F C G low, right hand keeps the ticking high E on top (Am, Fmaj7, C, G6 sounds); a simple version, not the film score.
+- Build 23:
+  - **Lesson 4: genres** — music has flavours: pop (1 5 6 4), rock (D C G, Sweet Home Alabama), blues (12-bar, C7 F7 G7, play-along), jazz (2 5 1: Dm7 G7 Cmaj7), classical (broken chords, Bach's Prelude in C), a quiz, "find your style". "Lesson 4 complete" line.
+  - **Wait for me** in the Practice song player: the chords stop at the line until you play them (screen, MIDI keyboard, or microphone). Microphone message: "We'll use your phone's microphone only to hear your piano keys, nothing else." Mic hears single notes (pitch) and whole chords (12-pitch-class chroma match); app doesn't play the chord itself while waiting. Info.plist microphone text and privacy policy updated.
+  - "Guess the song (Shazam)" renamed to "Guess the song" (feature unchanged; privacy policy still discloses ShazamKit). Upload settings use our own icons instead of emoji.
+  - **Chord Ear Gym** (final lesson, after the whole curriculum): round 1 happy or sad (8), round 2 all 24 chords one by one with 4 options (incl. the same-letter major/minor twin), round 3 the chords anywhere on the piano (random octave + inversion). Streaks, panda tricks, wrong answers play both chords to compare, retry a round, play again.
