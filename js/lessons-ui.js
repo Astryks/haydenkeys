@@ -505,7 +505,7 @@ function todayHtml() {
       <span><b>Upload any song</b><span>and we'll find the chords for you</span></span>
       <span class="hk-home-upload-go">Upload</span>
     </button>
-    <button class="hk-home-how" data-home-how type="button">${icon("star", 18)} How it works &amp; support us</button>
+    <button class="hk-home-how" data-home-how type="button">${icon("star", 18)} How it works</button>
     <p class="hk-home-credit">Supported by the Astryks Group (<a href="https://astryks.com" target="_blank" rel="noopener">astryks.com</a>)</p></div>`;
 }
 

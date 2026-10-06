@@ -5,6 +5,5 @@ import Capacitor
 class HKBridgeViewController: CAPBridgeViewController {
     override open func capacitorDidLoad() {
         bridge?.registerPluginInstance(SongRecognizerPlugin())
-        bridge?.registerPluginInstance(TipJarPlugin())
     }
 }

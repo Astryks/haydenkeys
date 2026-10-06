@@ -1,5 +1,4 @@
 import { icon } from "./icons.js";
-import { renderTipJar } from "./tipjar.js";
 // "How It Works" — a fun-but-real explanation of how the own-audio-
 // upload feature (basic-pitch) figures out notes/chords from a sound
 // file. Every technical idea here is real and substantive; only the
@@ -26,7 +25,6 @@ function initHowItWorksTab(root) {
         <p class="hk-how-sub">Some amazing technology, packed into a free app.</p>
         <div class="hk-tech-grid">${TECH.map(([ic, t, d]) => `<div class="hk-tech-card">${icon(ic, 40)}<b>${t}</b><p>${d}</p></div>`).join("")}</div>
       </section>
-      <div id="hk-tipjar-slot"></div>
       <h2>How does the app know what notes you played?</h2>
       <p class="hk-how-sub">A real, honest explanation of the "upload your own recording" feature — no jargon, no substance cut.</p>
 
@@ -99,7 +97,6 @@ function initHowItWorksTab(root) {
          in wording only. See THIRD_PARTY_NOTICES.md for exactly which model is running and under what
          license.</p>
     </div>`;
-  renderTipJar(root.querySelector("#hk-tipjar-slot"));
 
   initWaveDemo();
   initOvertoneDiagram();
