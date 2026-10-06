@@ -9,13 +9,18 @@ import { peopleHtml, videoHtml, wireVideos } from "./media.js";
 import { icon } from "./icons.js";
 
 const FACTS = [
-  // --- Inventing the piano ---
+  // --- Inventing the piano (always the 2nd fact anyone sees) ---
   {
-    title: "Someone had to INVENT the piano!",
-    people: ["cristofori"],
-    text: `About 300 years ago, in Italy, a clever instrument maker called <strong>Bartolomeo Cristofori</strong> had a problem. The keyboard everyone played, the <strong>harpsichord</strong>, plucks its strings with tiny picks — so every note is the same loudness, no matter how hard you press. Boring!<br><br>
-      His big idea: instead of plucking, <strong>hit</strong> the string with a tiny <strong>hammer</strong> that bounces right off again. Tap a key gently → a soft note. Press hard → a LOUD note! He named it "harpsichord that plays soft and loud" — in Italian, <em>piano e forte</em>. That's why we call it a <strong>piano</strong>!`,
-    footnote: "Around 1700, in Florence. His first hammers were covered in leather; today they're covered in thick wool felt.",
+    id: "cristofori",
+    photosFirst: true,
+    title: "Meet the man who invented the piano! 🎹",
+    people: ["cristofori", "cristofori-piano"],
+    text: `About <strong>300 years ago</strong>, in Florence, Italy, a rich prince called <strong>Ferdinando de' Medici</strong> was crazy about music. He hired an instrument maker, <strong>Bartolomeo Cristofori</strong>, to look after his huge collection of instruments.<br><br>
+      Back then the big keyboard was the <strong>harpsichord</strong>. It <em>plucks</em> its strings with tiny picks, so every note comes out the same loudness. Press gently? Same. Bash it? Same! 😴<br><br>
+      Cristofori had a brilliant idea: swap the picks for tiny <strong>hammers</strong> with <strong>leather</strong> on the tips. Press a key, a lever flicks a hammer up, it <em>bonks</em> the string and <strong>bounces straight off</strong> so the string can ring. Press gently → soft. Press hard → LOUD! 💥<br><br>
+      By <strong>1700</strong> the prince's list of instruments included his new invention: a harpsichord "that plays soft and loud" — in Italian, <em>piano e forte</em>. That's where the name <strong>piano</strong> comes from!<br><br>
+      <strong>What did it look like?</strong> Just like a harpsichord: a long wooden box shaped like a wing, on wooden legs, with no metal frame inside. It had only <strong>54 keys</strong> (yours has up to 88) and was much quieter than pianos today.`,
+    footnote: "Only three of Cristofori's pianos survive. The oldest piano in the world, from 1720, is in the Metropolitan Museum of Art in New York (that's it in the photo). Fun twist: hardly anyone cared about his invention at first!",
   },
   // --- Under the hood of a grand piano ---
   {
@@ -118,6 +123,9 @@ function nextFact() {
   let seen = [];
   try { seen = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) { /* ignore */ }
   let pool = FACTS.map((_, i) => i).filter((i) => !seen.includes(i));
+  const inventor = FACTS.findIndex((f) => f.id === "cristofori");
+  if (seen.length === 0) pool = pool.filter((i) => i !== inventor);
+  else if (seen.length === 1 && !seen.includes(inventor)) pool = [inventor];
   if (!pool.length) {
     seen = [];
     pool = FACTS.map((_, i) => i);
@@ -137,8 +145,9 @@ function showFunFact(fact = nextFact()) {
     <div class="hk-funfact-card">
       <div class="hk-funfact-kicker">${icon("fact", 22)} Did you know?</div>
       <h3>${fact.title}</h3>
+      ${fact.photosFirst ? peopleHtml(fact.people) : ""}
       <p>${fact.text}</p>
-      ${peopleHtml(fact.people)}
+      ${fact.photosFirst ? "" : peopleHtml(fact.people)}
       ${videoHtml(fact.video)}
       ${fact.footnote ? `<p class="hk-funfact-note">${fact.footnote}</p>` : ""}
       <button class="hk-btn hk-btn-primary hk-funfact-close">Cool! Keep going</button>

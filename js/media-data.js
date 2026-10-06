@@ -2,6 +2,15 @@
 // Commons photos (bundled in assets/people/, credited under each photo)
 // and YouTube IDs verified with YouTube's oEmbed endpoint.
 const PEOPLE = {
+ "cristofori-piano": {
+  "person": "Cristofori's piano, 1720: the oldest piano in the world",
+  "artist": "The Metropolitan Museum of Art",
+  "license": "Public domain (CC0)",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "pageUrl": "https://www.metmuseum.org/art/collection/search/501788",
+  "file": "DP300941.jpg",
+  "img": "assets/people/cristofori-piano-1720.webp"
+ },
  "cristofori": {
   "person": "Bartolomeo Cristofori",
   "artist": "Unknown author",
