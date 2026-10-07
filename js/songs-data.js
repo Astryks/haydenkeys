@@ -1798,24 +1798,6 @@ const SONGS = [
     "notes": "Four chords on piano under the whole verse, all in F minor with four flats."
   },
   {
-    "title": "Creep",
-    "artist": "Radiohead",
-    "genre": "Alternative Rock",
-    "popularityRank": 119,
-    "key": "G major",
-    "chords": [
-      "G",
-      "B",
-      "C",
-      "Cm"
-    ],
-    "degreeSequence": "I - III - IV - iv",
-    "confidence": "confirmed",
-    "oneFiveSixFourMatch": false,
-    "difficulty": "Intermediate",
-    "notes": "Famous for two 'borrowed' chords: B major (not normally in G) and C minor (the minor iv) — that's the sad lift."
-  },
-  {
     "title": "Counting Stars",
     "artist": "OneRepublic",
     "genre": "Pop",
@@ -2113,8 +2095,21 @@ const SONGS = [
     "advanced": true,
     "notes": "The piece Tom plays in Tom and Jerry's Oscar-winning 'The Cat Concerto' (1947) — and Bugs Bunny in 'Rhapsody Rabbit'. A virtuoso showpiece: a slow, dramatic 'lassan' in C# minor, then a wild, fast 'friska' that ends in F# major. Only those two home chords are given here — the real harmony is far richer."
   },
+  {
+    title: "Something Just Like This",
+    artist: "The Chainsmokers & Coldplay",
+    genre: "Electropop",
+    popularityRank: 40,
+    year: 2017,
+    key: "B minor",
+    chords: ["G", "A", "Bm", "A"],
+    degreeSequence: "VI - VII - i - VII",
+    confidence: "confirmed",
+    oneFiveSixFourMatch: false,
+    difficulty: "Beginner",
+    notes: "Chris Martin from Coldplay sings with The Chainsmokers on this big, happy dance anthem. Almost the whole song loops the same four chords, G, A, Bm and back to A, so once you learn them you can play along from start to finish.",
+  },
 ];
-
 // Precomputed, honestly-reported summary for the Lesson 1 payoff screen.
 // Advanced/bonus entries (e.g. Bohemian Rhapsody) are deliberately
 // excluded from this beginner-curriculum payoff count even if some

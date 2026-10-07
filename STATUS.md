@@ -6,7 +6,7 @@
 
 **What's done (full history below):** beginner→advanced lessons as simple panda cards (Day 1–4, middle C, key names A0–A7, two hands, styles), falling-blocks player with Listen / Wait for me (microphone) / Play in time, upload a song → chords (Basic Pitch on device) with Easy/Hard, L/R hands and Wait for me, Guess the song (ShazamKit), Netflix-style song library (241 songs in genre rows incl. Karaoke anthems and International) with album art, Main chords / Whole song and the official YouTube video under each song, streaks/XP/rewards, How it works page, Astryks credit, App Store screenshots and listing text.
 
-**Latest build:** 34 (see bottom). **Not submitted to App Review yet.**
+**Latest build:** 34 uploaded; build 35 is archived but not uploaded (Xcode needs the owner to sign in again: Xcode → Settings → Accounts). See the 2026-10-07 late sections at the bottom. **Not submitted to App Review yet.**
 
 ### Next steps (in order)
 1. **TestFlight:** check the latest build appears in App Store Connect → TestFlight (processing takes 5–30 min; Apple emails if a build fails processing). Add it to the internal tester group and install on the phone.
@@ -2503,3 +2503,12 @@ All done 2026-10-07 (see the notes under each item).
 **Tested:** every lesson (258) opened, stepped Next/Back and closed in the browser with 0 page errors; every library song (240) opened, Whole song and Main chords played, Back works: 0 page errors.
 
 **Other:** HTTPS is now enforced on haydenkeys.com (certificate was approved but not enforced).
+
+
+## 2026-10-07 (late): Ginger and Pepper, the piano cats
+
+- **Logo, splash and lesson cards:** two cats modelled on the owner's photo (Ginger, an orange-and-white tabby; Pepper, a calico; both green-eyed), drawn in SVG with 3D lighting, fur texture, almond eyes and whiskers (`js/cats.js`, `css/cats.css`). The logo is them on an upright piano; the splash is their show (they swap pianos with big jumps, walk the keys, snuggle). Hayden the panda stays as the lesson guide elsewhere.
+- **One animation per card:** the first message of a card shows one cats scene; follow-up messages have no avatar. Scenes are dealt from a shuffled deck so none repeats until all have shown (localStorage).
+- **Scenes:** the two pianos, running across the keys, chasing over the piano, balancing on a plank (side-view cats with jointed legs that walk and trot), a steaming latte and croissant, tea and cookies, a ticking metronome, a rainy window with a lamp, the Christmas tree, the goldfish bowl. Each action plays once; then they wait naturally (slow blinks, tail flicks, looking around, head tilts).
+- **App icon:** the two cats on the piano (all web sizes + iOS AppIcon).
+- **New song:** Something Just Like This (The Chainsmokers & Coldplay), B minor, 103 BPM, with the official BRITs live video. Duplicate Creep entry removed.

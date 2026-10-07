@@ -1,0 +1,265 @@
+/* ===== Hayden Keys: Ginger and Pepper (js/cats.js) =====
+   Colours and shading, where everyone stands in each scene, and the
+   animations. Each scene's action plays once and the cats stay where it
+   ends; after that only natural waiting things keep going (slow blinks,
+   tail flicks, looking around, a head tilt). Steam, rain, goldfish and the
+   metronome keep moving because that's what they do. */
+
+.hc-cats { display: block; width: 100%; height: 100%; overflow: visible; }
+.hc-scene { overflow: hidden; }
+.hc-cats g, .hc-cats text, .hc-cats path { transform-box: fill-box; }
+
+/* Fur and features */
+.hc-cats .hc-ginger { fill: url(#hc-gr-ginger); }
+.hc-cats .hc-orange { fill: url(#hc-gr-orange); }
+.hc-cats .hc-black { fill: url(#hc-gr-black); }
+.hc-cats .hc-white { fill: url(#hc-gr-white); }
+.hc-cats .hc-shade { filter: brightness(0.82); }
+.hc-cats .hc-ear-in { fill: #e9a69a; opacity: 0.85; }
+.hc-cats .hc-ear-tuft { stroke: #fff; stroke-width: 0.9; opacity: 0.8; fill: none; stroke-linecap: round; }
+.hc-cats .hc-stripe { stroke: #a85a20; stroke-width: 2.2; opacity: 0.6; fill: none; stroke-linecap: round; }
+.hc-cats .hc-lid { fill: none; stroke: #2a1f18; stroke-width: 1.4; stroke-linecap: round; }
+.hc-cats .hc-pad { fill: #fbf6ee; }
+.hc-cats .hc-nose { fill: #d98a8f; }
+.hc-cats .hc-mouth { fill: none; stroke: #5a4038; stroke-width: 0.9; }
+.hc-cats .hc-whisker { stroke: #fffaf0; stroke-width: 0.55; opacity: 0.9; fill: none; }
+.hc-cats .hc-whiskers circle { fill: #8a6a5a; }
+.hc-cats .hc-fluff { stroke: #fff; stroke-width: 1.3; opacity: 0.85; fill: none; stroke-linejoin: round; stroke-linecap: round; }
+.hc-cats .hc-strands { stroke: #fff; stroke-width: 0.8; opacity: 0.45; fill: none; stroke-linecap: round; }
+.hc-cats .hc-coat-calico .hc-strands { opacity: 0.3; }
+.hc-cats .hc-ao { fill: url(#hc-gr-ao); }
+.hc-cats .hc-rim { fill: none; stroke: #fff; stroke-width: 1.4; opacity: 0.35; stroke-linecap: round; }
+.hc-cats .hc-tail { stroke-width: 8.5; fill: none; }
+.hc-cats .hc-ginger-tail { stroke: #cf8340; }
+.hc-cats .hc-coat-calico .hc-tail { stroke: #26232a; }
+.hc-cats .hc-side-tail { stroke-width: 7; }
+.hc-cats .hc-leg-gap { stroke: #b9aa96; stroke-width: 0.9; fill: none; opacity: 0.7; }
+.hc-cats .hc-toes { stroke: #c8b9a6; stroke-width: 0.7; fill: none; stroke-linecap: round; }
+.hc-cats .hc-shadow { fill: #2a2030; opacity: 0.2; }
+.hc-cats .hc-far { opacity: 0.94; }
+
+/* Pianos, props, rooms */
+.hc-cats .hc-wood { fill: url(#hc-gr-wood); }
+.hc-cats .hc-wood-dark { fill: #7d4a27; }
+.hc-cats .hc-black-wood { fill: url(#hc-gr-ebony); }
+.hc-cats .hc-wkey { fill: url(#hc-gr-key); stroke: #bfb6a8; stroke-width: 0.5; }
+.hc-cats .hc-bkey { fill: url(#hc-gr-bkey); }
+.hc-cats .hc-glow { fill: #8a63d2; opacity: 0; }
+.hc-cats .hc-notes text { font: 800 22px system-ui, sans-serif; fill: #8a63d2; opacity: 0; }
+.hc-cats .hc-heart { fill: #e7849c; opacity: 0; }
+.hc-cats .hc-floor { stroke: #e3d6c6; stroke-width: 3; }
+.hc-cats .hc-needles path { stroke: #1f5a33; stroke-width: 1.4; fill: none; opacity: 0.6; stroke-linecap: round; }
+.hc-cats .hc-tinsel { stroke: #f5d76e; stroke-width: 1.6; fill: none; stroke-dasharray: 2 2; }
+.hc-cats .hc-sniff circle { fill: #b9a68f; opacity: 0; }
+.hc-cats .hc-paw-reach { fill: url(#hc-gr-ginger); opacity: 0; }
+.hc-cats .hc-bubbles circle { fill: #fff; opacity: 0.8; }
+.hc-cats .hc-steam path { fill: none; stroke: #cfc6ba; stroke-width: 3.4; stroke-linecap: round; opacity: 0.8; filter: blur(1.2px); }
+.hc-cats .hc-rain path { stroke: #e9f3fb; stroke-width: 1.6; stroke-linecap: round; opacity: 0.8; }
+.hc-logo .hc-heart { transform-origin: 50% 100%; }
+
+/* Hinges: legs at the hip/shoulder, lower legs at the knee */
+.hc-cats .hc-tail { transform-origin: 0% 100%; }
+.hc-cats .hc-eyes { transform-origin: 50% 50%; }
+.hc-cats .hc-head { transform-origin: 50% 90%; }
+.hc-cats .hc-cat, .hc-cats .hc-bob { transform-origin: 50% 100%; }
+.hc-cats .hc-sl, .hc-cats .hc-sl-low { transform-origin: 50% 0%; }
+.hc-cats .hc-side-head { transform-origin: 20% 80%; }
+.hc-cats .hc-side-tail { transform-origin: 90% 100%; }
+.hc-scene .hc-actor { transform-box: view-box; transform-origin: 0 0; }
+.hc-cats .hc-bauble { transform-origin: 50% 0%; }
+.hc-cats .hc-metro-arm { transform-box: view-box; transform-origin: 283px 74px; transform: rotate(14deg); }
+
+/* Where everyone stands (the resting frame; also what reduced motion shows) */
+.hc-s-show .hc-a-ginger { transform: translate(46px, 19px) scale(0.6); }
+.hc-s-show .hc-a-calico { transform: translate(334px, 49px) scale(0.6); }
+.hc-scene .hc-x-ginger { transform: translate(150px, 169px) scale(0.6); }
+.hc-scene .hc-x-calico { transform: translate(318px, 169px) scale(0.6); }
+.hc-scene .hc-f-ginger { transform: translate(112px, 107px) scale(0.6); }
+.hc-scene .hc-f-calico { transform: translate(318px, 169px) scale(0.6); }
+.hc-scene .hc-cf-ginger { transform: translate(112px, 113px) scale(0.6); }
+.hc-scene .hc-cf-calico { transform: translate(226px, 113px) scale(0.6); }
+.hc-scene .hc-t-ginger { transform: translate(120px, 113px) scale(0.6); }
+.hc-scene .hc-t-calico { transform: translate(262px, 121px) scale(0.62); }
+.hc-scene .hc-mt-ginger { transform: translate(120px, 19px) scale(0.6); }
+.hc-scene .hc-mt-calico { transform: translate(196px, 19px) scale(0.6); }
+.hc-scene .hc-w-ginger { transform: translate(110px, 105px) scale(0.6); }
+.hc-scene .hc-w-calico { transform: translate(230px, 105px) scale(0.6); }
+.hc-scene .hc-r-ginger { transform: translate(220px, 131px) scale(0.62); }
+.hc-scene .hc-r-calico { transform: translate(80px, 131px) scale(0.62); }
+.hc-scene .hc-p-ginger { transform: translate(150px, 105px) scale(0.62); }
+.hc-scene .hc-p-calico { transform: translate(300px, 97px) scale(0.6); }
+.hc-scene .hc-c-calico { transform: translate(300px, 177px) scale(0.62); }
+.hc-scene .hc-c-ginger { transform: translate(160px, 27px) scale(0.62); }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ---- Always-on, natural waiting ---- */
+  .hc-cats .hc-tail { animation: hc-flick 4.5s ease-in-out infinite; }
+  .hc-cats .hc-coat-calico .hc-tail { animation-delay: 1.6s; }
+  .hc-cats .hc-eyes { animation: hc-slow-blink 6s ease-in-out infinite; }
+  .hc-cats .hc-look { animation: hc-look-around 10s ease-in-out infinite; }
+  .hc-cats .hc-head { animation: hc-tilt 8s ease-in-out 2s infinite; }
+  .hc-cats .hc-coat-calico .hc-head { animation-delay: 5s; }
+  .hc-cats .hc-side-tail { animation: hc-side-sway 3.2s ease-in-out infinite; }
+  .hc-logo .hc-heart { animation: hc-heart 5s ease-out infinite; }
+  .hc-cats .hc-steam path { animation: hc-steam 3.2s ease-in-out infinite; }
+  .hc-cats .hc-steam path:nth-child(2) { animation-delay: 1s; } .hc-cats .hc-steam path:nth-child(3) { animation-delay: 2s; }
+  .hc-cats .hc-rain path { animation: hc-rain 0.9s linear infinite; }
+
+  /* ---- Walk cycles (side view): diagonal pairs swing together ---- */
+  .hc-walk .hc-sl-fn, .hc-walk .hc-sl-bf { animation: hc-leg 0.5s ease-in-out infinite alternate; }
+  .hc-walk .hc-sl-ff, .hc-walk .hc-sl-bn { animation: hc-leg 0.5s ease-in-out infinite alternate-reverse; }
+  .hc-walk .hc-sl-low { animation: hc-knee 0.5s ease-in-out infinite; }
+  .hc-walk .hc-side-body, .hc-walk .hc-side-head { animation: hc-step-bob 0.25s ease-in-out infinite alternate; }
+
+  /* ---- On the two pianos: swap with big jumps, walk the keys, snuggle ---- */
+  .hc-s-show .hc-a-ginger { animation: hc-ginger 12s ease-in-out 1 forwards; }
+  .hc-s-show .hc-a-calico { animation: hc-calico 12s ease-in-out 1 forwards; }
+  .hc-s-show .hc-coat-ginger { animation: hc-tail-chase 12s ease-in-out 1 forwards; transform-origin: 50% 60%; }
+  .hc-s-show .hc-coat-calico { animation: hc-pounce 12s ease-in-out 1 forwards; }
+  .hc-s-show .hc-glow { animation: hc-glow-a 12s 1 forwards; }
+  .hc-s-show .hc-glow-2, .hc-s-show .hc-glow-5 { animation-delay: 0.6s; } .hc-s-show .hc-glow-3, .hc-s-show .hc-glow-6 { animation-delay: 1.2s; }
+  .hc-s-show .hc-glow-4, .hc-s-show .hc-glow-5, .hc-s-show .hc-glow-6 { animation-name: hc-glow-b; }
+  .hc-s-show .hc-n1, .hc-s-show .hc-n2 { animation: hc-note-a 12s ease-out 1 forwards; }
+  .hc-s-show .hc-n3, .hc-s-show .hc-n4 { animation: hc-note-b 12s ease-out 1 forwards; }
+  .hc-s-show .hc-n5 { animation: hc-note-c 12s ease-out 1 forwards; }
+  .hc-s-show .hc-heart { animation: hc-heart-show 12s ease-out 1 forwards; transform-origin: 50% 100%; }
+
+  /* ---- Christmas tree: Ginger sniffs, Pepper bats the bauble ---- */
+  .hc-s-xmas .hc-x-ginger .hc-bob { animation: hc-lean 3s ease-in-out 2; }
+  .hc-s-xmas .hc-sniff circle { animation: hc-sniff 3s ease-out 2; }
+  .hc-s-xmas .hc-sniff circle:nth-child(2) { animation-delay: 0.2s; } .hc-s-xmas .hc-sniff circle:nth-child(3) { animation-delay: 0.4s; }
+  .hc-s-xmas .hc-x-calico .hc-bob { animation: hc-bat 2.4s ease-in-out 1.5s 2; }
+  .hc-s-xmas .hc-bauble { animation: hc-swing 2.4s ease-in-out 1.5s 2; }
+  .hc-s-xmas .hc-orn { animation: hc-twinkle 1.6s ease-in-out infinite alternate; }
+  .hc-s-xmas .hc-orn-2 { animation-delay: 0.5s; } .hc-s-xmas .hc-orn-3 { animation-delay: 1s; }
+
+  /* ---- Goldfish: it swims about, Ginger's paw dips in twice, Pepper watches ---- */
+  .hc-s-fish .hc-goldfish { animation: hc-swim 3.2s ease-in-out infinite; }
+  .hc-s-fish .hc-bubbles circle { animation: hc-float 2s ease-out infinite; }
+  .hc-s-fish .hc-paw-reach { animation: hc-reach 3.2s ease-in-out 0.8s 2; }
+  .hc-s-fish .hc-f-ginger .hc-bob { animation: hc-lean 3.2s ease-in-out 0.8s 2; }
+
+  /* ---- Coffee: Ginger leans in to sniff, Pepper hops to paw at the steam ---- */
+  .hc-s-coffee .hc-cf-ginger .hc-bob { animation: hc-lean-right 3s ease-in-out 0.6s 2; }
+  .hc-s-coffee .hc-cf-calico .hc-bob { animation: hc-paw-hop 2.2s ease-in-out 2.4s 2; }
+
+  /* ---- Tea: Pepper walks over to the cookies and sniffs; Ginger watches the steam ---- */
+  .hc-s-tea .hc-t-calico { animation: hc-tea-walk 3.2s ease-in-out 0.4s 1 both; }
+  .hc-s-tea .hc-t-calico .hc-cat-side { animation: none; }
+  .hc-s-tea .hc-t-calico .hc-sl-fn, .hc-s-tea .hc-t-calico .hc-sl-bf { animation: hc-leg 0.4s ease-in-out 0.4s 8 alternate; }
+  .hc-s-tea .hc-t-calico .hc-sl-ff, .hc-s-tea .hc-t-calico .hc-sl-bn { animation: hc-leg 0.4s ease-in-out 0.4s 8 alternate-reverse; }
+  .hc-s-tea .hc-t-calico .hc-sl-low { animation: hc-knee 0.4s ease-in-out 0.4s 8; }
+  .hc-s-tea .hc-t-calico .hc-side-head { animation: hc-sniff-dip 1.4s ease-in-out 3.8s 2; }
+
+  /* ---- Metronome: it ticks, Ginger's head follows it ---- */
+  .hc-s-metronome .hc-metro-arm { animation: hc-metro 1.2s ease-in-out infinite alternate; }
+  .hc-s-metronome .hc-mt-ginger .hc-head { animation: hc-follow 1.2s ease-in-out 10 alternate, hc-tilt 8s ease-in-out 12s infinite; }
+
+  /* ---- Window: rain outside, Pepper hops up to paw at a raindrop ---- */
+  .hc-s-window .hc-w-calico .hc-bob { animation: hc-paw-hop 2.2s ease-in-out 1s 2; }
+  .hc-s-window .hc-lamp ellipse { animation: hc-lamp 4s ease-in-out infinite alternate; }
+
+  /* ---- Running across the keys: a proper trot, keys light up under them ---- */
+  .hc-s-run .hc-r-ginger { animation: hc-run-g 4s linear 1 both; }
+  .hc-s-run .hc-r-calico { animation: hc-run-c 4s linear 0.5s 1 both; }
+  .hc-s-run .hc-sl-fn, .hc-s-run .hc-sl-bf { animation: hc-leg-run 0.26s ease-in-out 16 alternate; }
+  .hc-s-run .hc-sl-ff, .hc-s-run .hc-sl-bn { animation: hc-leg-run 0.26s ease-in-out 16 alternate-reverse; }
+  .hc-s-run .hc-sl-low { animation: hc-knee 0.26s ease-in-out 16; }
+  .hc-s-run .hc-side-body, .hc-s-run .hc-side-head { animation: hc-step-bob 0.13s ease-in-out 32 alternate; }
+  .hc-s-run .hc-run-glow { animation: hc-run-glow 4s linear 1 both; }
+  .hc-s-run .hc-run-notes text { animation: hc-float 1.4s ease-out 3; }
+  .hc-s-run .hc-run-notes text:nth-child(2) { animation-delay: 0.45s; } .hc-s-run .hc-run-notes text:nth-child(3) { animation-delay: 0.9s; }
+
+  /* ---- Chase: Pepper dashes over the piano, Ginger bounds after her ---- */
+  .hc-s-chase .hc-c-calico { animation: hc-chase-c 5s ease-in-out 1 both; }
+  .hc-s-chase .hc-c-ginger { animation: hc-chase-g 5s ease-in-out 0.5s 1 both; }
+  .hc-s-chase .hc-sl-fn, .hc-s-chase .hc-sl-bf { animation: hc-leg-run 0.28s ease-in-out 18 alternate; }
+  .hc-s-chase .hc-sl-ff, .hc-s-chase .hc-sl-bn { animation: hc-leg-run 0.28s ease-in-out 18 alternate-reverse; }
+  .hc-s-chase .hc-sl-low { animation: hc-knee 0.28s ease-in-out 18; }
+
+  /* ---- Plank: Ginger tiptoes along, wobbling; the plank tips a little ---- */
+  .hc-s-plank .hc-p-ginger { animation: hc-tiptoe 6s ease-in-out 1 both; }
+  .hc-s-plank .hc-p-ginger .hc-sl-fn, .hc-s-plank .hc-p-ginger .hc-sl-bf { animation: hc-leg 0.6s ease-in-out 10 alternate; }
+  .hc-s-plank .hc-p-ginger .hc-sl-ff, .hc-s-plank .hc-p-ginger .hc-sl-bn { animation: hc-leg 0.6s ease-in-out 10 alternate-reverse; }
+  .hc-s-plank .hc-p-ginger .hc-sl-low { animation: hc-knee 0.6s ease-in-out 10; }
+  .hc-s-plank .hc-p-ginger .hc-bob { animation: hc-balance 1.1s ease-in-out 6 alternate; transform-origin: 50% 100%; }
+  .hc-s-plank .hc-plank { animation: hc-tip 2s ease-in-out 3 alternate; transform-origin: 50% 50%; }
+}
+
+@keyframes hc-flick { 0%, 60%, 100% { transform: rotate(0); } 66% { transform: rotate(-10deg); } 72% { transform: rotate(4deg); } 78% { transform: rotate(-6deg); } }
+@keyframes hc-slow-blink { 0%, 40%, 58%, 100% { transform: scaleY(1); } 46%, 52% { transform: scaleY(0.12); } }
+@keyframes hc-look-around { 0%, 25%, 100% { transform: translateX(0); } 35%, 50% { transform: translateX(-1.6px); } 62%, 78% { transform: translateX(1.6px); } }
+@keyframes hc-tilt { 0%, 64%, 100% { transform: rotate(0); } 70%, 80% { transform: rotate(-5deg); } 84% { transform: rotate(2deg); } }
+@keyframes hc-side-sway { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-12deg); } }
+@keyframes hc-heart { 0%, 55% { opacity: 0; transform: translateY(10px) scale(0.5); } 65% { opacity: 1; transform: translateY(0) scale(1.1); } 90%, 100% { opacity: 0; transform: translateY(-14px) scale(1); } }
+@keyframes hc-steam { 0% { opacity: 0; transform: translateY(6px) scaleY(0.8); } 30% { opacity: 0.85; } 100% { opacity: 0; transform: translateY(-16px) scaleY(1.1); } }
+@keyframes hc-rain { from { transform: translateY(-30px); opacity: 0; } 20% { opacity: 0.9; } to { transform: translateY(70px); opacity: 0; } }
+@keyframes hc-leg { from { transform: rotate(-18deg); } to { transform: rotate(18deg); } }
+@keyframes hc-leg-run { from { transform: rotate(-30deg); } to { transform: rotate(30deg); } }
+@keyframes hc-knee { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(24deg); } }
+@keyframes hc-step-bob { from { transform: translateY(0); } to { transform: translateY(-1.6px); } }
+@keyframes hc-ginger {
+  0%, 12% { transform: translate(46px, 19px) scale(0.6); }
+  17% { transform: translate(160px, -34px) scale(0.6); }
+  22% { transform: translate(262px, 87px) scale(0.6); }
+  23% { transform: translate(262px, 91px) scale(0.64, 0.54); }
+  25% { transform: translate(262px, 87px) scale(0.6); }
+  40%, 60% { transform: translate(300px, 87px) scale(0.6); }
+  66% { transform: translate(180px, -34px) scale(0.6); }
+  72% { transform: translate(46px, 19px) scale(0.6); }
+  73% { transform: translate(46px, 23px) scale(0.64, 0.54); }
+  75%, 100% { transform: translate(46px, 19px) scale(0.6); }
+}
+@keyframes hc-calico {
+  0%, 22% { transform: translate(334px, 49px) scale(0.6); }
+  27% { transform: translate(190px, -24px) scale(0.6); }
+  32% { transform: translate(50px, 95px) scale(0.6); }
+  33% { transform: translate(50px, 99px) scale(0.64, 0.54); }
+  35% { transform: translate(50px, 95px) scale(0.6); }
+  52%, 64% { transform: translate(96px, 95px) scale(0.6); }
+  68% { transform: translate(110px, 0px) scale(0.6); }
+  72%, 100% { transform: translate(92px, 19px) scale(0.6); }
+}
+@keyframes hc-tail-chase { 0%, 46% { transform: rotate(0); } 52% { transform: rotate(360deg); } 58%, 100% { transform: rotate(720deg); } }
+@keyframes hc-pounce { 0%, 54% { transform: translateY(0); } 56% { transform: translateY(6px) scale(1.06, 0.9); } 59% { transform: translateY(-58px) rotate(-10deg); } 62%, 72% { transform: translateY(0); } 76%, 100% { transform: rotate(-6deg); } }
+@keyframes hc-glow-a { 0%, 26% { opacity: 0; } 28% { opacity: 0.75; } 32%, 100% { opacity: 0; } }
+@keyframes hc-glow-b { 0%, 37% { opacity: 0; } 39% { opacity: 0.75; } 43%, 100% { opacity: 0; } }
+@keyframes hc-note-a { 0%, 26% { opacity: 0; transform: translateY(8px); } 30% { opacity: 1; } 40%, 100% { opacity: 0; transform: translateY(-30px); } }
+@keyframes hc-note-b { 0%, 37% { opacity: 0; transform: translateY(8px); } 41% { opacity: 1; } 51%, 100% { opacity: 0; transform: translateY(-30px); } }
+@keyframes hc-note-c { 0%, 50% { opacity: 0; } 54%, 58% { opacity: 1; transform: translateY(-4px) scale(1.2); } 60%, 100% { opacity: 0; transform: translateY(-10px) scale(2); } }
+@keyframes hc-heart-show { 0%, 74% { opacity: 0; transform: translateY(10px) scale(0.5); } 78% { opacity: 1; transform: scale(1.15); } 88% { opacity: 1; transform: translateY(-6px); } 94%, 100% { opacity: 0; transform: translateY(-16px); } }
+@keyframes hc-lean { 0%, 25%, 100% { transform: rotate(0); } 45%, 70% { transform: rotate(9deg) translateX(4px); } }
+@keyframes hc-lean-right { 0%, 25%, 100% { transform: rotate(0); } 45%, 70% { transform: rotate(10deg) translateX(5px); } }
+@keyframes hc-sniff { 0%, 45% { opacity: 0; transform: translate(0, 0); } 55% { opacity: 0.9; } 75%, 100% { opacity: 0; transform: translate(10px, -14px); } }
+@keyframes hc-bat { 0%, 40%, 100% { transform: rotate(0) translateY(0); } 55% { transform: rotate(-12deg) translateY(-14px); } 65% { transform: rotate(0) translateY(0); } }
+@keyframes hc-swing { 0%, 50%, 100% { transform: rotate(0); } 60% { transform: rotate(22deg); } 72% { transform: rotate(-14deg); } 84% { transform: rotate(7deg); } }
+@keyframes hc-twinkle { from { opacity: 0.55; } to { opacity: 1; } }
+@keyframes hc-swim { 0%, 100% { transform: translateX(0) scaleX(1); } 30% { transform: translateX(-14px); } 45% { transform: translate(10px, 6px) scaleX(-1); } 70% { transform: translate(16px, -4px) scaleX(-1); } }
+@keyframes hc-float { 0% { opacity: 0; transform: translateY(8px); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-26px); } }
+@keyframes hc-reach { 0%, 20% { opacity: 0; transform: translate(-20px, 40px); } 35% { opacity: 1; } 50% { opacity: 1; transform: translate(4px, 4px); } 60% { opacity: 1; transform: translate(10px, 12px); } 75% { opacity: 1; transform: translate(-20px, 40px); } 80%, 100% { opacity: 0; } }
+@keyframes hc-paw-hop { 0%, 30%, 100% { transform: translateY(0) rotate(0); } 40% { transform: translateY(3px) scale(1.05, 0.94); } 55% { transform: translateY(-16px) rotate(-8deg); } 70% { transform: translateY(0) rotate(0); } }
+@keyframes hc-tea-walk { from { transform: translate(196px, 121px) scale(0.62); } to { transform: translate(262px, 121px) scale(0.62); } }
+@keyframes hc-sniff-dip { 0%, 100% { transform: rotate(0); } 40%, 60% { transform: rotate(14deg) translateY(2px); } }
+@keyframes hc-metro { from { transform: rotate(-16deg); } to { transform: rotate(16deg); } }
+@keyframes hc-follow { from { transform: rotate(-6deg); } to { transform: rotate(6deg); } }
+@keyframes hc-lamp { from { opacity: 0.85; } to { opacity: 1; } }
+@keyframes hc-run-g { from { transform: translate(-90px, 131px) scale(0.62); } to { transform: translate(220px, 131px) scale(0.62); } }
+@keyframes hc-run-c { from { transform: translate(-90px, 131px) scale(0.62); } to { transform: translate(80px, 131px) scale(0.62); } }
+@keyframes hc-run-glow { 0% { opacity: 0; } 2% { opacity: 0.7; } 9%, 100% { opacity: 0; } }
+@keyframes hc-chase-c {
+  0% { transform: translate(-80px, 177px) scale(0.62); }
+  30% { transform: translate(60px, 177px) scale(0.62); }
+  42% { transform: translate(130px, -10px) scale(0.62); }
+  52% { transform: translate(170px, 27px) scale(0.62); }
+  66% { transform: translate(250px, 0px) scale(0.62); }
+  80%, 100% { transform: translate(300px, 177px) scale(0.62); }
+}
+@keyframes hc-chase-g {
+  0% { transform: translate(-80px, 177px) scale(0.62); }
+  40% { transform: translate(60px, 177px) scale(0.62); }
+  56% { transform: translate(120px, -10px) scale(0.62); }
+  70%, 100% { transform: translate(160px, 27px) scale(0.62); }
+}
+@keyframes hc-tiptoe { from { transform: translate(40px, 105px) scale(0.62); } to { transform: translate(150px, 105px) scale(0.62); } }
+@keyframes hc-balance { from { transform: rotate(-6deg); } to { transform: rotate(6deg); } }
+@keyframes hc-tip { from { transform: rotate(-1.5deg); } to { transform: rotate(1.5deg); } }

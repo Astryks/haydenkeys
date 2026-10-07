@@ -2,7 +2,7 @@
 // then one big button: "Start now" for new learners, or "Continue:
 // Lesson 6 of 150" so returning learners pick up right where they left off.
 
-import { pandaSvg } from "./panda.js";
+import { catsSvg } from "./cats.js";
 
 function showIntro({ total, done, next, number }) {
   const started = done > 0;
@@ -10,7 +10,7 @@ function showIntro({ total, done, next, number }) {
   el.className = "hk-intro";
   el.innerHTML = `
     <div class="hk-intro-notes" aria-hidden="true"><span>♪</span><span>♫</span><span>♩</span><span>♬</span><span>♪</span></div>
-    <div class="hk-intro-panda">${pandaSvg(started ? "idle" : "cheer", { label: "Hayden the panda" })}</div>
+    <div class="hk-intro-cats">${catsSvg("scene", { label: "Ginger and Pepper, the piano cats" })}</div>
     <h1 class="hk-intro-title">Hayden Keys</h1>
     <p class="hk-intro-tag">${started ? "Welcome back! Ready to play?" : "Learn piano, one tiny step at a time"}</p>
     ${started && next ? `<div class="hk-intro-progress"><div class="hk-hero-bar"><span style="width:${Math.max(3, Math.round((100 * done) / total))}%"></span></div><div>Lesson ${number} of ${total}</div></div>` : ""}

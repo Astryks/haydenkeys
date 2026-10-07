@@ -1592,3 +1592,15 @@ body.hk-lesson-open .hk-lesson-topbar { padding-top: 6px !important; }
 .hk-seg button { overflow: hidden; text-overflow: ellipsis; min-width: 0; padding: 8px 4px; }
 .hk-upload-match-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
 .hk-match-chip { border: 1px solid #e6dcfb; background: #fff; border-radius: 999px; padding: 6px 12px; font-weight: 700; font-size: 0.85rem; color: #3a2d6b; cursor: pointer; }
+
+/* Opening splash: the two piano cats' show (css/cats.css). */
+.hk-intro-cats { width: min(420px, 90vw); aspect-ratio: 400 / 240; animation: hk-pop 0.6s cubic-bezier(.2,1.4,.4,1); }
+@media (orientation: landscape) and (max-height: 500px) { .hk-intro-cats { width: 300px; } }
+.hk-header .hk-logo { width: 62px; height: 62px; }
+
+/* One animation per card: the two cats' scene sits on the first message. */
+.hk-avatar-scene { width: 132px !important; height: 80px !important; flex: 0 0 auto; }
+@media (max-width: 520px) { .hk-avatar-scene { width: 96px !important; height: 58px !important; } }
+.hk-micro-reply, .hk-chat-them:not(:first-child) { margin-left: 0; }
+.hk-avatar-scene { width: 180px !important; height: 108px !important; border-radius: 12px; overflow: hidden; background: #fff; }
+@media (max-width: 520px) { .hk-avatar-scene { width: 132px !important; height: 80px !important; } }

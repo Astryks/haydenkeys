@@ -114,6 +114,7 @@ const PEOPLE = {
 // Song videos (official artist / label / "Topic" channels only, each
 // checked with YouTube's oEmbed): acoustic versions where one exists.
 const VIDEOS = {
+ "something-just-like-this-live": {"id": "4u6bWs-ZG0o", "title": "The Chainsmokers & Coldplay - Something Just Like This (Live at the BRITs)", "author_name": "ChainsmokersVEVO", "kind": "live"},
  "perfect-acoustic": {"id": "qxbS8qbBL0c", "title": "Ed Sheeran - Perfect in the Live Lounge", "author_name": "BBC Radio 1", "kind": "acoustic"},
  "radioactive-acoustic": {"id": "XkNNOG1sx1o", "title": "Imagine Dragons “Radioactive” on the Howard Stern Show (2015)", "author_name": "The Howard Stern Show", "kind": "acoustic"},
  "i-m-like-a-bird-acoustic": {"id": "6Jzc3Ffva4Q", "title": "Nelly Furtado \"I'm Like A Bird\" Acoustic Live @ SiriusXM // Hits 1", "author_name": "SiriusXM", "kind": "acoustic"},
@@ -438,6 +439,7 @@ const SONG_VIDEOS = {
  "Yellow": "song-yellow",
  "The Night We Met": "song-the-night-we-met",
  "Closer": "song-closer",
+ "Something Just Like This": "something-just-like-this-live",
  "Riptide": "riptide-acoustic",
  "Levitating": "song-levitating",
  "Lucid Dreams": "song-lucid-dreams",

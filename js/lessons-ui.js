@@ -31,6 +31,7 @@ import { SONGS, SONG_STRUCTURES, ONE_FIVE_SIX_FOUR_SONGS, WORLD_LANGUAGES } from
 import { songSteps, barSeconds } from "./song-map.js";
 import { watchChats, chatHtml } from "./chat.js";
 import { pandaSvg, nextTrick } from "./panda.js";
+import { catsSvg, nextCatScene } from "./cats.js";
 import { icon } from "./icons.js";
 import { videoHtml, wireVideos } from "./media.js";
 import { SONG_VIDEOS } from "./media-data.js";
@@ -992,7 +993,7 @@ function initLessonsTab(root) {
     const lesson = LESSONS.find((l) => l.id === id);
     const { content, keyboardWrap, controls } = lessonShell(lesson.title);
     // Chat style: Hayden "types" for a moment, then the message pops in.
-    content.innerHTML = (card.chat ? chatHtml(card.chat, "idle") : "") + `<div class="hk-micro-thread" id="hk-micro-thread"><div class="hk-micro"><div class="hk-micro-avatar">${pandaSvg(card.want.choice ? "think" : card.sing ? "sing" : card.want.tap ? "idle" : "play", { item: card.want.tap ? "surprise" : undefined })}</div><div class="hk-micro-bubble" id="hk-micro-say"><span class="hk-chat-typing"><i></i><i></i><i></i></span></div></div></div>`;
+    content.innerHTML = (card.chat ? chatHtml(card.chat, "idle") : "") + `<div class="hk-micro-thread" id="hk-micro-thread"><div class="hk-micro">${card.chat ? "" : `<div class="hk-micro-avatar hk-avatar-scene">${catsSvg(nextCatScene(), { label: "Ginger and Pepper" })}</div>`}<div class="hk-micro-bubble" id="hk-micro-say"><span class="hk-chat-typing"><i></i><i></i><i></i></span></div></div></div>`;
     const thread = content.querySelector("#hk-micro-thread");
     setTimeout(() => { if (!finished) say.innerHTML = card.say; }, 550);
     // Chord cards: pressing 3 keys at once on a phone is hard; say so.
@@ -1007,7 +1008,7 @@ function initLessonsTab(root) {
     }
     const reply = (html, cls = "") => {
       thread.querySelector(".hk-micro-oops")?.remove();
-      thread.insertAdjacentHTML("beforeend", `<div class="hk-micro hk-micro-reply ${cls}"><div class="hk-micro-avatar">${pandaSvg(cls.includes("yay") ? nextTrick("yay") : cls.includes("oops") ? nextTrick("try") : "idle", { item: cls.includes("yay") || cls.includes("oops") ? undefined : "surprise" })}</div><div class="hk-micro-bubble">${html}</div></div>`);
+      thread.insertAdjacentHTML("beforeend", `<div class="hk-micro hk-micro-reply ${cls}"><div class="hk-micro-bubble">${html}</div></div>`);
       thread.lastElementChild.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
     };
     // C3 to E5: middle C sits right in the middle of the screen.

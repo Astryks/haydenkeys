@@ -37362,6 +37362,146 @@ const VERIFIED = {
    }
   ]
  },
+ "Something Just Like This": {
+  "status": "uncertain",
+  "key": "B minor",
+  "bpm": 103,
+  "beatsPerBar": 4,
+  "durationSec": 247,
+  "chords": [
+   "G",
+   "A",
+   "Bm",
+   "A"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "G",
+     "A",
+     "Bm",
+     "A"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "G",
+     "A",
+     "Bm",
+     "A"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "G",
+     "A",
+     "Bm",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "G",
+     "A",
+     "Bm",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Drop (post-chorus)",
+    "chords": [
+     "G",
+     "A",
+     "Bm",
+     "A"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "G",
+     "A",
+     "Bm",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "G",
+     "A",
+     "Bm",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "G",
+     "A",
+     "Bm",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Drop (post-chorus)",
+    "chords": [
+     "G",
+     "A",
+     "Bm",
+     "A"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "G",
+     "A",
+     "Bm",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Final chorus",
+    "chords": [
+     "G",
+     "A",
+     "Bm",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "G",
+     "A",
+     "Bm",
+     "A"
+    ],
+    "bars": 4
+   }
+  ],
+  "pianoVideo": {
+   "id": "4u6bWs-ZG0o",
+   "title": "The Chainsmokers & Coldplay - Something Just Like This (Live at the BRITs)",
+   "channel": "ChainsmokersVEVO"
+  }
+ },
  "Angels": {
   "status": "uncertain",
   "key": "E major",

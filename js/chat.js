@@ -6,7 +6,7 @@
 // reply chip to send the next question; Hayden "types" and answers. The
 // lesson's keyboard and buttons appear once the chat reaches the end.
 
-import { pandaSvg } from "./panda.js";
+import { catsSvg, nextCatScene } from "./cats.js";
 
 // Old image poses map to the new animated panda's poses.
 function poseFor(src) {
@@ -66,7 +66,9 @@ function buildChat(el) {
   function reply(ex, instant) {
     const row = document.createElement("div");
     row.className = "hk-chat-msg hk-chat-them";
-    row.innerHTML = `<div class="hk-chat-avatar">${pandaSvg(poseFor(pose), { item: poseFor(pose) === "idle" ? "surprise" : undefined })}</div><div class="hk-chat-bubble"><span class="hk-chat-typing"><i></i><i></i><i></i></span></div>`;
+    // One animation per card: the cats appear on the first message only.
+    const first = !thread.querySelector(".hk-chat-them");
+    row.innerHTML = `${first ? `<div class="hk-chat-avatar hk-avatar-scene">${catsSvg(nextCatScene(), { label: "Ginger and Pepper" })}</div>` : ""}<div class="hk-chat-bubble"><span class="hk-chat-typing"><i></i><i></i><i></i></span></div>`;
     thread.appendChild(row);
     scroll(row);
     const fill = () => {
@@ -122,8 +124,7 @@ function chatHtml(html, pose) {
   // Conversations with several questions still play out one tap at a time.
   const exchanges = (html.match(/<h3/g) || []).length;
   if (exchanges <= 1 && !/data-q=/.test(html)) {
-    const p = poseFor(pose);
-    return `<div class="hk-chat" data-ready="1"><div class="hk-chat-thread"><div class="hk-chat-msg hk-chat-them"><div class="hk-chat-avatar">${pandaSvg(p, { item: p === "idle" ? "surprise" : undefined })}</div><div class="hk-chat-bubble">${html}</div></div></div></div>`;
+    return `<div class="hk-chat" data-ready="1"><div class="hk-chat-thread"><div class="hk-chat-msg hk-chat-them"><div class="hk-chat-avatar hk-avatar-scene">${catsSvg(nextCatScene(), { label: "Ginger and Pepper" })}</div><div class="hk-chat-bubble">${html}</div></div></div></div>`;
   }
   return `<div class="hk-chat" data-pose="${pose}"><template>${html}</template></div>`;
 }

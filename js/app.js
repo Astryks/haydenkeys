@@ -15,6 +15,7 @@ import { maybeShowFunFact, showFunFact } from "./fun-facts.js";
 import { initPopups } from "./popups.js";
 import { applyRewards } from "./rewards.js";
 import { pandaSvg } from "./panda.js";
+import { catsSvg } from "./cats.js";
 
 // Stripe Payment Link for the footer's "Support Hayden Keys" link —
 // empty until Sid creates one in his own Stripe dashboard.
@@ -80,8 +81,9 @@ function init() {
   initPopups();
   applyRewards();
   showIntro(courseProgress());
-  const logo = document.getElementById("hk-logo-panda");
-  if (logo) logo.innerHTML = pandaSvg("idle", { label: "Hayden Keys" });
+  // The logo: Ginger and Pepper, the two piano cats (js/cats.js).
+  const logo = document.getElementById("hk-logo-cats");
+  if (logo) logo.innerHTML = catsSvg("logo", { label: "Hayden Keys" });
 
   document.querySelectorAll("[data-tab]").forEach((btn) => {
     btn.addEventListener("click", () => showTab(btn.dataset.tab));
