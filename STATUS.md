@@ -6,15 +6,24 @@
 
 **What's done (full history below):** beginner→advanced lessons as simple panda cards (Day 1–4, middle C, key names A0–A7, two hands, styles), falling-blocks player with Listen / Wait for me (microphone) / Play in time, upload a song → chords (Basic Pitch on device) with Easy/Hard, L/R hands and Wait for me, Guess the song (ShazamKit), Netflix-style song library (241 songs in genre rows incl. Karaoke anthems and International) with album art, Main chords / Whole song and the official YouTube video under each song, streaks/XP/rewards, How it works page, Astryks credit, App Store screenshots and listing text.
 
-**Latest build:** 34 uploaded; build 35 is archived but not uploaded (Xcode needs the owner to sign in again: Xcode → Settings → Accounts). See the 2026-10-07 late sections at the bottom. **Not submitted to App Review yet.**
+**Latest build:** 37, uploaded to TestFlight (the "Internal testers" group gets every build automatically). **Submitted to App Review 2026-10-07** with the three tips; status Waiting for Review. Release is manual. App ID 6819420632.
 
-### Next steps (in order)
-1. **TestFlight:** check the latest build appears in App Store Connect → TestFlight (processing takes 5–30 min; Apple emails if a build fails processing). Add it to the internal tester group and install on the phone.
-2. **Test on a phone:** Wait for me with the microphone, Guess the song with a real recording, Main/Whole song on a few new songs, landscape player.
-3. **App Store version page (owner, signed in):** select the latest build, upload screenshots from `ios/screenshots/app-store/`, paste text from `ios/APP_STORE_LISTING.md`, Age Rating, App Privacy ("Data Not Collected") → Publish, Content Rights, App Review contact + notes. **Submit for Review only when the owner says so.**
-4. ~~Data clean-up: 15 older songs still have a placeholder instead of chords~~ **Done** (see "Paused 2026-10-07": every song now has real chords). Was: ("insufficient agreement…" - e.g. Wildest Dreams, Happy, Africa, Bohemian Rhapsody, Misty, Stella by Starlight, November Rain, Still D.R.E.). They rely on their notes/song map; research proper chords or hide them.
-5. Tip jar is back (owner asked 2026-10-07): create the three tip In-App Purchases in App Store Connect (see the Tip jar section at the bottom). Left-handed fretboard (Jaxx) is done.
-6. Next apps after Hayden Keys and Jaxx Guitar: fitness, jiu jitsu, then public speaking, singing, investing & markets, dance.
+**Business (checked 2026-10-07):** Free and Paid Apps Agreements active until 18 Aug 2027, bank account active (paid in AUD), tax forms (ABN/GST, W-8BEN) active. Nothing to do here; tips can be paid out once approved.
+
+### Next steps (to do, in order)
+1. **Wait for App Review** (usually 1-3 days; Apple emails). If Apple sends a question or rejection, open it in App Store Connect and paste it to Claude to draft the reply and fix.
+2. **Release:** after approval, App Store Connect > Hayden Keys > the 1.0 version > **Release this version** (release is set to manual on purpose).
+3. **Google Search Console** (owner, about 10 minutes):
+   1. Go to search.google.com/search-console, **Add property** > **URL prefix** > `https://haydenkeys.com`.
+   2. Choose the **HTML tag** method, copy the `<meta name="google-site-verification" ...>` line and give it to Claude, who adds it to `index.html` and pushes.
+   3. Click **Verify** once the site has redeployed (a few minutes).
+   4. **Sitemaps** > enter `sitemap.xml` > Submit.
+4. **Bing Webmaster Tools** (optional, also covers Yahoo and DuckDuckGo): bing.com/webmasters > **Import from Google Search Console**.
+5. **Apple Search Ads** (optional, costs money, owner's decision): plan in `ios/SEARCH_ADS_PLAN.md` (suggested start US$5-10 a day on "learn piano" style keywords). Sign up at searchads.apple.com, then Claude can set up the campaigns.
+6. **Test on a real phone** from TestFlight: Wait for me with the microphone, Guess the song with a real recording, a tip in the sandbox (TestFlight purchases are free) to see the thank-you animation, landscape player.
+7. **After launch:** watch ratings and reviews; update promotional text any time (no review needed); the What's New text for 1.0.1 is in `ios/APP_STORE_LISTING.md`.
+8. **Known gaps (later):** Camera Overlay ignores saved calibration; Discover, Saved and MIDI screens have no button; Wait for me accepts any single note of a chord; three song videos imperfect (Sekai ni Hitotsu, Hungarian Rhapsody No. 2, Ya Lili).
+9. Next apps after Hayden Keys and Jaxx Guitar: fitness, jiu jitsu, then public speaking, singing, investing and markets, dance.
 
 ### How to build and upload (both apps)
 ```
