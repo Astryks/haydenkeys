@@ -414,6 +414,22 @@ const DEFS = `<defs>
   <linearGradient id="hc-gr-ebony" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3742"/><stop offset="1" stop-color="#17151b"/></linearGradient>
 </defs>`;
 
+// Every drawing repeats DEFS, so ids like hc-gr-ginger exist many times and
+// url(#...) resolves to the first copy in the page. If that copy sits inside a
+// hidden element (the header logo during a lesson), the fills vanish. One
+// always-rendered copy at the very top of <body> keeps every drawing coloured.
+(function mountSharedDefs() {
+  if (typeof document === "undefined") return;
+  const mount = () => {
+    if (document.getElementById("hc-shared-defs")) return;
+    const holder = document.createElement("div");
+    holder.innerHTML = `<svg id="hc-shared-defs" aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden">${DEFS}</svg>`;
+    document.body.insertBefore(holder.firstChild, document.body.firstChild);
+  };
+  if (document.body) mount(); else document.addEventListener("DOMContentLoaded", mount);
+})();
+
+
 // The Hayden Keys logo/app icon: a glossy grand piano with its lid up,
 // gold notes floating out of it.
 function pianoLogo({ label = "Hayden Keys", tile = true } = {}) {
