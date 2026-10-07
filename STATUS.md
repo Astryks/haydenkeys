@@ -2616,3 +2616,6 @@ All done 2026-10-07 (see the notes under each item).
 - **Store page:** 6 iPhone 6.9" and 6 iPad 13" screenshots from `ios/screenshots/app-store-v2/` uploaded (English U.S.; Australia and UK listings use the same). Each tip has its review screenshot.
 - **Filled in:** App Review contact (same as the owner's other apps), review notes, Content Rights (uses third-party content: iTunes album art, YouTube embeds, chord progressions), App Privacy published as "Data Not Collected", export compliance (no non-exempt encryption).
 - **Still for the owner:** Paid Applications Agreement, tax and banking must be active before tips can be sold; watch for App Review messages in App Store Connect; press Release after approval; Google Search Console verification and sitemap.
+
+## 2026-10-07: website deploy fixed
+- haydenkeys.com had been stuck on the 2026-10-06 version: every "Deploy static site to GitHub Pages" Actions run since then sat in "pending" and was cancelled by the next push (a deployment from 2026-10-06 09:17 was stuck in "waiting"). Cleared it, and switched GitHub Pages to **Deploy from a branch** (main, root) with a `.nojekyll` file, so every push to main publishes directly without Actions. The live site now matches main (service worker cache hayden-keys-v17). The old workflow file is still in `.github/workflows/` but Pages no longer uses it.
