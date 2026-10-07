@@ -2437,3 +2437,30 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
   - **Upload panel simplified:** purple Settings button; tidy one-line rows (Speed, Wait for me on/off, View Easy (chords) / Hard (all notes), Sound, Drum beat). **Wait for me for uploads** (holds until you play the chord). **Left/right hands clear:** note names coloured by hand, legend, and the now-line says e.g. "left hand C3 + right hand C4 E4 G4".
   - **Guess the song fixed:** it was sending low-quality 22 kHz audio and only the first 12 s; now re-decodes the file at 44.1 kHz and tries 3 windows, and shows the real error. Still to test with a real song on a phone.
   - **55 more songs** (owner's lists: classical masterpieces, Taylor Swift / Lady Gaga / Billie Eilish, Radiohead, karaoke anthems, international songs; plus Dilemma, Hot in Herre, I'm Like a Bird, Bubbly, Like a Star). Researched chords, song maps ("our best guide") and official videos; skipped: To a Wild Rose (no chord source). Total 241 songs.
+
+## ⏸ Paused 2026-10-07 (out of credits). Pick up here next time
+
+**Done after the last build (committed, not yet in a TestFlight build):**
+- Every song now has real chords: the 15 placeholder songs (Wildest Dreams, Happy, Africa, Bohemian Rhapsody, Misty, Stella by Starlight, November Rain, Still D.R.E. and others) were researched.
+- Every song now has a whole-song map, including all international songs. Maps for international songs go in SONG_STRUCTURES in songs-data.js, looked up by title.
+- Every song has a video. Ya Lili's official video can't be embedded, so it opens on YouTube (new `noEmbed` flag in media-data.js / media.js).
+- Every chord in every song and map is checked playable on the instrument. Jaxx simplified Dadd9→D, Gaug→G, Eaug→E.
+- Map/key sanity check: no map in the wrong key.
+
+**To do next (in order):**
+1. **Spot-check chords:** many of the new maps (and the 15 fixed songs) were written by research agents from memory, not checked against a chord site. They're labelled "our best guide" / "close version". Spot-check the popular ones (Bohemian Rhapsody, Africa, November Rain, Happy, Wildest Dreams, the Metallica songs) against Ultimate Guitar or Hooktheory.
+2. **Full click-through test of both apps** (not finished). Steps:
+   - Open every lesson, step through with Next and Back, then close.
+   - Open songs, switch Main / Whole song, turn on Wait for me (microphone), then close.
+   - Visit every tab and check for page errors and screens with no way back.
+   - Run Chrome with `--use-fake-ui-for-media-stream --use-fake-device-for-media-stream` for the mic.
+   - The old scripts back.mjs / wait.mjs use outdated selectors. The card tests still pass (Hayden 58/58 cards; Jaxx lesson 1 completes; Main/Whole + video OK).
+   - Selectors: lessons `[data-lesson]`, Hayden exit `.hk-lesson-exit`, back `.hk-lesson-back`, Jaxx exit `.jg-exit`, song cards `.hk-lib-card` / `.jg-lib-card`, parts `[data-part]`.
+3. **Test on a real phone:** the Wait for me microphone, Guess the song with a real recording, the Back buttons, landscape.
+4. **New builds:** build and upload Hayden Keys 35 and Jaxx Guitar 19 with these fixes. Steps are under "How to build and upload" above.
+5. **App Store Connect (owner):**
+   - Add the builds to the TestFlight tester group. Check that Jaxx shows up there.
+   - Fill in the version page: screenshots, listing text, Age Rating, App Privacy, Content Rights, review contact.
+   - **Submit only when the owner says so.**
+6. **Guitar solos:** add "Solo" cards (the scale and fret position each solo uses, plus original practice licks; no copied lead lines) for the top guitar songs: Metallica, Stairway, Sweet Child O' Mine, Comfortably Numb and others.
+7. Play-along isn't synced to the YouTube video timing (the chords play at the app's tempo). Possible future feature.

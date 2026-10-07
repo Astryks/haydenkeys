@@ -372,7 +372,9 @@ const VIDEOS = {
  "song-a-cha": {"id": "gzlHucbD76U", "title": "Khaled - Aicha", "author_name": "KhaledMusicVEVO"},
  "song-shchedryk": {"id": "ReSHW69mU4w", "title": "AUSTRALIAN CHAMBER CHOIR Ukrainian Bell Carol (Shchedryk), by Mykola Leontovych", "author_name": "AUSTRALIAN CHAMBER CHOIR"},
  "song-zorba-s-dance": {"id": "Xsen9Jh-TPo", "title": "Zorba's Dance - Mikis Theodorakis [Original Score]", "author_name": "FM Records"},
- "song-mar-k": {"id": "cpp69ghR1IM", "title": "TARKAN - Şımarık (Official Music Video)", "author_name": "Tarkan"}
+ "song-mar-k": {"id": "cpp69ghR1IM", "title": "TARKAN - Şımarık (Official Music Video)", "author_name": "Tarkan"},
+ "song-sekai-ni-hitotsu-dake-no-hana-v": {"id": "b7ruJQM0A0I", "title": "Sekai Ni Hitotsu Dake No Hana (Live At Nippon Budokan / 2005)", "author_name": "Noriyuki Makihara - Topic"},
+ "song-ya-lili-v": {"id": "IJHPpTYtIqk", "title": "Balti feat. Hamouda - Ya Lili (Official Music Video)", "author_name": "Thisiz Balti", "noEmbed": true}
 };
 const SONG_VIDEOS = {
  "Creep": "creep",
@@ -612,6 +614,8 @@ const SONG_VIDEOS = {
  "Aïcha": "song-a-cha",
  "Shchedryk": "song-shchedryk",
  "Zorba's Dance": "song-zorba-s-dance",
- "Şımarık": "song-mar-k"
+ "Şımarık": "song-mar-k",
+ "Sekai ni Hitotsu Dake no Hana": "song-sekai-ni-hitotsu-dake-no-hana-v",
+ "Ya Lili": "song-ya-lili-v"
 };
 export { PEOPLE, VIDEOS, SONG_VIDEOS };

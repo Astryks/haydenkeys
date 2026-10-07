@@ -24,7 +24,7 @@ function peopleHtml(keys = []) {
 function videoHtml(topic) {
   const v = VIDEOS[topic];
   if (!v) return "";
-  return `<div class="hk-video" data-yt="${esc(v.id)}">
+  return `<div class="hk-video" data-yt="${esc(v.id)}"${v.noEmbed ? ' data-noembed="1"' : ""}>
     <button class="hk-btn hk-video-load" type="button">▶ Watch: ${esc(v.title)}</button>
     <span class="hk-note">${esc(v.author_name)} · plays from YouTube when you tap</span>
   </div>`;
@@ -34,7 +34,7 @@ function wireVideos(root) {
   root.querySelectorAll(".hk-video-load").forEach((b) => b.addEventListener("click", () => {
     const box = b.closest(".hk-video");
     const id = box.dataset.yt;
-    if (window.Capacitor?.isNativePlatform?.()) {
+    if (window.Capacitor?.isNativePlatform?.() || box.dataset.noembed) {
       window.open(`https://www.youtube.com/watch?v=${encodeURIComponent(id)}`, "_blank");
       return;
     }
