@@ -2600,3 +2600,10 @@ All done 2026-10-07 (see the notes under each item).
 - **Screenshots** for the App Store: `ios/screenshots/app-store-v2/` (6 for iPhone 6.9", 6 for iPad 13"); Tip jar review screenshot in `ios/screenshots/review/tip-jar.png`.
 - **Tested (final, latest code):** all 258 lessons crawled (every button, Back and Close): 0 errors. Every mascot scene renders. Earlier today: all 241 library songs play Whole song and Main chords.
 - **TestFlight:** build 36 uploaded. Build 37 (colour fix) is archived; upload failed with "Failed to Use Accounts" (Xcode needs the owner to sign in again in Settings > Accounts), then run the export step.
+
+## 2026-10-07 (late night): submitted for App Review
+- **Submitted 2026-10-07** (owner asked): version 1.0 with build 37 plus the three tips (Thank you US$1, Bravo US$5, Encore US$10) in one review submission. Status: **Waiting for Review**. Release is set to **manual**, so after approval nothing goes live until the owner presses Release.
+- **TestFlight:** build 37 uploaded and processed; the "Internal testers" group gets every build automatically.
+- **Store page:** 6 iPhone 6.9" and 6 iPad 13" screenshots from `ios/screenshots/app-store-v2/` uploaded (English U.S.; Australia and UK listings use the same). Each tip has its review screenshot.
+- **Filled in:** App Review contact (same as the owner's other apps), review notes, Content Rights (uses third-party content: iTunes album art, YouTube embeds, chord progressions), App Privacy published as "Data Not Collected", export compliance (no non-exempt encryption).
+- **Still for the owner:** Paid Applications Agreement, tax and banking must be active before tips can be sold; watch for App Review messages in App Store Connect; press Release after approval; Google Search Console verification and sitemap.
