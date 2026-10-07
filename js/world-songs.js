@@ -1,8 +1,8 @@
-// Item 60: optional "World songs" — five popular songs in each of 10
+// Item 60: optional "World songs" - five popular songs in each of 10
 // other languages. Chords are each song's main repeating loop, checked
 // against at least two independent chord sources (researched
 // 2026-10-05); "needs-verification" where they didn't fully agree. No
-// lyrics. Generated from the research notes — edit freely.
+// lyrics. Generated from the research notes - edit freely.
 
 const WORLD_LANGUAGES = [
   {
@@ -64,7 +64,7 @@ const WORLD_SONGS = [
   {
     "title": "Les Champs-Elysées",
     "artist": "Joe Dassin",
-    "genre": "World — French",
+    "genre": "World - French",
     "popularityRank": 201,
     "year": 1969,
     "key": "C major (commonly taught; original in E)",
@@ -88,7 +88,7 @@ const WORLD_SONGS = [
   {
     "title": "Je veux",
     "artist": "Zaz",
-    "genre": "World — French",
+    "genre": "World - French",
     "popularityRank": 202,
     "year": 2010,
     "key": "D minor",
@@ -108,7 +108,7 @@ const WORLD_SONGS = [
   {
     "title": "Papaoutai",
     "artist": "Stromae",
-    "genre": "World — French",
+    "genre": "World - French",
     "popularityRank": 203,
     "year": 2013,
     "key": "Bb minor",
@@ -128,7 +128,7 @@ const WORLD_SONGS = [
   {
     "title": "La Vie en rose",
     "artist": "Édith Piaf",
-    "genre": "World — French",
+    "genre": "World - French",
     "popularityRank": 204,
     "year": 1946,
     "key": "F major",
@@ -148,7 +148,7 @@ const WORLD_SONGS = [
   {
     "title": "Non, je ne regrette rien",
     "artist": "Édith Piaf",
-    "genre": "World — French",
+    "genre": "World - French",
     "popularityRank": 205,
     "year": 1960,
     "key": "G major",
@@ -171,7 +171,7 @@ const WORLD_SONGS = [
   {
     "title": "La Bamba",
     "artist": "Ritchie Valens",
-    "genre": "World — Spanish",
+    "genre": "World - Spanish",
     "popularityRank": 206,
     "year": 1958,
     "key": "C major",
@@ -190,7 +190,7 @@ const WORLD_SONGS = [
   {
     "title": "Guantanamera",
     "artist": "Joseíto Fernández",
-    "genre": "World — Spanish",
+    "genre": "World - Spanish",
     "popularityRank": 207,
     "year": 1929,
     "key": "G major (commonly taught)",
@@ -210,7 +210,7 @@ const WORLD_SONGS = [
   {
     "title": "Bailando",
     "artist": "Enrique Iglesias ft. Descemer Bueno & Gente de Zona",
-    "genre": "World — Spanish",
+    "genre": "World - Spanish",
     "popularityRank": 208,
     "year": 2014,
     "key": "E minor",
@@ -225,12 +225,12 @@ const WORLD_SONGS = [
     "oneFiveSixFourMatch": false,
     "difficulty": "Advanced",
     "world": "Spanish",
-    "notes": "A global Latin hit with a record 41 weeks at No. 1 on Billboard's Hot Latin Songs; the pre-chorus (Am-C-Em-D) is left out."
+    "notes": "A global Latin hit that spent 41 weeks at No. 1 on Billboard's Hot Latin Songs, a record at the time; the pre-chorus (Am-C-Em-D) is left out."
   },
   {
     "title": "Vivir Mi Vida",
     "artist": "Marc Anthony",
-    "genre": "World — Spanish",
+    "genre": "World - Spanish",
     "popularityRank": 209,
     "year": 2013,
     "key": "B minor (commonly taught)",
@@ -250,7 +250,7 @@ const WORLD_SONGS = [
   {
     "title": "Mas Que Nada",
     "artist": "Jorge Ben",
-    "genre": "World — Portuguese (Brazil)",
+    "genre": "World - Portuguese (Brazil)",
     "popularityRank": 210,
     "year": 1963,
     "key": "G minor",
@@ -270,7 +270,7 @@ const WORLD_SONGS = [
   {
     "title": "Ai Se Eu Te Pego",
     "artist": "Michel Teló",
-    "genre": "World — Portuguese (Brazil)",
+    "genre": "World - Portuguese (Brazil)",
     "popularityRank": 211,
     "year": 2011,
     "key": "C major (commonly taught; recorded in B)",
@@ -285,12 +285,12 @@ const WORLD_SONGS = [
     "oneFiveSixFourMatch": false,
     "difficulty": "Advanced",
     "world": "Portuguese (Brazil)",
-    "notes": "Michel Teló's sertanejo hit went to No. 1 across Europe and Latin America — the same 1-5-6-4 as Lesson 1."
+    "notes": "Michel Teló's sertanejo hit went to No. 1 across Europe and Latin America - the same 1-5-6-4 as Lesson 1."
   },
   {
     "title": "Trem-Bala",
     "artist": "Ana Vilela",
-    "genre": "World — Portuguese (Brazil)",
+    "genre": "World - Portuguese (Brazil)",
     "popularityRank": 212,
     "year": 2016,
     "key": "A major (recorded in B major)",
@@ -310,7 +310,7 @@ const WORLD_SONGS = [
   {
     "title": "Tempo Perdido",
     "artist": "Legião Urbana",
-    "genre": "World — Portuguese (Brazil)",
+    "genre": "World - Portuguese (Brazil)",
     "popularityRank": 213,
     "year": 1986,
     "key": "E minor",
@@ -330,7 +330,7 @@ const WORLD_SONGS = [
   {
     "title": "Evidências",
     "artist": "Chitãozinho & Xororó",
-    "genre": "World — Portuguese (Brazil)",
+    "genre": "World - Portuguese (Brazil)",
     "popularityRank": 214,
     "year": 1990,
     "key": "E major",
@@ -350,7 +350,7 @@ const WORLD_SONGS = [
   {
     "title": "Nel blu, dipinto di blu (Volare)",
     "artist": "Domenico Modugno",
-    "genre": "World — Italian",
+    "genre": "World - Italian",
     "popularityRank": 215,
     "year": 1958,
     "key": "C major (commonly taught)",
@@ -372,9 +372,9 @@ const WORLD_SONGS = [
   {
     "title": "Bella Ciao",
     "artist": "Traditional (Italian partisan song)",
-    "genre": "World — Italian",
+    "genre": "World - Italian",
     "popularityRank": 216,
-    "year": 1945,
+    "year": 1953,
     "key": "A minor (commonly taught)",
     "chords": [
       "Am",
@@ -393,7 +393,7 @@ const WORLD_SONGS = [
   {
     "title": "L'Italiano",
     "artist": "Toto Cutugno",
-    "genre": "World — Italian",
+    "genre": "World - Italian",
     "popularityRank": 217,
     "year": 1983,
     "key": "A minor",
@@ -415,7 +415,7 @@ const WORLD_SONGS = [
   {
     "title": "Felicità",
     "artist": "Al Bano & Romina Power",
-    "genre": "World — Italian",
+    "genre": "World - Italian",
     "popularityRank": 218,
     "year": 1982,
     "key": "C major",
@@ -435,7 +435,7 @@ const WORLD_SONGS = [
   {
     "title": "Sarà perché ti amo",
     "artist": "Ricchi e Poveri",
-    "genre": "World — Italian",
+    "genre": "World - Italian",
     "popularityRank": 219,
     "year": 1981,
     "key": "E major",
@@ -455,7 +455,7 @@ const WORLD_SONGS = [
   {
     "title": "99 Luftballons",
     "artist": "Nena",
-    "genre": "World — German",
+    "genre": "World - German",
     "popularityRank": 220,
     "year": 1983,
     "key": "D major (recorded in E major)",
@@ -470,12 +470,12 @@ const WORLD_SONGS = [
     "oneFiveSixFourMatch": false,
     "difficulty": "Advanced",
     "world": "German",
-    "notes": "Cold War protest song that reached No. 2 on the US Billboard Hot 100 — one of the most successful German-language songs ever."
+    "notes": "Cold War protest song that reached No. 2 on the US Billboard Hot 100 - one of the most successful German-language songs ever."
   },
   {
     "title": "Atemlos durch die Nacht",
     "artist": "Helene Fischer",
-    "genre": "World — German",
+    "genre": "World - German",
     "popularityRank": 221,
     "year": 2013,
     "key": "C major",
@@ -495,7 +495,7 @@ const WORLD_SONGS = [
   {
     "title": "Tage wie diese",
     "artist": "Die Toten Hosen",
-    "genre": "World — German",
+    "genre": "World - German",
     "popularityRank": 222,
     "year": 2012,
     "key": "D major",
@@ -517,7 +517,7 @@ const WORLD_SONGS = [
   {
     "title": "Auf uns",
     "artist": "Andreas Bourani",
-    "genre": "World — German",
+    "genre": "World - German",
     "popularityRank": 223,
     "year": 2014,
     "key": "C major (commonly taught; recorded in D)",
@@ -539,7 +539,7 @@ const WORLD_SONGS = [
   {
     "title": "Stille Nacht, heilige Nacht",
     "artist": "Franz Xaver Gruber & Joseph Mohr",
-    "genre": "World — German",
+    "genre": "World - German",
     "popularityRank": 224,
     "year": 1818,
     "key": "C major",
@@ -557,12 +557,12 @@ const WORLD_SONGS = [
     "oneFiveSixFourMatch": false,
     "difficulty": "Advanced",
     "world": "German",
-    "notes": "'Silent Night' — the Austrian carol, among the most widely sung Christmas songs in the world. Public domain."
+    "notes": "'Silent Night' - the Austrian carol, among the most widely sung Christmas songs in the world. Public domain."
   },
   {
     "title": "Tum Hi Ho",
     "artist": "Arijit Singh (music: Mithoon)",
-    "genre": "World — Hindi",
+    "genre": "World - Hindi",
     "popularityRank": 225,
     "year": 2013,
     "key": "E minor (commonly taught; recorded in F minor)",
@@ -577,12 +577,12 @@ const WORLD_SONGS = [
     "oneFiveSixFourMatch": false,
     "difficulty": "Advanced",
     "world": "Hindi",
-    "notes": "The Aashiqui 2 ballad that made Arijit Singh a star — one of the most-streamed Bollywood songs of the 2010s."
+    "notes": "The Aashiqui 2 ballad that made Arijit Singh a star - one of the most-streamed Bollywood songs of the 2010s."
   },
   {
     "title": "Channa Mereya",
     "artist": "Arijit Singh (music: Pritam)",
-    "genre": "World — Hindi",
+    "genre": "World - Hindi",
     "popularityRank": 226,
     "year": 2016,
     "key": "A minor (commonly taught)",
@@ -603,7 +603,7 @@ const WORLD_SONGS = [
   {
     "title": "Kesariya",
     "artist": "Arijit Singh (music: Pritam)",
-    "genre": "World — Hindi",
+    "genre": "World - Hindi",
     "popularityRank": 227,
     "year": 2022,
     "key": "C major (commonly taught)",
@@ -625,7 +625,7 @@ const WORLD_SONGS = [
   {
     "title": "Agar Tum Saath Ho",
     "artist": "Alka Yagnik & Arijit Singh (music: A. R. Rahman)",
-    "genre": "World — Hindi",
+    "genre": "World - Hindi",
     "popularityRank": 228,
     "year": 2015,
     "key": "Eb major",
@@ -645,7 +645,7 @@ const WORLD_SONGS = [
   {
     "title": "Pal Pal Dil Ke Paas",
     "artist": "Kishore Kumar (music: Kalyanji-Anandji)",
-    "genre": "World — Hindi",
+    "genre": "World - Hindi",
     "popularityRank": 229,
     "year": 1973,
     "key": "G major (commonly taught)",
@@ -667,7 +667,7 @@ const WORLD_SONGS = [
   {
     "title": "Ue o Muite Arukō (Sukiyaki)",
     "artist": "Kyu Sakamoto",
-    "genre": "World — Japanese",
+    "genre": "World - Japanese",
     "popularityRank": 230,
     "year": 1961,
     "key": "G major",
@@ -690,7 +690,7 @@ const WORLD_SONGS = [
   {
     "title": "Lemon",
     "artist": "Kenshi Yonezu",
-    "genre": "World — Japanese",
+    "genre": "World - Japanese",
     "popularityRank": 231,
     "year": 2018,
     "key": "B major",
@@ -710,7 +710,7 @@ const WORLD_SONGS = [
   {
     "title": "Marigold",
     "artist": "Aimyon",
-    "genre": "World — Japanese",
+    "genre": "World - Japanese",
     "popularityRank": 232,
     "year": 2018,
     "key": "D major",
@@ -734,7 +734,7 @@ const WORLD_SONGS = [
   {
     "title": "Sekai ni Hitotsu Dake no Hana",
     "artist": "SMAP",
-    "genre": "World — Japanese",
+    "genre": "World - Japanese",
     "popularityRank": 233,
     "year": 2003,
     "key": "A major",
@@ -757,7 +757,7 @@ const WORLD_SONGS = [
   {
     "title": "Plastic Love",
     "artist": "Mariya Takeuchi",
-    "genre": "World — Japanese",
+    "genre": "World - Japanese",
     "popularityRank": 234,
     "year": 1984,
     "key": "F major (D minor)",
@@ -777,7 +777,7 @@ const WORLD_SONGS = [
   {
     "title": "Spring Day",
     "artist": "BTS",
-    "genre": "World — Korean",
+    "genre": "World - Korean",
     "popularityRank": 235,
     "year": 2017,
     "key": "Eb major",
@@ -797,7 +797,7 @@ const WORLD_SONGS = [
   {
     "title": "Love Scenario",
     "artist": "iKON",
-    "genre": "World — Korean",
+    "genre": "World - Korean",
     "popularityRank": 236,
     "year": 2018,
     "key": "E minor",
@@ -817,7 +817,7 @@ const WORLD_SONGS = [
   {
     "title": "Through the Night",
     "artist": "IU",
-    "genre": "World — Korean",
+    "genre": "World - Korean",
     "popularityRank": 237,
     "year": 2017,
     "key": "Eb major",
@@ -837,7 +837,7 @@ const WORLD_SONGS = [
   {
     "title": "Stay With Me",
     "artist": "Chanyeol & Punch",
-    "genre": "World — Korean",
+    "genre": "World - Korean",
     "popularityRank": 238,
     "year": 2016,
     "key": "C minor",
@@ -857,7 +857,7 @@ const WORLD_SONGS = [
   {
     "title": "Eight",
     "artist": "IU feat. SUGA",
-    "genre": "World — Korean",
+    "genre": "World - Korean",
     "popularityRank": 239,
     "year": 2020,
     "key": "Db major",
@@ -877,7 +877,7 @@ const WORLD_SONGS = [
   {
     "title": "The Moon Represents My Heart (Yuèliàng Dàibiǎo Wǒ de Xīn)",
     "artist": "Teresa Teng",
-    "genre": "World — Mandarin Chinese",
+    "genre": "World - Mandarin Chinese",
     "popularityRank": 240,
     "year": 1977,
     "key": "C major",
@@ -901,7 +901,7 @@ const WORLD_SONGS = [
   {
     "title": "Tián Mì Mì",
     "artist": "Teresa Teng",
-    "genre": "World — Mandarin Chinese",
+    "genre": "World - Mandarin Chinese",
     "popularityRank": 241,
     "year": 1979,
     "key": "C major",
@@ -924,7 +924,7 @@ const WORLD_SONGS = [
   {
     "title": "Sunny Day (Qíng Tiān)",
     "artist": "Jay Chou",
-    "genre": "World — Mandarin Chinese",
+    "genre": "World - Mandarin Chinese",
     "popularityRank": 242,
     "year": 2003,
     "key": "G major",
@@ -944,7 +944,7 @@ const WORLD_SONGS = [
   {
     "title": "Fairy Tale (Tóng Huà)",
     "artist": "Michael Wong",
-    "genre": "World — Mandarin Chinese",
+    "genre": "World - Mandarin Chinese",
     "popularityRank": 243,
     "year": 2005,
     "key": "G major (commonly taught)",
@@ -964,7 +964,7 @@ const WORLD_SONGS = [
   {
     "title": "Mouse Loves Rice (Lǎoshǔ Ài Dàmǐ)",
     "artist": "Yang Chengang",
-    "genre": "World — Mandarin Chinese",
+    "genre": "World - Mandarin Chinese",
     "popularityRank": 244,
     "year": 2004,
     "key": "F major",
@@ -988,7 +988,7 @@ const WORLD_SONGS = [
   {
     "title": "Tamally Maak",
     "artist": "Amr Diab",
-    "genre": "World — Arabic",
+    "genre": "World - Arabic",
     "popularityRank": 245,
     "year": 2000,
     "key": "A minor (commonly taught; recorded in C minor)",
@@ -1012,7 +1012,7 @@ const WORLD_SONGS = [
   {
     "title": "Habibi Ya Nour El Ein",
     "artist": "Amr Diab",
-    "genre": "World — Arabic",
+    "genre": "World - Arabic",
     "popularityRank": 246,
     "year": 1996,
     "key": "A minor (commonly taught; recorded in C minor)",
@@ -1034,9 +1034,9 @@ const WORLD_SONGS = [
   {
     "title": "Ya Lili",
     "artist": "Balti feat. Hamouda",
-    "genre": "World — Arabic",
+    "genre": "World - Arabic",
     "popularityRank": 247,
-    "year": 2020,
+    "year": 2017,
     "key": "G minor",
     "chords": [
       "Gm",
@@ -1049,12 +1049,12 @@ const WORLD_SONGS = [
     "oneFiveSixFourMatch": false,
     "difficulty": "Advanced",
     "world": "Arabic",
-    "notes": "A Tunisian song that went viral worldwide with billions of views; plain natural minor, one loop throughout."
+    "notes": "A Tunisian song that went viral worldwide with hundreds of millions of views; plain natural minor, one loop throughout."
   },
   {
     "title": "Ya Rayah",
     "artist": "Dahmane El Harrachi (famous cover by Rachid Taha)",
-    "genre": "World — Arabic",
+    "genre": "World - Arabic",
     "popularityRank": 248,
     "year": 1973,
     "key": "A minor (commonly taught)",
@@ -1075,7 +1075,7 @@ const WORLD_SONGS = [
   {
     "title": "Lamma Bada Yatathanna",
     "artist": "Traditional Andalusian muwashshah (sung by Fairuz and many others)",
-    "genre": "World — Arabic",
+    "genre": "World - Arabic",
     "popularityRank": 249,
     "year": null,
     "key": "A minor (commonly taught)",

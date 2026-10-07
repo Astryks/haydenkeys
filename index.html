@@ -3,8 +3,89 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-<title>Hayden Keys — Learn Piano, Gamified</title>
-<meta name="description" content="A free, gamified, Duolingo-style piano learning web app. 100% local, zero backend, runs entirely in your browser." />
+<title>Hayden Keys - Free Piano Lessons for Beginners | Learn Songs &amp; Chords</title>
+<meta name="description" content="Learn piano free with 250+ beginner lessons and 240+ songs with chords. Falling notes, Wait for me hears your piano. No ads, no account. iPhone, iPad, web." />
+<link rel="canonical" href="https://haydenkeys.com/" />
+<meta name="robots" content="index, follow" />
+<!-- Smart App Banner (Safari on iPhone/iPad shows an "Open / Get" bar for the App Store app). -->
+<meta name="apple-itunes-app" content="app-id=6819420632" />
+<!-- Open Graph / social sharing -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Hayden Keys" />
+<meta property="og:title" content="Hayden Keys - Free Piano Lessons for Beginners" />
+<meta property="og:description" content="Learn piano with real songs from your first lesson. 250+ bite-sized lessons, 240+ songs with chords, falling notes and Wait for me. Free, no ads, no account." />
+<meta property="og:url" content="https://haydenkeys.com/" />
+<meta property="og:image" content="https://haydenkeys.com/land.png" />
+<meta property="og:image:width" content="1748" />
+<meta property="og:image:height" content="804" />
+<meta property="og:image:alt" content="Hayden Keys play-along: falling notes land on piano keys with the song's chords underneath" />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Hayden Keys - Free Piano Lessons for Beginners" />
+<meta name="twitter:description" content="Learn piano with real songs from your first lesson. 250+ lessons, 240+ songs with chords, falling notes and Wait for me. Free, no ads, no account." />
+<meta name="twitter:image" content="https://haydenkeys.com/land.png" />
+<meta name="twitter:image:alt" content="Hayden Keys play-along: falling notes land on piano keys with the song's chords underneath" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "MobileApplication",
+      "@id": "https://haydenkeys.com/#app",
+      "name": "Hayden Keys",
+      "alternateName": "Hayden Keys: Learn Piano",
+      "url": "https://haydenkeys.com/",
+      "description": "A free piano app for beginners: 250+ bite-sized lessons, a 240+ song library with chords for every section, falling-note play-along, Wait for me that listens to your real piano, and upload any song to find its chords on your device. No ads, no account.",
+      "operatingSystem": "iOS, Web",
+      "applicationCategory": "EducationalApplication",
+      "applicationSubCategory": "Music education",
+      "image": "https://haydenkeys.com/assets/icons/icon-512.png",
+      "screenshot": "https://haydenkeys.com/land.png",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "installUrl": "https://apps.apple.com/app/id6819420632",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "publisher": { "@type": "Organization", "name": "Astryks Group", "url": "https://astryks.com" }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://haydenkeys.com/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is Hayden Keys free?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every lesson and every song is free, with no ads and no subscription. The iPhone and iPad app has an optional tip jar, and a tip unlocks nothing extra." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I learn piano without an account?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. There is no sign-up. Your progress, streaks and saved songs are stored on your own device." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need a real piano or keyboard?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Hayden Keys is made for practising on your own piano or keyboard. Wait for me uses the microphone to hear the notes you play. You can also explore on the on-screen keyboard." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my microphone audio recorded or uploaded?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The microphone is optional and the sound is analysed on your device to hear your piano keys. It is never recorded or sent anywhere." }
+        },
+        {
+          "@type": "Question",
+          "name": "What songs can I learn?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A library of 240+ songs across pop, rock, ballads, jazz, film, classical and international hits, each with its key and chords section by section. Song pages show chords only, never lyrics. You can also upload a recording and the app finds the chords on your device." }
+        },
+        {
+          "@type": "Question",
+          "name": "Where can I use Hayden Keys?",
+          "acceptedAnswer": { "@type": "Answer", "text": "In any modern web browser at haydenkeys.com, and as an app for iPhone and iPad." }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <link rel="manifest" href="manifest.webmanifest" />
 <link rel="icon" href="assets/icons/icon-32.png" sizes="32x32" type="image/png" />
 <link rel="icon" href="assets/icons/icon-192.png" sizes="192x192" type="image/png" />
@@ -40,7 +121,10 @@
   <header class="hk-header">
     <div class="hk-logo" id="hk-logo-cats" role="img" aria-label="Hayden Keys"></div>
     <h1>Hayden Keys</h1>
-    <p class="hk-tagline">Learn any song in the piano for free!</p>
+    <p class="hk-tagline">Learn any song on the piano for free!</p>
+    <!-- Crawlable intro for search engines and screen readers; visually hidden so the design is unchanged. -->
+    <p style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Hayden Keys is a free app to learn piano for beginners: 250+ short piano lessons, 240+ songs with chords for every section, falling-note play-along, and Wait for me, which listens to your real piano or keyboard. Learn chords, both hands, reading notes and jazz tricks. No ads, no account.</p>
+    <noscript><p>Hayden Keys is a free app to learn piano for beginners, with step-by-step piano lessons, chords and 240+ songs to play on your own piano or keyboard. Please turn on JavaScript to start learning.</p></noscript>
     <div class="hk-level-chip" id="hk-level-chip"></div>
   </header>
 
@@ -63,13 +147,13 @@
   </main>
 
   <footer class="hk-footer">
-    <p>Hayden Keys runs 100% on your device. No account, no server, no cost.
+    <p>Hayden Keys is free and runs on your device. No account needed.
        <button class="hk-footer-link" data-tab="about">About &amp; Credits</button> ·
        <a href="privacy.html">Privacy Policy</a> ·
        <!-- Item 56: README/notices point at GitHub's rendered copies instead of the raw .md
-            files -- the .md files aren't bundled into the iOS app (only www/ is), and raw
+            files; the .md files aren't bundled into the iOS app (only www/ is), and raw
             markdown in the app's WebView was a dead end with no way back. -->
-       <a href="https://github.com/Astryks/haydenkeys/blob/main/README.md" target="_blank" rel="noopener">README</a> · <a href="https://github.com/Astryks/haydenkeys/blob/main/THIRD_PARTY_NOTICES.md" target="_blank" rel="noopener">THIRD_PARTY_NOTICES</a>.</p>
+       <a href="https://github.com/Astryks/haydenkeys/blob/main/README.md" target="_blank" rel="noopener">Source code</a> · <a href="https://github.com/Astryks/haydenkeys/blob/main/THIRD_PARTY_NOTICES.md" target="_blank" rel="noopener">Licences</a></p>
   </footer>
 
   <!-- Portrait phones only (CSS): a dismissible tip, never a block. -->

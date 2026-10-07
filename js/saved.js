@@ -19,14 +19,14 @@ function initSavedTab(root, { onOpenSong } = {}) {
             ? `<ul>${completedLessons.map((l) => `<li>${l.title}</li>`).join("")}</ul>`
             : `<div class="hk-empty-state">
                  <div class="hk-empty-mascot">${pandaSvg("sleep")}</div>
-                 <p class="hk-empty">None yet — head to the Lessons tab.</p>
+                 <p class="hk-empty">None yet. Try the Lessons tab!</p>
                </div>`}
         </section>
         <section>
           <h3>Songs (${entries.length})</h3>
           ${entries.length ? "" : `<div class="hk-empty-state">
                  <div class="hk-empty-mascot">${pandaSvg("sleep")}</div>
-                 <p class="hk-empty">Nothing saved yet — start a song from the Discover tab.</p>
+                 <p class="hk-empty">Nothing saved yet. Start a song from the Discover tab.</p>
                </div>`}
           <div class="hk-saved-list" id="hk-saved-list"></div>
         </section>
@@ -41,7 +41,7 @@ function initSavedTab(root, { onOpenSong } = {}) {
         row.className = "hk-saved-row";
         row.innerHTML = `
           <div>
-            <strong>${title}</strong> — ${song ? song.artist : "?"}
+            <strong>${title}</strong> - ${song ? song.artist : "?"}
             <span class="hk-badge">${info.status}</span>
           </div>
           <div class="hk-saved-actions">

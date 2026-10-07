@@ -297,6 +297,9 @@ function registerComputerKeyboardTarget(kb, container) {
   ensureListenersInstalled();
   const existingIdx = targets.findIndex((t) => t.container === container);
   if (existingIdx !== -1) targets.splice(existingIdx, 1);
+  // Every lesson screen renders a brand-new keyboard; drop the ones that
+  // are no longer on the page so the list doesn't grow all session.
+  for (let i = targets.length - 1; i >= 0; i--) if (!targets[i].container?.isConnected) targets.splice(i, 1);
   targets.unshift({ kb, container });
 }
 

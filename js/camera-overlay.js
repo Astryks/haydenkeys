@@ -42,9 +42,8 @@ function initCameraOverlay(container, { getCurrentStep } = {}) {
     container.innerHTML = `
       <div class="hk-camera-wrap">
         <p class="hk-camera-note">
-          Point your camera at your real keyboard. This positions a highlight using a simple
-          two-point calibration, not true keyboard detection — hold the phone steady after
-          calibrating; if it moves, tap "Recalibrate."
+          Point your camera at your piano and keep the phone still. If it moves,
+          tap "Recalibrate."
         </p>
         <button class="hk-btn hk-btn-primary" id="hk-camera-start">Start camera</button>
         <div class="hk-camera-stage" id="hk-camera-stage" style="display:none">
@@ -66,10 +65,8 @@ function initCameraOverlay(container, { getCurrentStep } = {}) {
     } catch (err) {
       if (destroyed) return;
       container.innerHTML = `
-        <p class="hk-cal-status">Camera access failed (${err.message}). This is expected in
-        environments without a real camera (e.g. this review sandbox) or if permission was
-        denied — Camera Overlay needs a real device camera to do anything useful. Try Follow
-        Along or Ear Check instead.</p>`;
+        <p class="hk-cal-status">The camera isn't working (${err.message}). Check that camera access is
+        allowed, or try Follow Along or Ear Check instead.</p>`;
       return;
     }
     // Item 56: left Camera mode while the permission prompt was up — the
@@ -120,7 +117,7 @@ function initCameraOverlay(container, { getCurrentStep } = {}) {
         statusEl.textContent = "Now tap the C one octave higher.";
       } else if (calPoints.length === 1) {
         calPoints.push({ midi: 72, x, y }); // C one octave up
-        statusEl.textContent = "Calibrated — highlighting the next key to press.";
+        statusEl.textContent = "All set! The next key to press will light up.";
         canvas.removeEventListener("pointerdown", onTap);
         startOverlayLoop();
       }

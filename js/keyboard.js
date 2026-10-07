@@ -101,7 +101,15 @@ function playTone(midi, opts = {}) {
   const velocity = opts.velocity ?? 100;
   if (piano) {
     const { duration = 0.6, delay = 0 } = opts;
-    piano.start({ note: midi, duration, time: ctx.currentTime + delay, velocity });
+    // Only the velocity 85-100 sample layer is loaded (piano-sample.js),
+    // and the sampler stays SILENT for any velocity outside it, so soft
+    // (e.g. 35) and strong (e.g. 120) notes used to make no sound at all.
+    // Keep the velocity inside the loaded layer; a strong note gets a
+    // second identical voice (+6 dB) so soft vs strong is still clear.
+    const sv = Math.max(85, Math.min(100, velocity));
+    const time = ctx.currentTime + delay;
+    piano.start({ note: midi, duration, time, velocity: sv });
+    if (velocity >= 110) piano.start({ note: midi, duration, time, velocity: sv });
     return;
   }
   playSynthTone(midi, { ...opts, gain: (opts.gain ?? 0.18) * (velocity / 100) });

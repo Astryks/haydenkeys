@@ -26,14 +26,14 @@ const MAJOR_SCALES = [
     key: "C",
     notes: [60, 62, 64, 65, 67, 69, 71, 72],
     fingeringRH: [1, 2, 3, 1, 2, 3, 4, 5],
-    accidentals: "none — all white keys",
+    accidentals: "none, all white keys",
   },
   {
     day: 12,
     key: "G",
     notes: [67, 69, 71, 72, 74, 76, 78, 79],
     fingeringRH: [1, 2, 3, 1, 2, 3, 4, 5],
-    accidentals: "one sharp (F#) — the same F# already inside your D chord (D-F#-A)",
+    accidentals: "one sharp (F#), the same F# inside your D chord (D-F#-A)",
   },
   {
     day: 13,
@@ -47,7 +47,7 @@ const MAJOR_SCALES = [
     key: "F",
     notes: [65, 67, 69, 70, 72, 74, 76, 77],
     fingeringRH: [1, 2, 3, 4, 1, 2, 3, 4],
-    accidentals: "one flat (Bb) — fingering shifts here: thumb tucks under after Bb (finger 4), not after finger 3, to avoid landing on a black key",
+    accidentals: "one flat (Bb). Your thumb tucks under after Bb (finger 4), so it never lands on a black key",
   },
 ];
 
@@ -61,21 +61,21 @@ const MINOR_SCALES = [
     key: "A",
     notes: [57, 59, 60, 62, 64, 65, 67, 69],
     relativeMajor: "C",
-    accidentals: "none — identical key signature to C major, just starting on A",
+    accidentals: "none, same as C major",
   },
   {
     day: 17,
     key: "E",
     notes: [64, 66, 67, 69, 71, 72, 74, 76],
     relativeMajor: "G",
-    accidentals: "one sharp (F#) — identical key signature to G major",
+    accidentals: "one sharp (F#), same as G major",
   },
   {
     day: 18,
     key: "D",
     notes: [62, 64, 65, 67, 69, 70, 72, 74],
     relativeMajor: "F",
-    accidentals: "one flat (Bb) — identical key signature to F major",
+    accidentals: "one flat (Bb), same as F major",
   },
 ];
 
@@ -85,18 +85,18 @@ const TWO_HAND_PATTERNS = {
     label: "Alternating bass (root-fifth)",
     leftHand: [48, 55, 48, 55], // C3, G3, C3, G3
     rightHandChord: [60, 64, 67], // C major
-    description: "The classic 'oom-pah' pattern — left hand alternates the root and fifth while the right hand holds the chord.",
+    description: "The classic 'oom-pah': your left hand switches between two notes (the root and fifth) while the right hand holds the chord.",
   },
   albertiBass: {
     label: "Alberti bass (1-5-3-5)",
     leftHand: [48, 55, 52, 55], // C3, G3, E3, G3
     rightHandChord: [60, 64, 67],
-    description: "A broken-chord bass pattern named for 18th-century composer Domenico Alberti — smoother and busier than a plain alternating bass, and everywhere in classical piano repertoire.",
+    description: "A broken-chord bass named after composer Domenico Alberti (1700s). Busier and smoother than alternating bass, and heard all over classical piano.",
   },
   arpeggio: {
     label: "Arpeggio (broken chord)",
     notes: [60, 64, 67, 72, 67, 64, 60],
-    description: "The same C major chord, played one note at a time instead of all together — the technique bridge between scales and chords.",
+    description: "The C major chord, played one note at a time instead of all together.",
   },
 };
 
@@ -175,18 +175,18 @@ const JAZZ_COMPING = {
 // no fabricated simplified chart, consistent with how Stella by
 // Starlight and Bohemian Rhapsody were handled rather than guessed at.
 const ADVANCED_REPERTOIRE = [
-  { title: "Nocturne Op. 9 No. 2", composer: "Frédéric Chopin", year: 1832, key: "Eb major", difficulty: "Genuinely intermediate — not a virtuosic étude. Chopin's single most iconic piece; a strong anchor for this section.", built: false },
-  { title: "Prelude Op. 28 No. 4", composer: "Frédéric Chopin", year: 1839, key: "E minor", difficulty: "An easier entry point than the Nocturne, but its left-hand chords move in continuous, non-diatonic chromatic half-steps — real, interesting harmony that isn't confidently reducible to a simple beginner chord chart, so not built into an excerpt here.", built: false },
-  { title: "Waltz in A minor", composer: "Frédéric Chopin", year: undefined, key: "A minor", difficulty: "Accessible. Note: Chopin wrote more than one waltz in A minor (including a well-known posthumous one) — which specific one was intended wasn't disambiguated with full confidence, flagged honestly rather than guessed.", built: false },
-  { title: "Fantaisie-Impromptu", composer: "Frédéric Chopin", year: 1834, key: "C# minor", difficulty: "Genuinely harder — an explicit stretch-goal piece, not watered down to feel falsely easy. Famous for its cross-rhythm (4-against-3) between the hands.", built: false },
-  { title: "Für Elise", composer: "Ludwig van Beethoven", year: 1810, key: "A minor", difficulty: "Accessible opening phrase, harder in its later sections. Built into a real interactive excerpt this pass — see Lesson 37.", built: true },
-  { title: "Clair de Lune", composer: "Claude Debussy", year: 1905, key: "Db major", difficulty: "Intermediate-to-advanced; flowing, rubato-heavy texture that resists a simple beginner reduction. Catalog entry only.", built: false },
-  { title: "Gymnopédie No. 1", composer: "Erik Satie", year: 1888, key: "D major", difficulty: "Genuinely one of the more accessible pieces on this list — slow, sparse, repetitive chords. A strong future-excerpt candidate.", built: false },
-  { title: "Prelude in C major, BWV 846", composer: "Johann Sebastian Bach", year: 1722, key: "C major", difficulty: "The opening of the Well-Tempered Clavier, Book I — one steady broken-chord pattern throughout, so it's an ideal first 'real' classical piece. First 8 bars built as an interactive lesson (Bach: Prelude in C major).", built: true },
-  { title: "Piano Sonata No. 14 \"Moonlight\", 1st movement", composer: "Ludwig van Beethoven", year: 1801, key: "C# minor", difficulty: "Slow and famous, but the steady triplet broken chords under a singing top melody take real hand control. The \"Moonlight\" nickname came from a critic, Ludwig Rellstab, after Beethoven's death. Catalog entry.", built: false },
-  { title: "Piano Sonata No. 8 \"Pathétique\", 1st movement", composer: "Ludwig van Beethoven", year: 1799, key: "C minor", difficulty: "Advanced: a slow, dramatic Grave introduction, then a fast movement in sonata form. A classic example of the form explained in \"Beethoven: harmony vs. form\". Catalog entry.", built: false },
-  { title: "Canon in D", composer: "Johann Pachelbel", year: undefined, key: "D major", difficulty: "Already built as the Day 31-35 capstone — see Lessons 31-35, not repeated here.", built: true },
-  { title: "Spring (\"La Primavera\"), from The Four Seasons", composer: "Antonio Vivaldi", year: 1725, key: "E major", difficulty: "Vivaldi's single most famous work — originally for violin and string orchestra, not piano, so any piano version is already an arrangement of the real composition's melodic material. Catalog entry only this pass; a real interactive excerpt would need its own careful simplification, not rushed here.", built: false },
+  { title: "Nocturne Op. 9 No. 2", composer: "Frédéric Chopin", year: 1832, key: "Eb major", difficulty: "Intermediate. One of Chopin's most famous pieces, and a great goal to aim for.", built: false },
+  { title: "Prelude Op. 28 No. 4", composer: "Frédéric Chopin", year: 1839, key: "E minor", difficulty: "Easier than the Nocturne. Its left-hand chords keep sliding by tiny half steps, so it's hard to turn into a simple chord chart.", built: false },
+  { title: "Waltz in A minor", composer: "Frédéric Chopin", year: undefined, key: "A minor", difficulty: "Not too hard. Chopin wrote more than one waltz in A minor, including a well-known one published after he died.", built: false },
+  { title: "Fantaisie-Impromptu", composer: "Frédéric Chopin", year: 1834, key: "C# minor", difficulty: "Hard: a stretch goal. Famous for its 4-against-3 rhythm between the hands.", built: false },
+  { title: "Für Elise", composer: "Ludwig van Beethoven", year: 1810, key: "A minor", difficulty: "Easy opening, harder later on. You'll play the opening in this lesson.", built: true },
+  { title: "Clair de Lune", composer: "Claude Debussy", year: 1905, key: "Db major", difficulty: "Intermediate to advanced. Its flowing, free rhythm is hard to simplify.", built: false },
+  { title: "Gymnopédie No. 1", composer: "Erik Satie", year: 1888, key: "D major", difficulty: "One of the easier pieces here: slow, gentle, repeating chords.", built: false },
+  { title: "Prelude in C major, BWV 846", composer: "Johann Sebastian Bach", year: 1722, key: "C major", difficulty: "The opening of the Well-Tempered Clavier, Book I. One steady broken-chord pattern, so it's a great first classical piece. Play bars 1-8 in the Bach: Prelude in C major lesson.", built: true },
+  { title: "Piano Sonata No. 14 \"Moonlight\", 1st movement", composer: "Ludwig van Beethoven", year: 1801, key: "C# minor", difficulty: "Slow and famous, but the steady broken chords under a singing tune take real hand control. A critic, Ludwig Rellstab, gave it the \"Moonlight\" nickname after Beethoven died.", built: false },
+  { title: "Piano Sonata No. 8 \"Pathétique\", 1st movement", composer: "Ludwig van Beethoven", year: 1799, key: "C minor", difficulty: "Advanced: a slow, dramatic opening, then a fast part in sonata form, as explained in \"Beethoven: harmony vs. form\".", built: false },
+  { title: "Canon in D", composer: "Johann Pachelbel", year: undefined, key: "D major", difficulty: "You've already played its chords in the Canon in D lessons.", built: true },
+  { title: "Spring (\"La Primavera\"), from The Four Seasons", composer: "Antonio Vivaldi", year: 1725, key: "E major", difficulty: "Vivaldi's most famous work, written for violin and strings, not piano, so any piano version is an arrangement.", built: false },
 ];
 
 // Für Elise's famous opening phrase (Beethoven, WoO 59, c. 1810) — the

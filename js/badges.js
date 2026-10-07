@@ -28,12 +28,12 @@ function anyCompletedAdvancedSong() {
 }
 
 const BADGE_DEFS = [
-  { id: "first-lesson", title: "First Steps", icon: "🎹", desc: "Complete Day 1: Your first 4 chords.", check: () => isLessonComplete("lesson-1") },
+  { id: "first-lesson", title: "First Steps", icon: "🎹", desc: "Finish your first lesson.", check: () => isLessonComplete("lesson-1") },
   { id: "first-song", title: "First Song", icon: "🎵", desc: "Mark any song as completed.", check: anyCompletedSong },
   { id: "streak-5", title: "5-Day Streak", icon: "🔥", desc: "Practice 5 days in a row.", check: () => getStreak().count >= 5 },
   { id: "streak-30", title: "30-Day Streak", icon: "🏆", desc: "Practice 30 days in a row.", check: () => getStreak().count >= 30 },
-  { id: "intermediate-unlocked", title: "Leveling Up", icon: "⬆️", desc: "Unlock Intermediate songs (5 Beginner songs completed).", check: () => countCompletedByDifficulty("Beginner") >= 5 },
-  { id: "advanced-unlocked", title: "Going Pro", icon: "🚀", desc: "Unlock Advanced songs (5 Intermediate songs completed).", check: () => countCompletedByDifficulty("Intermediate") >= 5 },
+  { id: "intermediate-unlocked", title: "Leveling Up", icon: "⬆️", desc: "Finish 5 Beginner songs to unlock Intermediate songs.", check: () => countCompletedByDifficulty("Beginner") >= 5 },
+  { id: "advanced-unlocked", title: "Going Pro", icon: "🚀", desc: "Finish 5 Intermediate songs to unlock Advanced songs.", check: () => countCompletedByDifficulty("Intermediate") >= 5 },
   { id: "first-advanced-song", title: "Jazz Hands", icon: "🎷", desc: "Complete your first Advanced song.", check: anyCompletedAdvancedSong },
   { id: "halfway-curriculum", title: "Halfway There", icon: "📈", desc: `Complete at least half of the ${LESSONS.length} lessons.`, check: () => LESSONS.filter((l) => isLessonComplete(l.id)).length >= Math.ceil(LESSONS.length / 2) },
   { id: "curriculum-complete", title: "Curriculum Complete", icon: "🎓", desc: `Finish all ${LESSONS.length} lessons.`, check: () => LESSONS.every((l) => isLessonComplete(l.id)) },

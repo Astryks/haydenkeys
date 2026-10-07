@@ -13,7 +13,7 @@ import { shareButton } from "./share.js";
 
 const KEY = "hk_unlocks";
 const REWARDS = [
-  { id: "song-let-it-be", when: { day: 1 }, icon: "song", title: "New song: Let It Be", text: "The Beatles. All white keys!", song: "Let It Be" },
+  { id: "song-let-it-be", when: { day: 1 }, icon: "song", title: "New song: Let It Be", text: "The Beatles. The main chords are all white keys!", song: "Let It Be" },
   { id: "hat", when: { streak: 2 }, icon: "hat", title: "A party hat for Hayden", text: "Hayden wears it everywhere 🎉" },
   { id: "song-stand-by-me", when: { day: 2 }, icon: "song", title: "New song: Stand By Me", text: "Ben E. King. A classic!", song: "Stand By Me" },
   { id: "song-someone-like-you", when: { streak: 3 }, icon: "song", title: "New song: Someone Like You", text: "Adele. Same 4-chord idea!", song: "Someone Like You" },

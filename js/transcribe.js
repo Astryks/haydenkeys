@@ -299,7 +299,7 @@ async function transcribeFile(file, onStatus = () => {}) {
   let audioBuffer;
   const audioCtx = getAudioContext();
   try {
-    onStatus("Decoding audio...");
+    onStatus("Reading your song...");
     let decoded = null;
     var nativeError = null;
     try {
@@ -311,12 +311,12 @@ async function transcribeFile(file, onStatus = () => {}) {
     if (!decoded) try {
       decoded = await decodeWith(audioCtx, await readFileBuffer(file));
     } catch (firstErr) {
-      onStatus("This file needs to be played through once to read its audio — listening now (it stays silent)...");
+      onStatus("Listening to your file once (it stays silent)...");
       decoded = await captureViaMediaElement(file, audioCtx, onStatus);
     }
     lastDecoded = decoded;
     lastRecognition = null;
-    onStatus(`Resampling from ${decoded.sampleRate} Hz / ${decoded.numberOfChannels}ch to 22050 Hz mono...`);
+    onStatus("Getting your song ready...");
     audioBuffer = await resampleToMono22050(decoded);
   } catch (err) {
     const why = nativeError?.message || (err && err.message) || "unsupported format";
@@ -331,19 +331,19 @@ async function transcribeFile(file, onStatus = () => {}) {
   // WebGL/WASM support that TensorFlow.js needs.
   let BasicPitch, outputToNotesPoly, addPitchBendsToNoteEvents, noteFramesToTime, basicPitch;
   try {
-    onStatus("Loading transcription model (vendored locally, no network needed)...");
+    onStatus("Getting the note finder ready...");
     ({ BasicPitch, outputToNotesPoly, addPitchBendsToNoteEvents, noteFramesToTime } =
       await import("./vendor/basic-pitch/basic-pitch.bundle.js"));
     basicPitch = new BasicPitch(new URL("./vendor/basic-pitch/model/model.json", import.meta.url).href);
   } catch (err) {
-    throw new Error(`Couldn't load the local transcription model (${err.message}). This usually means your browser lacks WebGL/WASM support for TensorFlow.js.`);
+    throw new Error(`Couldn't start the note finder (${err.message}). Try updating your browser or using a different one.`);
   }
 
   try {
     const frames = [];
     const onsets = [];
     const contours = [];
-    onStatus("Transcribing in your browser (this can take a while for longer clips)...");
+    onStatus("Finding the notes (long songs take a while)...");
     await basicPitch.evaluateModel(
       audioBuffer,
       (f, o, c) => {
@@ -351,7 +351,7 @@ async function transcribeFile(file, onStatus = () => {}) {
         onsets.push(...o);
         contours.push(...c);
       },
-      (progress) => onStatus(`Transcribing... ${Math.round(progress * 100)}%`)
+      (progress) => onStatus(`Finding the notes... ${Math.round(progress * 100)}%`)
     );
     // Item 44: this used to call outputToNotesPoly with onsetThresh/
     // frameThresh loosened to 0.25/0.25 — the library's own real
@@ -368,7 +368,7 @@ async function transcribeFile(file, onStatus = () => {}) {
     console.log(`Hayden Keys: basic-pitch transcription result — ${rawNotes.length} raw notes, ${notes.length} after cleanup`, notes);
     return notes;
   } catch (err) {
-    throw new Error(`Transcription failed: ${err.message}.`);
+    throw new Error(`Couldn't find the notes: ${err.message}.`);
   }
 }
 
@@ -545,7 +545,7 @@ function showRecognition(box, btn) {
     if (!box.isConnected) return;
     if (!r || !r.found) {
       console.warn("Hayden Keys: Guess the song found nothing", r?.error);
-      box.innerHTML = `<div class="hk-upload-rec-box">Couldn't find this song. Try a recording of the original song (not someone playing it), with a clear chorus.${r?.error ? `<br><small>(${esc(r.error)})</small>` : ""}</div>`;
+      box.innerHTML = `<div class="hk-upload-rec-box">Couldn't name this song. Try the original recording, with a clear chorus.${r?.error ? `<br><small>(${esc(r.error)})</small>` : ""}</div>`;
       return;
     }
     const inLib = SONGS.find((s) => s.title.toLowerCase() === String(r.title).toLowerCase());
@@ -580,10 +580,13 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
   // A second upload into the same container must stop the first one's
   // scheduled audio, not play both on top of each other.
   if (container._hkStopPlayback) container._hkStopPlayback();
+  // The previous upload's "Wait for me" note listener goes too.
+  if (container._hkOffNote) container._hkOffNote();
+  container._hkOffNote = null;
   if (container._hkObjectUrl) URL.revokeObjectURL(container._hkObjectUrl);
   container._hkObjectUrl = null;
   if (!notes.length) {
-    container.innerHTML = `<p class="hk-honest-note">No notes were detected in this clip.</p>`;
+    container.innerHTML = `<p class="hk-honest-note">We couldn't hear any notes in this clip.</p>`;
     return;
   }
   const midiValues = notes.map((n) => n.pitchMidi).sort((a, b) => a - b);
@@ -661,7 +664,7 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
         <input type="range" id="hk-upload-seek" class="hk-upload-seek-range" min="0" step="0.05" value="0" aria-label="Playback position" />
         <span class="hk-upload-clock" id="hk-upload-total">0:00</span>
       </div>
-      <p class="hk-upload-hands"><span class="hk-hand-l">L</span> left hand: the low notes &nbsp;·&nbsp; <span class="hk-hand-r">R</span> right hand: the high notes &nbsp;·&nbsp; <b>C4</b> = middle C</p>
+      <p class="hk-upload-hands"><span class="hk-hand-l">L</span> left hand &nbsp;·&nbsp; <span class="hk-hand-r">R</span> right hand</p>
       <div class="hk-upload-wait hk-hidden" id="hk-upload-wait"></div>
       ${window.Capacitor?.isNativePlatform?.() ? `<button class="hk-btn hk-upload-guess" id="hk-upload-guess">${icon("search", 20)} Guess the song</button><div id="hk-upload-recognized"></div>` : ""}
       <div class="hk-upload-match" id="hk-upload-match"></div>
@@ -669,7 +672,7 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
         <summary>${icon("gear", 22)} Settings</summary>
         <div class="hk-set-row"><span>Speed</span><div class="hk-seg">${SPEEDS.map((s) => `<button class="${s === 1 ? "hk-speed-active" : ""}" data-speed="${s}">${s === 1 ? "Normal" : s === 0.5 ? "Slow" : "0.75×"}</button>`).join("")}</div></div>
         <div class="hk-set-row"><span>Wait for me</span><div class="hk-seg"><button class="hk-speed-active" data-wait="off">Off</button><button data-wait="on">On</button></div></div>
-        <div class="hk-set-row"><span>Notes</span><div class="hk-seg"><button class="${easyNotes.length ? "hk-speed-active" : ""}" data-mode="easy">Easy (chords)</button><button class="${easyNotes.length ? "" : "hk-speed-active"}" data-mode="detailed">Hard (all notes)</button></div></div>
+        <div class="hk-set-row"><span>Notes</span><div class="hk-seg"><button class="${easyNotes.length ? "hk-speed-active" : ""}" data-mode="easy">Easy</button><button class="${easyNotes.length ? "" : "hk-speed-active"}" data-mode="detailed">Hard</button></div></div>
         ${originalEl ? `<div class="hk-set-row"><span>Sound</span><div class="hk-seg"><button class="hk-speed-active" data-sound="original">Song</button><button data-sound="piano">Piano</button><button data-sound="both">Both</button></div></div>` : ""}
         ${beat ? `<div class="hk-set-row"><span>Drum beat</span><div class="hk-seg"><button class="hk-speed-active" data-beat="off">Off</button><button data-beat="on">On</button></div></div>` : ""}
         <p class="hk-honest-note" id="hk-upload-summary"></p>
@@ -686,8 +689,8 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
 
   function updateSummary() {
     container.querySelector("#hk-upload-summary").textContent = highwayNotes === easyNotes
-      ? `Easy: ${new Set(easyNotes.map((n) => n.chord)).size} chords. Left hand plays the chord's letter, low; right hand plays the chord near middle C.`
-      : `Hard: all ${detailedNotes.length} notes we heard.`;
+      ? `Easy: ${new Set(easyNotes.map((n) => n.chord)).size} simple chords.`
+      : "Hard: every note in the song.";
     seek.max = String(totalDuration);
     container.querySelector("#hk-upload-total").textContent = formatClock(totalDuration);
   }
@@ -918,10 +921,12 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
     holding = false;
     nextGroup = groupAt(currentTime());
     if (waitOn) {
-      showWait(`${icon("hand", 20)} The notes will wait for you. Play them on the screen, or on your piano. <button class="hk-btn hk-btn-small" id="hk-upload-mic">${icon("mic", 16)} Use my microphone</button><br><small>We use your phone's microphone only to hear your piano keys, nothing else.</small>`);
+      showWait(`${icon("hand", 20)} The notes will wait for you. Play them on screen or on your piano. <button class="hk-btn hk-btn-small" id="hk-upload-mic">${icon("mic", 16)} Use my microphone</button><br><small>The microphone only listens for your piano.</small>`);
       waitEl.querySelector("#hk-upload-mic")?.addEventListener("click", async (e) => {
-        try { if (!micOn()) await enableMic(); e.currentTarget.textContent = "Listening to your piano"; }
-        catch (err) { e.currentTarget.textContent = "Microphone not available"; }
+        // currentTarget is null once the await below has run, so keep the button.
+        const micBtn = e.currentTarget;
+        try { if (!micOn()) await enableMic(); micBtn.textContent = "Listening to your piano"; }
+        catch (err) { micBtn.textContent = "Microphone not available"; }
       });
     } else showWait("");
   }));

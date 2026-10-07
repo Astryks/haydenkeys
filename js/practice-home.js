@@ -4,6 +4,7 @@
 // (no need to touch the screen). ← All songs / Next song → move between them.
 
 import { SONGS, SONG_STRUCTURES, APPROX_STRUCTURES, getDifficulty } from "./songs-data.js";
+import { songInspireHtml } from "./inspire.js";
 import { initPracticeTab } from "./practice.js";
 import { transcribeFile, renderTranscribedPlayback } from "./transcribe.js";
 import { unlockedSongs } from "./rewards.js";
@@ -111,7 +112,8 @@ function initPracticeHome(root) {
 
   function showHome() {
     document.body.classList.remove("hk-song-open");
-    player?.suspend?.();
+    // Fully stop the song player (its note/mic listeners too), not just pause it.
+    player?.destroy?.();
     player = null;
     const rows = libraryRows();
     // "Next song" walks the library in the order it's shown.
@@ -122,10 +124,10 @@ function initPracticeHome(root) {
       <div class="hk-ph">
         <section class="hk-ph-upload">
           <div class="hk-ph-upload-head"><div class="hk-ph-panda">${pandaSvg("sing")}</div>
-            <div><h2>Upload any song</h2><p>We'll find the chords for you and show them falling onto the piano.</p></div></div>
+            <div><h2>Upload any song</h2><p>We'll find the chords and show them falling onto the piano.</p></div></div>
           <label class="hk-upload-pick" for="hk-ph-file">${icon("cassette", 24)} Choose a song</label>
           <input type="file" id="hk-ph-file" class="hk-upload-input" accept="audio/*,video/*" />
-          <p class="hk-upload-fine">(Hayden Keys is for entertainment and learning only. We've added this feature for you to record any song from your phone and upload it, only for the purpose of learning the songs you love and support the artists who create beautiful things in this world. The real fun begins when you get inspired and create your own original music! Our model runs on your device only, we don't store any data.)</p>
+          <p class="hk-upload-fine">(For learning only. Please support the artists you love. Your song stays on your device.)</p>
           <div id="hk-ph-status" class="hk-cal-status"></div>
           <div id="hk-ph-playback"></div>
         </section>
@@ -156,7 +158,7 @@ function initPracticeHome(root) {
       if (!file) return;
       try {
         const notes = await transcribeFile(file, (t) => { status.textContent = t; });
-        status.textContent = `Done — detected ${notes.length} notes. Saved to My songs.`;
+        status.textContent = "Done! Saved to My songs.";
         saveUpload(file, notes);
         renderTranscribedPlayback(root.querySelector("#hk-ph-playback"), notes, { file });
       } catch (err) {
@@ -190,10 +192,11 @@ function initPracticeHome(root) {
         <button class="hk-part" data-part="main">${icon("play", 18)} Main chords<small>${esc([...new Set(song.chords.filter((c) => /^[A-G]/.test(c)))].slice(0, 4).join(" · "))}</small></button>
         <button class="hk-part" data-part="whole" ${SONG_STRUCTURES[song.title] ? "" : "disabled"}>${icon("song", 18)} Whole song<small>${SONG_STRUCTURES[song.title] ? (APPROX_STRUCTURES.has(song.title) ? "start to finish (our best guide)" : "every section, start to finish") : "coming soon"}</small></button>
       </div>
-      <div class="hk-rotate-hint">${icon("piano", 20)}<span><b>Tip:</b> turn off <b>rotation lock</b> and turn your phone <b>sideways</b>. The keys get bigger and everything fits on one screen.</span></div>
+      <div class="hk-rotate-hint">${icon("piano", 20)}<span><b>Tip:</b> turn your phone <b>sideways</b> (rotation lock off) for bigger keys.</span></div>
       <div class="hk-player-tip">${icon("piano", 20)} Press Play, watch the chords fall and play along on your own piano.</div>
       <div class="hk-practice-simple" id="hk-player"></div>
       ${SONG_VIDEOS[song.title] ? `<div class="hk-player-video">${videoHtml(SONG_VIDEOS[song.title])}</div>` : ""}
+      ${songInspireHtml(song, { advanced: getDifficulty(song) === "Advanced" })}
       <div class="hk-player-share">${shareButton(song.title, "I learned it! Share")}</div>`;
     wireVideos(root);
     songArt(song).then((art) => {

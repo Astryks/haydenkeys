@@ -3124,14 +3124,14 @@ const VERIFIED = {
    {
     "section": "Refrain",
     "chords": [
-     "Fm",
-     "Cm",
-     "Db",
-     "Bbm",
-     "Eb",
-     "Eb",
      "Ab",
-     "Ab"
+     "Fm",
+     "C",
+     "Db",
+     "Bbm7",
+     "Bbm7",
+     "Eb",
+     "Eb"
     ],
     "bars": 16
    },
@@ -3222,11 +3222,11 @@ const VERIFIED = {
      "D",
      "Bm",
      "E",
-     "F#m",
+     "C#m",
      "D",
      "Bm",
      "E",
-     "F#m",
+     "C#m",
      "D"
     ],
     "bars": 16
@@ -3280,11 +3280,11 @@ const VERIFIED = {
      "D",
      "Bm",
      "E",
-     "F#m",
+     "C#m",
      "D",
      "Bm",
      "E",
-     "F#m",
+     "C#m",
      "D"
     ],
     "bars": 16
@@ -3354,11 +3354,11 @@ const VERIFIED = {
      "D",
      "Bm",
      "E",
-     "F#m",
+     "C#m",
      "D",
      "Bm",
      "E",
-     "F#m",
+     "C#m",
      "D"
     ],
     "bars": 16
@@ -9116,7 +9116,10 @@ const VERIFIED = {
    {
     "section": "Intro",
     "chords": [
-     "F#"
+     "F#",
+     "C#",
+     "G#m",
+     "B"
     ],
     "bars": 4
    },
@@ -9153,7 +9156,10 @@ const VERIFIED = {
    {
     "section": "Interlude",
     "chords": [
-     "F#"
+     "F#",
+     "C#",
+     "G#m",
+     "B"
     ],
     "bars": 4
    },
@@ -9469,7 +9475,7 @@ const VERIFIED = {
   ]
  },
  "Wildest Dreams": {
-  "status": "corrected",
+  "status": "verified",
   "key": "Ab major",
   "capoNote": "Capo 1, G shapes (G D Am C = Ab Eb Bbm Db)",
   "bpm": 140,
@@ -9505,10 +9511,10 @@ const VERIFIED = {
    {
     "section": "Pre-chorus",
     "chords": [
-     "Ab",
+     "Db",
+     "Fm",
      "Eb",
-     "Bbm",
-     "Db"
+     "Eb"
     ],
     "bars": 8
    },
@@ -9535,10 +9541,10 @@ const VERIFIED = {
    {
     "section": "Pre-chorus",
     "chords": [
-     "Ab",
+     "Db",
+     "Fm",
      "Eb",
-     "Bbm",
-     "Db"
+     "Eb"
     ],
     "bars": 8
    },
@@ -9557,8 +9563,8 @@ const VERIFIED = {
     "chords": [
      "Ab",
      "Eb",
-     "Db",
-     "Eb"
+     "Bbm7",
+     "Db"
     ],
     "bars": 16
    },
@@ -10878,7 +10884,7 @@ const VERIFIED = {
   }
  },
  "No Woman No Cry": {
-  "status": "uncertain",
+  "status": "corrected",
   "key": "C major (the famous Live! 1975 recording sounds sharp of C, near Db)",
   "bpm": 78,
   "beatsPerBar": 4,
@@ -10906,7 +10912,11 @@ const VERIFIED = {
      "C",
      "G/B",
      "Am",
-     "F"
+     "F",
+     "C",
+     "F",
+     "C",
+     "G"
     ],
     "bars": 8
    },
@@ -10926,7 +10936,11 @@ const VERIFIED = {
      "C",
      "G/B",
      "Am",
-     "F"
+     "F",
+     "C",
+     "F",
+     "C",
+     "G"
     ],
     "bars": 8
    },
@@ -10956,7 +10970,11 @@ const VERIFIED = {
      "C",
      "G/B",
      "Am",
-     "F"
+     "F",
+     "C",
+     "F",
+     "C",
+     "G"
     ],
     "bars": 8
    },
@@ -10986,7 +11004,11 @@ const VERIFIED = {
      "C",
      "G/B",
      "Am",
-     "F"
+     "F",
+     "C",
+     "F",
+     "C",
+     "G"
     ],
     "bars": 16
    },
@@ -13981,9 +14003,9 @@ const VERIFIED = {
   ]
  },
  "Mr. Brightside": {
-  "status": "corrected",
+  "status": "verified",
   "key": "Db major",
-  "capoNote": "Capo 1, C shapes (C-Cmaj7-F verse, F-C-Am7-G chorus)",
+  "capoNote": "Capo 1, C shapes (C-Cmaj7-F verse, Am-Gsus4-F pre-chorus, C-F-Am7-G chorus)",
   "bpm": 148,
   "beatsPerBar": 4,
   "durationSec": 222,
@@ -19353,25 +19375,25 @@ const VERIFIED = {
   ]
  },
  "Still D.R.E.": {
-  "status": "uncertain",
-  "key": "Bb minor (recording sits between A minor and Bb minor; many piano tutorials teach it in A minor as Am, Am, Am9, Em)",
+  "status": "corrected",
+  "key": "A minor",
   "bpm": 93,
   "beatsPerBar": 4,
   "durationSec": 274,
   "chords": [
-   "Bbm",
-   "Bbm",
-   "Bbm7",
-   "Fm"
+   "Am",
+   "Am",
+   "Bm7b5",
+   "Esus4"
   ],
   "structure": [
    {
     "section": "Intro",
     "chords": [
-     "Bbm",
-     "Bbm",
-     "Bbm7",
-     "Fm"
+     "Am",
+     "Am",
+     "Bm7b5",
+     "Esus4"
     ],
     "per": 0.5,
     "bars": 8
@@ -19379,10 +19401,10 @@ const VERIFIED = {
    {
     "section": "Verse 1",
     "chords": [
-     "Bbm",
-     "Bbm",
-     "Bbm7",
-     "Fm"
+     "Am",
+     "Am",
+     "Bm7b5",
+     "Esus4"
     ],
     "per": 0.5,
     "bars": 16
@@ -19390,10 +19412,10 @@ const VERIFIED = {
    {
     "section": "Hook",
     "chords": [
-     "Bbm",
-     "Bbm",
-     "Bbm7",
-     "Fm"
+     "Am",
+     "Am",
+     "Bm7b5",
+     "Esus4"
     ],
     "per": 0.5,
     "bars": 8
@@ -19401,10 +19423,10 @@ const VERIFIED = {
    {
     "section": "Verse 2",
     "chords": [
-     "Bbm",
-     "Bbm",
-     "Bbm7",
-     "Fm"
+     "Am",
+     "Am",
+     "Bm7b5",
+     "Esus4"
     ],
     "per": 0.5,
     "bars": 16
@@ -19412,10 +19434,10 @@ const VERIFIED = {
    {
     "section": "Hook",
     "chords": [
-     "Bbm",
-     "Bbm",
-     "Bbm7",
-     "Fm"
+     "Am",
+     "Am",
+     "Bm7b5",
+     "Esus4"
     ],
     "per": 0.5,
     "bars": 8
@@ -19423,10 +19445,10 @@ const VERIFIED = {
    {
     "section": "Verse 3",
     "chords": [
-     "Bbm",
-     "Bbm",
-     "Bbm7",
-     "Fm"
+     "Am",
+     "Am",
+     "Bm7b5",
+     "Esus4"
     ],
     "per": 0.5,
     "bars": 16
@@ -19434,10 +19456,10 @@ const VERIFIED = {
    {
     "section": "Hook",
     "chords": [
-     "Bbm",
-     "Bbm",
-     "Bbm7",
-     "Fm"
+     "Am",
+     "Am",
+     "Bm7b5",
+     "Esus4"
     ],
     "per": 0.5,
     "bars": 8
@@ -19445,10 +19467,10 @@ const VERIFIED = {
    {
     "section": "Outro (instrumental)",
     "chords": [
-     "Bbm",
-     "Bbm",
-     "Bbm7",
-     "Fm"
+     "Am",
+     "Am",
+     "Bm7b5",
+     "Esus4"
     ],
     "per": 0.5,
     "bars": 24
@@ -19624,8 +19646,8 @@ const VERIFIED = {
   ]
  },
  "Someday": {
-  "status": "uncertain",
-  "key": "D major",
+  "status": "corrected",
+  "key": "D major (bridge in G major)",
   "bpm": 82,
   "beatsPerBar": 4,
   "durationSec": 233,
@@ -19697,14 +19719,14 @@ const VERIFIED = {
    {
     "section": "Bridge",
     "chords": [
-     "G",
-     "Gm",
-     "C",
+     "Cadd9",
+     "G/B",
+     "Bb",
+     "Bb",
+     "Cadd9",
+     "Cadd9",
      "D",
-     "G",
-     "Gm",
-     "A",
-     "A"
+     "D"
     ],
     "bars": 8
    },
@@ -22786,7 +22808,7 @@ const VERIFIED = {
   ]
  },
  "Fly Me to the Moon": {
-  "status": "uncertain",
+  "status": "corrected",
   "key": "C major (A sections start on A minor)",
   "bpm": 119,
   "beatsPerBar": 4,
@@ -22843,6 +22865,8 @@ const VERIFIED = {
      "G7",
      "G7",
      "Cmaj7",
+     "Cmaj7",
+     "Am7",
      "Am7",
      "Dm7",
      "Dm7",
@@ -22851,8 +22875,6 @@ const VERIFIED = {
      "Cmaj7",
      "Cmaj7",
      "Bm7b5",
-     "Bm7b5",
-     "E7",
      "E7"
     ],
     "per": 0.5,
@@ -22935,6 +22957,8 @@ const VERIFIED = {
      "G7",
      "G7",
      "Cmaj7",
+     "Cmaj7",
+     "Am7",
      "Am7",
      "Dm7",
      "Dm7",
@@ -22943,8 +22967,6 @@ const VERIFIED = {
      "Cmaj7",
      "Cmaj7",
      "Bm7b5",
-     "Bm7b5",
-     "E7",
      "E7"
     ],
     "per": 0.5,
@@ -24241,7 +24263,7 @@ const VERIFIED = {
   ]
  },
  "The Blue Danube (waltz)": {
-  "status": "uncertain",
+  "status": "corrected",
   "key": "D major",
   "bpm": 150,
   "beatsPerBar": 3,
@@ -24410,6 +24432,17 @@ const VERIFIED = {
     "bars": 32
    },
    {
+    "section": "Coda: recap of Waltz 4A (F major)",
+    "chords": [
+     "F",
+     "C7",
+     "C7",
+     "F"
+    ],
+    "per": 4,
+    "bars": 16
+   },
+   {
     "section": "Coda: quiet return of main theme (D major)",
     "chords": [
      "D",
@@ -24418,7 +24451,7 @@ const VERIFIED = {
      "D"
     ],
     "per": 4,
-    "bars": 32
+    "bars": 16
    },
    {
     "section": "Coda: fast closing (D major)",
@@ -26011,7 +26044,7 @@ const VERIFIED = {
      "F#m",
      "A/B"
     ],
-    "bars": 8
+    "bars": 4
    },
    {
     "section": "Verse 1",
@@ -26169,7 +26202,7 @@ const VERIFIED = {
      "F#m",
      "B7"
     ],
-    "bars": 20
+    "bars": 16
    },
    {
     "section": "Outro",
@@ -27020,9 +27053,9 @@ const VERIFIED = {
     "section": "Verse 1",
     "chords": [
      "B",
-     "B",
+     "C#m",
      "G#m",
-     "F#"
+     "F#/C#"
     ],
     "bars": 16
    },
@@ -27054,9 +27087,9 @@ const VERIFIED = {
     "section": "Verse 2",
     "chords": [
      "B",
-     "B",
+     "C#m",
      "G#m",
-     "F#"
+     "F#/C#"
     ],
     "bars": 16
    },
@@ -30766,8 +30799,8 @@ const VERIFIED = {
     "chords": [
      "F#",
      "F#",
-     "A#m",
-     "A#m",
+     "C#/F",
+     "C#/F",
      "D#m",
      "F#",
      "B",
@@ -30817,8 +30850,8 @@ const VERIFIED = {
     "chords": [
      "F#",
      "F#",
-     "A#m",
-     "A#m",
+     "C#/F",
+     "C#/F",
      "D#m",
      "F#",
      "B",
@@ -30844,8 +30877,8 @@ const VERIFIED = {
     "chords": [
      "F#",
      "F#",
-     "A#m",
-     "A#m",
+     "C#/F",
+     "C#/F",
      "D#m",
      "F#",
      "B",
@@ -33732,20 +33765,20 @@ const VERIFIED = {
    {
     "section": "Intro (acoustic)",
     "chords": [
-     "Am",
-     "C",
-     "G",
-     "Em"
+     "Bm",
+     "D/A",
+     "Bm",
+     "A/C#"
     ],
     "bars": 8
    },
    {
     "section": "Intro guitar solo",
     "chords": [
-     "Am",
-     "C",
-     "G",
-     "Em"
+     "Bm",
+     "D/A",
+     "Bm",
+     "A/C#"
     ],
     "bars": 24
    },
@@ -33884,29 +33917,24 @@ const VERIFIED = {
    {
     "section": "Outro guitar solo",
     "chords": [
-     "D5",
-     "E5",
-     "D5",
-     "E5",
-     "G5",
-     "F#5",
-     "D5",
-     "D5"
+     "Bm",
+     "A",
+     "G",
+     "A"
     ],
-    "per": 0.5,
     "bars": 64
    }
   ],
   "solos": [
    {
     "section": "Intro guitar solo",
-    "scale": "A minor pentatonic box 1 at 5th fret; A natural minor (Aeolian) for melody",
-    "tips": "Clean-ish lead tone, slow bends; land on E when the backing reaches Em.",
+    "scale": "B minor pentatonic box 1 at the 7th fret; B natural minor (Aeolian) for melody",
+    "tips": "Clean-ish lead tone, slow bends; land on B over Bm and on A or C# over A/C#.",
     "chords": [
-     "Am",
-     "C",
-     "G",
-     "Em"
+     "Bm",
+     "D/A",
+     "Bm",
+     "A/C#"
     ]
    },
    {
@@ -33914,14 +33942,10 @@ const VERIFIED = {
     "scale": "B minor pentatonic box 1 at the 7th fret (same notes as D major pentatonic), B natural minor for runs",
     "tips": "Build gradually: start with long held bends, then faster pentatonic triplets toward the end.",
     "chords": [
-     "D5",
-     "E5",
-     "D5",
-     "E5",
-     "G5",
-     "F#5",
-     "D5",
-     "D5"
+     "Bm",
+     "A",
+     "G",
+     "A"
     ]
    }
   ]
@@ -34636,7 +34660,7 @@ const VERIFIED = {
   ]
  },
  "Iron Man": {
-  "status": "uncertain",
+  "status": "corrected",
   "key": "B minor",
   "bpm": 77,
   "beatsPerBar": 4,
@@ -34717,16 +34741,12 @@ const VERIFIED = {
     "bars": 8
    },
    {
-    "section": "Riff B",
+    "section": "Riff B (chorus)",
     "chords": [
-     "B5",
+     "E5",
      "D5",
      "B5",
-     "A#5",
-     "A5",
-     "E5",
-     "A5",
-     "A#5"
+     "B5"
     ],
     "per": 0.5,
     "bars": 8
@@ -34734,12 +34754,9 @@ const VERIFIED = {
    {
     "section": "Fast section (guitar solo)",
     "chords": [
-     "E5",
-     "D5",
-     "E5",
-     "B5"
+     "B5",
+     "A5"
     ],
-    "per": 0.5,
     "bars": 20
    },
    {
@@ -34773,16 +34790,12 @@ const VERIFIED = {
     "bars": 8
    },
    {
-    "section": "Riff B",
+    "section": "Riff B (chorus)",
     "chords": [
-     "B5",
+     "E5",
      "D5",
      "B5",
-     "A#5",
-     "A5",
-     "E5",
-     "A5",
-     "A#5"
+     "B5"
     ],
     "per": 0.5,
     "bars": 4
@@ -34803,16 +34816,12 @@ const VERIFIED = {
     "bars": 8
    },
    {
-    "section": "Riff B",
+    "section": "Riff B (chorus)",
     "chords": [
-     "B5",
+     "E5",
      "D5",
      "B5",
-     "A#5",
-     "A5",
-     "E5",
-     "A5",
-     "A#5"
+     "B5"
     ],
     "per": 0.5,
     "bars": 4
@@ -34820,36 +34829,29 @@ const VERIFIED = {
    {
     "section": "Outro (fast, guitar solo)",
     "chords": [
-     "E5",
-     "D5",
-     "E5",
-     "B5"
+     "B5",
+     "A5"
     ],
-    "per": 0.5,
     "bars": 18
    }
   ],
   "solos": [
    {
     "section": "Fast section (guitar solo)",
-    "scale": "E minor pentatonic, box 1 at the 12th fret (B minor pentatonic box 1 at the 7th fret also fits)",
-    "tips": "The tempo doubles here - practise the backing riff first, then add short bluesy licks.",
+    "scale": "B minor pentatonic box 1 at the 7th fret; add G# for a B Dorian colour over the A5 bars",
+    "tips": "The tempo picks up here - loop the B5-A5 backing first, then add short bluesy licks that resolve to B.",
     "chords": [
-     "E5",
-     "D5",
-     "E5",
-     "B5"
+     "B5",
+     "A5"
     ]
    },
    {
     "section": "Outro (fast, guitar solo)",
-    "scale": "E minor pentatonic, 12th fret",
+    "scale": "B minor pentatonic / B Dorian, 7th fret",
     "tips": "Repeat a simple 3-note phrase and add vibrato; Iommi's style is about tone and feel more than speed.",
     "chords": [
-     "E5",
-     "D5",
-     "E5",
-     "B5"
+     "B5",
+     "A5"
     ]
    }
   ]
@@ -34896,26 +34898,11 @@ const VERIFIED = {
    {
     "section": "Chorus",
     "chords": [
-     "F#m",
-     "D",
-     "F#m",
-     "D",
-     "A",
-     "E",
-     "F#m",
-     "F#m",
-     "A",
-     "E",
-     "F#m",
-     "F#m",
-     "A",
-     "E",
-     "F#m",
-     "D",
-     "E",
-     "E"
+     "F#5",
+     "E5",
+     "F#5",
+     "D5"
     ],
-    "per": 0.5,
     "bars": 9
    },
    {
@@ -34947,26 +34934,11 @@ const VERIFIED = {
    {
     "section": "Chorus",
     "chords": [
-     "F#m",
-     "D",
-     "F#m",
-     "D",
-     "A",
-     "E",
-     "F#m",
-     "F#m",
-     "A",
-     "E",
-     "F#m",
-     "F#m",
-     "A",
-     "E",
-     "F#m",
-     "D",
-     "E",
-     "E"
+     "F#5",
+     "E5",
+     "F#5",
+     "D5"
     ],
-    "per": 0.5,
     "bars": 9
    },
    {
@@ -34999,11 +34971,12 @@ const VERIFIED = {
     "section": "Guitar solo",
     "chords": [
      "F#m",
+     "E",
      "D",
-     "Bm",
-     "F#m"
+     "C#m",
+     "Bm"
     ],
-    "bars": 24
+    "bars": 25
    },
    {
     "section": "Main riff",
@@ -35034,26 +35007,11 @@ const VERIFIED = {
    {
     "section": "Chorus",
     "chords": [
-     "F#m",
-     "D",
-     "F#m",
-     "D",
-     "A",
-     "E",
-     "F#m",
-     "F#m",
-     "A",
-     "E",
-     "F#m",
-     "F#m",
-     "A",
-     "E",
-     "F#m",
-     "D",
-     "E",
-     "E"
+     "F#5",
+     "E5",
+     "F#5",
+     "D5"
     ],
-    "per": 0.5,
     "bars": 9
    },
    {
@@ -35075,13 +35033,14 @@ const VERIFIED = {
   "solos": [
    {
     "section": "Guitar solo",
-    "scale": "F# minor pentatonic box 1 at the 14th fret (or 2nd fret), F# natural minor for runs",
-    "tips": "Practise the fast passages slowly with alternate picking; outline the Bm bar by landing on B or D.",
+    "scale": "F# natural minor (F# G# A B C# D E), F# minor pentatonic box 1 at the 14th or 2nd fret for the bluesy bits",
+    "tips": "The backing walks down F#m-E-D-C#m-Bm; land on the root of each chord as it arrives. Practise the fast runs slowly with alternate picking.",
     "chords": [
      "F#m",
+     "E",
      "D",
-     "Bm",
-     "F#m"
+     "C#m",
+     "Bm"
     ]
    }
   ]

@@ -33,24 +33,21 @@ function initMidiTab(root) {
       <div class="hk-mascot-row">
         <div class="hk-mascot-avatar">${pandaSvg("play")}</div>
         <div class="hk-mascot-bubble">
-          <p>This is handy for exploring without a piano nearby, but your fingers won't build the real
-             muscle memory they need this way. Practicing on an actual keyboard — even a cheap one, see
-             the "Get yourself a piano" lesson — is what actually makes you better.</p>
+          <p>Great for trying things out without a piano nearby. To really get better, play on a real
+             keyboard, even a cheap one.</p>
         </div>
       </div>
       <div class="hk-speed-picker hk-midi-layout-picker">
         <span class="hk-speed-label">Layout:</span>
         <button class="hk-speed-btn" data-layout="split">Two hands</button>
-        <button class="hk-speed-btn" data-layout="piano">One hand (GarageBand-style)</button>
+        <button class="hk-speed-btn" data-layout="piano">One hand</button>
       </div>
       <div class="hk-midi-instructions" id="hk-midi-instructions"></div>
       <div class="hk-midi-zones" id="hk-midi-zones"></div>
       <div class="hk-midi-scroll" id="hk-midi-scroll">
         <div id="hk-midi-keyboard" class="hk-keyboard-wrap hk-midi-full"></div>
       </div>
-      <p class="hk-honest-note">Every note on a real piano is here — all 88 keys, black and white. You don't need
-         to pick a musical key first: the white/black layout matches a real piano, so any song or scale works
-         by moving your hands, just like on the real thing.</p>
+      <p class="hk-honest-note">All 88 keys of a real piano are here. Move your hands to play any song or scale.</p>
     </div>`;
 
   const keyboardWrap = root.querySelector("#hk-midi-keyboard");
@@ -70,12 +67,12 @@ function initMidiTab(root) {
     const isSplit = getLayout() === "split";
     root.querySelectorAll("[data-layout]").forEach((b) => b.classList.toggle("hk-speed-active", b.dataset.layout === getLayout()));
     root.querySelector("#hk-midi-instructions").innerHTML = isSplit
-      ? `<p>Laid out like a real piano: each hand's <strong>white keys</strong> are one row of letters, and its
-           <strong>black keys</strong> are the row just above, sitting in the gaps — exactly where they are on a piano.</p>
+      ? `<p>Just like a piano: <strong>white keys</strong> are one row of letters, and <strong>black keys</strong>
+           are the row just above.</p>
          <p><span class="hk-hand-left-label">Left hand</span>: white keys <kbd>Z X C V B N M</kbd>, black keys
            <kbd>S D</kbd> <kbd>G H J</kbd>. <span class="hk-hand-right-label">Right hand</span>: white keys
            <kbd>T Y U I O P [ ] \\</kbd>, black keys <kbd>6 7</kbd> <kbd>9 0 -</kbd>.</p>`
-      : `<p>One hand, laid out like a real piano (the same layout GarageBand and most music apps use):
+      : `<p>One hand, like in GarageBand:
            <strong>white keys</strong> <kbd>A S D F G H J K L ; '</kbd>, <strong>black keys</strong> on the row above
            <kbd>W E</kbd> <kbd>T Y U</kbd> <kbd>O P</kbd>.</p>`;
   }

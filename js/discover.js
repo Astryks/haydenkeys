@@ -50,7 +50,7 @@ function escapeAttr(text) {
 function confidenceBadge(song) {
   return song.confidence === "confirmed"
     ? `<span class="hk-badge hk-badge-confirmed">Chords verified</span>`
-    : `<span class="hk-badge hk-badge-unverified" title="${escapeAttr(song.notes)}">Needs verification</span>`;
+    : `<span class="hk-badge hk-badge-unverified" title="${escapeAttr(song.notes)}">Best guess</span>`;
 }
 
 function matchBadge(song) {
@@ -135,7 +135,7 @@ function realChords(song) {
 }
 function chordsDisplay(song) {
   const real = realChords(song);
-  return real.length ? real.join(" · ") : "Chords: still being verified — see details";
+  return real.length ? real.join(" · ") : "Chords coming soon";
 }
 
 function songCard(song, onStart) {
@@ -160,8 +160,8 @@ function songCard(song, onStart) {
         </div>
         ${chordsLine}
         <p class="hk-song-artist">${song.artist} &middot; ${song.genre}</p>
-        <p class="hk-lock-message">&#128274; Complete ${lock.need - lock.have} more ${lock.priorTier} song${lock.need - lock.have === 1 ? "" : "s"}
-           (${lock.have}/${lock.need} so far) to unlock ${difficulty} songs like this one.</p>
+        <p class="hk-lock-message">&#128274; Finish ${lock.need - lock.have} more ${lock.priorTier} song${lock.need - lock.have === 1 ? "" : "s"} to unlock this
+           (${lock.have}/${lock.need}).</p>
       </div>`;
     hydrateArt(div, song);
     return div;
@@ -172,7 +172,7 @@ function songCard(song, onStart) {
     <div class="hk-song-card-body">
       <div class="hk-song-card-top">
         <h3>${song.title}</h3>
-        ${song.advanced ? `<span class="hk-badge hk-badge-advanced" title="Not part of the beginner curriculum">Advanced / bonus</span>` : ""}
+        ${song.advanced ? `<span class="hk-badge hk-badge-advanced" title="An extra challenge">Bonus</span>` : ""}
         ${difficultyBadge(difficulty)}
         ${confidenceBadge(song)}
       </div>
@@ -200,20 +200,16 @@ function initDiscoverTab(root, { onStartSong } = {}) {
   root.innerHTML = `
     <div class="hk-discover">
       <div class="hk-upload-banner hk-upload-banner-top">
-        <h2>${icon("song", 28)} Upload any song and we'll find the chords for you!</h2>
-        <p>Not in the library? Pick a song from your phone. We'll work out the notes and easy chords, and show songs that use the same chords.</p>
+        <h2>${icon("song", 28)} Upload any song</h2>
+        <p>Not in the library? Pick a song from your phone and we'll find the easy chords.</p>
         <label class="hk-upload-pick" for="hk-discover-upload">${icon("cassette", 24)} Choose a song</label>
-        <p class="hk-upload-fine">(Hayden Keys is for entertainment and learning only. We've added this feature for you to record any song from your phone and upload it, only for the purpose of learning the songs you love and support the artists who create beautiful things in this world. The real fun begins when you get inspired and create your own original music! Our model runs on your device only, we don't store any data.)</p>
+        <p class="hk-upload-fine">(For learning only. Please support the artists you love. Your song stays on your device.)</p>
         <input type="file" id="hk-discover-upload" class="hk-upload-input" accept="audio/*,video/*" />
         <div id="hk-discover-upload-status" class="hk-cal-status"></div>
         <div id="hk-discover-upload-playback"></div>
         <p class="hk-scope-note">
-          Note: Hayden Keys teaches from a curated library of real, chord-verified songs below.
-          It does <strong>not</strong> support pasting a YouTube link or any other URL to import
-          arbitrary audio — that would require extracting audio from streaming platforms, which
-          violates their terms of service. Your own recordings are welcome via the
-          <strong>upload button above</strong> instead (transcribed locally in your browser,
-          nothing uploaded to a server).
+          You can't paste a YouTube link here. Use the <strong>upload button above</strong>
+          with your own recording instead.
         </p>
       </div>
       <div class="hk-discover-controls">
@@ -257,7 +253,7 @@ function initDiscoverTab(root, { onStartSong } = {}) {
       // view with the real falling-notes highway + speed control the
       // curated lesson flow uses (renderTranscribedPlayback, shared
       // from transcribe.js — not a second visualizer built here).
-      statusEl.textContent = `Done — detected ${notes.length} notes.`;
+      statusEl.textContent = "Done! Press Play to start.";
       renderTranscribedPlayback(playbackEl, notes, { file });
     } catch (err) {
       statusEl.textContent = err.message;
@@ -280,7 +276,7 @@ function initDiscoverTab(root, { onStartSong } = {}) {
       .filter((s) => (!genre || s.genre === genre))
       .filter((s) => (!tier || getDifficulty(s) === tier))
       .filter((s) => !query || s.title.toLowerCase().includes(query) || s.artist.toLowerCase().includes(query))
-      .sort((a, b) => a.popularityRank - b.popularityRank)
+      .sort((a, b) => (a.popularityRank || 999) - (b.popularityRank || 999))
       .forEach((song) => grid.appendChild(songCard(song, onStartSong || (() => {}))));
     // Item 44: a tile at the end of the grid pointing back up to the
     // existing "Upload any song" banner — makes upload discoverable

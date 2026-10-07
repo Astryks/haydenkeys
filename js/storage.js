@@ -125,7 +125,7 @@ function bumpStreak() {
   if (streak.lastDay === localDay(-2) && getStreakFreezes() > 0) {
     safeSet(KEYS.FREEZES, getStreakFreezes() - 1);
     count = streak.count + 1;
-    emit("hk-toast", { text: "❄️ Streak freeze used — your streak survived a day off!" });
+    emit("hk-toast", { text: "❄️ Streak freeze used. Your streak survived a day off!" });
   }
   if (count > 0 && count % 7 === 0 && getStreakFreezes() < 2) {
     safeSet(KEYS.FREEZES, getStreakFreezes() + 1);
@@ -205,7 +205,7 @@ function awardXp(amount, reason) {
 const QUEST_DEFS = [
   { id: "lesson", text: "Finish a lesson" },
   { id: "review", text: "Do your 2-minute daily review" },
-  { id: "practice", text: "Score 80%+ in wait mode or play-in-time" },
+  { id: "practice", text: "Score 80%+ in Wait for me or Play in time" },
 ];
 function getQuests() {
   const stored = safeGet(KEYS.QUESTS, { date: null, done: {} });

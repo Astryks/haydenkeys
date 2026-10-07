@@ -234,15 +234,15 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
       <div class="hk-practice">
         <div class="hk-practice-header">
           <select id="hk-song-select">
-            ${SONGS.map((s) => `<option value="${s.title}" ${s.title === currentSong.title ? "selected" : ""}>${s.title} — ${s.artist}</option>`).join("")}
+            ${SONGS.map((s) => `<option value="${s.title}" ${s.title === currentSong.title ? "selected" : ""}>${s.title} - ${s.artist}</option>`).join("")}
           </select>
           <button class="hk-btn" id="hk-open-calibration">Calibrate keyboard</button>
         </div>
         <p class="hk-practice-meta">
           Key: ${currentSong.key} &middot; ${currentSong.degreeSequence}
-          ${SONG_STRUCTURES[currentSong.title] ? `<span class="hk-badge hk-badge-match">Full song structure</span>` : `<span class="hk-badge" title="Only the main repeating loop is mapped for this song">Main loop only</span>`}
+          ${SONG_STRUCTURES[currentSong.title] ? `<span class="hk-badge hk-badge-match">Whole song</span>` : `<span class="hk-badge" title="Only the main chords for this song">Main chords only</span>`}
         </p>
-        ${songMeta.noRealChords ? `<p class="hk-honest-note">This song's chords are still being verified, so there's nothing real to practice yet — the C chord below is only a placeholder. ${currentSong.notes || ""}</p>` : ""}
+        ${songMeta.noRealChords ? `<p class="hk-honest-note">We don't have this song's chords yet. The C chord below is just for practice. ${currentSong.notes || ""}</p>` : ""}
         <div class="hk-mode-picker" id="hk-mode-picker">
           ${MODES.map((m) => `<button class="hk-mode-btn ${m === mode ? "hk-mode-active" : ""}" data-mode="${m}">${MODE_LABELS[m]}</button>`).join("")}
         </div>
@@ -250,13 +250,13 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
         <div class="hk-speed-picker" id="hk-speed-picker">
           <div class="hk-speed-mascot">${pandaSvg("think")}</div>
           <span class="hk-speed-label">Speed:</span>
-          ${SPEEDS.map((s) => `<button class="hk-speed-btn ${s === playbackSpeed ? "hk-speed-active" : ""}" data-speed="${s}">${s}×${s === 1 ? " (normal)" : s === 0.5 ? " (slow)" : ""}</button>`).join("")}
+          ${SPEEDS.map((s) => `<button class="hk-speed-btn ${s === playbackSpeed ? "hk-speed-active" : ""}" data-speed="${s}">${s === 1 ? "Normal" : s === 0.5 ? "Slow" : "0.75×"}</button>`).join("")}
           <button class="hk-btn hk-btn-small hk-drums-toggle ${drumsOn ? "hk-drums-on" : ""}" id="hk-drums-toggle"
                   title="Adds a simple drum beat while the song plays">
             ${drumLabel()}
           </button>
           <button class="hk-btn hk-btn-small" id="hk-tap-tempo"
-                  title="Tap along with the real recording (4+ taps, one per beat) to practice at its actual tempo">
+                  title="Tap 4 or more times with the beat to match the song's speed">
             ${icon("tap", 18)} Tap tempo${tappedBpm ? ` (♩ = ${tappedBpm})` : ""}
           </button>
           <button class="hk-btn hk-btn-small hk-drums-toggle hk-wait-toggle" id="hk-wait-toggle"
@@ -283,19 +283,18 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
         <div id="hk-camera-panel" class="hk-camera-panel hk-hidden"></div>
         <div id="hk-calibration-panel" class="hk-calibration-panel hk-hidden"></div>
         <section class="hk-upload-section">
-          <h3>${icon("song", 26)} Upload any song and we'll find the chords for you!</h3>
-          <p>Pick a song from your phone (a few seconds is enough). We'll show the notes falling onto the piano, the easy chords to play, and songs that use the same chords.</p>
+          <h3>${icon("song", 26)} Upload any song</h3>
+          <p>Pick a song from your phone (a short clip is fine). We'll show its notes and easy chords falling onto the piano.</p>
           <label class="hk-upload-pick" for="hk-audio-upload">${icon("cassette", 24)} Choose a song</label>
-          <p class="hk-upload-fine">(Hayden Keys is for entertainment and learning only. We've added this feature for you to record any song from your phone and upload it, only for the purpose of learning the songs you love and support the artists who create beautiful things in this world. The real fun begins when you get inspired and create your own original music! Our model runs on your device only, we don't store any data.)</p>
+          <p class="hk-upload-fine">(For learning only. Please support the artists you love. Your song stays on your device.)</p>
           <input type="file" id="hk-audio-upload" class="hk-upload-input" accept="audio/*,video/*" />
           <div id="hk-upload-status" class="hk-cal-status"></div>
           <div id="hk-upload-playback"></div>
         </section>
         <section class="hk-playbyear-section" id="hk-playbyear-section">
           <h3>🎧 Play what you hear</h3>
-          <p>A different kind of practice: no falling notes, no chord names shown up front. Pick a song, listen
-             to its chord progression, then try to replicate it on the keyboard below by ear. Replay as many
-             times as you want, then reveal the real chords to check yourself.</p>
+          <p>No falling notes, no chord names. Listen to a song's chords and try to play them by ear.
+             Replay as often as you like, then reveal the answer.</p>
           <select id="hk-playbyear-song"></select>
           <div class="hk-playbyear-controls">
             <button class="hk-btn hk-btn-primary" id="hk-playbyear-play">&#9658; Play clip</button>
@@ -364,10 +363,10 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
       panel.innerHTML = `
         <b>${icon("hand", 22)} Wait for me</b>
         <p>Play along on your real piano. Each chord waits at the line until you play it.</p>
-        <p class="hk-wait-mic-note">${icon("speaker", 18)}<span>We'll use your phone's microphone <b>only to hear your piano keys, nothing else</b>. Nothing is recorded or saved.</span></p>
+        <p class="hk-wait-mic-note">${icon("speaker", 18)}<span>We use the microphone <b>only to hear your piano</b>. Nothing is recorded or saved.</span></p>
         <div class="hk-wait-actions">
           <button class="hk-btn hk-btn-primary" id="hk-wait-mic">Use my microphone</button>
-          <button class="hk-btn" id="hk-wait-tap">I'll tap the screen or use a MIDI keyboard</button>
+          <button class="hk-btn" id="hk-wait-tap">I'll use the screen or a MIDI keyboard</button>
         </div>
         <div class="hk-cal-status" id="hk-wait-err"></div>`;
       panel.classList.remove("hk-hidden");
@@ -427,9 +426,9 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
   }
 
   function modeDescription() {
-    if (mode === "follow") return "Notes fall down the highway toward the hit line above each key, timed so they arrive exactly when you should play them — plus the keyboard highlights each chord as it plays. Pink = left hand, light blue = right hand. No microphone needed. The default speed is a comfortable practice tempo, the same for every song (one chord box = one bar) — use Tap tempo to match the real recording.";
-    if (mode === "ear") return "Play each chord's root note on your real piano — the mic listens via the same pitch tracker used for calibration and advances when you get it right.";
-    return "Point your camera at your real keyboard. After a quick two-tap calibration, the next key to press is highlighted right on the video.";
+    if (mode === "follow") return "Notes fall toward the keys. Play each one as it reaches the line. Pink = left hand, blue = right hand.";
+    if (mode === "ear") return "Play each chord's root note (its letter) on your real piano. The microphone listens and moves on when you get it right.";
+    return "Point your camera at your piano and tap two keys to set it up. Then the next key lights up on the video.";
   }
 
   function renderControls() {
@@ -715,7 +714,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
         const expectedPitchClass = parsed.root;
         const heardPitchClass = ((Math.round(result.noteMidi) % 12) + 12) % 12;
         if (heardPitchClass === expectedPitchClass && Math.abs(result.cents) < 45) {
-          statusEl.textContent = `Correct — that's ${step.chord}'s root note.`;
+          statusEl.textContent = `Correct! That's the root of ${step.chord}.`;
           statusEl.classList.add("hk-ear-correct");
           earMatchLocked = true;
           earCheckIndex++;
@@ -723,7 +722,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
           updateCursor();
           if (earCheckIndex >= songMeta.steps.length) {
             statusEl.textContent = songMeta.loops
-              ? "Loop complete — starting over."
+              ? "Loop done! Starting again."
               : "Song complete! Press Restart to go again.";
             if (songMeta.loops) {
               earCheckIndex = 0;
@@ -747,7 +746,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
         stopListening = stop;
       }
     } catch (err) {
-      statusEl.textContent = `Microphone access failed (${err.message}) — Ear Check needs the mic. Try Follow Along instead.`;
+      statusEl.textContent = `The microphone isn't working (${err.message}). Ear Check needs it, so try Follow Along instead.`;
     }
   }
 
@@ -817,7 +816,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
   function initPlayByEar() {
     const select = root.querySelector("#hk-playbyear-song");
     select.innerHTML = PLAY_BY_EAR_SONGS.map(
-      (s) => `<option value="${s.title}">${s.title} — ${s.artist}</option>`
+      (s) => `<option value="${s.title}">${s.title} - ${s.artist}</option>`
     ).join("");
     const answerEl = root.querySelector("#hk-playbyear-answer");
     answerEl.textContent = "";
@@ -862,7 +861,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
       // (renderTranscribedPlayback, transcribe.js) replaces the old
       // bare "Play it + one highlighted key" view — same function
       // Discover's upload flow calls, not a second implementation.
-      statusEl.textContent = `Done — detected ${notes.length} notes.`;
+      statusEl.textContent = "Done! Press Play to start.";
       renderTranscribedPlayback(playbackEl, notes, { file });
     } catch (err) {
       statusEl.textContent = err.message;

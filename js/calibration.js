@@ -21,37 +21,27 @@ function initCalibration(root, { onComplete, showSkip = true } = {}) {
   function render() {
     root.innerHTML = `
       <div class="hk-calibration">
-        <h3>Step 1 of 2 — find Middle C by ear</h3>
+        <h3>Step 1 of 2: find Middle C</h3>
         <div id="hk-cal-keyboard-step1" class="hk-keyboard-wrap"></div>
-        <p>Quick basics first: the <strong>white keys</strong> are the main notes — just the musical alphabet,
-           A through G, repeating up and down the whole keyboard. The <strong>black keys</strong> are the notes
-           "in between" two white keys. They're raised up and bunched into groups of 2 and 3 specifically so
-           your fingers (and eyes) can feel/see a repeating landmark instead of a featureless wall of identical
-           keys — which is exactly the pattern we're about to use to find Middle C.</p>
-        <p>Every piano/keyboard repeats the same pattern of black keys, over and over: a group of
-           <strong>2 black keys</strong>, then a group of <strong>3 black keys</strong>, then back to 2, and so
-           on — <strong>this repeats no matter how big or small your keyboard is</strong>. Find the group of 2
-           black keys closest to the middle of your instrument (highlighted above, next to the C) — Middle C
-           is the <strong>white key immediately to its left</strong> (the lit-up white key above — the two
-           lit black keys are just the landmark, not keys to press).</p>
-        <p class="hk-honest-note">On a real piano, that's usually close to dead-center. Quick guide by size —
-           count the C's (the white key just left of each group of 2 black keys) from the LEFT end:</p>
+        <p>The <strong>white keys</strong> are the musical alphabet, A to G, repeating. The <strong>black keys</strong>
+           come in groups of 2 and 3, so you can always find your place.</p>
+        <p>Find the group of <strong>2 black keys</strong> nearest the middle of your piano. Middle C is the
+           <strong>white key just to its left</strong> (lit up above).</p>
+        <p class="hk-honest-note">Quick guide by size: count the C's from the LEFT end.</p>
         <table class="hk-size-table">
           <tr><th>Keys on your keyboard</th><th>Middle C is…</th></tr>
           <tr><td>88 (full piano)</td><td>the 4th C from the left</td></tr>
           <tr><td>76 or 61</td><td>the 3rd C from the left</td></tr>
           <tr><td>49</td><td>the 3rd C from the left (the middle one)</td></tr>
-          <tr><td>37 or 25</td><td>usually the 2nd C — but small keyboards often have octave (+/−) buttons that move it</td></tr>
+          <tr><td>37 or 25</td><td>usually the 2nd C (octave buttons can move it)</td></tr>
         </table>
-        <p class="hk-honest-note">Not sure? That's what the listening check below is for — it tells you for certain.</p>
-        <p class="hk-honest-note">Black keys are named after their white neighbours: the black key just right
-           of C is <strong>C#</strong> ("C sharp"); the same key, seen as just left of D, is <strong>D♭</strong>
-           ("D flat"). Every 12 keys (white and black together) the pattern repeats one <strong>octave</strong>
-           higher — so there's a C every 8 white keys.</p>
-        <h3>Check it by ear — like tuning a guitar</h3>
-        <p>Tap <strong>Start listening</strong>, then press the key you think is Middle C on your real piano and
-           hold it. The meter turns <strong>green</strong> when it hears Middle C. Wrong key? It tells you how many
-           keys to move, and which way.</p>
+        <p class="hk-honest-note">Not sure? The listening check below will tell you.</p>
+        <p class="hk-honest-note">Black keys are named after their neighbours: the one just right of C is
+           <strong>C#</strong> ("C sharp"), also called <strong>D♭</strong> ("D flat"). The pattern repeats every
+           <strong>octave</strong> (12 keys), so there's a C every 7 white keys.</p>
+        <h3>Check it by ear</h3>
+        <p>Tap <strong>Start listening</strong>, then press and hold the key you think is Middle C. The meter
+           turns <strong>green</strong> when it's right. If not, it tells you which way to move.</p>
         <button class="hk-btn" id="hk-play-ref">&#9658; Hear Middle C first</button>
         <div id="hk-cal-tuner"></div>
         <p id="hk-cal-status" class="hk-cal-status"></p>
@@ -104,20 +94,27 @@ function initCalibration(root, { onComplete, showSkip = true } = {}) {
   function renderStepTwo() {
     root.innerHTML = `
       <div class="hk-calibration">
-        <h3>Step 2 of 2 — match the on-screen keyboard</h3>
-        <p>Tap <strong>Middle C</strong> and then the <strong>C one octave higher</strong> on the keyboard below,
-           so the app knows how your on-screen keys line up for practice.</p>
+        <h3>Step 2 of 2: match the screen</h3>
+        <p>Tap <strong>Middle C</strong>, then the <strong>C one octave higher</strong> on the keyboard below.</p>
         <div id="hk-cal-keyboard" class="hk-keyboard-wrap"></div>
         <p id="hk-cal-status2" class="hk-cal-status">Tap Middle C first.</p>
       </div>`;
     const kbWrap = root.querySelector("#hk-cal-keyboard");
     const kb = renderKeyboard(kbWrap, { startMidi: 48, endMidi: 84 });
     let firstTap = null;
+    let saved = false;
     kb.onKeyPress((midi) => {
+      if (saved) return;
+      const status = root.querySelector("#hk-cal-status2");
       if (firstTap === null) {
+        // Only a C counts: C is the white key just left of the 2 black keys.
+        if (midi % 12 !== 0) { status.textContent = "That's not a C. Look for the white key just left of the 2 black keys."; return; }
         firstTap = midi;
-        root.querySelector("#hk-cal-status2").textContent = "Now tap the C one octave higher.";
+        status.textContent = "Now tap the C one octave higher.";
+      } else if (midi !== firstTap + 12) {
+        status.textContent = "Not quite. The next C up is 7 white keys to the right.";
       } else {
+        saved = true;
         const offset = firstTap; // visual offset from theoretical C4=60
         saveCalibration({ audioConfirmedMidi, visualOffsetMidi: offset - 60 });
         root.querySelector("#hk-cal-status2").textContent = "Calibration saved.";

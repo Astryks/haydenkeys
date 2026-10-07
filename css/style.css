@@ -1514,15 +1514,6 @@ body.hk-lesson-open .hk-lesson-topbar { padding-top: 6px !important; }
 .hk-tech-card { background: #fff; border: 2px solid #ece6fb; border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 4px 12px rgba(90, 60, 160, 0.08); }
 .hk-tech-card b { font-size: 1.1rem; color: #3a2d6b; }
 .hk-tech-card p { margin: 0; font-size: 0.92rem; color: var(--hk-text-dim); line-height: 1.45; }
-.hk-tipjar { margin: 4px 0 24px; padding: 16px; border-radius: 20px; background: linear-gradient(135deg, #fff1f7, #f1ecff); border: 2px solid #e6dcfb; }
-.hk-tipjar h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; color: #3a2d6b; }
-.hk-tipjar p { margin: 0 0 10px; }
-.hk-tip-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.hk-tip { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 12px 6px; border-radius: 16px; border: none; background: linear-gradient(135deg, var(--hk-accent), var(--hk-purple)); color: #fff; cursor: pointer; }
-.hk-tip b { font-size: 1.2rem; }
-.hk-tip span { font-size: 0.78rem; opacity: 0.95; }
-.hk-tip:disabled { opacity: 0.6; }
-.hk-tip-status, .hk-tip-note { font-size: 0.85rem; color: var(--hk-text-dim); }
 .hk-home-how { display: inline-flex; align-items: center; gap: 6px; margin: 18px auto 0; padding: 8px 14px; border-radius: 999px; border: 1px solid #e6dcfb; background: #fff; color: #6a45b5; font-weight: 700; font-size: 0.9rem; cursor: pointer; }
 .hk-today-clean { text-align: center; }
 .hk-today-clean > button:not(.hk-home-how) { text-align: left; }
@@ -1604,3 +1595,38 @@ body.hk-lesson-open .hk-lesson-topbar { padding-top: 6px !important; }
 .hk-micro-reply, .hk-chat-them:not(:first-child) { margin-left: 0; }
 .hk-avatar-scene { width: 180px !important; height: 108px !important; border-radius: 12px; overflow: hidden; background: #fff; }
 @media (max-width: 520px) { .hk-avatar-scene { width: 132px !important; height: 80px !important; } }
+
+/* Home stage: the pianos and the cats, a new scene each visit */
+.hk-home-stage { width: 100%; aspect-ratio: 400 / 240; border-radius: 20px; overflow: hidden; background: linear-gradient(#fbf8ff, #f1eafc); box-shadow: 0 6px 22px rgba(80, 50, 140, 0.12); }
+.hk-intro-logo { width: min(200px, 50vw); aspect-ratio: 1; animation: hk-pop 0.6s cubic-bezier(.2,1.4,.4,1); filter: drop-shadow(0 10px 22px rgba(80,50,140,.3)); }
+.hk-header .hk-logo { width: 48px !important; height: 48px !important; }
+.hk-teach { margin: 6px 0 8px; padding: 8px 12px; border-radius: 12px; background: #f1ecff; }
+.hk-teach summary { cursor: pointer; font-weight: 800; color: #6b4fc8; font-size: 0.92rem; }
+.hk-teach[open] summary { margin-bottom: 8px; }
+.hk-inspire { margin: 10px 0; padding: 10px 12px; border-radius: 12px; background: linear-gradient(135deg, #2b2140, #46306e); color: #fbf6ff; }
+.hk-inspire-title { font-weight: 800; margin-bottom: 6px; }
+.hk-inspire .hk-note { color: #e8dcff; }
+.hk-inspire-blurb { margin: 6px 0 0; font-size: 0.88rem; opacity: 0.92; }
+
+/* Tip jar: a quiet, collapsed line at the bottom of home (app only). */
+.hk-tipjar { max-width: 420px; margin: 22px auto 0; border-top: 1px solid var(--hk-border); color: var(--hk-text-dim); text-align: center; }
+.hk-tipjar summary { list-style: none; display: inline-flex; align-items: center; gap: 6px; padding: 12px 10px 4px; font-size: 0.86rem; font-weight: 600; letter-spacing: 0.02em; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.hk-tipjar summary::-webkit-details-marker { display: none; }
+.hk-tipjar summary small { font-weight: 400; font-size: 0.74rem; opacity: 0.75; }
+.hk-tipjar summary::after { content: ""; width: 6px; height: 6px; margin-left: 2px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-2px) rotate(45deg); transition: transform 0.25s ease; }
+.hk-tipjar[open] summary::after { transform: translateY(1px) rotate(-135deg); }
+.hk-tipjar::details-content { block-size: 0; overflow: hidden; transition: block-size 0.3s ease, content-visibility 0.3s allow-discrete; }
+.hk-tipjar[open]::details-content { block-size: auto; }
+@supports (interpolate-size: allow-keywords) { .hk-tipjar { interpolate-size: allow-keywords; } }
+.hk-tipjar-body { padding: 4px 6px 10px; animation: hk-tip-in 0.3s ease; }
+@keyframes hk-tip-in { from { opacity: 0; transform: translateY(-4px); } }
+.hk-tipjar-body p { margin: 4px auto 12px; max-width: 34ch; font-size: 0.84rem; line-height: 1.45; }
+.hk-tip-list { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.hk-tip { min-width: 84px; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 9px 12px; border-radius: 14px; border: 1px solid var(--hk-border); background: var(--hk-panel); color: var(--hk-text); font: inherit; cursor: pointer; transition: border-color 0.2s, transform 0.15s; }
+.hk-tip b { font-size: 1rem; font-weight: 700; }
+.hk-tip span { font-size: 0.72rem; color: var(--hk-text-dim); letter-spacing: 0.03em; }
+.hk-tip:hover, .hk-tip:focus-visible { border-color: var(--hk-accent); }
+.hk-tip:active { transform: scale(0.97); }
+.hk-tip:disabled { opacity: 0.55; }
+.hk-tip-note { display: block; font-size: 0.74rem; opacity: 0.8; margin-top: 10px !important; }
+.hk-tip-thanks .hk-tip-icon { color: var(--hk-accent); }

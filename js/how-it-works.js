@@ -13,8 +13,8 @@ const TECH = [
   ["song", "Upload any song", "A music AI from Spotify, called Basic Pitch, runs right on your phone. It listens to your recording and writes down every note it hears. Then we group the notes into the chords you can play."],
   ["search", "Guess the song", "Apple's ShazamKit turns a few seconds of the song into a tiny audio fingerprint and finds its name. Only the fingerprint is sent, never the recording."],
   ["hand", "Wait for me", "The microphone listens only for your piano keys. It works out the pitch of a single note, and for a chord it checks how strong each of the 12 notes is in the sound, many times a second."],
-  ["piano", "A real grand piano", "Every note you hear is a real recording of a Steinway grand piano, key by key, built into the app."],
-  ["star", "All on your phone", "No servers and no account. Your progress, your uploads and the AI all stay on your device."],
+  ["piano", "A real grand piano", "Every note you hear comes from real recordings of a Steinway grand piano, built into the app."],
+  ["star", "All on your phone", "No account and no sign-up. Your progress, your uploads and the AI all stay on your device."],
 ];
 
 function initHowItWorksTab(root) {
@@ -26,13 +26,12 @@ function initHowItWorksTab(root) {
         <div class="hk-tech-grid">${TECH.map(([ic, t, d]) => `<div class="hk-tech-card">${icon(ic, 40)}<b>${t}</b><p>${d}</p></div>`).join("")}</div>
       </section>
       <h2>How does the app know what notes you played?</h2>
-      <p class="hk-how-sub">A real, honest explanation of the "upload your own recording" feature — no jargon, no substance cut.</p>
+      <p class="hk-how-sub">How the "upload your own recording" feature works, in plain words.</p>
 
       <section class="hk-how-section">
         <h3>1. Sound is just air wiggling</h3>
-        <p>Every sound is air pressure going up and down, over and over, really fast. "Hz" just means
-           <strong>how many times per second it wiggles</strong>. Middle C wiggles about
-           <strong>261.6 times every second</strong> — that's it, that's a pitch.</p>
+        <p>Every sound is air wiggling back and forth, really fast. "Hz" means <strong>how many wiggles per second</strong>, and
+           Middle C wiggles about <strong>261.6 times every second</strong>.</p>
         <div class="hk-wave-demo">
           <canvas id="hk-wave-canvas" width="600" height="120"></canvas>
           <div class="hk-wave-controls">
@@ -40,62 +39,42 @@ function initHowItWorksTab(root) {
             <input type="range" id="hk-wave-freq" min="80" max="800" value="262" />
           </div>
         </div>
-        <p class="hk-honest-note">Quick detour on the name: "Hz" is short for Hertz, and it just means
-           "wiggles per second" — if a string wiggles back and forth 100 times every second, that's
-           100 Hz. It's named after a real scientist, <strong>Heinrich Hertz</strong>, who in the 1880s
-           was the first person to actually create and detect invisible waves traveling through the air
-           (the same kind radios use today), proving a big theory that had only existed on paper before.
-           Scientists later named the unit after him — before that, it was just called "cycles per
-           second," which means exactly the same thing (one wiggle = one cycle), just a plainer name.</p>
+        <p class="hk-honest-note">"Hz" is short for Hertz, named after scientist <strong>Heinrich Hertz</strong>. In the 1880s he was
+           the first to make and detect invisible radio waves. Before that, people just said "cycles per second".</p>
       </section>
 
       <section class="hk-how-section">
-        <h3>2. A real note is secretly a whole stack of frequencies</h3>
-        <p>Here's the part most people never learn: a piano playing "one note" isn't making one clean
-           wiggle. It's making a <strong>main frequency</strong> (the "fundamental" — the pitch you
-           actually hear) plus a bunch of quieter extra wiggles on top, at exact whole-number multiples
-           of it (2×, 3×, 4×...). Those extras are called <strong>overtones</strong> or
-           <strong>harmonics</strong>. A piano and a guitar playing "the same note" have the same
-           fundamental — but totally different overtone mixes, which is the actual reason they sound
-           different. That's it, that's timbre.</p>
+        <h3>2. A note is really a stack of wiggles</h3>
+        <p>A piano note isn't one clean wiggle. It has a <strong>main frequency</strong> (the "fundamental", the pitch you hear)
+           plus quieter <strong>overtones</strong> on top, at (almost exactly) whole-number multiples (2×, 3×, 4×...).</p>
+        <p>A piano and a guitar playing the same note have different overtone mixes. That's a big part of why they
+           sound different.</p>
         <div class="hk-overtone-diagram" id="hk-overtone-diagram"></div>
       </section>
 
       <section class="hk-how-section">
-        <h3>3. A chord is one messy, tangled-up wave</h3>
-        <p>Now play three notes together. You don't get three separate signals — you get
-           <strong>one single wave</strong> where every note's fundamental AND every note's overtones
-           are all mashed into each other, some literally overlapping at the same frequency. Figuring
-           out "which original notes are hiding in this one messy wave" is the actual hard problem.
-           You can't just "look" at the wiggly wave and read the notes off it — it's too tangled.</p>
+        <h3>3. A chord is one tangled wave</h3>
+        <p>Play three notes and you don't get three separate sounds. You get <strong>one single wave</strong>, with all
+           their notes and overtones mixed together. Working out which notes are hiding in it is the hard part.</p>
       </section>
 
       <section class="hk-how-section">
-        <h3>4. The trick: turn the sound into a picture, then pattern-match it</h3>
-        <p>The model doesn't try to untangle the raw wave directly. First, it converts a short slice of
-           audio into something like a bar chart: <strong>"how much energy is at each pitch, right
-           now"</strong> (the same basic idea as a spectrogram, if you've seen one). Then a neural
-           network — one that was shown thousands of real audio clips <em>where the correct notes were
-           already known</em>, during training, long before you ever uploaded anything — recognizes the
-           <strong>pattern</strong> of energy that usually means "these specific notes are sounding,"
-           even when their overtones overlap confusingly. Learning to recognize that pattern reliably is
-           the genuinely hard part — plain math alone can't do it well, which is exactly why this needs
-           a trained model instead of a formula.</p>
+        <h3>4. The trick: turn sound into a picture</h3>
+        <p>First, the model turns a tiny slice of sound into a kind of bar chart: <strong>how much energy is at each pitch
+           right now</strong>. Then a neural network spots the <strong>pattern</strong> that means "these notes are playing".</p>
+        <p>It learned by studying thousands of clips where the right notes were already known. Plain math can't do this
+           well, which is why it needs a trained model.</p>
       </section>
 
       <section class="hk-how-section">
-        <h3>5. The fun detail almost everyone misses</h3>
-        <p>The model's actual output is just: <strong>"C, E, and G are sounding together right
-           now."</strong> It has no idea that's called a "C major chord" — chord names aren't part of
-           what it learned. Turning a note list into a chord name is a completely separate, much
-           simpler step: just checking the combination against a lookup table of known chord shapes.
-           <strong>Plain pattern-matching, not AI</strong> — the exact same kind of lookup logic this
-           app's own 92-song library already uses to label a verified chord progression.</p>
+        <h3>5. The AI doesn't know chord names</h3>
+        <p>The model only says <strong>"C, E and G are playing now."</strong> It doesn't know that's called a "C major chord".</p>
+        <p>Naming the chord is a separate, simple step: matching the notes against a list of chord shapes. That's
+           <strong>plain pattern-matching, not AI</strong>, the same kind the app's song library uses.</p>
       </section>
 
-      <p class="hk-honest-note">This explanation covers basic-pitch's real approach honestly, simplified
-         in wording only. See THIRD_PARTY_NOTICES.md for exactly which model is running and under what
-         license.</p>
+      <p class="hk-honest-note">This is how Spotify's open-source basic-pitch model really works, just in simpler words.
+         It's free to use under the Apache License 2.0.</p>
     </div>`;
 
   initWaveDemo();
@@ -119,6 +98,9 @@ function initWaveDemo() {
   }
 
   function draw() {
+    // Only animate while the How it works page is on screen; the observer
+    // below starts it again when the page is shown.
+    if (!canvas.isConnected || canvas.offsetParent === null) { raf = null; return; }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.strokeStyle = "#7c5cff";
     ctx.lineWidth = 2;
@@ -141,6 +123,11 @@ function initWaveDemo() {
   });
 
   draw();
+  if (typeof IntersectionObserver !== "undefined") {
+    new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting) && !raf) draw();
+    }).observe(canvas);
+  }
   return () => cancelAnimationFrame(raf);
 }
 
@@ -148,7 +135,7 @@ function initOvertoneDiagram() {
   const el = document.getElementById("hk-overtone-diagram");
   if (!el) return;
   const rows = [
-    { label: "Fundamental (1×) — the pitch you hear", cycles: 1, opacity: 1 },
+    { label: "Fundamental (1×): the pitch you hear", cycles: 1, opacity: 1 },
     { label: "2nd harmonic (2×)", cycles: 2, opacity: 0.7 },
     { label: "3rd harmonic (3×)", cycles: 3, opacity: 0.5 },
     { label: "4th harmonic (4×)", cycles: 4, opacity: 0.35 },

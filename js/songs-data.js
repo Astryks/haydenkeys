@@ -4,61 +4,61 @@ import { VERIFIED } from "./song-verified.js";
 // Curated 25-song library for Hayden Keys.
 //
 // Sourcing method (per project scope rules): each chord progression below
-// is a commonly-known, independently-corroborated musical fact — cross
+// is a commonly-known, independently-corroborated musical fact - cross
 // checked against at least two independent, generally-reliable sources
 // (aggregated chord-site/tutorial consensus, not one site's literal
 // formatted chart) via web search on 2026-10-05. Chord *names* and
-// *progressions* are treated as facts, not copyrightable expression —
+// *progressions* are treated as facts, not copyrightable expression -
 // the same reasoning that lets any chord-reference site exist. No lyrics
 // or note-for-note transcriptions are bundled here, and nothing is
 // scraped from Ultimate Guitar / Songsterr / Hooktheory's TheoryTab DB.
 //
 // `confidence`:
-//   "confirmed"           — multiple independent sources agree closely.
-//   "needs-verification"  — sources conflicted on key/chords, or the
+//   "confirmed"           - multiple independent sources agree closely.
+//   "needs-verification"  - sources conflicted on key/chords, or the
 //                            progression is unusually complex/jazzy and
 //                            we are not confident enough to present it
 //                            as solid. Shown with a visible badge in the
 //                            UI rather than silently guessed.
 //
 // `degreeSequence` is the song's progression written as scale degrees
-// (1-7, lowercase-ish intent conveyed via `quality`) in its OWN key —
+// (1-7, lowercase-ish intent conveyed via `quality`) in its OWN key -
 // this is what Lesson 1's "songs you can already play" payoff screen
 // checks against the 1-5-6-4 family (I-V-vi-IV and its rotations, plus
 // the same four chords {I, IV, V, vi} in a different order, which is
 // the same broader "four chords, a hundred songs" phenomenon).
 //
 // oneFiveSixFourMatch:
-//   "exact"    — the progression is a true cyclic rotation of
+//   "exact"    - the progression is a true cyclic rotation of
 //                I-V-vi-IV in the SAME direction (i.e. every chord is
 //                followed by the same next chord as in I->V->vi->IV->I
-//                — e.g. starting instead at V gives V-vi-IV-I). A loop
+//                - e.g. starting instead at V gives V-vi-IV-I). A loop
 //                played in the opposite direction (e.g. vi-V-I-IV) uses
 //                the identical four chords but is a genuinely different
-//                progression to the ear, not an "exact" match — see
+//                progression to the ear, not an "exact" match - see
 //                `fourChordOrderFamily` below. (An earlier draft of
 //                this data incorrectly called two reverse-direction
-//                songs — Riptide, The Night We Met — "exact"; fixed
+//                songs - Riptide, The Night We Met - "exact"; fixed
 //                after re-deriving each song's chord-to-chord adjacency
 //                by hand and catching the error.)
-//   "variant"  — uses the same four chords {I, IV, V, vi} but in a
+//   "variant"  - uses the same four chords {I, IV, V, vi} but in a
 //                functionally different order/direction.
-//   false      — does not reduce to that four-chord family.
+//   false      - does not reduce to that four-chord family.
 //
 // fourChordOrderFamily (only set on "variant" entries): which of the
 // non-Lesson-1 four-chord cyclic orders a song uses, so Lesson 4 (which
 // specifically teaches the I-vi-IV-V reordering) can credit only the
 // families that actually match it, not every "variant" song generically:
-//   "B" — I-IV-vi-V direction (e.g. Riptide, The Night We Met)
-//   "C" — I-vi-IV-V direction (e.g. Perfect) — this is what Lesson 4 teaches
-//   "D" — I-vi-V-IV direction (e.g. Photograph) — close to Lesson 4's order
+//   "B" - I-IV-vi-V direction (e.g. Riptide, The Night We Met)
+//   "C" - I-vi-IV-V direction (e.g. Perfect) - this is what Lesson 4 teaches
+//   "D" - I-vi-V-IV direction (e.g. Photograph) - close to Lesson 4's order
 
 const SONGS = [
   // Added Oct 2026 from the owner's song lists (researched chords, maps and videos).
   {"title": "Ode to Joy", "artist": "Ludwig van Beethoven", "genre": "Classical", "popularityRank": 300, "year": 1824, "key": "D major", "chords": ["D", "A", "D", "A", "D"], "degreeSequence": "I - V - I - V - I", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "The famous theme from the finale of Beethoven's Ninth Symphony, built almost entirely on the home chord and the five chord. Its stepwise tune makes it one of the first pieces many learners play."},
-  {"title": "Minuet in G Major", "artist": "J.S. Bach (attr. Christian Petzold)", "genre": "Classical", "popularityRank": 300, "year": 1725, "key": "G major", "chords": ["G", "C", "G", "D7", "G"], "degreeSequence": "I - IV - I - V7 - I", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "A dance from the 1725 Notebook for Anna Magdalena Bach, now credited to Christian Petzold. The first half stays in G major and the second half visits D major before coming home."},
+  {"title": "Minuet in G Major", "artist": "Christian Petzold (long credited to J.S. Bach)", "genre": "Classical", "popularityRank": 300, "year": 1725, "key": "G major", "chords": ["G", "C", "G", "D7", "G"], "degreeSequence": "I - IV - I - V7 - I", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "A dance from the 1725 Notebook for Anna Magdalena Bach, now credited to Christian Petzold. The first half stays in G major and the second half visits D major before coming home."},
   {"title": "Für Elise", "artist": "Ludwig van Beethoven", "genre": "Classical", "popularityRank": 300, "year": 1810, "key": "A minor", "chords": ["Am", "E", "Am", "E", "C", "G", "Am", "E"], "degreeSequence": "i - V - i - V - III - VII - i - V", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "Beethoven's Bagatelle No. 25 is a rondo: the famous A-minor theme keeps returning between two contrasting episodes. The rocking between A minor and E major is the heart of the piece."},
-  {"title": "Canon in D", "artist": "Johann Pachelbel", "genre": "Classical", "popularityRank": 300, "year": 1694, "key": "D major", "chords": ["D", "A", "Bm", "F#m", "G", "D", "G", "A"], "degreeSequence": "I - V - vi - iii - IV - I - IV - V", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "The whole piece sits on one repeating two-bar bass line, with three violins entering in canon above it; the exact date is unknown (somewhere between 1680 and 1706). The same eight-chord loop shows up in countless pop songs."},
+  {"title": "Canon in D", "artist": "Johann Pachelbel", "genre": "Classical", "popularityRank": 300, "year": 1690, "key": "D major", "chords": ["D", "A", "Bm", "F#m", "G", "D", "G", "A"], "degreeSequence": "I - V - vi - iii - IV - I - IV - V", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "The whole piece sits on one repeating two-bar bass line, with three violins entering in canon above it; the exact date is unknown (somewhere between 1680 and 1706). The same eight-chord loop shows up in countless pop songs."},
   {"title": "Symphony No. 5 (Theme)", "artist": "Ludwig van Beethoven", "genre": "Classical", "popularityRank": 300, "year": 1808, "key": "C minor", "chords": ["Cm", "G/B", "Ab", "Fm", "G7", "Cm"], "degreeSequence": "i - V6 - VI - iv - V7 - i", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "The four-note 'fate' motif opens the first movement and drives almost every bar of it. The gentler second theme moves to E-flat major before the storm returns."},
   {"title": "Morning Mood", "artist": "Edvard Grieg", "genre": "Classical", "popularityRank": 300, "year": 1875, "key": "E major", "chords": ["E", "C#m", "E", "G#"], "degreeSequence": "I - vi - I - III", "confidence": "close version", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "The sunrise music from Peer Gynt, with a pentatonic tune passed between flute and oboe over long-held chords. Grieg colours it with surprise shifts to G-sharp and C-sharp major chords before the full-orchestra climax."},
   {"title": "Moonlight Sonata (3rd Movement)", "artist": "Ludwig van Beethoven", "genre": "Classical", "popularityRank": 300, "year": 1801, "key": "C# minor", "chords": ["C#m", "G#/B#", "C#7/B", "F#m/A", "G#"], "degreeSequence": "i - V6 - V7/iv - iv6 - V", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Advanced", "notes": "The stormy Presto agitato finale of the Moonlight Sonata, opening with rushing broken chords that end in sharp accents. It is in sonata form, with a second theme in G-sharp minor."},
@@ -74,10 +74,10 @@ const SONGS = [
   {"title": "Angels", "artist": "Robbie Williams", "genre": "Pop", "popularityRank": 300, "year": 1997, "key": "E major", "chords": ["E", "B", "C#m", "A"], "degreeSequence": "I - V - vi - IV", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "A big piano-and-guitar power ballad co-written with Guy Chambers that builds from a quiet verse into a huge singalong chorus. A great song for learning smooth changes between the main chords of E major."},
   {"title": "My Way", "artist": "Frank Sinatra", "genre": "Jazz Standard", "popularityRank": 300, "year": 1969, "key": "D major", "chords": ["D", "Dmaj7", "D7", "B7", "Em7", "A7", "D"], "degreeSequence": "I - Imaj7 - I7 - VI7 - ii7 - V7 - I", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "Sinatra's signature ballad, with English words by Paul Anka set to a French melody. Each verse grows bigger, and the descending D - Dmaj7 - D7 line is the classic sound to master."},
   {"title": "Lose Control", "artist": "Teddy Swims", "genre": "Soul/R&B", "popularityRank": 300, "year": 2023, "key": "F# minor", "chords": ["F#m", "A/E", "D", "C#"], "degreeSequence": "i - III/v - VI - V", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "A slow 12/8 soul ballad that loops one four-chord progression through every verse and chorus; the major V chord (C#) gives it a gospel-like pull back home. Guitarists often play Em-G-C-B7 shapes with a capo on the 2nd fret."},
-  {"title": "Aïcha", "artist": "Khaled", "genre": "World — Arabic", "popularityRank": 300, "year": 1996, "key": "G minor", "chords": ["Gm", "Eb", "Bb", "F"], "degreeSequence": "i - VI - III - VII", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "Khaled's French-and-Arabic hit, written by Jean-Jacques Goldman, loops one four-chord minor progression almost all the way through. A short bridge moves to C minor before the final choruses."},
-  {"title": "Shchedryk", "artist": "Mykola Leontovych", "genre": "World — Ukrainian", "popularityRank": 300, "year": 1916, "key": "G minor", "chords": ["Gm", "F", "Eb", "D"], "degreeSequence": "i - VII - VI - V", "confidence": "close version", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "The Ukrainian New Year carol later known in English as Carol of the Bells, built on a famous four-note ostinato in 3/4. The voices layer over it while the bass slowly steps down from G to D."},
-  {"title": "Zorba's Dance", "artist": "Mikis Theodorakis", "genre": "World — Greek", "popularityRank": 300, "year": 1964, "key": "G major", "chords": ["G", "Am", "D7", "G"], "degreeSequence": "I - ii - V7 - I", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "The sirtaki from the film Zorba the Greek starts slowly and keeps speeding up until it becomes a fast, joyful dance. The harmony stays on a few simple chords, so the challenge is keeping steady as the tempo rises."},
-  {"title": "Şımarık", "artist": "Tarkan", "genre": "World — Turkish", "popularityRank": 300, "year": 1997, "key": "A minor", "chords": ["Am", "G", "Em", "Am"], "degreeSequence": "i - VII - v - i", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "Tarkan's worldwide pop hit (famous for its kissing sounds) mixes a Turkish percussion groove with a simple minor-key vamp. Most of it sits on Am and G, with an F-G-F-E climb leading into the chorus."},
+  {"title": "Aïcha", "artist": "Khaled", "genre": "World - Arabic", "popularityRank": 300, "year": 1996, "key": "G minor", "chords": ["Gm", "Eb", "Bb", "F"], "degreeSequence": "i - VI - III - VII", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "Khaled's French-and-Arabic hit, written by Jean-Jacques Goldman, loops one four-chord minor progression almost all the way through. A short bridge moves to C minor before the final choruses."},
+  {"title": "Shchedryk", "artist": "Mykola Leontovych", "genre": "World - Ukrainian", "popularityRank": 300, "year": 1916, "key": "G minor", "chords": ["Gm", "F", "Eb", "D"], "degreeSequence": "i - VII - VI - V", "confidence": "close version", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "The Ukrainian New Year carol later known in English as Carol of the Bells, built on a famous four-note ostinato in 3/4. The voices layer over it while the bass slowly steps down from G to D."},
+  {"title": "Zorba's Dance", "artist": "Mikis Theodorakis", "genre": "World - Greek", "popularityRank": 300, "year": 1964, "key": "G major", "chords": ["G", "Am", "D7", "G"], "degreeSequence": "I - ii - V7 - I", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "The sirtaki from the film Zorba the Greek starts slowly and keeps speeding up until it becomes a fast, joyful dance. The harmony stays on a few simple chords, so the challenge is keeping steady as the tempo rises."},
+  {"title": "Şımarık", "artist": "Tarkan", "genre": "World - Turkish", "popularityRank": 300, "year": 1997, "key": "A minor", "chords": ["Am", "G", "Em", "Am"], "degreeSequence": "i - VII - v - i", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "Tarkan's worldwide pop hit (famous for its kissing sounds) mixes a Turkish percussion groove with a simple minor-key vamp. Most of it sits on Am and G, with an F-G-F-E climb leading into the chorus."},
 
   // Added Oct 2026 from the owner's song lists (researched chords, maps and videos).
   {"title": "Blank Space", "artist": "Taylor Swift", "genre": "Pop", "popularityRank": 300, "year": 2014, "key": "F major", "chords": ["F", "Dm", "Gm", "Bb"], "degreeSequence": "I - vi - ii - IV", "confidence": "close version", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "A synth-pop hit from the album 1989 that loops a bright four-chord pattern almost the whole way through. Great for practising steady changes between F, Dm, Gm and Bb."},
@@ -96,22 +96,22 @@ const SONGS = [
   {"title": "Like a Prayer", "artist": "Madonna", "genre": "Pop", "popularityRank": 300, "year": 1989, "key": "F major", "chords": ["F", "C", "Bb", "F/A", "Dm"], "degreeSequence": "I - V - IV - I - vi", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "Madonna's gospel-pop classic opens with a D minor rock intro, then brightens into F major for the verses and a choir-backed chorus. The bridge drops back to D minor before the big finish."},
   {"title": "Valerie", "artist": "Mark Ronson ft. Amy Winehouse", "genre": "Soul/R&B", "popularityRank": 300, "year": 2007, "key": "Eb major", "chords": ["Ebmaj7", "Fm7"], "degreeSequence": "I - ii", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "Mark Ronson's horn-driven cover of The Zutons song, sung by Amy Winehouse, rocks back and forth between just two chords. The bridge adds a gentle Ab to Gm sway before landing back home."},
   {"title": "Before He Cheats", "artist": "Carrie Underwood", "genre": "Country", "popularityRank": 300, "year": 2006, "key": "F# minor", "chords": ["F#m", "E", "D", "C#"], "degreeSequence": "i - VII - VI - V", "confidence": "close version", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "A fiery country revenge anthem in F# minor, driven by a descending i, VII, VI, V verse. The bridge briefly brightens into A major before the final chorus."},
-  {"title": "Pata Pata", "artist": "Miriam Makeba", "genre": "World — Xhosa", "popularityRank": 300, "year": 1967, "key": "Eb major", "chords": ["Eb", "Ab", "Eb", "Bb"], "degreeSequence": "I - IV - I - V", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "A joyful South African dance hit that became a worldwide anthem. The whole song rides one bouncy I-IV-I-V loop, so it is perfect for practising steady rhythm."},
-  {"title": "Hava Nagila", "artist": "Traditional", "genre": "World — Hebrew", "popularityRank": 300, "year": 1918, "key": "E Phrygian dominant (A harmonic minor)", "chords": ["E", "Dm", "E", "Am"], "degreeSequence": "I - bvii - I - iv", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "A traditional Jewish celebration song built on the exotic-sounding Phrygian dominant scale. It speeds up as it goes, so start slowly and build the tempo."},
-  {"title": "Hoppípolla", "artist": "Sigur Rós", "genre": "World — Icelandic", "popularityRank": 300, "year": 2005, "key": "B major", "chords": ["B", "G#m", "F#", "E"], "degreeSequence": "I - vi - V - IV", "confidence": "close version", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "A soaring Icelandic anthem from the album Takk..., famous from nature documentaries. A bright piano figure grows into a huge orchestral climax."},
+  {"title": "Pata Pata", "artist": "Miriam Makeba", "genre": "World - Xhosa", "popularityRank": 300, "year": 1967, "key": "Eb major", "chords": ["Eb", "Ab", "Eb", "Bb"], "degreeSequence": "I - IV - I - V", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "A joyful South African dance hit that became a worldwide anthem. The whole song rides one bouncy I-IV-I-V loop, so it is perfect for practising steady rhythm."},
+  {"title": "Hava Nagila", "artist": "Traditional", "genre": "World - Hebrew", "popularityRank": 300, "year": 1918, "key": "E Phrygian dominant (A harmonic minor)", "chords": ["E", "Dm", "E", "Am"], "degreeSequence": "I - bvii - I - iv", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "A traditional Jewish celebration song built on the exotic-sounding Phrygian dominant scale. It speeds up as it goes, so start slowly and build the tempo."},
+  {"title": "Hoppípolla", "artist": "Sigur Rós", "genre": "World - Icelandic", "popularityRank": 300, "year": 2005, "key": "B major", "chords": ["B", "G#m", "F#", "E"], "degreeSequence": "I - vi - V - IV", "confidence": "close version", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "A soaring Icelandic anthem from the album Takk..., famous from nature documentaries. A bright piano figure grows into a huge orchestral climax."},
   {"title": "Dilemma", "artist": "Nelly feat. Kelly Rowland", "genre": "Hip-Hop", "popularityRank": 300, "year": 2002, "key": "D minor", "chords": ["Gm7", "C", "Am7", "Dm"], "degreeSequence": "iv7 - VII - v7 - i", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "A Grammy-winning R&B duet from Nelly's Nellyville built on a smooth soul sample. The same four-chord loop repeats through every rap verse and sung hook."},
   {"title": "Hot in Herre", "artist": "Nelly", "genre": "Hip-Hop", "popularityRank": 300, "year": 2002, "key": "E minor (E Dorian groove)", "chords": ["Em", "F/E"], "degreeSequence": "i - bII/i", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "Nelly's first number one, built on a funky go-go loop with the bass parked on E the whole time. Practise the tight two-chord rhythm and add the quick G to F# turnaround at the end of phrases."},
   {"title": "I'm Like a Bird", "artist": "Nelly Furtado", "genre": "Pop", "popularityRank": 300, "year": 2000, "key": "Bb major", "chords": ["Bb", "F", "Cm", "Eb"], "degreeSequence": "I - V - ii - IV", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "Nelly Furtado's Grammy-winning debut single from Whoa, Nelly!. The intro leans minor before the chorus opens up into a bright four-chord loop."},
   {"title": "Bubbly", "artist": "Colbie Caillat", "genre": "Pop", "popularityRank": 300, "year": 2007, "key": "A major", "chords": ["A", "Dsus2"], "degreeSequence": "I - IVsus2", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "Colbie Caillat's breakthrough acoustic hit, written on guitar. Almost the whole song rocks gently between two chords, making it a great first strumming song."},
   {"title": "Like a Star", "artist": "Corinne Bailey Rae", "genre": "Soul/R&B", "popularityRank": 300, "year": 2005, "key": "A minor", "chords": ["Dm9", "E7", "Am7", "G7sus4"], "degreeSequence": "iv9 - V7 - i7 - VII7sus4", "confidence": "close version", "oneFiveSixFourMatch": false, "difficulty": "Advanced", "notes": "The gentle, jazzy debut single by Corinne Bailey Rae, played on a fingerpicked guitar. Its rich ninth and seventh chords make it a lovely study in soulful voicings."},
-  {"title": "Anak", "artist": "Freddie Aguilar", "genre": "World — Filipino", "popularityRank": 300, "year": 1978, "key": "A minor", "chords": ["Am", "F", "G", "Am"], "degreeSequence": "i - VI - VII - i", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "A gentle folk ballad that became one of the most famous Filipino songs worldwide. It loops a simple three-chord minor progression, ideal for practising smooth changes."},
-  {"title": "Tadhana", "artist": "Up Dharma Down", "genre": "World — Filipino", "popularityRank": 300, "year": 2010, "key": "F# major", "chords": ["B", "C#", "D#m"], "degreeSequence": "IV - V - vi", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "A dreamy OPM favourite that climbs IV-V-vi over and over, so it feels like it is always reaching upward. Guitarists usually play it with a capo (capo 4 with G-A-Bm shapes)."},
-  {"title": "Sukiyaki", "artist": "Kyu Sakamoto", "genre": "World — Japanese", "popularityRank": 300, "year": 1961, "key": "G major", "chords": ["G", "Em", "G", "Em", "G", "Bm", "Em", "D"], "degreeSequence": "I - vi - I - vi - I - iii - vi - V", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "The only Japanese-language song to top the US Billboard Hot 100 (1963). The verse rocks between G and Em, while the chorus adds colour chords like C6 and B7."},
-  {"title": "Kal Ho Naa Ho", "artist": "Sonu Nigam (Shankar-Ehsaan-Loy)", "genre": "World — Hindi", "popularityRank": 300, "year": 2003, "key": "C major", "chords": ["C", "Am", "F", "C", "F", "Gm7", "C"], "degreeSequence": "I - vi - IV - I - IV - v - I", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "The title song of the 2003 Bollywood film, composed by Shankar-Ehsaan-Loy. The Gm7 (a borrowed minor v chord) gives the refrain its wistful feel."},
-  {"title": "Volare (Nel blu, dipinto di blu)", "artist": "Domenico Modugno", "genre": "World — Italian", "popularityRank": 300, "year": 1958, "key": "Bb major", "chords": ["Cm", "F7", "Bb", "Gm"], "degreeSequence": "ii - V7 - I - vi", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "Winner of Sanremo 1958 and the first Grammy Record of the Year. The famous refrain is a classic ii-V-I-vi turnaround, with a dramatic minor section in between."},
-  {"title": "Dragostea Din Tei", "artist": "O-Zone", "genre": "World — Romanian", "popularityRank": 300, "year": 2003, "key": "A minor", "chords": ["F", "C", "G", "Am"], "degreeSequence": "VI - III - VII - i", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "The Moldovan Eurodance hit that swept Europe in 2004. The same four chords run through the whole song, so it is great for steady strumming at a fast dance tempo."},
-  {"title": "Jerusalema", "artist": "Master KG", "genre": "World — Zulu", "popularityRank": 300, "year": 2019, "key": "Db major", "chords": ["Db", "Bbm", "Gb", "Ab"], "degreeSequence": "I - vi - IV - V", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "A South African gospel-house song featuring Nomcebo Zikode that inspired a global dance challenge in 2020. It loops the I-vi-IV-V progression; on guitar use capo 1 with C-Am-F-G shapes."},
-  {"title": "Vintersaga", "artist": "Monica Törnell", "genre": "World — Swedish", "popularityRank": 300, "year": 1984, "key": "A minor", "chords": ["Am", "C", "Dm", "Am", "Em", "Dm", "Am"], "degreeSequence": "i - III - iv - i - v - iv - i", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "A Swedish winter classic written by Ted Ström, which became Monica Törnell's breakthrough hit in 1984. Long storytelling verses in A minor lead into a short, rising F-G-Am chorus."},
+  {"title": "Anak", "artist": "Freddie Aguilar", "genre": "World - Filipino", "popularityRank": 300, "year": 1978, "key": "A minor", "chords": ["Am", "F", "G", "Am"], "degreeSequence": "i - VI - VII - i", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "A gentle folk ballad that became one of the most famous Filipino songs worldwide. It loops a simple three-chord minor progression, ideal for practising smooth changes."},
+  {"title": "Tadhana", "artist": "Up Dharma Down", "genre": "World - Filipino", "popularityRank": 300, "year": 2012, "key": "F# major", "chords": ["B", "C#", "D#m"], "degreeSequence": "IV - V - vi", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "A dreamy OPM favourite that climbs IV-V-vi over and over, so it feels like it is always reaching upward. Guitarists usually play it with a capo (capo 4 with G-A-Bm shapes)."},
+  {"title": "Sukiyaki", "artist": "Kyu Sakamoto", "genre": "World - Japanese", "popularityRank": 300, "year": 1961, "key": "G major", "chords": ["G", "Em", "G", "Em", "G", "Bm", "Em", "D"], "degreeSequence": "I - vi - I - vi - I - iii - vi - V", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "The only Japanese-language song to top the US Billboard Hot 100 (1963). The verse rocks between G and Em, while the chorus adds colour chords like C6 and B7."},
+  {"title": "Kal Ho Naa Ho", "artist": "Sonu Nigam (Shankar-Ehsaan-Loy)", "genre": "World - Hindi", "popularityRank": 300, "year": 2003, "key": "C major", "chords": ["C", "Am", "F", "C", "F", "Gm7", "C"], "degreeSequence": "I - vi - IV - I - IV - v - I", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "The title song of the 2003 Bollywood film, composed by Shankar-Ehsaan-Loy. The Gm7 (a borrowed minor v chord) gives the refrain its wistful feel."},
+  {"title": "Volare (Nel blu, dipinto di blu)", "artist": "Domenico Modugno", "genre": "World - Italian", "popularityRank": 300, "year": 1958, "key": "Bb major", "chords": ["Cm", "F7", "Bb", "Gm"], "degreeSequence": "ii - V7 - I - vi", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "Winner of Sanremo 1958 and the first Grammy Record of the Year. The famous refrain is a classic ii-V-I-vi turnaround, with a dramatic minor section in between."},
+  {"title": "Dragostea Din Tei", "artist": "O-Zone", "genre": "World - Romanian", "popularityRank": 300, "year": 2003, "key": "A minor", "chords": ["F", "C", "G", "Am"], "degreeSequence": "VI - III - VII - i", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "The Moldovan Eurodance hit that swept Europe in 2004. The same four chords run through the whole song, so it is great for steady strumming at a fast dance tempo."},
+  {"title": "Jerusalema", "artist": "Master KG", "genre": "World - Zulu", "popularityRank": 300, "year": 2019, "key": "Db major", "chords": ["Db", "Bbm", "Gb", "Ab"], "degreeSequence": "I - vi - IV - V", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "A South African gospel-house song featuring Nomcebo Zikode that inspired a global dance challenge in 2020. It loops the I-vi-IV-V progression; on guitar use capo 1 with C-Am-F-G shapes."},
+  {"title": "Vintersaga", "artist": "Monica Törnell", "genre": "World - Swedish", "popularityRank": 300, "year": 1984, "key": "A minor", "chords": ["Am", "C", "Dm", "Am", "Em", "Dm", "Am"], "degreeSequence": "i - III - iv - i - v - iv - i", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "A Swedish winter classic written and first recorded by Ted Ström; Monica Törnell's 1984 version made it famous. Long storytelling verses in A minor lead into a short, rising F-G-Am chorus."},
 
   {
     title: "Creep",
@@ -180,7 +180,7 @@ const SONGS = [
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
     notes:
-      "Re-verified independently (item 25): the verse/intro/interlude chords D-Bm-Em-A are consistently confirmed across multiple independent chord-chart sources, including the exact lyric-to-chord mapping (D: \"Once bitten and twice shy\", Bm: \"I keep my distance...\", Em: \"Tell me baby...\", A: \"...it doesn't surprise me\"). Upgraded from needs-verification to confirmed on that basis. Important honesty note: this is I-vi-ii-V, NOT the Lesson 1 pattern (I-V-vi-IV) — it shares 2 of 4 chords/degrees (I, vi) but is a genuinely different progression, not \"the same 4 chords.\" The in-app lesson that teaches this song says so plainly rather than overstating the connection to Lesson 1.",
+      "Re-verified independently (item 25): the verse/intro/interlude chords D-Bm-Em-A are consistently confirmed across multiple independent chord-chart sources, including the exact lyric-to-chord mapping (D: \"Once bitten and twice shy\", Bm: \"I keep my distance...\", Em: \"Tell me baby...\", A: \"...it doesn't surprise me\"). Upgraded from needs-verification to confirmed on that basis. Important honesty note: this is I-vi-ii-V, NOT the Lesson 1 pattern (I-V-vi-IV) - it shares 2 of 4 chords/degrees (I, vi) but is a genuinely different progression, not \"the same 4 chords.\" The in-app lesson that teaches this song says so plainly rather than overstating the connection to Lesson 1.",
   },
   {
     title: "All I Want for Christmas Is You",
@@ -193,7 +193,7 @@ const SONGS = [
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "Widely simplified/taught as a I-V-vi-IV pattern (commonly shown as C-G-Am-F using a capo/transposed teaching key), but the real recording has considerably more harmonic movement (secondary dominants, a minor-plagal Cmin6/Eb cadence) that the simplified version leaves out. Not counted in the Lesson 1 payoff list since we're not confident enough in the simplification to call it a real match — flagging as needs-verification instead of guessing.",
+      "Widely simplified/taught as a I-V-vi-IV pattern (commonly shown as C-G-Am-F using a capo/transposed teaching key), but the real recording has considerably more harmonic movement (secondary dominants, a minor-plagal Cmin6/Eb cadence) that the simplified version leaves out. Not counted in the Lesson 1 payoff list since we're not confident enough in the simplification to call it a real match - flagging as needs-verification instead of guessing.",
   },
   {
     title: "Die With a Smile",
@@ -319,7 +319,7 @@ const SONGS = [
     oneFiveSixFourMatch: "variant",
     fourChordOrderFamily: "C",
     notes:
-      "Loops G-Em-C-D the entire way through (verse, chorus, bridge) — the same four chords as the 1-5-6-4 family, just in I-vi-IV-V order rather than I-V-vi-IV.",
+      "Loops G-Em-C-D the entire way through (verse, chorus, bridge) - the same four chords as the 1-5-6-4 family, just in I-vi-IV-V order rather than I-V-vi-IV.",
   },
   {
     title: "Stay",
@@ -395,7 +395,7 @@ const SONGS = [
     oneFiveSixFourMatch: "variant",
     fourChordOrderFamily: "B",
     notes:
-      "Uses the same four chords as 1-5-6-4, but walked in the opposite direction around the cycle (vi to V to I to IV, vs. Lesson 1's I to V to vi to IV) — correcting an earlier draft of this data that called it an exact match. Same ingredients, genuinely different-sounding progression, not just a different starting point.",
+      "Uses the same four chords as 1-5-6-4, but walked in the opposite direction around the cycle (vi to V to I to IV, vs. Lesson 1's I to V to vi to IV) - correcting an earlier draft of this data that called it an exact match. Same ingredients, genuinely different-sounding progression, not just a different starting point.",
   },
   {
     title: "Closer",
@@ -408,7 +408,7 @@ const SONGS = [
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "Sources disagree on the home key (Ab major vs F minor cited); the Eb major chord doesn't sit diatonically in either reading cleanly, suggesting a borrowed chord — flagging rather than guessing at the exact function.",
+      "Sources disagree on the home key (Ab major vs F minor cited); the Eb major chord doesn't sit diatonically in either reading cleanly, suggesting a borrowed chord - flagging rather than guessing at the exact function.",
   },
   {
     title: "Riptide",
@@ -422,7 +422,7 @@ const SONGS = [
     oneFiveSixFourMatch: "variant",
     fourChordOrderFamily: "B",
     notes:
-      "The famous ukulele-driven Am-G-C-F loop — same four chords as 1-5-6-4, but (like The Night We Met) walked in the opposite cyclic direction, not an exact match to Lesson 1's specific loop. Corrected from an earlier draft that called it exact.",
+      "The famous ukulele-driven Am-G-C-F loop - same four chords as 1-5-6-4, but (like The Night We Met) walked in the opposite cyclic direction, not an exact match to Lesson 1's specific loop. Corrected from an earlier draft that called it exact.",
   },
   {
     title: "Levitating",
@@ -461,7 +461,7 @@ const SONGS = [
     oneFiveSixFourMatch: "variant",
     fourChordOrderFamily: "D",
     notes:
-      "Four chords for the entire song (I-vi-V-IV in its common teaching key) — same four-chord family as 1-5-6-4, different order.",
+      "Four chords for the entire song (I-vi-V-IV in its common teaching key) - same four-chord family as 1-5-6-4, different order.",
   },
 
   // --- Second batch, added after launch (2026-10-05) ---------------------
@@ -471,17 +471,17 @@ const SONGS = [
   // songs, including "Despacito," which has a very different harmonic
   // character on its face; "Shape of You"'s entry had a garbled chord
   // symbol). Every song below was independently re-researched the same
-  // way as the original 25 — titles only were taken from the list, not
+  // way as the original 25 - titles only were taken from the list, not
   // chords. A few pasted guesses turned out to hold up under independent
   // verification anyway (Despacito genuinely does reduce to the 1-5-6-4
-  // family once correctly read as Bm-G-D-A in D major — see its entry);
+  // family once correctly read as Bm-G-D-A in D major - see its entry);
   // most did not, and are marked needs-verification or corrected below.
   //
   // This pass also caught and fixed a real bug in the ORIGINAL 25: two
   // songs (Riptide, The Night We Met) were marked as "exact" 1-5-6-4
   // matches, but re-deriving their chord-to-chord adjacency by hand
   // showed they actually walk the same four chords in the OPPOSITE
-  // cyclic direction — a genuinely different-sounding progression, not
+  // cyclic direction - a genuinely different-sounding progression, not
   // an exact match. Fixed in those entries above with a correction note.
   {
     title: "You Belong With Me",
@@ -490,7 +490,7 @@ const SONGS = [
     popularityRank: 26,
     key: "F# (sources disagree on the practical chord reading)",
     chords: ["D", "A", "Em", "G"],
-    degreeSequence: "disputed — sources give inconsistent readings",
+    degreeSequence: "disputed - sources give inconsistent readings",
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
@@ -507,7 +507,7 @@ const SONGS = [
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
     notes:
-      "Verse/chorus center on G-D-C (with Dsus4/Cadd9 color tones) — three chords, no vi in the main loop. The bridge is more harmonically complex (adds Em, F, Am, C/B) but that's not the core progression.",
+      "Verse/chorus center on G-D-C (with Dsus4/Cadd9 color tones) - three chords, no vi in the main loop. The bridge is more harmonically complex (adds Em, F, Am, C/B) but that's not the core progression.",
   },
   {
     title: "Shake It Off",
@@ -519,7 +519,7 @@ const SONGS = [
     degreeSequence: "ii - IV - I (3-chord loop, no V)",
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
-    notes: "A genuinely simple, well-documented three-chord song — Am-C-G repeating, never resolving to D (V). (Item 57: was mislabelled vi - IV - I; Am in the key of G is the 2, not the 6.)",
+    notes: "A genuinely simple, well-documented three-chord song - Am-C-G repeating, never resolving to D (V). (Item 57: was mislabelled vi - IV - I; Am in the key of G is the 2, not the 6.)",
   },
   {
     title: "Wildest Dreams",
@@ -532,7 +532,7 @@ const SONGS = [
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "Key (F minor) is well agreed on, but sources describe the actual chords only in terms of various capo positions (capo 1, 4, or 6, each implying different absolute chord names) without agreeing on one real-sounding chord set — not confident enough to present a single chart.",
+      "Key (F minor) is well agreed on, but sources describe the actual chords only in terms of various capo positions (capo 1, 4, or 6, each implying different absolute chord names) without agreeing on one real-sounding chord set - not confident enough to present a single chart.",
   },
   {
     title: "Shallow",
@@ -558,7 +558,7 @@ const SONGS = [
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "One source explicitly describes an I-vi-IV-V progression that 'inverts itself for the chorus,' which would make this a Lesson-4-family song — but this wasn't independently cross-confirmed by a second source with the same specificity, so flagging rather than claiming it solidly.",
+      "One source explicitly describes an I-vi-IV-V progression that 'inverts itself for the chorus,' which would make this a Lesson-4-family song - but this wasn't independently cross-confirmed by a second source with the same specificity, so flagging rather than claiming it solidly.",
   },
   {
     title: "Always Remember Us This Way",
@@ -571,7 +571,7 @@ const SONGS = [
     confidence: "confirmed",
     oneFiveSixFourMatch: "exact",
     notes:
-      "Verse is Am-F-C-G, relative to C major. Re-derived its chord-to-chord adjacency by hand (vi→IV, IV→I, I→V, V→vi) and confirmed it's the identical edge set to Lesson 1's G-D-Em-C loop, just starting at a different point in the cycle — a genuine exact match, not just a superficial 'same chords' claim.",
+      "Verse is Am-F-C-G, relative to C major. Re-derived its chord-to-chord adjacency by hand (vi→IV, IV→I, I→V, V→vi) and confirmed it's the identical edge set to Lesson 1's G-D-Em-C loop, just starting at a different point in the cycle - a genuine exact match, not just a superficial 'same chords' claim.",
   },
   {
     title: "Have Yourself a Merry Little Christmas",
@@ -584,7 +584,7 @@ const SONGS = [
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "A 1944 jazz standard with many different published arrangements/keys (G and C both common) — a ii-V-I-style turnaround, not our 4-chord family. Too many materially different chord charts across sources to call one definitive.",
+      "A 1944 jazz standard with many different published arrangements/keys (G and C both common) - a ii-V-I-style turnaround, not our 4-chord family. Too many materially different chord charts across sources to call one definitive.",
   },
   {
     title: "Thinking Out Loud",
@@ -609,7 +609,7 @@ const SONGS = [
     degreeSequence: "I - V - vi - IV",
     confidence: "confirmed",
     oneFiveSixFourMatch: "exact",
-    notes: "The capo-2 teaching version is explicitly G-D-Em-C shapes — the exact Lesson 1 order.",
+    notes: "The capo-2 teaching version is explicitly G-D-Em-C shapes - the exact Lesson 1 order.",
   },
   {
     title: "Galway Girl",
@@ -635,7 +635,7 @@ const SONGS = [
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "Extremely sparse, beat-driven production (tongue clicks, minimal keyboard) — sources agree on key but not on a chord-by-chord progression; may not have a conventional one to document.",
+      "Extremely sparse, beat-driven production (tongue clicks, minimal keyboard) - sources agree on key but not on a chord-by-chord progression; may not have a conventional one to document.",
   },
   {
     title: "Gin and Juice",
@@ -644,11 +644,11 @@ const SONGS = [
     popularityRank: 38,
     key: "F Phrygian / F minor",
     chords: ["Fm", "F#", "G#", "C#"],
-    degreeSequence: "Phrygian-mode progression — not a standard major/minor pattern",
+    degreeSequence: "Phrygian-mode progression - not a standard major/minor pattern",
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "Built on the Phrygian mode (interpolates Slave's 'Watching You' and samples George McRae's 'I Get Lifted') — unusual enough harmonically that it doesn't fit this app's major/minor beginner framework well, and sources don't agree on a precise chord-by-chord chart.",
+      "Built on the Phrygian mode (interpolates Slave's 'Watching You' and samples George McCrae's 'I Get Lifted') - unusual enough harmonically that it doesn't fit this app's major/minor beginner framework well, and sources don't agree on a precise chord-by-chord chart.",
   },
   {
     title: "Young, Wild & Free",
@@ -672,7 +672,7 @@ const SONGS = [
     degreeSequence: "I - V - vi - IV",
     confidence: "confirmed",
     oneFiveSixFourMatch: "exact",
-    notes: "Verse is explicitly C-G-Am-F, with sources directly naming it an I-V-vi-IV progression — textbook Lesson 1 match.",
+    notes: "Verse is explicitly C-G-Am-F, with sources directly naming it an I-V-vi-IV progression - textbook Lesson 1 match.",
   },
   {
     title: "No Woman No Cry",
@@ -684,7 +684,7 @@ const SONGS = [
     degreeSequence: "I - V - vi - IV",
     confidence: "confirmed",
     oneFiveSixFourMatch: "exact",
-    notes: "The same C-G-Am-F loop as Let It Be, repeating unchanged for the entire song — no bridge, no key change.",
+    notes: "The same C-G-Am-F loop as Let It Be, repeating unchanged for the entire song - no bridge, no key change.",
   },
   {
     title: "With or Without You",
@@ -710,7 +710,7 @@ const SONGS = [
     oneFiveSixFourMatch: "variant",
     fourChordOrderFamily: "A",
     notes:
-      "An 8-chord extension, not a pure 4-chord loop — but the first half is literally Lesson 1's G-D-Em-C (I-V-vi-IV) before continuing on to iii (Bm) and IV again. Counted as a variant match since the full loop isn't identical to Lesson 1's, but it's the closest possible relative.",
+      "An 8-chord extension, not a pure 4-chord loop - but the first half is literally Lesson 1's G-D-Em-C (I-V-vi-IV) before continuing on to iii (Bm) and IV again. Counted as a variant match since the full loop isn't identical to Lesson 1's, but it's the closest possible relative.",
   },
   {
     title: "I'm Yours",
@@ -735,7 +735,7 @@ const SONGS = [
     confidence: "confirmed",
     oneFiveSixFourMatch: "exact",
     notes:
-      "This one was specifically flagged as suspicious in a pasted draft list that assigned the same progression to many unrelated songs — but independent verification actually bears it out: Bm-G-D-A, read relative to D major, has the identical chord-to-chord adjacency as Lesson 1's loop (vi→IV→I→V→vi...). A case where double-checking confirmed rather than debunked the claim.",
+      "This one was specifically flagged as suspicious in a pasted draft list that assigned the same progression to many unrelated songs - but independent verification actually bears it out: Bm-G-D-A, read relative to D major, has the identical chord-to-chord adjacency as Lesson 1's loop (vi→IV→I→V→vi...). A case where double-checking confirmed rather than debunked the claim.",
   },
   {
     title: "Someone Like You",
@@ -756,7 +756,7 @@ const SONGS = [
     popularityRank: 47,
     key: "G major (guitarists often play it with C shapes and a capo on fret 7)",
     chords: ["G", "D", "Em", "C"],
-    degreeSequence: "disputed — see notes",
+    degreeSequence: "disputed - see notes",
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
@@ -773,7 +773,7 @@ const SONGS = [
     confidence: "confirmed",
     oneFiveSixFourMatch: "variant",
     fourChordOrderFamily: "C",
-    notes: "Classic doo-wop progression, I-vi-IV-V — the same family as Lesson 4 and Perfect, not Lesson 1's exact order.",
+    notes: "Classic doo-wop progression, I-vi-IV-V - the same family as Lesson 4 and Perfect, not Lesson 1's exact order.",
   },
   {
     title: "A Horse With No Name",
@@ -785,7 +785,7 @@ const SONGS = [
     degreeSequence: "i - VII (2-chord loop)",
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
-    notes: "Genuinely a two-chord song — Em and a D variant, looped for the entire track. About as simple as it gets.",
+    notes: "Genuinely a two-chord song - Em and a D variant, looped for the entire track. About as simple as it gets.",
   },
   {
     title: "Knockin' on Heaven's Door",
@@ -797,7 +797,7 @@ const SONGS = [
     degreeSequence: "I - V - ii - IV",
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
-    notes: "Uses the 2 (ii, Am) chord instead of the 6 (vi) — a Lesson 5 song, not a Lesson 1 match.",
+    notes: "Uses the 2 (ii, Am) chord instead of the 6 (vi) - a Lesson 5 song, not a Lesson 1 match.",
   },
   {
     title: "Wonderwall",
@@ -810,7 +810,7 @@ const SONGS = [
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "Sources themselves describe this song as 'meandering between the keys of E minor and G major' — a real harmonic ambiguity, not just conflicting research. Not confident enough to assign one clean roman-numeral analysis.",
+      "Sources themselves describe this song as 'meandering between the keys of E minor and G major' - a real harmonic ambiguity, not just conflicting research. Not confident enough to assign one clean roman-numeral analysis.",
   },
   {
     title: "Love Yourself",
@@ -823,7 +823,7 @@ const SONGS = [
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "A simplified G-D-Em-C 'teaching version' is widely shared online, but the real recording's chords (E-B/D#-C#m-F#m) are actually I-V-vi-ii, not I-V-vi-IV — the popular teaching simplification appears to be musically inaccurate to the actual recording. Flagging rather than repeating the inaccurate popular version.",
+      "A simplified G-D-Em-C 'teaching version' is widely shared online, but the real recording's chords (E-B/D#-C#m-F#m) are actually I-V-vi-ii, not I-V-vi-IV - the popular teaching simplification appears to be musically inaccurate to the actual recording. Flagging rather than repeating the inaccurate popular version.",
   },
   {
     title: "Count on Me",
@@ -832,7 +832,7 @@ const SONGS = [
     popularityRank: 53,
     key: "C major",
     chords: ["C", "Em", "Am", "G", "F"],
-    degreeSequence: "uses I, iii, vi, V, IV — richer than a simple 4-chord loop",
+    degreeSequence: "uses I, iii, vi, V, IV - richer than a simple 4-chord loop",
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
     notes: "Five chords across verse/chorus/bridge; key and chord set are well corroborated, but not a clean 4-chord loop.",
@@ -848,7 +848,7 @@ const SONGS = [
     confidence: "confirmed",
     oneFiveSixFourMatch: "exact",
     notes:
-      "Em-C-G-D repeats for the entire song. Read relative to its relative major (G), this has the identical chord-to-chord adjacency as Lesson 1's loop — a genuine exact match, not just a shared chord set.",
+      "Em-C-G-D repeats for the entire song. Read relative to its relative major (G), this has the identical chord-to-chord adjacency as Lesson 1's loop - a genuine exact match, not just a shared chord set.",
   },
   {
     title: "Hey Soul Sister",
@@ -886,7 +886,7 @@ const SONGS = [
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "A through-composed power ballad that builds across multiple sections rather than looping one progression — sources list chords used but not a single confident chart, similar in spirit to Die With a Smile's complexity.",
+      "A through-composed power ballad that builds across multiple sections rather than looping one progression - sources list chords used but not a single confident chart, similar in spirit to Die With a Smile's complexity.",
   },
   {
     title: "Budapest",
@@ -898,20 +898,20 @@ const SONGS = [
     degreeSequence: "I - IV - V (3-chord loop, no vi)",
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
-    notes: "A genuinely simple three-chord song, well corroborated — verse is mostly G and C, chorus brings in D.",
+    notes: "A genuinely simple three-chord song, well corroborated - verse is mostly G and C, chorus brings in D.",
   },
   {
     title: "Sweet Home Alabama",
     artist: "Lynyrd Skynyrd",
     genre: "Southern Rock",
     popularityRank: 59,
-    key: "G major (sources conflict — see notes)",
+    key: "G major (sources conflict - see notes)",
     chords: ["D", "C", "G"],
     degreeSequence: "V - IV - I (as commonly simplified)",
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "Sources gave genuinely conflicting chord sets for this one — a simple D-C-G (V-IV-I) loop in G is the most commonly cited, but another source described entirely different chords (C-A-F-G, or even Bb-Ab-Db-G) in a different key. Flagging the real disagreement rather than picking one.",
+      "Sources gave genuinely conflicting chord sets for this one - a simple D-C-G (V-IV-I) loop in G is the most commonly cited, but another source described entirely different chords (C-A-F-G, or even Bb-Ab-Db-G) in a different key. Flagging the real disagreement rather than picking one.",
   },
   {
     title: "Wonderful Tonight",
@@ -924,7 +924,7 @@ const SONGS = [
     confidence: "confirmed",
     oneFiveSixFourMatch: "variant",
     fourChordOrderFamily: "C",
-    notes: "Explicitly listed as 'G Em C D' — the same I-vi-IV-V family as Lesson 4 and Perfect.",
+    notes: "Explicitly listed as 'G Em C D' - the same I-vi-IV-V family as Lesson 4 and Perfect.",
   },
   {
     title: "Over the Rainbow",
@@ -933,10 +933,10 @@ const SONGS = [
     popularityRank: 61,
     key: "C major",
     chords: ["C", "Em", "F", "G", "Am"],
-    degreeSequence: "uses I, iii, IV, V, vi — richer than a simple 4-chord loop",
+    degreeSequence: "uses I, iii, IV, V, vi - richer than a simple 4-chord loop",
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
-    notes: "The famous ukulele medley uses five chords including both iii (Em) and vi (Am) — not a clean 4-chord loop.",
+    notes: "The famous ukulele medley uses five chords including both iii (Em) and vi (Am) - not a clean 4-chord loop.",
   },
   {
     title: "Chasing Cars",
@@ -955,13 +955,13 @@ const SONGS = [
     artist: "Pharrell Williams",
     genre: "Pop/Soul",
     popularityRank: 63,
-    key: "genuinely disputed — see notes",
+    key: "genuinely disputed - see notes",
     chords: ["Fm7", "Bb7", "Db", "Eb", "Fm"],
     degreeSequence: "needs verification",
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "Sources describe this song using at least three different modal frameworks (Em with capo, F with a flat-heavy chord set, B Phrygian Dominant, F Dorian with dominant 7th extensions) — a genuinely unusual, funk-influenced harmony that doesn't reduce to a simple major/minor chart.",
+      "Sources describe this song using at least three different modal frameworks (Em with capo, F with a flat-heavy chord set, B Phrygian Dominant, F Dorian with dominant 7th extensions) - a genuinely unusual, funk-influenced harmony that doesn't reduce to a simple major/minor chart.",
   },
   {
     title: "Banana Pancakes",
@@ -973,7 +973,7 @@ const SONGS = [
     degreeSequence: "I7 - V7 - ii7 - IV7",
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
-    notes: "Built entirely on dominant-7th chords and uses the 2 (ii, Am7) chord — relevant to both Lesson 5 and Lesson 8.",
+    notes: "Built entirely on dominant-7th chords and uses the 2 (ii, Am7) chord - relevant to both Lesson 5 and Lesson 8.",
   },
   {
     title: "Can You Feel the Love Tonight",
@@ -998,7 +998,7 @@ const SONGS = [
     degreeSequence: "I - IV - V (3-chord loop; A7 turnaround, no vi)",
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
-    notes: "A simple, well-documented three-chord singalong — no vi chord in the main loop.",
+    notes: "A simple, well-documented three-chord singalong - no vi chord in the main loop.",
   },
   {
     title: "Livin' on a Prayer",
@@ -1007,11 +1007,11 @@ const SONGS = [
     popularityRank: 67,
     key: "E minor (the last chorus jumps up a minor third)",
     chords: ["Em", "C", "D"],
-    degreeSequence: "needs verification — genuine key changes",
+    degreeSequence: "needs verification - genuine key changes",
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "This one genuinely modulates key more than once (sources describe a move from E minor to G minor, then to C minor for the second chorus) — too much real harmonic movement to reduce to one simple chart.",
+      "This one genuinely modulates key more than once (sources describe a move from E minor to G minor, then to C minor for the second chorus) - too much real harmonic movement to reduce to one simple chart.",
   },
   {
     title: "I Will Survive",
@@ -1023,7 +1023,7 @@ const SONGS = [
     degreeSequence: "a circle-of-fifths-style descending minor progression",
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
-    notes: "A rich, 7-chord descending progression (including two major-7th chords) — relevant to Lesson 8's seventh-chord theme.",
+    notes: "A rich, 7-chord descending progression (including two major-7th chords) - relevant to Lesson 8's seventh-chord theme.",
   },
   {
     title: "Mr. Brightside",
@@ -1044,11 +1044,11 @@ const SONGS = [
     popularityRank: 70,
     key: "A major",
     chords: ["A", "D", "F#m", "E"],
-    degreeSequence: "uses I, IV, vi, V — exact sequential order not clearly confirmed",
+    degreeSequence: "uses I, IV, vi, V - exact sequential order not clearly confirmed",
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "All four of the 1-5-6-4 chords show up somewhere in this song, which is why a pasted draft list guessed it matches — but no source gave a clean, confidently-ordered 4-chord loop the way Let It Be or No Woman No Cry have. Flagging the order rather than assuming it matches just because the chords overlap.",
+      "All four of the 1-5-6-4 chords show up somewhere in this song, which is why a pasted draft list guessed it matches - but no source gave a clean, confidently-ordered 4-chord loop the way Let It Be or No Woman No Cry have. Flagging the order rather than assuming it matches just because the chords overlap.",
   },
   {
     title: "Summer Nights",
@@ -1067,13 +1067,13 @@ const SONGS = [
     artist: "Toto",
     genre: "Pop Rock",
     popularityRank: 72,
-    key: "genuinely disputed — modulates between C#m/B/A sections",
+    key: "genuinely disputed - modulates between C#m/B/A sections",
     chords: ["F#m", "Dsus2", "A", "E"],
     degreeSequence: "needs verification",
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "Sources disagree on the home key (C minor vs C# minor) and describe the song moving through multiple keys/modes across its verse and chorus — a genuinely complex song, not simplified here.",
+      "Sources disagree on the home key (C minor vs C# minor) and describe the song moving through multiple keys/modes across its verse and chorus - a genuinely complex song, not simplified here.",
   },
   {
     title: "Bohemian Rhapsody",
@@ -1082,25 +1082,25 @@ const SONGS = [
     popularityRank: 73,
     key: "Modulates through Bb, Eb, A, and F major across distinct sections",
     chords: ["Bb", "Gm", "Cm", "F7", "Eb", "Ab"],
-    degreeSequence: "not applicable — not a loop-based song",
+    degreeSequence: "not applicable - not a loop-based song",
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
     advanced: true,
     notes:
-      "Added as a clearly-labeled advanced/bonus entry, not part of the beginner curriculum — Sid's own instinct going in was correct, this is genuinely not a simple beginner song. It moves through at least four different keys across a ballad intro, an operatic section with diminished/augmented chords and rapid changes, and a hard-rock section. For what it's worth, the ballad intro alone (commonly cited as C-G-Am-F) is literally Lesson 1's exact I-V-vi-IV shape — a fun 'you already know the first 20 seconds' fact — but the rest of the song is well beyond this app's beginner scope, and no simplified version is presented here to avoid misrepresenting its real difficulty.",
+      "Added as a clearly-labeled advanced/bonus entry, not part of the beginner curriculum - Sid's own instinct going in was correct, this is genuinely not a simple beginner song. It moves through at least four different keys across a ballad intro, an operatic section with diminished/augmented chords and rapid changes, and a hard-rock section. For what it's worth, the ballad intro alone (commonly cited as C-G-Am-F) is literally Lesson 1's exact I-V-vi-IV shape - a fun 'you already know the first 20 seconds' fact - but the rest of the song is well beyond this app's beginner scope, and no simplified version is presented here to avoid misrepresenting its real difficulty.",
   },
 
   // --- Jazz standards, added for the Day 26-30+ "richer harmony" / jazz ---
   // comping-and-improv lesson. Sourced from a cited list (jazz educator
   // Mark Rapp's top-10, via South Carolina Public Radio) plus two of
-  // Sid's own specific requests (My Funny Valentine — already on the
-  // cited list; Almost Blue — not on it, researched separately). Jazz
+  // Sid's own specific requests (My Funny Valentine - already on the
+  // cited list; Almost Blue - not on it, researched separately). Jazz
   // standards are, honestly, harder to pin to one simple chart than pop
-  // songs — most published "changes" vary by recording/arranger, and
+  // songs - most published "changes" vary by recording/arranger, and
   // several of these are explicitly documented as harmonically complex
   // even by jazz-education sources. Where that's the case, confidence is
   // marked needs-verification with the real reason, exactly like
-  // Bohemian Rhapsody and the pop-song entries above — no fake
+  // Bohemian Rhapsody and the pop-song entries above - no fake
   // simplified chart invented just to mark something "done."
   {
     title: "Autumn Leaves",
@@ -1126,7 +1126,7 @@ const SONGS = [
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "The opening vi-ii-V-I in Ab is well corroborated, but the full 36-bar form is explicitly documented as moving through a circle-of-fifths modulation to multiple keys with an unusual AA2BA3 structure — genuinely too harmonically complex to reduce to one chart here.",
+      "The opening vi-ii-V-I in Ab is well corroborated, but the full 36-bar form is explicitly documented as moving through a circle-of-fifths modulation to multiple keys with an unusual AA2BA3 structure - genuinely too harmonically complex to reduce to one chart here.",
   },
   {
     title: "Blue Bossa",
@@ -1139,7 +1139,7 @@ const SONGS = [
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
     notes:
-      "One of the most consistently-documented jazz standards for beginners — a classic minor ii-V-i, 75% in C minor with a clearly-documented 4-bar modulation to Db in the middle. A real, approachable entry point into jazz minor harmony.",
+      "One of the most consistently-documented jazz standards for beginners - a classic minor ii-V-i, 75% in C minor with a clearly-documented 4-bar modulation to Db in the middle. A real, approachable entry point into jazz minor harmony.",
   },
   {
     title: "There Will Never Be Another You",
@@ -1152,7 +1152,7 @@ const SONGS = [
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "Key (Eb major) is solid, but sources explicitly describe secondary dominants, a 'backdoor' bVII7 progression, and a tritone substitution in the final four bars — genuinely advanced jazz harmony, not simplified here to avoid misrepresenting it.",
+      "Key (Eb major) is solid, but sources explicitly describe secondary dominants, a 'backdoor' bVII7 progression, and a tritone substitution in the final four bars - genuinely advanced jazz harmony, not simplified here to avoid misrepresenting it.",
   },
   {
     title: "Misty",
@@ -1165,7 +1165,7 @@ const SONGS = [
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "Key is solid and well documented, and the bar-1 tonic chord is simple enough — but bars 2 onward include a backdoor ii-V borrowed from the parallel minor, which is real, interesting harmony but too specific to commit to one simplified chart here.",
+      "Key is solid and well documented, and the bar-1 tonic chord is simple enough - but bars 2 onward include a backdoor ii-V borrowed from the parallel minor, which is real, interesting harmony but too specific to commit to one simplified chart here.",
   },
   {
     title: "Take the A Train",
@@ -1178,7 +1178,7 @@ const SONGS = [
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
     notes:
-      "A well-documented, specific opening progression — the classic 'tonic to V7/V, then resolve home via ii-V' trick that gives the tune its distinctive sound. Full tune (AABA, 32 bars) has more harmonic movement in the B section not covered here.",
+      "A well-documented, specific opening progression - the classic 'tonic to V7/V, then resolve home via ii-V' trick that gives the tune its distinctive sound. Full tune (AABA, 32 bars) has more harmonic movement in the B section not covered here.",
   },
   {
     title: "So What",
@@ -1191,7 +1191,7 @@ const SONGS = [
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
     notes:
-      "One of the most famous and simplest-harmonically jazz standards ever recorded — foundational to modal jazz specifically because it reduces an entire 32-bar form to two chords. An excellent, well-documented entry point for the pentatonic-improvisation lesson.",
+      "One of the most famous and simplest-harmonically jazz standards ever recorded - foundational to modal jazz specifically because it reduces an entire 32-bar form to two chords. An excellent, well-documented entry point for the pentatonic-improvisation lesson.",
   },
   {
     title: "Stella by Starlight",
@@ -1204,7 +1204,7 @@ const SONGS = [
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "Sources explicitly describe this tune's harmony as 'not very straightforward,' with non-diatonic chords and minor ii-V progressions that don't resolve conventionally — and note that the commonly-played changes today have evolved significantly from the original film score through later recordings by Miles Davis, Bill Evans, and others. Too genuinely disputed for one confident beginner chart.",
+      "Sources explicitly describe this tune's harmony as 'not very straightforward,' with non-diatonic chords and minor ii-V progressions that don't resolve conventionally - and note that the commonly-played changes today have evolved significantly from the original film score through later recordings by Miles Davis, Bill Evans, and others. Too genuinely disputed for one confident beginner chart.",
   },
   {
     title: "Blue Monk",
@@ -1217,7 +1217,7 @@ const SONGS = [
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
     notes:
-      "The 12-bar blues FORM in Bb is well documented and confirmed. The chords shown are the standard generic 12-bar-blues changes, not Monk's own famously idiosyncratic chord substitutions and voicings on his recordings — those are real but not captured in this simplified beginner version, flagged honestly rather than presented as Monk's exact harmony.",
+      "The 12-bar blues FORM in Bb is well documented and confirmed. The chords shown are the standard generic 12-bar-blues changes, not Monk's own famously idiosyncratic chord substitutions and voicings on his recordings - those are real but not captured in this simplified beginner version, flagged honestly rather than presented as Monk's exact harmony.",
   },
   {
     title: "My Funny Valentine",
@@ -1226,7 +1226,7 @@ const SONGS = [
     popularityRank: 83,
     key: "C minor",
     chords: ["Cm", "CmMaj7", "Cm7", "Cm6"],
-    degreeSequence: "i - i(maj7) - i7 - i6 (the 'minor line cliché' — a descending chromatic line C-B-Bb-A)",
+    degreeSequence: "i - i(maj7) - i7 - i6 (the 'minor line cliché' - a descending chromatic line C-B-Bb-A)",
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
     notes:
@@ -1243,7 +1243,7 @@ const SONGS = [
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "Only one real source with specific chord detail was found (Am-Dm9-E+ for the intro, with a ii-V-i in A minor recurring through the tune) — not independently cross-confirmed by a second source with matching specificity, so flagged rather than presented as solid, per this project's two-source standard.",
+      "Only one real source with specific chord detail was found (Am-Dm9-E+ for the intro, with a ii-V-i in A minor recurring through the tune) - not independently cross-confirmed by a second source with matching specificity, so flagged rather than presented as solid, per this project's two-source standard.",
   },
 
   // --- Third batch: a church-hymn request, a title correction batch, ---
@@ -1260,7 +1260,7 @@ const SONGS = [
     oneFiveSixFourMatch: "variant",
     fourChordOrderFamily: "C",
     notes:
-      "The classic, nearly-universal arrangement of this hymn — same I-vi-IV-V family as Lesson 4 and Perfect. Public domain (1779 text; the tune 'New Britain' predates any modern copyright by well over a century).",
+      "The classic, nearly-universal arrangement of this hymn - same I-vi-IV-V family as Lesson 4 and Perfect. Public domain (1779 text; the tune 'New Britain' predates any modern copyright by well over a century).",
   },
   {
     title: "When I Was Your Man",
@@ -1282,11 +1282,11 @@ const SONGS = [
     popularityRank: 87,
     key: "E minor",
     chords: ["C", "D", "D7", "Bm", "Em"],
-    degreeSequence: "needs verification — see notes",
+    degreeSequence: "needs verification - see notes",
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "Only one source with real chord specificity was found (intro C-D-D7-Bm-Em, chorus built on C-D-D7/G-Em) — not independently cross-confirmed by a second source with matching detail, so flagged per this project's two-source standard despite looking plausible.",
+      "Only one source with real chord specificity was found (intro C-D-D7-Bm-Em, chorus built on C-D-D7/G-Em) - not independently cross-confirmed by a second source with matching detail, so flagged per this project's two-source standard despite looking plausible.",
   },
   {
     title: "Can't Help Falling in Love",
@@ -1299,7 +1299,7 @@ const SONGS = [
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
     notes:
-      "Verse progression (C-Em-Am-F) is consistently documented across sources, though the exact key varies by recording/version (studio 1961 vs. 1968 vs. 1973 performances differ) — normal for a 60+ year old standard. The bridge uses different, more complex chords (Em7, Bm11, B11b9, A7) not covered here.",
+      "Verse progression (C-Em-Am-F) is consistently documented across sources, though the exact key varies by recording/version (studio 1961 vs. 1968 vs. 1973 performances differ) - normal for a 60+ year old standard. The bridge uses different, more complex chords (Em7, Bm11, B11b9, A7) not covered here.",
   },
   {
     title: "Say You Won't Let Go",
@@ -1311,7 +1311,7 @@ const SONGS = [
     degreeSequence: "I - V - vi - IV",
     confidence: "confirmed",
     oneFiveSixFourMatch: "exact",
-    notes: "Explicitly documented as G-D-Em-C (sometimes Em7) throughout — the exact Lesson 1 shape.",
+    notes: "Explicitly documented as G-D-Em-C (sometimes Em7) throughout - the exact Lesson 1 shape.",
   },
   {
     title: "Die for You",
@@ -1324,7 +1324,7 @@ const SONGS = [
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "Sources give three materially different chord sets (Am-Bb-Dm-Gm; Cmaj7-Dm9-F6 for intro with Fmaj7-Fm6-Cmaj7-Asus2-Dm7-Fm6 for pre-chorus; and an entirely separate G-F#m-Bm-Em reading, possibly a different transposition or a different section) — genuinely too inconsistent to present one confident chart.",
+      "Sources give three materially different chord sets (Am-Bb-Dm-Gm; Cmaj7-Dm9-F6 for intro with Fmaj7-Fm6-Cmaj7-Asus2-Dm7-Fm6 for pre-chorus; and an entirely separate G-F#m-Bm-Em reading, possibly a different transposition or a different section) - genuinely too inconsistent to present one confident chart.",
   },
   {
     title: "All of Me",
@@ -1337,7 +1337,7 @@ const SONGS = [
     confidence: "confirmed",
     oneFiveSixFourMatch: "exact",
     notes:
-      "Verse is explicitly documented as a vi-IV-I-V progression (Fm-Db-Ab-Eb) — re-derived its chord-to-chord adjacency by hand and confirmed it's the identical edge set to Lesson 1's loop, just starting at a different point in the cycle. A genuine exact match.",
+      "Verse is explicitly documented as a vi-IV-I-V progression (Fm-Db-Ab-Eb) - re-derived its chord-to-chord adjacency by hand and confirmed it's the identical edge set to Lesson 1's loop, just starting at a different point in the cycle. A genuine exact match.",
   },
   {
     title: "Just the Way You Are",
@@ -1366,7 +1366,7 @@ const SONGS = [
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "Sources agree the intro is Bmaj-C#m-G#m-E-F#-D#m, but give two materially different verse/chorus chord sets (F-Dm-C-G vs. E-C#m-B-A) with no clear resolution of which is correct — plus the song genuinely shifts through related keys/modes across its 9 minutes. Too inconsistent for one confident chart.",
+      "Sources agree the intro is Bmaj-C#m-G#m-E-F#-D#m, but give two materially different verse/chorus chord sets (F-Dm-C-G vs. E-C#m-B-A) with no clear resolution of which is correct - plus the song genuinely shifts through related keys/modes across its 9 minutes. Too inconsistent for one confident chart.",
   },
   {
     title: "Sweet Child O' Mine",
@@ -1375,11 +1375,11 @@ const SONGS = [
     popularityRank: 94,
     key: "D major shapes (the recording sounds in Db: guitars tuned down a half step)",
     chords: ["D", "C", "G", "D"],
-    degreeSequence: "intro: I-VII-IV-I (borrowed VII, not fully diatonic) — see notes",
+    degreeSequence: "intro: I-VII-IV-I (borrowed VII, not fully diatonic) - see notes",
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
     notes:
-      "Intro riff (D-C-G) and chorus (G-D-Am-C) are consistently documented, but include a borrowed/non-diatonic chord (C major, the bVII, is outside D major's own key) — common in rock but not reducible to a clean roman-numeral analysis, so degrees are described rather than forced into a false-precision roman numeral reading.",
+      "Intro riff (D-C-G) and chorus (G-D-Am-C) are consistently documented, but include a borrowed/non-diatonic chord (C major, the bVII, is outside D major's own key) - common in rock but not reducible to a clean roman-numeral analysis, so degrees are described rather than forced into a false-precision roman numeral reading.",
   },
   {
     title: "Hotel California",
@@ -1392,7 +1392,7 @@ const SONGS = [
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
     notes:
-      "One of the most consistently-documented chord progressions in rock — an 8-chord loop, not a simple 4-chord pattern, deliberately mixing minor-key and parallel-major-borrowed chords for its distinctive, unsettled color.",
+      "One of the most consistently-documented chord progressions in rock - an 8-chord loop, not a simple 4-chord pattern, deliberately mixing minor-key and parallel-major-borrowed chords for its distinctive, unsettled color.",
   },
   {
     title: "Summer of '69",
@@ -1404,20 +1404,20 @@ const SONGS = [
     degreeSequence: "I - V - vi - IV",
     confidence: "confirmed",
     oneFiveSixFourMatch: "exact",
-    notes: "Explicitly documented as an I-V-vi-IV verse progression (A-E-F#m-D) — the exact Lesson 1 shape.",
+    notes: "Explicitly documented as an I-V-vi-IV verse progression (A-E-F#m-D) - the exact Lesson 1 shape.",
   },
   {
     title: "Make You Feel My Love",
     artist: "Adele (originally Bob Dylan)",
     genre: "Pop Ballad",
     popularityRank: 97,
-    key: "disputed — varies by version, see notes",
+    key: "disputed - varies by version, see notes",
     chords: ["C", "G/B", "Bb", "F/A", "Fm/Ab", "C/G", "D7", "G7"],
     degreeSequence: "needs verification",
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "Sources give several materially different chord sets (D-A-Bm-G; G-Em-C-D/G-Em-D-D7; C-G-Am-F), most likely reflecting real differences between Dylan's original and Adele's cover and various transposed teaching versions — too inconsistent to single out one as 'the' Adele chart without a source that specifically confirms which version it's transcribing.",
+      "Sources give several materially different chord sets (D-A-Bm-G; G-Em-C-D/G-Em-D-D7; C-G-Am-F), most likely reflecting real differences between Dylan's original and Adele's cover and various transposed teaching versions - too inconsistent to single out one as 'the' Adele chart without a source that specifically confirms which version it's transcribing.",
   },
   {
     title: "Set Fire to the Rain",
@@ -1430,7 +1430,7 @@ const SONGS = [
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
     notes:
-      "A detailed, internally-consistent source gives verse (i-III-VII-VI) and chorus (Dm-F-C-Gm, using the natural-minor iv) progressions — a real minor-key loop, not a 1-5-6-4 match.",
+      "A detailed, internally-consistent source gives verse (i-III-VII-VI) and chorus (Dm-F-C-Gm, using the natural-minor iv) progressions - a real minor-key loop, not a 1-5-6-4 match.",
   },
   {
     title: "Somebody's Me",
@@ -1442,20 +1442,20 @@ const SONGS = [
     degreeSequence: "I - V - IV (3-chord loop, no vi)",
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
-    notes: "A simple three-chord loop built around Ab major — no minor chord in the main progression.",
+    notes: "A simple three-chord loop built around Ab major - no minor chord in the main progression.",
   },
   {
     title: "Still D.R.E.",
     artist: "Dr. Dre ft. Snoop Dogg",
     genre: "Hip-Hop",
     popularityRank: 100,
-    key: "disputed — see notes",
+    key: "disputed - see notes",
     chords: ["Am", "Bm7b5", "Esus4"],
     degreeSequence: "needs verification",
     confidence: "needs-verification",
     oneFiveSixFourMatch: false,
     notes:
-      "Item 44 re-check: still genuinely disputed after fresh research. Several 'how to play on piano' results sharing identical text (syndicated/mirrored across different domains, not independent) converge on A minor (all-white-keys), but other distinct sources describe a C major I-V-vi-IV reading or a G-major-bass intro instead — real disagreement between actually-different sources, not resolved by finding more mirrors of the same article. Reported honestly rather than picking one arbitrarily.",
+      "Item 44 re-check: still genuinely disputed after fresh research. Several 'how to play on piano' results sharing identical text (syndicated/mirrored across different domains, not independent) converge on A minor (all-white-keys), but other distinct sources describe a C major I-V-vi-IV reading or a G-major-bass intro instead - real disagreement between actually-different sources, not resolved by finding more mirrors of the same article. Reported honestly rather than picking one arbitrarily.",
   },
   {
     title: "25 Minutes",
@@ -1464,10 +1464,10 @@ const SONGS = [
     popularityRank: 101,
     key: "G major (original key F#, commonly taught/played in G)",
     chords: ["G", "D", "Em", "Bm", "C", "A", "C9", "F"],
-    degreeSequence: "uses 8 chords across the song — richer than a simple 4-chord loop",
+    degreeSequence: "uses 8 chords across the song - richer than a simple 4-chord loop",
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
-    notes: "A real, well-documented 8-chord arrangement in G major — too rich to reduce to one 4-chord pattern.",
+    notes: "A real, well-documented 8-chord arrangement in G major - too rich to reduce to one 4-chord pattern.",
   },
   {
     title: "Someday",
@@ -1480,13 +1480,13 @@ const SONGS = [
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
     notes:
-      "Item 44 re-verification: real chord/tab data found this pass (the song-titled 'Michael Learns to Rock' and not the unrelated same-titled songs by other artists that an earlier search had returned instead) — Bm-G-D-A repeating, with Em appearing later in the progression, cross-checked across two independent tab sources (Ultimate Guitar, Chordu). Not the same 4-chord family as Lesson 1 (starts on vi, not I).",
+      "Item 44 re-verification: real chord/tab data found this pass (the song-titled 'Michael Learns to Rock' and not the unrelated same-titled songs by other artists that an earlier search had returned instead) - Bm-G-D-A repeating, with Em appearing later in the progression, cross-checked across two independent tab sources (Ultimate Guitar, Chordu). Not the same 4-chord family as Lesson 1 (starts on vi, not I).",
   },
   {
     // Item 39: independently researched and cross-checked across
     // multiple sources (a UkuTabs-style chord chart, a separate
     // "Creep progression" reference discussing this exact song, and a
-    // third general chord-chart result) — all agree on the same chord
+    // third general chord-chart result) - all agree on the same chord
     // set and all independently identify it as using the famous
     // "Creep" borrowed-chord progression (I-III7-IV-iv in A major,
     // the same trick Radiohead's "Creep" uses in G), which is also a
@@ -1499,14 +1499,14 @@ const SONGS = [
     popularityRank: 103,
     key: "A major",
     chords: ["Amaj7", "C#7", "D", "Dm"],
-    degreeSequence: "I(maj7) - III7 - IV - iv (the \"Creep progression\" — a borrowed major III and minor iv)",
+    degreeSequence: "I(maj7) - III7 - IV - iv (the \"Creep progression\" - a borrowed major III and minor iv)",
     confidence: "confirmed",
     oneFiveSixFourMatch: false,
     notes:
-      "Uses the same borrowed-chord trick as Radiohead's 'Creep' (a major chord on the 3rd degree, then the 4th degree played both major and minor) — multiple independent sources agree on this exact chord set (Amaj7, Db7, D, Dm) and independently name the Creep-progression connection, not just one site's chart copied around.",
+      "Uses the same borrowed-chord trick as Radiohead's 'Creep' (a major chord on the 3rd degree, then the 4th degree played both major and minor) - multiple independent sources agree on this exact chord set (Amaj7, Db7, D, Dm) and independently name the Creep-progression connection, not just one site's chart copied around.",
   },
 
-  // ===== Item 60: 32 more songs — 12 easy (incl. two Chet Baker, simplified),
+  // ===== Item 60: 32 more songs - 12 easy (incl. two Chet Baker, simplified),
   // 10 intermediate, 10 advanced (incl. Tom and Jerry's concert pieces). =====
   {
     "title": "Heart and Soul",
@@ -1524,7 +1524,7 @@ const SONGS = [
     "confidence": "confirmed",
     "oneFiveSixFourMatch": "variant",
     "fourChordOrderFamily": "C",
-    "notes": "The famous two-person piano duet loop — one player loops these four chords low, the other plays the tune on top. Same four chords as Lesson 1, in the I-vi-IV-V order Lesson 4 teaches."
+    "notes": "The famous two-person piano duet loop - one player loops these four chords low, the other plays the tune on top. Same four chords as Lesson 1, in the I-vi-IV-V order Lesson 4 teaches."
   },
   {
     "title": "Hallelujah",
@@ -1585,7 +1585,7 @@ const SONGS = [
     "confidence": "confirmed",
     "oneFiveSixFourMatch": false,
     "difficulty": "Beginner",
-    "notes": "The melody is in the public domain in the US. Three chords — C, F and G7 (plus C7 to lead into F) — carry the whole song."
+    "notes": "The melody is in the public domain in the US. Three chords - C, F and G7 (plus C7 to lead into F) - carry the whole song."
   },
   {
     "title": "Twinkle Twinkle Little Star",
@@ -1604,7 +1604,7 @@ const SONGS = [
     "confidence": "confirmed",
     "oneFiveSixFourMatch": false,
     "difficulty": "Beginner",
-    "notes": "The 18th-century French tune 'Ah! vous dirai-je, maman' — the same melody as the alphabet song. Public domain."
+    "notes": "The 18th-century French tune 'Ah! vous dirai-je, maman' - the same melody as the alphabet song. Public domain."
   },
   {
     "title": "Brown Eyed Girl",
@@ -1622,7 +1622,7 @@ const SONGS = [
     "confidence": "confirmed",
     "oneFiveSixFourMatch": false,
     "difficulty": "Beginner",
-    "notes": "A bright three-chord loop — G, C and D — through most of the song."
+    "notes": "A bright three-chord loop - G, C and D - through most of the song."
   },
   {
     "title": "Three Little Birds",
@@ -1703,7 +1703,7 @@ const SONGS = [
   },
   {
     "title": "Autumn Leaves (Chet Baker, simplified)",
-    "artist": "Joseph Kosma — as recorded by Chet Baker & Paul Desmond (1974)",
+    "artist": "Joseph Kosma - as recorded by Chet Baker & Paul Desmond (1974)",
     "genre": "Jazz (simplified)",
     "popularityRank": 114,
     "key": "E minor / G major",
@@ -1724,7 +1724,7 @@ const SONGS = [
   },
   {
     "title": "My Funny Valentine (easy version)",
-    "artist": "Rodgers & Hart — Chet Baker's signature song (1954)",
+    "artist": "Rodgers & Hart - Chet Baker's signature song (1954)",
     "genre": "Jazz (simplified)",
     "popularityRank": 115,
     "key": "C minor",
@@ -1755,7 +1755,7 @@ const SONGS = [
     "confidence": "confirmed",
     "oneFiveSixFourMatch": false,
     "difficulty": "Intermediate",
-    "notes": "The famous rolling piano riff is broken chords over these three — one of the most recognizable piano parts in modern rock. Three flats, so lots of black keys."
+    "notes": "The famous rolling piano riff is broken chords over these three - one of the most recognizable piano parts in modern rock. Three flats, so lots of black keys."
   },
   {
     "title": "Piano Man",
@@ -1777,7 +1777,7 @@ const SONGS = [
     "confidence": "confirmed",
     "oneFiveSixFourMatch": false,
     "difficulty": "Intermediate",
-    "notes": "A walking-down bass line (C - B - A - G - F - E - D) under the chords — the slash chords show the bass note. In 3/4 (waltz) time."
+    "notes": "A walking-down bass line (C - B - A - G - F - E - D) under the chords - the slash chords show the bass note. In 3/4 (waltz) time."
   },
   {
     "title": "Hello",
@@ -1849,7 +1849,7 @@ const SONGS = [
     "confidence": "confirmed",
     "oneFiveSixFourMatch": "exact",
     "difficulty": "Intermediate",
-    "notes": "One of the most-learned piano pieces online. The same four chords as Lesson 1 (I-V-vi-IV), in A — but as a full flowing piano piece, so it's Intermediate."
+    "notes": "One of the most-learned piano pieces online. The same four chords as Lesson 1 (I-V-vi-IV), in A - but as a full flowing piano piece, so it's Intermediate."
   },
   {
     "title": "Radioactive",
@@ -1885,7 +1885,7 @@ const SONGS = [
     "confidence": "confirmed",
     "oneFiveSixFourMatch": false,
     "difficulty": "Intermediate",
-    "notes": "The famous bass line stays rooted on F# while the chords change on top — the '/F#' means F# stays in the bass."
+    "notes": "The famous bass line stays rooted on F# while the chords change on top - the '/F#' means F# stays in the bass."
   },
   {
     "title": "Sweet Dreams (Are Made of This)",
@@ -1923,11 +1923,11 @@ const SONGS = [
     "degreeSequence": "vi7 - ii7 - V7 - Imaj7 - IVmaj7 - vii7b5 - V7/vi - vi7",
     "confidence": "confirmed",
     "oneFiveSixFourMatch": false,
-    "notes": "A textbook 'circle of fifths' progression — every chord's root falls by a fifth to the next. Made famous by Frank Sinatra (1964)."
+    "notes": "A textbook 'circle of fifths' progression - every chord's root falls by a fifth to the next. Made famous by Frank Sinatra (1964)."
   },
   {
     "title": "Take Five",
-    "artist": "Paul Desmond — Dave Brubeck Quartet (1959)",
+    "artist": "Paul Desmond - Dave Brubeck Quartet (1959)",
     "genre": "Jazz Standard",
     "popularityRank": 127,
     "key": "Eb minor",
@@ -1938,7 +1938,7 @@ const SONGS = [
     "degreeSequence": "i - v7 (vamp)",
     "confidence": "confirmed",
     "oneFiveSixFourMatch": false,
-    "notes": "In 5/4 time — five beats per bar, the whole point of the piece. The piano vamps between Ebm and Bbm7 under the sax melody."
+    "notes": "In 5/4 time - five beats per bar, the whole point of the piece. The piano vamps between Ebm and Bbm7 under the sax melody."
   },
   {
     "title": "All of Me (jazz standard)",
@@ -1960,7 +1960,7 @@ const SONGS = [
     "degreeSequence": "I - III7 - VI7 - ii - III7 - vi - II7 - ii7 - V7",
     "confidence": "confirmed",
     "oneFiveSixFourMatch": false,
-    "notes": "Not the John Legend song — the 1931 standard. Famous for its chain of dominant 7th chords (E7 → A7 → Dm, D7 → G7 → C)."
+    "notes": "Not the John Legend song - the 1931 standard. Famous for its chain of dominant 7th chords (E7 → A7 → Dm, D7 → G7 → C)."
   },
   {
     "title": "Summertime",
@@ -2006,7 +2006,7 @@ const SONGS = [
     "degreeSequence": "ii7 - V7 (×2) - ii7/ii - V7/ii (×2) - ii7/V - V7/V - (chromatic ii-V) - Imaj7",
     "confidence": "confirmed",
     "oneFiveSixFourMatch": false,
-    "notes": "The A section is a chain of ii-V pairs, each one a step lower — the classic jazz 'ii-V' workout."
+    "notes": "The A section is a chain of ii-V pairs, each one a step lower - the classic jazz 'ii-V' workout."
   },
   {
     "title": "Cantaloupe Island",
@@ -2061,7 +2061,7 @@ const SONGS = [
     "confidence": "confirmed",
     "oneFiveSixFourMatch": false,
     "advanced": true,
-    "notes": "Public domain — the first 8 bars, one chord per bar, each played as the same broken-chord pattern. Taught note by note in the Bach lesson."
+    "notes": "Public domain - the first 8 bars, one chord per bar, each played as the same broken-chord pattern. Taught note by note in the Bach lesson."
   },
   {
     "title": "The Blue Danube (waltz)",
@@ -2077,7 +2077,7 @@ const SONGS = [
     "confidence": "needs-verification",
     "oneFiveSixFourMatch": false,
     "advanced": true,
-    "notes": "Strauss's most famous waltz — Tom and Jerry's Oscar-winning 'Johann Mouse' (1953) is all about Strauss's waltzes, played by concert pianist Jakob Gimpel (which waltzes it uses isn't something we've confirmed). Only the main theme's two core chords are given here (it begins over D major and moves to A7); the full waltz goes much further."
+    "notes": "Strauss's most famous waltz - Tom and Jerry's Oscar-winning 'Johann Mouse' (1953) is all about Strauss's waltzes, played by concert pianist Jakob Gimpel (which waltzes it uses isn't something we've confirmed). Only the main theme's two core chords are given here (it begins over D major and moves to A7); the full waltz goes much further."
   },
   {
     "title": "Hungarian Rhapsody No. 2",
@@ -2093,7 +2093,7 @@ const SONGS = [
     "confidence": "needs-verification",
     "oneFiveSixFourMatch": false,
     "advanced": true,
-    "notes": "The piece Tom plays in Tom and Jerry's Oscar-winning 'The Cat Concerto' (1947) — and Bugs Bunny in 'Rhapsody Rabbit'. A virtuoso showpiece: a slow, dramatic 'lassan' in C# minor, then a wild, fast 'friska' that ends in F# major. Only those two home chords are given here — the real harmony is far richer."
+    "notes": "The piece Tom plays in Tom and Jerry's Oscar-winning 'The Cat Concerto' (1947) - and Bugs Bunny in 'Rhapsody Rabbit'. A virtuoso showpiece: a slow, dramatic 'lassan' in C# minor, then a wild, fast 'friska' that ends in F# major. Only those two home chords are given here - the real harmony is far richer."
   },
   {
     title: "Something Just Like This",
@@ -2119,23 +2119,23 @@ const ONE_FIVE_SIX_FOUR_SONGS = SONGS.filter((s) => s.oneFiveSixFourMatch && !s.
 // --- Full song structures (Practice tab "play the whole song" mode) ----
 //
 // Most of the 73 entries above only have a single 4-chord loop recorded
-// — real, but a simplification (the "main riff," not the whole
+// - real, but a simplification (the "main riff," not the whole
 // arrangement). For a subset of the already-highest-confidence songs,
 // this maps the actual section-by-section structure (Intro, Verse,
 // Chorus, Bridge, etc.) with each section's own chord sequence, so the
 // Practice tab can play/scroll through an entire song once instead of
 // just looping the main 4 chords forever.
 //
-// Scope, stated honestly: this is NOT done for all 73 songs — that
+// Scope, stated honestly: this is NOT done for all 73 songs - that
 // would be a much bigger research lift than the simple-loop version,
 // and rushing it would mean guessing bridge/pre-chorus chords without
 // real confidence. Covered here: 12 of the highest-confidence,
 // best-documented songs, prioritizing ones with genuinely well-sourced
 // section detail (not just "it's the same 4 chords the whole time"
 // restated as fake "structure"). Bar counts are approximate (rounded
-// to musically typical phrase lengths — 4 or 8 bars), not pulled from
+// to musically typical phrase lengths - 4 or 8 bars), not pulled from
 // a measure-by-measure transcription. No lyrics anywhere, per the
-// product's legal scope — sections are labeled structurally only
+// product's legal scope - sections are labeled structurally only
 // ("Chorus," "Bridge"), never with lyric text.
 //
 // Songs NOT in this map fall back to the existing simple-loop Practice
@@ -4598,7 +4598,7 @@ const SONG_STRUCTURES = {
     { section: "Chorus 1", chords: ["Am", "G", "F", "C", "C", "G", "F", "C"], bars: 8 },
     { section: "Verse 2", chords: ["C", "G", "Am", "F", "C", "G", "F", "C"], bars: 8 },
     { section: "Chorus 2", chords: ["Am", "G", "F", "C", "C", "G", "F", "C"], bars: 8 },
-    { section: "Bridge / Solo", chords: ["C", "G", "Am", "F"], bars: 8, note: "Simplified to the core loop here — some recordings add extra turnaround chords in this section that aren't confidently documented across sources." },
+    { section: "Bridge / Solo", chords: ["C", "G", "Am", "F"], bars: 8, note: "Simplified to the core loop here - some recordings add extra turnaround chords in this section that aren't confidently documented across sources." },
     { section: "Final Chorus", chords: ["Am", "G", "F", "C", "C", "G", "F", "C"], bars: 8 },
     { section: "Outro", chords: ["C", "G", "Am", "F", "C"], bars: 5 },
   ],
@@ -4607,7 +4607,7 @@ const SONG_STRUCTURES = {
     { section: "Verse 1", chords: ["C", "G", "Am", "F"], bars: 8 },
     { section: "Chorus 1", chords: ["C", "G", "Am", "F"], bars: 8 },
     { section: "Verse 2", chords: ["C", "G", "Am", "F"], bars: 8 },
-    { section: "Chorus 2 (extended, fades out)", chords: ["C", "G", "Am", "F"], bars: 16, note: "Sources agree this song never deviates from the one loop — no bridge, no key change, for the entire track." },
+    { section: "Chorus 2 (extended, fades out)", chords: ["C", "G", "Am", "F"], bars: 16, note: "Sources agree this song never deviates from the one loop - no bridge, no key change, for the entire track." },
   ],
   "Love Story": [
     { section: "Intro", chords: ["D", "A", "Bm", "G"], bars: 4 },
@@ -4616,7 +4616,7 @@ const SONG_STRUCTURES = {
     { section: "Verse 2", chords: ["D", "A", "Bm", "G"], bars: 8 },
     { section: "Chorus 2", chords: ["D", "A", "Bm", "G"], bars: 8 },
     { section: "Bridge", chords: ["Bm", "G", "D", "A"], bars: 8 },
-    { section: "Final Chorus (key change to E major)", chords: ["E", "B", "C#m", "A"], bars: 6, note: "The famous 'Marry me, Juliet' moment — the whole song steps up a whole tone from D major to E major." },
+    { section: "Final Chorus (key change to E major)", chords: ["E", "B", "C#m", "A"], bars: 6, note: "The famous 'Marry me, Juliet' moment - the whole song steps up a whole tone from D major to E major." },
   ],
   "Perfect": [
     { section: "Intro", chords: ["G", "Em", "C", "D"], bars: 4 },
@@ -4624,7 +4624,7 @@ const SONG_STRUCTURES = {
     { section: "Chorus 1", chords: ["Em", "C", "G", "D"], bars: 8 },
     { section: "Verse 2", chords: ["G", "Em", "C", "D"], bars: 8 },
     { section: "Chorus 2", chords: ["Em", "C", "G", "D"], bars: 8 },
-    { section: "Bridge", chords: ["G", "Em", "C", "D"], bars: 8, note: "Sources explicitly describe this progression looping 'the entire way through — every verse, every chorus, every bridge' with no deviation." },
+    { section: "Bridge", chords: ["G", "Em", "C", "D"], bars: 8, note: "Sources explicitly describe this progression looping 'the entire way through - every verse, every chorus, every bridge' with no deviation." },
     { section: "Final Chorus", chords: ["Em", "C", "G", "D"], bars: 8 },
   ],
   "Photograph": [
@@ -4632,22 +4632,22 @@ const SONG_STRUCTURES = {
     { section: "Verse 1", chords: ["C", "Am", "G", "F"], bars: 8 },
     { section: "Chorus 1", chords: ["Am", "F", "C", "G"], bars: 8 },
     { section: "Verse 2", chords: ["C", "Am", "G", "F"], bars: 8 },
-    { section: "Chorus 2", chords: ["Am", "F", "C", "G"], bars: 8, note: "Sources describe this as 'four chords for the entire song' — no bridge deviation documented." },
+    { section: "Chorus 2", chords: ["Am", "F", "C", "G"], bars: 8, note: "Sources describe this as 'four chords for the entire song' - no bridge deviation documented." },
   ],
   "With or Without You": [
     { section: "Intro", chords: ["D", "A", "Bm", "G"], bars: 8 },
     { section: "Verse 1", chords: ["D", "A", "Bm", "G"], bars: 8 },
     { section: "Verse 2", chords: ["D", "A", "Bm", "G"], bars: 8 },
     { section: "Chorus", chords: ["D", "A", "Bm", "G"], bars: 8 },
-    { section: "Bridge / Climax", chords: ["D", "A", "Bm", "G"], bars: 8, note: "Sources are explicit that this progression 'repeats for nearly five minutes without a single deviation' — the climax is a dynamic/vocal change, not a chord change." },
+    { section: "Bridge / Climax", chords: ["D", "A", "Bm", "G"], bars: 8, note: "Sources are explicit that this progression 'repeats for nearly five minutes without a single deviation' - the climax is a dynamic/vocal change, not a chord change." },
     { section: "Outro", chords: ["D", "A", "Bm", "G"], bars: 4 },
   ],
   "I'm Yours": [
     { section: "Intro", chords: ["B", "F#", "G#m", "E"], bars: 4 },
     { section: "Verse 1", chords: ["B", "F#", "G#m", "E"], bars: 8 },
-    { section: "Verse 2", chords: ["B", "F#", "G#m", "E"], bars: 8, note: "The 'open up your mind' verse — same four chords as verse 1." },
+    { section: "Verse 2", chords: ["B", "F#", "G#m", "E"], bars: 8, note: "The 'open up your mind' verse - same four chords as verse 1." },
     { section: "Chorus", chords: ["B", "F#", "G#m", "E"], bars: 8 },
-    { section: "Bridge", chords: ["B", "D#m", "G#m", "F#", "E", "C#7"], bars: 6, note: "The one section that steps outside the core four chords — adds D#m and a turnaround C#7. (Item 57: transposed from the guitar capo-4 G shapes to the real key, B, so it matches this song's key and chord list.)" },
+    { section: "Bridge", chords: ["B", "D#m", "G#m", "F#", "E", "C#7"], bars: 6, note: "The one section that steps outside the core four chords - adds D#m and a turnaround C#7. (Item 57: transposed from the guitar capo-4 G shapes to the real key, B, so it matches this song's key and chord list.)" },
     { section: "Final Chorus", chords: ["B", "F#", "G#m", "E"], bars: 8 },
   ],
   "Stand By Me": [
@@ -4672,7 +4672,7 @@ const SONG_STRUCTURES = {
     { section: "Pre-Chorus 1", chords: ["C", "C", "G", "G"], bars: 4, note: "Pre-choruses alternate IV and I before a short turnaround." },
     { section: "Verse 3", chords: ["G", "D", "Em", "C", "G", "D", "Bm", "C"], bars: 8 },
     { section: "Pre-Chorus 2", chords: ["C", "C", "G", "G"], bars: 4 },
-    { section: "Chorus (until fade)", chords: ["G", "D", "Em", "C", "G", "D", "Bm", "C"], bars: 8, note: "Famously, the chorus doesn't arrive until the song is nearly finished — two verses and two pre-choruses come first." },
+    { section: "Chorus (until fade)", chords: ["G", "D", "Em", "C", "G", "D", "Bm", "C"], bars: 8, note: "Famously, the chorus doesn't arrive until the song is nearly finished - two verses and two pre-choruses come first." },
   ],
   "Riptide": [
     { section: "Intro", chords: ["Am", "G", "C"], bars: 4 },
@@ -4695,18 +4695,18 @@ const SONG_STRUCTURES = {
 // --- Difficulty tiers (Beginner / Intermediate / Advanced) --------------
 // Computed from the chord data already researched and verified above,
 // not assigned by genre-name vibes (genre only enters it once, for jazz
-// standards specifically — see below — because that category's harmonic
+// standards specifically - see below - because that category's harmonic
 // complexity was independently confirmed while researching every one of
 // those songs, not assumed from the label "jazz").
 //
-//   Beginner     — a confirmed, simple 4-chord-family song (an exact or
+//   Beginner     - a confirmed, simple 4-chord-family song (an exact or
 //                  reordered 1-5-6-4 relative). The "G-D-Em-C plays 100
 //                  songs" category this whole app opens with.
-//   Advanced     — a jazz standard (genuinely confirmed harmonically
-//                  complex while researching that whole batch — see
+//   Advanced     - a jazz standard (genuinely confirmed harmonically
+//                  complex while researching that whole batch - see
 //                  THIRD_PARTY_NOTICES/README), or a song explicitly
 //                  marked `advanced` (Bohemian Rhapsody).
-//   Intermediate — everything else: minor-key loops, 7th-chord/8-chord
+//   Intermediate - everything else: minor-key loops, 7th-chord/8-chord
 //                  progressions, and needs-verification songs (if we're
 //                  not even confident enough to call its chords solid,
 //                  it isn't honest to call it Beginner-simple either).
@@ -4720,7 +4720,7 @@ function getDifficulty(song) {
   return "Intermediate";
 }
 
-// Item 60: the optional "World songs" section — popular songs in 10
+// Item 60: the optional "World songs" section - popular songs in 10
 // other languages (world-songs.js), part of the library (Discover,
 // Practice) but taught only in their own skippable lessons at the end.
 SONGS.push(...WORLD_SONGS);

@@ -111,9 +111,9 @@ function grade(id, correct) {
 }
 
 function itemPrompt(it) {
-  if (it.kind === "chord") return `Play the <strong>${it.chord}</strong> chord <span class="hk-honest-note">(any octave — all its notes)</span>`;
+  if (it.kind === "chord") return `Play the <strong>${it.chord}</strong> chord <span class="hk-honest-note">(all its notes, any octave)</span>`;
   if (it.kind === "note") return `Find any <strong>${NOTE_NAMES[it.pc]}</strong> <span class="hk-honest-note">(any octave)</span>`;
-  if (it.kind === "staff") return `Play this note <span class="hk-honest-note">(the exact one shown — ${it.hand === "left" ? "bass" : "treble"} clef)</span>`;
+  if (it.kind === "staff") return `Play this note <span class="hk-honest-note">(this exact note, ${it.hand === "left" ? "bass" : "treble"} clef)</span>`;
   return "Which chord is this? <span class=\"hk-honest-note\">(listen)</span>";
 }
 
@@ -140,8 +140,7 @@ function runDailyReviewSession({ content, controls, kb, mascotSay, onExit, onLes
 
   if (!queue.length) {
     content.innerHTML = mascotSay(`<h3>Nothing to review yet.</h3>
-      <p>Finish your first lesson ("The 4 chords to play 100 songs") and the daily review will start quizzing you
-         on what you've learned.</p>`);
+      <p>Finish your first lesson and we'll quiz you on what you've learned.</p>`);
     controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
     controls.querySelector("#hk-done").addEventListener("click", onExit);
     return;
@@ -149,8 +148,8 @@ function runDailyReviewSession({ content, controls, kb, mascotSay, onExit, onLes
 
   function intro() {
     content.innerHTML = mascotSay(`<h3>🧠 Your 2-minute daily review</h3>
-      <p>Quick-fire questions on things you've already learned — as many as you can in 2 minutes. Things you
-         miss come back sooner; things you know well come back less often.</p>
+      <p>Quick questions on things you've learned, as many as you can in 2 minutes. Ones you miss come
+         back sooner.</p>
       <p class="hk-honest-note">Play on the keys below, your laptop keyboard, or a connected MIDI keyboard.</p>`,
       "assets/mascot-poses/metronome.png");
     controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-go">Start (2:00)</button>`;
@@ -208,7 +207,7 @@ function runDailyReviewSession({ content, controls, kb, mascotSay, onExit, onLes
         kb.highlightChord(n, { letter: current.chord, rootMidi: n[0] });
       } else if (current.kind === "note") kb.highlightChord([60 + current.pc], { letter: NOTE_NAMES[current.pc], rootMidi: 60 + current.pc });
       else if (current.kind === "staff") kb.highlightChord([current.midi], { letter: NOTE_NAMES[current.midi % 12], rootMidi: current.midi });
-      resolve(false, "Here it is — it'll come back again soon.");
+      resolve(false, "Here it is. It'll come back soon.");
     });
 
     if (current.kind === "ear") {
@@ -218,7 +217,7 @@ function runDailyReviewSession({ content, controls, kb, mascotSay, onExit, onLes
       content.querySelector("#hk-ear-again").addEventListener("click", play);
       content.querySelectorAll("[data-ear]").forEach((b) => b.addEventListener("click", () => {
         const ok = b.dataset.ear === current.chord;
-        resolve(ok, ok ? `Yes — ${current.chord}.` : `It was ${current.chord}.`);
+        resolve(ok, ok ? `Yes! ${current.chord}.` : `It was ${current.chord}.`);
       }));
       return;
     }
@@ -226,19 +225,19 @@ function runDailyReviewSession({ content, controls, kb, mascotSay, onExit, onLes
     unsubscribe = onNoteOn((midi) => {
       const pc = ((midi % 12) + 12) % 12;
       if (current.kind === "note") {
-        if (pc === current.pc) resolve(firstTry, firstTry ? `Yes — that's ${NOTE_NAMES[pc]}.` : "Got it (second try).");
-        else { firstTry = false; feedback.textContent = `That's ${NOTE_NAMES[pc]} — try again.`; }
+        if (pc === current.pc) resolve(firstTry, firstTry ? `Yes! That's ${NOTE_NAMES[pc]}.` : "Got it (second try).");
+        else { firstTry = false; feedback.textContent = `That's ${NOTE_NAMES[pc]}. Try again.`; }
       } else if (current.kind === "staff") {
-        if (midi === current.midi) resolve(firstTry, firstTry ? `Yes — ${NOTE_NAMES[pc]}.` : "Got it (second try).");
-        else if (pc === current.midi % 12) { firstTry = false; feedback.textContent = "Right letter — wrong octave. Look at where it sits on the staff."; }
-        else { firstTry = false; feedback.textContent = `That's ${NOTE_NAMES[pc]} — try again.`; }
+        if (midi === current.midi) resolve(firstTry, firstTry ? `Yes! ${NOTE_NAMES[pc]}.` : "Got it (second try).");
+        else if (pc === current.midi % 12) { firstTry = false; feedback.textContent = "Right letter, wrong octave. Check where it sits on the staff."; }
+        else { firstTry = false; feedback.textContent = `That's ${NOTE_NAMES[pc]}. Try again.`; }
       } else {
         const want = new Set(chordSymbolToMidi(current.chord).map((m) => m % 12));
         if (want.has(pc)) {
           pressed.add(pc);
           feedback.textContent = `${[...pressed].map((p) => NOTE_NAMES[p]).join(" + ")}…`;
-          if ([...want].every((p) => pressed.has(p))) resolve(firstTry, firstTry ? `Yes — ${current.chord}.` : "Got it.");
-        } else { firstTry = false; feedback.textContent = `${NOTE_NAMES[pc]} isn't in ${current.chord} — keep going.`; }
+          if ([...want].every((p) => pressed.has(p))) resolve(firstTry, firstTry ? `Yes! ${current.chord}.` : "Got it.");
+        } else { firstTry = false; feedback.textContent = `${NOTE_NAMES[pc]} isn't in ${current.chord}. Keep going.`; }
       }
     });
   }
@@ -259,7 +258,7 @@ function runDailyReviewSession({ content, controls, kb, mascotSay, onExit, onLes
       }
     }
     content.innerHTML = mascotSay(`<h3>Review done: ${score.right} of ${score.total} right.</h3>
-      <p>${score.total && score.right === score.total ? "Perfect — those will come back less often now." : "The ones you missed will show up again soon — that's how they stick."}
+      <p>${score.total && score.right === score.total ? "Perfect! Those will come back less often now." : "The ones you missed will come back soon. That's how they stick."}
          See you tomorrow!</p>`, "assets/mascot-poses/maestro-conducting.png");
     controls.innerHTML = `<button class="hk-btn hk-btn-primary" id="hk-done">Back to lessons</button>`;
     controls.querySelector("#hk-done").addEventListener("click", onExit);

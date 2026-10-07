@@ -15,44 +15,38 @@ const FACTS = [
     photosFirst: true,
     title: "Meet the man who invented the piano! 🎹",
     people: ["cristofori", "cristofori-piano"],
-    text: `About <strong>300 years ago</strong>, in Florence, Italy, a rich prince called <strong>Ferdinando de' Medici</strong> was crazy about music. He hired an instrument maker, <strong>Bartolomeo Cristofori</strong>, to look after his huge collection of instruments.<br><br>
-      Back then the big keyboard was the <strong>harpsichord</strong>. It <em>plucks</em> its strings with tiny picks, so every note comes out the same loudness. Press gently? Same. Bash it? Same! 😴<br><br>
-      Cristofori had a brilliant idea: swap the picks for tiny <strong>hammers</strong> with <strong>leather</strong> on the tips. Press a key, a lever flicks a hammer up, it <em>bonks</em> the string and <strong>bounces straight off</strong> so the string can ring. Press gently → soft. Press hard → LOUD! 💥<br><br>
-      By <strong>1700</strong> the prince's list of instruments included his new invention: a harpsichord "that plays soft and loud" — in Italian, <em>piano e forte</em>. That's where the name <strong>piano</strong> comes from!<br><br>
-      <strong>What did it look like?</strong> Just like a harpsichord: a long wooden box shaped like a wing, on wooden legs, with no metal frame inside. It had only <strong>54 keys</strong> (yours has up to 88) and was much quieter than pianos today.`,
-    footnote: "Only three of Cristofori's pianos survive. The oldest piano in the world, from 1720, is in the Metropolitan Museum of Art in New York (that's it in the photo). Fun twist: hardly anyone cared about his invention at first!",
+    text: `About <strong>300 years ago</strong> in Italy, <strong>Bartolomeo Cristofori</strong> swapped the harpsichord's plucking picks for tiny <strong>hammers</strong>. Now a gentle press played soft, and a hard press played LOUD! 💥<br><br>
+      People called it a keyboard that plays <em>piano e forte</em> ("soft and loud"), and that's where the name <strong>piano</strong> comes from! It had only 4 octaves, about <strong>49 keys</strong>. Yours has up to 88!`,
+    footnote: "Only three of Cristofori's pianos survive. The oldest, from 1720, is in the Metropolitan Museum of Art in New York (that's it in the photo). At first, hardly anyone cared!",
   },
   // --- Under the hood of a grand piano ---
   {
-    title: "Inside a grand piano: what happens when you press a key",
+    title: "What happens when you press a key",
     video: "piano-action",
-    text: `Every key is a <strong>seesaw</strong>! When you push the front of the key down, the back pops up and flicks a <strong>felt hammer</strong> toward the strings.<br><br>
-      Here's the clever part: just before the hammer reaches the string, it gets <strong>let go</strong> and flies the last bit on its own — <em>bonk!</em> — then falls straight back. If it stayed pressed against the string, the string couldn't ring. Piano makers call this trick the <strong>escapement</strong>, because the hammer "escapes".`,
-    footnote: "A concert grand has around 12,000 parts, and most of them live inside these key-and-hammer machines.",
+    text: `Every key is a <strong>seesaw</strong>! Push the front down and the back flicks a <strong>felt hammer</strong> up at the string. Just before it hits, the hammer is let go, so it can <em>bonk!</em> and bounce straight off, letting the string ring: a trick called the <strong>escapement</strong>.`,
+    footnote: "A concert grand has around 12,000 parts, and most of them are in these key-and-hammer machines.",
   },
   {
     title: "Why does the sound stop when you let go?",
-    text: `Sitting on top of the strings are little <strong>felt pads called dampers</strong> — like tiny pillows. When you press a key, its damper lifts up so the string can ring. When you let go, the damper drops back down and <strong>hushes</strong> the string.<br><br>
-      The <strong>right pedal</strong> lifts <em>all</em> the dampers at once — that's why notes keep ringing when you hold it down, like a big echoey cave!`,
+    text: `Little felt pads called <strong>dampers</strong> sit on the strings. Press a key and its damper lifts so the string rings; let go and it drops back to <strong>hush</strong> it. The <strong>right pedal</strong> lifts <em>all</em> the dampers at once, so every note keeps ringing!`,
   },
   {
     title: "How can thin wires be so LOUD?",
-    text: `A string on its own is very quiet — it's too thin to push much air. So underneath the strings is a big, thin wooden board called the <strong>soundboard</strong> (usually spruce). The strings rest on a wooden <strong>bridge</strong> glued to it, and their shaking passes into the board, which wobbles like a giant <strong>drum skin</strong> or a speaker and pushes LOTS of air. That's the sound you hear!`,
+    text: `A string on its own is very quiet. Under the strings is a big, thin wooden board called the <strong>soundboard</strong>. The strings shake it, and it wobbles like a giant <strong>drum skin</strong>, pushing LOTS of air to make the sound you hear!`,
   },
   {
     title: "A piano is holding up 3 elephants",
-    text: `A grand piano has about <strong>230 strings</strong> (most keys have 3 strings, so they're extra loud). Every string is stretched super tight — all together they pull with about <strong>20 tonnes</strong> of force. That's like <strong>three elephants</strong> pulling on the piano!<br><br>
-      Wood alone would bend, so inside every modern piano is a huge <strong>cast-iron frame</strong>, called the <strong>plate</strong> — it's the gold-coloured part you see when you open the lid.`,
+    text: `A grand piano has about <strong>230 strings</strong>, all stretched super tight. Together they pull with about <strong>20 tonnes</strong> of force, like <strong>three elephants</strong>! A huge <strong>cast-iron frame</strong> (the gold-coloured part under the lid) holds it all together.`,
     footnote: "The one-piece iron frame was patented by Alpheus Babcock in 1825 and perfected by Steinway in the 1850s.",
   },
   {
     title: "Why are the low strings so fat?",
-    text: `Low notes need strings that vibrate <strong>slowly</strong>. A heavier string wobbles more slowly, so the bass strings are wrapped in <strong>copper wire</strong> to make them chunky and heavy. The A above Middle C vibrates <strong>440 times every second</strong>; the lowest A only about 27 times!`,
+    text: `Low notes need strings that wobble <strong>slowly</strong>, so the bass strings are wrapped in <strong>copper wire</strong> to make them heavy. The A above Middle C vibrates <strong>440 times a second</strong>. The lowest A vibrates only about 27 times!`,
   },
   {
     title: "The trick that made fast playing possible",
     people: ["erard"],
-    text: `On early pianos, you had to let a key come almost all the way back up before you could play that note again — so super-fast repeated notes were hard. In <strong>1821</strong>, a French inventor, <strong>Sébastien Érard</strong>, built a <strong>double escapement</strong>: an extra set of levers that "re-arms" the hammer while the key is only halfway up. Now you could play the same note again and again, really fast — <em>ratatatat!</em> Almost every grand piano still uses his invention.`,
+    text: `On early pianos, a key had to come almost all the way back up before you could play that note again. In <strong>1821</strong>, <strong>Sébastien Érard</strong> invented the <strong>double escapement</strong>, so you could repeat a note really fast: <em>ratatatat!</em> Almost every grand piano still uses it.`,
     footnote: "Érard's company gave Beethoven a piano in 1803. Beethoven played so hard he often broke strings!",
   },
   // --- Legendary pianists ---
@@ -60,60 +54,60 @@ const FACTS = [
     title: "The first rock star was a pianist",
     people: ["liszt"],
     video: "liszt",
-    text: `About 180 years ago, a pianist called <strong>Franz Liszt</strong> was SO exciting that fans screamed, fainted and fought over his gloves and broken piano strings. A poet named it <strong>"Lisztomania"</strong>. He played so hard that strings snapped and hammers broke in the middle of concerts — sometimes a spare piano waited on stage, just in case!`,
+    text: `About 180 years ago, fans of pianist <strong>Franz Liszt</strong> screamed, fainted and fought over his gloves. People called it <strong>"Lisztomania"</strong>! He played so hard that strings snapped mid-concert, so sometimes a spare piano waited on stage.`,
     footnote: "Players like Liszt (and bigger concert halls) pushed piano makers to build stronger pianos with iron frames.",
   },
   {
     title: "Why pianists sit sideways",
     people: ["liszt"],
-    text: `<strong>Franz Liszt</strong> is famous for turning the piano <strong>sideways</strong> on stage so people could see his face and his flying hands. He was also one of the first to play whole concerts <strong>from memory</strong>, and he called them <strong>"recitals"</strong> — the word we still use for a solo concert!`,
+    text: `<strong>Franz Liszt</strong> turned the piano <strong>sideways</strong> on stage so people could see his face and flying hands. He was also one of the first to play whole concerts <strong>from memory</strong>. His London concert in 1840 was one of the first ever called a <strong>"recital"</strong>, the word we still use for a solo concert!`,
   },
   {
     title: "Screws, bolts and rubber… inside a piano?!",
     people: ["john-cage"],
     video: "prepared-piano",
-    text: `In 1940 a composer called <strong>John Cage</strong> needed drums for a dance show, but the stage only had room for one piano. So he turned the piano INTO a drum kit: he carefully slid <strong>screws, bolts and bits of rubber</strong> between the strings. Now the keys went <em>clonk</em>, <em>thud</em> and <em>bonggg</em>! He called it the <strong>prepared piano</strong>.`,
+    text: `Around 1940, a composer called <strong>John Cage</strong> needed drums for a dance show, but there was only room for a piano. So he slid <strong>screws, bolts and bits of rubber</strong> between the strings, and the keys went <em>clonk</em>, <em>thud</em> and <em>bonggg</em>! He called it the <strong>prepared piano</strong>.`,
     footnote: "Please don't try this without a grown-up and a piano you're allowed to experiment on!",
   },
   {
     title: "Writing music he couldn't hear",
     people: ["beethoven"],
-    text: `<strong>Beethoven</strong> slowly lost his hearing, and by the time his famous Ninth Symphony was first played in 1824 he was almost completely deaf. When it ended, he was still facing the orchestra — a singer gently turned him around so he could <strong>see</strong> the crowd cheering and waving.`,
+    text: `<strong>Beethoven</strong> was almost completely deaf when his Ninth Symphony was first played in 1824. When it ended, he was still facing the orchestra. A singer gently turned him around so he could <strong>see</strong> the crowd cheering!`,
   },
   {
     title: "Mozart's party trick",
     people: ["mozart"],
-    text: `When <strong>Mozart</strong> was a little boy, his dad took him around Europe to show off his playing. One trick: they <strong>covered the keys with a cloth</strong> — and he could still play perfectly without seeing them! (That's why it helps to learn where the keys are by feel.)`,
+    text: `When <strong>Mozart</strong> was a little boy, his dad took him around Europe to show off his playing. For one trick, they <strong>covered the keys with a cloth</strong>, and he still played perfectly! That's why it helps to learn the keys by feel.`,
   },
   {
     title: "Why 88 keys?",
-    text: `The first pianos had only about <strong>60 keys</strong>. Composers kept asking for higher and lower notes, so pianos grew and grew — until around the 1880s they settled on <strong>88 keys</strong>, just over 7 octaves. Notes much lower or higher than that are hard for our ears to hear as music anyway!`,
+    text: `The first pianos had only about <strong>49 keys</strong> (4 octaves). Composers kept asking for higher and lower notes, so by the 1880s pianos had grown to <strong>88 keys</strong>, just over 7 octaves. Much lower or higher notes are hard for our ears to hear as music anyway!`,
   },
   {
     title: "A superstar who barely did concerts",
     people: ["chopin"],
     video: "chopin",
-    text: `<strong>Chopin</strong> is one of the most famous piano composers ever — but he only played about <strong>30 public concerts</strong> in his whole life! He liked playing for a few friends in cosy rooms in Paris much more than for big crowds.`,
+    text: `<strong>Chopin</strong> is one of the most famous piano composers ever, but he played only about <strong>30 public concerts</strong> in his whole life! He much preferred playing for a few friends in cosy rooms in Paris.`,
   },
   {
     title: "The pianist who hummed along",
     people: ["glenn-gould"],
-    text: `A famous Canadian pianist, <strong>Glenn Gould</strong>, <strong>hummed and sang</strong> while he played — you can hear him on his recordings! And he always sat on a <strong>low wobbly chair his dad made</strong>, even after the seat wore out.`,
+    text: `Canadian pianist <strong>Glenn Gould</strong> <strong>hummed and sang</strong> while he played, and you can hear him on his recordings! He always sat on a <strong>low wobbly chair his dad made</strong>, even after the seat wore out.`,
   },
   {
-    title: "Playing with an orchestra — at age 11",
+    title: "Playing with an orchestra at age 11",
     people: ["herbie-hancock"],
     text: `Jazz legend <strong>Herbie Hancock</strong> played a Mozart piano concerto with the <strong>Chicago Symphony Orchestra</strong> when he was just <strong>11 years old</strong>. When he grew up, he played with Miles Davis and made some of the funkiest piano music ever.`,
   },
   {
     title: "From piano lessons to superstar",
     people: ["elton-john"],
-    text: `When <strong>Elton John</strong> was a boy called Reggie, he won a place at London's <strong>Royal Academy of Music</strong> at age 11 — he could play a song back after hearing it just once!`,
+    text: `When <strong>Elton John</strong> was a boy called Reggie, he won a place at London's <strong>Royal Academy of Music</strong> at age 11. He could play a song back after hearing it just once!`,
   },
   {
     title: "A singer who trained as a classical pianist",
     people: ["nina-simone"],
-    text: `<strong>Nina Simone</strong> dreamed of being a classical concert pianist and practised Bach for hours every day. To earn money she played in a bar — and the owner said she had to <strong>sing too</strong>. That's how one of the greatest singers ever got started!`,
+    text: `<strong>Nina Simone</strong> dreamed of being a classical pianist and practised Bach for hours every day. To earn money she played in a bar, and the owner said she had to <strong>sing too</strong>. That's how one of the greatest singers ever got started!`,
   },
 ];
 

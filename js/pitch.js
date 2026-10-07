@@ -225,13 +225,18 @@ function createTunerWidget(container, targetMidi, { label = "Tune this note", on
   const readout = container.querySelector(".hk-tuner-readout");
   const heard = container.querySelector(".hk-tuner-heard");
 
+  // True while the microphone permission prompt is open: a second tap
+  // then must not start a second listening session.
+  let starting = false;
   async function start() {
+    if (starting) return;
+    starting = true;
     matched = false;
     inTuneSince = null;
     root.classList.remove("hk-tuner-matched");
     display.style.display = "flex";
     toggleBtn.textContent = "Stop listening";
-    readout.textContent = `Listening — play ${name} on your real piano.`;
+    readout.textContent = `Listening. Play ${name} on your real piano.`;
     needle.style.transform = "translateX(-50%) rotate(0deg)";
     needle.className = "hk-tuner-needle";
     try {
@@ -247,7 +252,7 @@ function createTunerWidget(container, targetMidi, { label = "Tune this note", on
           inTuneSince = null;
           if (!matched) {
             heard.innerHTML = "&nbsp;";
-            readout.textContent = `Listening — play ${name} on your real piano.`;
+            readout.textContent = `Listening. Play ${name} on your real piano.`;
           }
           return;
         }
@@ -268,7 +273,7 @@ function createTunerWidget(container, targetMidi, { label = "Tune this note", on
             readout.textContent = `✓ That's ${name}! (${result.freq.toFixed(1)} Hz)`;
             if (onMatch) onMatch(result);
           } else if (!matched) {
-            readout.textContent = "That's it — hold it…";
+            readout.textContent = "That's it! Hold it…";
           }
           return;
         }
@@ -276,19 +281,21 @@ function createTunerWidget(container, targetMidi, { label = "Tune this note", on
         if (matched) return; // stay green; the needle keeps moving for info
         needle.className = "hk-tuner-needle hk-tuner-off";
         if (Math.abs(keysAway) === 12 || Math.abs(keysAway) === 24) {
-          readout.textContent = `Right letter, wrong octave — that's ${Math.abs(keysAway) / 12} octave${Math.abs(keysAway) === 24 ? "s" : ""} too ${keysAway > 0 ? "high. Try the same key further LEFT" : "low. Try the same key further RIGHT"}.`;
+          readout.textContent = `Right letter, wrong octave: ${Math.abs(keysAway) / 12} octave${Math.abs(keysAway) === 24 ? "s" : ""} too ${keysAway > 0 ? "high. Try the same key further LEFT" : "low. Try the same key further RIGHT"}.`;
         } else if (keysAway !== 0) {
           const n = Math.abs(keysAway);
-          readout.textContent = `${n} key${n === 1 ? "" : "s"} too ${keysAway > 0 ? "high — move LEFT" : "low — move RIGHT"} (counting black keys too).`;
+          readout.textContent = `${n} key${n === 1 ? "" : "s"} too ${keysAway > 0 ? "high. Move LEFT" : "low. Move RIGHT"} (counting black keys too).`;
         } else {
-          readout.textContent = `Right key, a little ${result.cents > 0 ? "sharp" : "flat"} — keep holding it.`;
+          readout.textContent = `Right key, a little ${result.cents > 0 ? "sharp" : "flat"}. Keep holding it.`;
         }
       });
       if (!toggleBtn.isConnected || !display.isConnected) stop();
       else stopListening = stop;
     } catch (err) {
-      readout.textContent = `Microphone access failed (${err.message}).`;
+      readout.textContent = `The microphone isn't working (${err.message}).`;
       toggleBtn.textContent = label;
+    } finally {
+      starting = false;
     }
   }
 
@@ -306,6 +313,7 @@ function createTunerWidget(container, targetMidi, { label = "Tune this note", on
   }
 
   toggleBtn.addEventListener("click", () => {
+    if (starting) return;
     if (stopListening) stop();
     else start();
   });

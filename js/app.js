@@ -15,11 +15,7 @@ import { maybeShowFunFact, showFunFact } from "./fun-facts.js";
 import { initPopups } from "./popups.js";
 import { applyRewards } from "./rewards.js";
 import { pandaSvg } from "./panda.js";
-import { catsSvg } from "./cats.js";
-
-// Stripe Payment Link for the footer's "Support Hayden Keys" link —
-// empty until Sid creates one in his own Stripe dashboard.
-const STRIPE_PAYMENT_LINK = "";
+import { pianoLogo } from "./cats.js";
 
 const TABS = ["discover", "practice", "saved", "lessons", "roadmap", "mysongs", "how", "about", "midi"];
 const panels = {};
@@ -81,34 +77,13 @@ function init() {
   initPopups();
   applyRewards();
   showIntro(courseProgress());
-  // The logo: Ginger and Pepper, the two piano cats (js/cats.js).
+  // The logo: a grand piano with gold notes (js/cats.js pianoLogo).
   const logo = document.getElementById("hk-logo-cats");
-  if (logo) logo.innerHTML = catsSvg("logo", { label: "Hayden Keys" });
+  if (logo) logo.innerHTML = pianoLogo({ label: "Hayden Keys" });
 
   document.querySelectorAll("[data-tab]").forEach((btn) => {
     btn.addEventListener("click", () => showTab(btn.dataset.tab));
   });
-
-  // Item 43/56: the "Support Hayden Keys" link. Paste the Stripe Payment
-  // Link (Stripe Dashboard -> Payment Links -> Create, e.g.
-  // https://buy.stripe.com/...) into STRIPE_PAYMENT_LINK at the top of this file — that's
-  // the only change needed to go live. Until then, clicking it says
-  // plainly that it isn't live yet instead of doing nothing. The link is
-  // hidden inside the iOS app either way (.hk-web-only), see index.html.
-  const supportLink = document.getElementById("hk-support-link");
-  if (supportLink) {
-    if (/^https:\/\/(buy|donate)\.stripe\.com\//.test(STRIPE_PAYMENT_LINK)) {
-      supportLink.href = STRIPE_PAYMENT_LINK;
-      supportLink.target = "_blank";
-      supportLink.rel = "noopener";
-      delete supportLink.dataset.stripeLinkPending;
-    } else {
-      supportLink.addEventListener("click", (e) => {
-        e.preventDefault();
-        alert("Support link coming soon -- not wired up to a real payment page yet.");
-      });
-    }
-  }
 
   discoverApi = initDiscoverTab(panels.discover, {
     onStartSong: (song) => {

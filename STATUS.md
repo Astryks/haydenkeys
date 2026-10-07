@@ -12,8 +12,8 @@
 1. **TestFlight:** check the latest build appears in App Store Connect → TestFlight (processing takes 5–30 min; Apple emails if a build fails processing). Add it to the internal tester group and install on the phone.
 2. **Test on a phone:** Wait for me with the microphone, Guess the song with a real recording, Main/Whole song on a few new songs, landscape player.
 3. **App Store version page (owner, signed in):** select the latest build, upload screenshots from `ios/screenshots/app-store/`, paste text from `ios/APP_STORE_LISTING.md`, Age Rating, App Privacy ("Data Not Collected") → Publish, Content Rights, App Review contact + notes. **Submit for Review only when the owner says so.**
-4. Data clean-up: 15 older songs still have a placeholder instead of chords ("insufficient agreement…" — e.g. Wildest Dreams, Happy, Africa, Bohemian Rhapsody, Misty, Stella by Starlight, November Rain, Still D.R.E.). They rely on their notes/song map; research proper chords or hide them.
-5. Later (not in v1): tip jar via Apple In-App Purchase (code existed in build 30/12, removed); left-handed fretboard (Jaxx).
+4. ~~Data clean-up: 15 older songs still have a placeholder instead of chords~~ **Done** (see "Paused 2026-10-07": every song now has real chords). Was: ("insufficient agreement…" - e.g. Wildest Dreams, Happy, Africa, Bohemian Rhapsody, Misty, Stella by Starlight, November Rain, Still D.R.E.). They rely on their notes/song map; research proper chords or hide them.
+5. Tip jar is back (owner asked 2026-10-07): create the three tip In-App Purchases in App Store Connect (see the Tip jar section at the bottom). Left-handed fretboard (Jaxx) is done.
 6. Next apps after Hayden Keys and Jaxx Guitar: fitness, jiu jitsu, then public speaking, singing, investing & markets, dance.
 
 ### How to build and upload (both apps)
@@ -27,24 +27,24 @@ ExportOptionsUpload.plist: method `app-store-connect`, destination `upload`, tea
 
 ### Rules we keep
 - Never print song lyrics or copyrighted melodies/tabs: chords, keys and song maps only. Videos are official uploads, verified with YouTube oEmbed.
-- No tip jar / payments in v1. Don't submit for review until the owner says so. The owner types all passwords.
+- Payments: only the optional Tip jar (Apple In-App Purchase, unlocks nothing, app only). Don't submit for review until the owner says so. The owner types all passwords.
 
 ---
 
-## TODO — not yet done (handoff for a future session)
+## TODO - not yet done (handoff for a future session)
 
 Item 56 (2026-10-05) finished the previous handoff list: Back on every
 lesson, the upload-playback seek bar / note labels / Easy mode, and an
 iOS submission-readiness sweep (see the item 56 entry at the bottom).
 What's genuinely left:
 
-- **Stripe Payment Link still needs creating** in Sid's own Stripe
+- ~~**Stripe Payment Link still needs creating**~~ **Obsolete (2026-10-07 audit):** v1 has no payments or tip jar, and the dead `STRIPE_PAYMENT_LINK` code was removed from `js/app.js`. Was: in Sid's own Stripe
   dashboard (Payment Links → Create). Once it exists, paste the
   `https://buy.stripe.com/...` URL into `STRIPE_PAYMENT_LINK` at the top
-  of `js/app.js` — that's the whole change. Web only: the link is
+  of `js/app.js` - that's the whole change. Web only: the link is
   deliberately hidden inside the iOS app (App Review guideline 3.1.1).
-- **Final iOS sign/archive/submit is still Sid's own action** (needs his
-  Apple Developer account) — follow `ios/SUBMISSION_CHECKLIST.md`. The
+- **Final iOS submit is still the owner's action** (2026-10-07 audit: the "never launched on a simulator" note below is obsolete; builds up to 35 were made and tested in the iOS Simulator). Was: needs his
+  Apple Developer account) - follow `ios/SUBMISSION_CHECKLIST.md`. The
   project now builds clean (Debug simulator + Release device, unsigned)
   but hasn't been launched on a simulator or device yet: this Mac has no
   iOS Simulator runtime installed. First real launch = checklist step 5.
@@ -54,7 +54,7 @@ What's genuinely left:
   Guitar specifically.
 
 Living progress log for Hayden Keys, in the same spirit as the sibling
-Dawsons project's own STATUS.md — what's actually done vs. planned,
+Dawsons project's own STATUS.md - what's actually done vs. planned,
 re-verified for real rather than assumed from memory. Last updated
 2026-10-05, after a full completeness audit against the entire
 conversation history.
@@ -62,7 +62,7 @@ conversation history.
 ## Objective
 
 A free, gamified, Duolingo-style piano learning web app for
-haydenkeys.com. Pure static site — zero backend, zero database, zero
+haydenkeys.com. Pure static site - zero backend, zero database, zero
 per-request cost, everything in `localStorage`. Teaches numbers/shapes
 first (the real 1-5-6-4 pattern: G-D-Em-C, not the originally-misstated
 "G-A-C-D"), extends into a 37-lesson "strong early-intermediate" arc,
@@ -74,35 +74,35 @@ system.
 Written for a future agent with zero memory of this conversation who
 needs to build a sibling app for a different instrument (Sid's next
 project: "Jaxx Guitar," same gamified/numbers-first concept, for
-guitar). This section is the reusable summary — read this instead of
+guitar). This section is the reusable summary - read this instead of
 the whole file below, which is a chronological log, not a design doc.
 
-**1. Overall architecture — reuse directly, instrument-agnostic.**
+**1. Overall architecture - reuse directly, instrument-agnostic.**
 Pure static site: no backend, no database, no server-side code, no
 per-request cost. Every page is plain HTML/CSS/vanilla-JS ES modules
 (`<script type="module">`), no build step, no bundler, no framework.
 All user state (progress, streaks, badges, saved songs, calibration)
-lives in `localStorage` only — see `js/storage.js` for the full
+lives in `localStorage` only - see `js/storage.js` for the full
 read/write API. This is *why* the app can be free forever: there is no
 ongoing hosting cost to recoup. A guitar app should copy this shape
-wholesale — it has nothing to do with piano specifically.
+wholesale - it has nothing to do with piano specifically.
 
-**2. The lesson system design — reuse the pattern, not the content.**
+**2. The lesson system design - reuse the pattern, not the content.**
 `js/lessons-data.js` builds one flat `LESSONS` array from several
 pieces, assembled in a specific order (see the file's own comments for
-the exact assembly, which has shifted over many items — don't assume a
+the exact assembly, which has shifted over many items - don't assume a
 specific lesson count or order, re-read the file):
-  - `PRE_LESSONS` — a couple of onboarding lessons before Lesson 1
+  - `PRE_LESSONS` - a couple of onboarding lessons before Lesson 1
     (e.g. "get an instrument," "find Middle C"/calibration). For
     guitar, the calibration-equivalent would be "find which string is
-    which" or "tune your guitar" — same *role*, different content.
-  - `THEORY_LESSONS` — the core theory arc, written numbers-first:
+    which" or "tune your guitar" - same *role*, different content.
+  - `THEORY_LESSONS` - the core theory arc, written numbers-first:
     teach "the 1, the 5, the 6, the 4" (Nashville numbers / scale
     degrees) BEFORE letter chord names, because the same numbers
-    transpose to any key — this pedagogy choice is instrument-agnostic
+    transpose to any key - this pedagogy choice is instrument-agnostic
     and should carry over directly to guitar (a guitarist capo-ing up
     two frets needs the same numbers-first mental model).
-  - `masterSongLesson(song, extra)` — a factory that auto-generates one
+  - `masterSongLesson(song, extra)` - a factory that auto-generates one
     "Master: <Song Title>" lesson per song in the library, rather than
     hand-writing one lesson per song. Directly reusable: swap in a
     guitar chord-shape renderer instead of `renderKeyboard()`/
@@ -112,7 +112,7 @@ specific lesson count or order, re-read the file):
     `discover.js`) gates a tier until 5 songs in the prior tier are
     completed (`UNLOCK_THRESHOLD`). This gating logic has nothing to do
     with piano and should be lifted as-is.
-  - `withReservedPositions()` — places specific showcase lessons (e.g.
+  - `withReservedPositions()` - places specific showcase lessons (e.g.
     a classical/jazz preview) at an exact numbered position in the
     generated sequence, regardless of how other content shifts around
     them. Reusable as-is for any "drop a specific lesson at position
@@ -120,12 +120,12 @@ specific lesson count or order, re-read the file):
   - **Known real bug class to watch for in a new app**: lesson-count/
     tier-boundary drift. This app had at least two real instances (a
     duplicate-lesson bug in item 36, a tier-boundary placement check in
-    item 47) — always verify `TOTAL_LESSON_COUNT`, check for duplicate
+    item 47) - always verify `TOTAL_LESSON_COUNT`, check for duplicate
     IDs, and confirm *array position* (not the literal numeric suffix
     in an id string) after inserting anything, the same way this app's
     own STATUS.md entries do.
 
-**3. The song library approach — reuse the discipline, not the data.**
+**3. The song library approach - reuse the discipline, not the data.**
 Every song's chords in `js/songs-data.js` are independently
 cross-checked against at least two real sources before being marked
 `confidence: "confirmed"`; anything disputed or unverifiable is marked
@@ -134,11 +134,11 @@ cross-checked against at least two real sources before being marked
 scraping (Ultimate Guitar, Songsterr, etc. explicitly ruled out at the
 product level, not just avoided as a dependency), no song lyrics
 anywhere, no YouTube/streaming-URL import (would violate those
-platforms' ToS). **All of this applies identically to a guitar app** —
+platforms' ToS). **All of this applies identically to a guitar app** -
 chord progressions are chord progressions regardless of instrument; the
 verification discipline and legal boundaries carry over word-for-word.
 
-**4. The "upload your own song" pipeline — reuse as-is.**
+**4. The "upload your own song" pipeline - reuse as-is.**
 `js/transcribe.js` is instrument-agnostic: `transcribeFile()` decodes
 any audio/video file, resamples to mono 22050 Hz via an
 `OfflineAudioContext` (`resampleToMono22050()`, required because
@@ -153,7 +153,7 @@ defaults plus a `cleanupNotes()` post-filter (merge same-pitch notes
 separated by <30ms gaps, drop anything under 60ms). **A guitar app
 reusing this pipeline should start from the library's real defaults,
 not copy this app's old over-tuned values.** Polyphonic pitch output
-(a note list with start/duration/pitch) is instrument-agnostic — the
+(a note list with start/duration/pitch) is instrument-agnostic - the
 only guitar-specific work is turning that raw note list into chord
 *shapes* (see point 7).
 
@@ -169,35 +169,35 @@ only guitar-specific work is turning that raw note list into chord
     (`runChordQuizLesson()` in `lessons-ui.js`, item 47): play a chord,
     4 options (1 correct + 3 real distractors from the same
     already-taught pool), immediate right/wrong feedback. Entirely
-    reusable for guitar — it only cares about chord *audio* and chord
+    reusable for guitar - it only cares about chord *audio* and chord
     *names*, never chord *shapes* or fingerings.
   - "Play what you hear" open-ended practice mode (`initPlayByEar()`
     in `practice.js`, item 48): pick a real song, hear its chord
     progression, try to replicate it by ear, reveal the real chords to
     self-check. Also entirely audio/chord-name based, not
-    shape-based — reusable as-is.
+    shape-based - reusable as-is.
   - The optional drum-beat layer (`js/drums.js`, item 45) and the
     optional sampled-instrument upgrade (`js/piano-sample.js` +
     vendored `smplr`, item 45) are both generic Web-Audio-level
-    enhancements with no piano-specific logic — reusable directly,
+    enhancements with no piano-specific logic - reusable directly,
     just point `smplr` at a different sampled instrument (e.g. an
     acoustic/electric guitar sample set) instead of
     `SplendidGrandPiano`.
 
-**6. Gamification — reuse as-is.**
+**6. Gamification - reuse as-is.**
 Streaks, daily goals, and badges (`js/badges.js`, `js/storage.js`) are
 pure `localStorage` logic with zero piano-specific assumptions baked
-in — lift directly.
+in - lift directly.
 
 **7. What is genuinely piano-specific and needs fresh design work for
 guitar (do NOT assume these are reusable):**
   - `js/keyboard.js`'s entire rendered keyboard (DOM piano keys,
-    `highlightChord()`, `highlightHands()`) — a guitar app needs chord-
+    `highlightChord()`, `highlightHands()`) - a guitar app needs chord-
     shape/fret diagrams instead (which frets/strings to press, open vs.
     muted strings), a fundamentally different visual grammar.
-  - Capo logic has no piano equivalent at all — new design surface.
+  - Capo logic has no piano equivalent at all - new design surface.
   - Strumming-pattern teaching (down/up strokes, rhythm patterns) has
-    no piano equivalent — new design surface, though the existing
+    no piano equivalent - new design surface, though the existing
     "optional drum beat" clock-driven approach (point 5) could plausibly
     generalize to "strum pattern driven by the same clock."
   - The MIDI tab's computer-keyboard-key-to-piano-note mapping
@@ -208,12 +208,12 @@ guitar (do NOT assume these are reusable):**
   - The falling-notes highway's horizontal layout (point 5) needs a
     fretboard-position equivalent, not just a recolor.
 
-**8. iOS wrapping — reuse directly.**
+**8. iOS wrapping - reuse directly.**
 The Capacitor setup (`ios/App/App.xcodeproj`, `capacitor.config.json`,
 the `www/` symlink-based bundling approach) has zero piano-specific
 logic and should be copied wholesale for a guitar app. **Real lesson
 learned (item 43)**: `www/` only symlinks files/folders that existed
-when first scaffolded — any new top-level HTML file added later (this
+when first scaffolded - any new top-level HTML file added later (this
 app's `reference.html`/`privacy.html`) needs its own explicit symlink
 added, or it silently 404s inside the native app specifically while
 working fine on the web. Remember to add that symlink proactively for
@@ -221,21 +221,21 @@ every new top-level page in a new project, not just when someone
 reports the native app is broken. **Orientation decision (item 55)**:
 this app ended up locked to landscape-only on iOS (both iPhone and
 iPad) because a piano keyboard genuinely needs horizontal width to be
-usable — a guitar app will face the exact same question with fretboard
+usable - a guitar app will face the exact same question with fretboard
 diagrams/chord shapes, which are also naturally wide. Worth deciding
 this deliberately early rather than retrofitting it, including the web
 fallback this project landed on (a CSS-only "rotate your phone" prompt
 for portrait-shaped phone viewports, since the web can't force
 orientation the way the native wrapper can).
 
-**9. Mascot/illustration approach — partially reusable.**
+**9. Mascot/illustration approach - partially reusable.**
 The "zero AI-generated art, Sid's own original hand-drawn illustration,
 multiple contextual pose variations for different app contexts"
-approach is a content/process choice independent of instrument — fully
+approach is a content/process choice independent of instrument - fully
 reusable *as a process*, but the actual piano-mascot artwork obviously
 isn't. **Real lesson learned (item 37)**: removing a flat color
 background from hand-drawn art works far better with a flood-fill from
-the image's own borders than a naive global color-threshold — the
+the image's own borders than a naive global color-threshold - the
 flood-fill approach correctly leaves color that happens to match the
 background elsewhere in the image (e.g. inside fur, sheet music)
 intact, where a global threshold would incorrectly punch holes in it.
@@ -244,54 +244,54 @@ work, regardless of instrument.
 
 ## The full checklist, re-verified
 
-- [x] **4+1 tabs**: Lessons, Discover, Practice, Saved, How It Works —
+- [x] **4+1 tabs**: Lessons, Discover, Practice, Saved, How It Works -
       re-ordered to Lessons-first (was Discover-first); all five
       confirmed rendering with zero console errors in a real browser.
 - [x] **Discover**: genre browse, search bar, difficulty-tier filter,
-      upload-any-song button — confirmed actually present and working
+      upload-any-song button - confirmed actually present and working
       (uploaded a real synthesized WAV through it and got a correct
       transcription back), not just planned.
-- [x] **No-YouTube-import boundary**, stated warmly — confirmed the
+- [x] **No-YouTube-import boundary**, stated warmly - confirmed the
       rewritten copy ("Upload any song and learn it with Hayden Keys!"
       headline, same unchanged legal facts below it) renders correctly.
 - [x] **Practice**: Follow Along (falling-note highway), Camera
-      Overlay, Ear Check (mic-verified) — all 3 selectable, confirmed.
-- [x] **Play/pause/rewind** controls — present and working.
-- [x] **Draggable/scrubbable playhead** — real pointer-drag, snaps to
+      Overlay, Ear Check (mic-verified) - all 3 selectable, confirmed.
+- [x] **Play/pause/rewind** controls - present and working.
+- [x] **Draggable/scrubbable playhead** - real pointer-drag, snaps to
       chord-cell boundaries, kept in sync with the speed control (same
       `chordDuration()` single source of truth both read from).
-- [x] **Playback speed control** (0.5x/0.75x/1x) — verified with an
+- [x] **Playback speed control** (0.5x/0.75x/1x) - verified with an
       actual measurement (800ms of real playback at 1x vs. 0.5x landed
       at very close to a 2x position difference), not eyeballed.
-- [x] **Saved tab** — localStorage-backed, confirmed showing correct
+- [x] **Saved tab** - localStorage-backed, confirmed showing correct
       "0/37 lessons" on a fresh profile.
-- [x] **Lessons**: Duolingo-style map, streak tracking — present.
-- [x] **Lesson 1 = G-D-Em-C**, numbers-first, letters alongside —
+- [x] **Lessons**: Duolingo-style map, streak tracking - present.
+- [x] **Lesson 1 = G-D-Em-C**, numbers-first, letters alongside -
       confirmed via DOM inspection multiple times across this project.
-- [x] **Payoff moments computed live**, not fake/rounded — confirmed
+- [x] **Payoff moments computed live**, not fake/rounded - confirmed
       recomputing correctly at every library-size milestone this project
       hit (22/73 → 26/92 → 27/102), never a hardcoded number.
 - [x] **Major/minor scale-degree pattern** taught as transposable (Day
-      2 major, Day 6 natural minor) — "this is true in every key."
-- [x] **Full curriculum to 37 days** — major scales (11-14), minor
+      2 major, Day 6 natural minor) - "this is true in every key."
+- [x] **Full curriculum to 37 days** - major scales (11-14), minor
       scales tied to relative-minor (16-20), two-hand coordination
       (21-25), 7th chords/inversions (26-30), Canon in D capstone
-      (31-35), jazz bonus (36), classical-repertoire bonus (37) — all
+      (31-35), jazz bonus (36), classical-repertoire bonus (37) - all
       present and individually played through end-to-end in a real
       browser at least once during this project.
-- [x] **Staff notation as a later/optional layer** — Days 3, 9, 10, 37.
+- [x] **Staff notation as a later/optional layer** - Days 3, 9, 10, 37.
       Never required to start Day 1.
 - [x] **Hand-independent absolute-octave labeling + visual color
-      separation** — real gap caught and fixed (`highlightHands()`):
+      separation** - real gap caught and fixed (`highlightHands()`):
       left hand pink, right hand light blue, screenshot-confirmed
       genuine spatial separation (e.g. Lesson 25's low pink bass note
       vs. higher blue chord).
-- [x] **Falling-notes highway**, hand-colored, tempo-synced — timing
+- [x] **Falling-notes highway**, hand-colored, tempo-synced - timing
       math (`yForTime`) unit-tested directly (a note due "now" lands
       exactly on the hit line; a note due one lookahead-window out
       starts at the canvas top), plus screenshot-confirmed during real
       playback and re-confirmed after the speed-control integration.
-- [x] **Jazz lesson**, not quiz-scored — Day 36, a running "time spent
+- [x] **Jazz lesson**, not quiz-scored - Day 36, a running "time spent
       noodling" counter instead of a pass/fail check, confirmed.
 - [~] **Classical repertoire**: Chopin x4 (catalog-only, no built
       excerpt), Debussy (catalog-only), Satie (catalog-only), Vivaldi's
@@ -300,12 +300,12 @@ work, regardless of instrument.
       built capstone**, Days 31-35). **Real, honest gap**: "Moonlight
       Sonata as a capstone" was explicitly suggested later in this
       project (as the item-10 hand-separation validation case) but was
-      never built — Canon in D had already been built and committed as
+      never built - Canon in D had already been built and committed as
       the Days 31-35 capstone by that point, and the suggestion was
       explicitly flagged as "not mandatory if you've already picked
       something that works just as well." Decision: kept Canon in D
       rather than rebuilding the capstone a second time under later
-      time pressure. Moonlight Sonata is not in the catalog at all —
+      time pressure. Moonlight Sonata is not in the catalog at all -
       a real omission against the literal checklist line, noted here
       rather than silently dropped.
 - [x] **Song library merge**: all batches landed, 102 total songs,
@@ -314,78 +314,78 @@ work, regardless of instrument.
       11 jazz standards + the love-songs/corrected-title batch + Amazing
       Grace + 10 classic-rock/Adele/MLTR songs = 102.
 - [x] **Every song has real chords or an honest needs-verification
-      badge** — 64 confirmed / 38 needs-verification / 0 silently
+      badge** - 64 confirmed / 38 needs-verification / 0 silently
       guessed. Roughly a third of the library is flagged, which is the
       honest result of applying a real two-source standard, not a
       target to hit.
-- [x] **No lyrics anywhere** — re-grepped the entire `js/` tree for this
+- [x] **No lyrics anywhere** - re-grepped the entire `js/` tree for this
       specifically during this audit. The only hits are (a) this
       project's own comments stating "no lyrics" as a design decision,
       and (b) generic MIDI-file-format event-type-name handling inside
       the vendored `@tonejs/midi` library (which can parse arbitrary
       MIDI files that the MIDI spec allows to contain a "lyrics"
-      meta-event type) — not any actual copyrighted lyric text.
-- [x] **Full song structure** (verse/chorus/bridge, no lyrics) — 12 of
+      meta-event type) - not any actual copyrighted lyric text.
+- [x] **Full song structure** (verse/chorus/bridge, no lyrics) - 12 of
       102 songs, confirmed via code (`Object.keys(SONG_STRUCTURES).length
       === 12`). Honestly a small fraction of the library; the other 90
       fall back to the simple main-loop view, labeled as such in the UI.
 - [x] **basic-pitch**: vendored locally (`js/vendor/basic-pitch/`, ~3.1
-      MB, zero runtime CDN dependency — confirmed via network-request
+      MB, zero runtime CDN dependency - confirmed via network-request
       log showing no unpkg/esm.sh traffic during a real transcription
       run), the 22050Hz-mono sample-rate bug fixed and verified against
       the real `fortnite.mp4` that originally triggered it (248s,
       48kHz/stereo → 6233 real notes, zero sample-rate error). **This
       audit additionally closed a real testing gap**: the original
-      sample-rate fix was verified against WAV + MP4 but not MP3 — ran
+      sample-rate fix was verified against WAV + MP4 but not MP3 - ran
       a real MP3 (encoded via `ffmpeg`) through the actual upload UI
       during this audit and confirmed it transcribes correctly too. All
       three requested formats (mp3/wav/mp4) are now genuinely confirmed
       working end-to-end, not two of three.
 - [x] **Audio pitch-match calibration** (plays 261.63Hz, mic confirms,
-      octave-correction guidance) + **two-tap visual calibration** —
+      octave-correction guidance) + **two-tap visual calibration** -
       both built and verified; the pitch tracker itself was additionally
       unit-tested against synthesized 261.63Hz and 523.25Hz tones and
       returned mathematically correct results (dead-on Middle C; exactly
       +12 semitones).
-- [x] **"How It Works" page** — 5 sections, a live animated frequency
+- [x] **"How It Works" page** - 5 sections, a live animated frequency
       slider, and a static 4-wave harmonics diagram, all confirmed
       rendering and interactive.
-- [x] **Mobile-responsive CSS** — real `@media` breakpoints added where
+- [x] **Mobile-responsive CSS** - real `@media` breakpoints added where
       there were previously none; confirmed via actual viewport resizing
       to 375×812 with zero horizontal overflow on Discover, Practice
-      (including the falling-note highway), and Lessons — re-confirmed
+      (including the falling-note highway), and Lessons - re-confirmed
       again after the full pastel re-theme landed, still zero overflow.
-- [x] **PWA manifest + service worker** — manifest is valid JSON with 5
+- [x] **PWA manifest + service worker** - manifest is valid JSON with 5
       real icon sizes (regenerated from the actual logo this pass).
       **Honest methodology note**: service worker registration could
       not be confirmed in this project's local sandbox preview (every
       attempt against a local dev server failed with an opaque "unknown
       error fetching script," isolated via a control test against a
-      real external HTTPS origin that behaved differently) — but this
+      real external HTTPS origin that behaved differently) - but this
       audit tested it directly against the real, live
       **https://haydenkeys.com** and confirmed the service worker is
       genuinely registered, active, and has a populated cache
       (`hayden-keys-v1`). Fully working in production, not just
       theoretically correct.
-- [x] **Capacitor iOS scaffolding** — real, committed Xcode project
+- [x] **Capacitor iOS scaffolding** - real, committed Xcode project
       (`ios/App/App.xcodeproj`), `@capacitor/camera` installed,
       `NSCameraUsageDescription`/`NSMicrophoneUsageDescription` added
       to `Info.plist` with honest descriptions, `npx cap sync` verified
       running clean. Exact numbered next steps for Xcode/signing/App
       Store Connect documented in the README. Cannot be built, signed,
-      archived, or submitted from this environment — that genuinely
+      archived, or submitted from this environment - that genuinely
       needs Xcode running interactively with Sid's own Apple Developer
       credentials, stated plainly rather than implied as done.
-- [x] **GitHub Pages live and auto-deploying** — confirmed independently
+- [x] **GitHub Pages live and auto-deploying** - confirmed independently
       during this audit: `has_pages: true`, the latest workflow run
       succeeded, `https://haydenkeys.com` returns a real 200 over valid
       HTTPS, and the live site is confirmed serving the actual latest
       code (checked for the newest songs and the logo). The one-time
       manual-enable blocker documented earlier in this project has been
-      resolved (presumably by Sid, per the documented instructions) —
+      resolved (presumably by Sid, per the documented instructions) -
       the self-deploying workflow now genuinely works end-to-end.
 - [x] **Pastel blue/pink re-theme**, logo's own gradient as the palette
-      source — `:root` variables now pull directly from `assets/logo.svg`'s
+      source - `:root` variables now pull directly from `assets/logo.svg`'s
       literal hex values (`#a7d8f0`/`#f4b8d0` as "-soft" fills,
       deepened versions as the main accent/text-safe colors). Text
       contrast checked by eye against the light background across every
@@ -395,12 +395,12 @@ work, regardless of instrument.
       of page theme. Caught and fixed a real follow-up bug during this
       same pass: several lesson/practice copy strings still said
       "amber"/"purple" after the hand colors changed to pink/light-blue
-      — found by re-grepping, not assumed clean from the first pass.
-- [x] **Logo wired in** — header (above the wordmark), SVG favicon,
+      - found by re-grepping, not assumed clean from the first pass.
+- [x] **Logo wired in** - header (above the wordmark), SVG favicon,
       and all 5 PWA/apple-touch-icon PNG sizes regenerated directly from
       `assets/logo.svg` (via `qlmanage -t`, same technique as the
       sibling Dawsons project, no new dependency).
-- [x] **THIRD_PARTY_NOTICES.md up to date** — basic-pitch's real
+- [x] **THIRD_PARTY_NOTICES.md up to date** - basic-pitch's real
       Apache-2.0 license (corrected from an initial MIT assumption),
       the vendored copy's build provenance (`npm pack` + `esbuild`,
       bundling `@tensorflow/tfjs` and `@tonejs/midi` with their own
@@ -410,18 +410,18 @@ work, regardless of instrument.
       `getDifficulty()` classifies all 102 songs from already-verified
       chord data (27 Beginner / 63 Intermediate / 12 Advanced).
       Intermediate unlocks after 5 completed Beginner songs, Advanced
-      after 5 completed Intermediate songs — tier-gating only, no
+      after 5 completed Intermediate songs - tier-gating only, no
       song-by-song sequencing within an unlocked tier. Locked songs stay
       visible with an explicit unlock-requirement message, never hidden.
       Verified by actually marking 5 real songs "completed" via the
       storage API and confirming the next tier's lock count dropped to
       exactly the expected value, not just reading the gating code.
-- [x] **Zero-friction lesson entry** — landing on the Lessons tab (now
+- [x] **Zero-friction lesson entry** - landing on the Lessons tab (now
       the default tab) drops straight into the next incomplete lesson
       (Day 1 for a brand-new user), confirmed with a cleared-localStorage
       test. The lesson map is still one tap away via the existing exit
       link for anyone who wants to browse instead.
-- [x] **Tabs reordered, Lessons first** — confirmed as both the markup
+- [x] **Tabs reordered, Lessons first** - confirmed as both the markup
       order and the default active tab on load.
 - [x] **Vivaldi added** to the repertoire catalog (catalog-only, "Spring"
       from The Four Seasons, composer died 1741, safely public domain).
@@ -429,31 +429,31 @@ work, regardless of instrument.
 ## Honest summary of what's NOT fully done
 
 - **Moonlight Sonata** was never built, despite being explicitly
-  discussed as a possible capstone — Pachelbel's Canon in D (already
+  discussed as a possible capstone - Pachelbel's Canon in D (already
   built) was kept instead. If a Moonlight Sonata excerpt is wanted, it's
   real, scoped future work, not something quietly skipped.
 - **7 of 8 pieces** in the advanced-repertoire catalog (now 9 with
-  Vivaldi) are catalog-only — real, verified metadata, no fabricated
+  Vivaldi) are catalog-only - real, verified metadata, no fabricated
   chart, but no interactive excerpt. Only Für Elise's opening and the
   full Canon in D got real built lessons.
 - **90 of 102 songs** don't have full verse/chorus/bridge structure data
-  — only the main 4-chord loop. Building full structure for the rest
+  - only the main 4-chord loop. Building full structure for the rest
   would be a much larger per-song research lift than the simple-loop
   version, same honest scope line drawn in earlier commits.
 - **Camera Overlay** is a real, working two-tap linear-mapping
   implementation, explicitly not full computer-vision keyboard
-  detection — stated as a Phase 2 boundary from the start, not changed
+  detection - stated as a Phase 2 boundary from the start, not changed
   in this audit.
 - **The falling-note highway** is wired into Follow Along only, not
   Ear Check or Camera Overlay (the latter was explicitly marked
   optional/time-permitting when requested).
 - **The Capacitor iOS app** is scaffolded and `cap sync`-clean but has
   never been opened in Xcode, built, or run on a simulator/device from
-  this environment — genuinely cannot be, for the credential/interactive
+  this environment - genuinely cannot be, for the credential/interactive
   reasons stated above.
 - **Difficulty tiers** are computed by a consistent rule (chord
   complexity + a jazz/classical-is-Advanced category rule), not by
-  individually hand-reviewing all 102 songs one at a time — a
+  individually hand-reviewing all 102 songs one at a time - a
   deliberate choice for consistency and auditability over manual
   spot-judgment at this volume, documented in the `getDifficulty()`
   function itself for anyone who wants to review or override specific
@@ -466,20 +466,20 @@ during this specific audit pass (not assumed correct from having built
 it earlier in the project) wherever that was practical in the time
 available, with network-request logs, localStorage inspection, direct
 unit tests of timing/pitch math, and the live production site itself
-all used as real evidence — not just reading the source code back.
+all used as real evidence - not just reading the source code back.
 
 ## 2026-10-05 update: Lesson 1 redesign, mascot, piano-buying intro, ~100 real lessons
 
 Prompted by Sid's direct feedback on a screenshot of the old Lesson 1
 ("chord 2 of 4" showing two highlighted keys with zero explanation of
-why) — this pass rebuilt the whole first-run experience end to end.
+why) - this pass rebuilt the whole first-run experience end to end.
 
 - [x] **Lesson 1 rewritten** (`js/lessons-ui.js`, `runLesson1`) to fix
       the actual reported confusion: every chord screen now spells out
       *all* of its notes by name ("It's 3 keys, all lit up below: G, B,
       D") instead of silently highlighting multiple keys. New flow:
       teach each chord one at a time -> quiz (play all 4 in order) ->
-      "let's play a real song" (Shallow — Lady Gaga/Bradley Cooper,
+      "let's play a real song" (Shallow - Lady Gaga/Bradley Cooper,
       chosen because its verified chords are *literally* G-D-Em-C with
       no capo/alternate-version caveat, unlike 5 other candidates) ->
       rapid-fire montage through the other 26 confirmed library songs
@@ -493,15 +493,15 @@ why) — this pass rebuilt the whole first-run experience end to end.
       pitch-match calibration) -> "Your first 4 chords." `lesson-1`'s
       id and saved progress/badge wiring are untouched; only its
       position in the on-screen list shifted.
-- [x] **"Get yourself a piano" intro card** (`runPianoIntro`) — real,
+- [x] **"Get yourself a piano" intro card** (`runPianoIntro`) - real,
       researched advice (where to find a cheap/free keyboard, what to
       check before taking one home, weighted vs. unweighted explained
       plainly, honest budget expectations, a real caution about free
       acoustic pianos), shown before any interactive content.
 - [x] **Mascot** (`assets/mascot.svg`, drawn and committed separately by
-      Sid — originally a wallaby, then swapped to a panda, same file
+      Sid - originally a wallaby, then swapped to a panda, same file
       path both times) replaces the key logo as the header/favicon/
-      PWA icon everywhere — PNG icons regenerated at all 5 sizes
+      PWA icon everywhere - PNG icons regenerated at all 5 sizes
       directly from the new SVG each time it changed (via `sips`, the
       only SVG-capable rasterizer available in this environment; no
       `rsvg-convert`/`inkscape`/`imagemagick` installed). A cropped
@@ -509,11 +509,11 @@ why) — this pass rebuilt the whole first-run experience end to end.
       with the full artwork) is used as a small recurring narrator
       avatar (`mascotSay()` helper) next to the simplified lesson copy
       throughout Lesson 1, part of "Get Started," and every "Master
-      this song" lesson — not full Duolingo-owl animation, but a
+      this song" lesson - not full Duolingo-owl animation, but a
       consistent illustrated presence, as asked. `assets/logo.svg` is
       kept in the repo as a secondary mark, just no longer referenced
       as the primary logo.
-- [x] **Copy simplified** in Lesson 1 and the start of Lesson 2 —
+- [x] **Copy simplified** in Lesson 1 and the start of Lesson 2 -
       shorter sentences, one instruction per screen, "chord" explained
       in one plain sentence on first use instead of assumed knowledge,
       "diminished" reframed as "sounds unstable" with the technical term
@@ -530,20 +530,20 @@ why) — this pass rebuilt the whole first-run experience end to end.
       (Lesson 30), 6 Advanced-tier lessons after the jazz/classical
       bonus content (Lesson 37). Honest final count: **102 lessons**
       (2 pre-lessons + 37 theory + 63 song-mastery), every single one
-      real and clickable — nothing padded to hit a round number.
+      real and clickable - nothing padded to hit a round number.
       "Bohemian Rhapsody" is deliberately excluded from song-mastery
       lessons because its own chord data literally says "varies
       dramatically by section," which the parser correctly can't turn
-      into playable chords — that's the one confirmed-chord song that
+      into playable chords - that's the one confirmed-chord song that
       didn't make the cut, and it's excluded for an honest reason, not
       an oversight.
 - [x] **Right-side lesson roadmap/timeline** (`timelineHtml()` /
-      `.hk-roadmap*` CSS) — persistent sidebar showing all 102 real
+      `.hk-roadmap*` CSS) - persistent sidebar showing all 102 real
       lessons, numbered, clickable (subject to the same linear
       lock-until-previous-done gating the main map already used),
       scrollable. Completed lessons fill in a deliberate **purple**
       accent (`--hk-purple`), distinct from the site's blue/pink base
-      theme from item 17 — verified live by completing a lesson and
+      theme from item 17 - verified live by completing a lesson and
       watching its roadmap node flip from grey to purple without a
       page reload, using real `localStorage` state, not a mockup.
       Caught and fixed a real bug during verification: the sidebar's
@@ -552,7 +552,7 @@ why) — this pass rebuilt the whole first-run experience end to end.
       Practice tab's draggable-playhead feature (`height: 50px;
       overflow: hidden`) and silently clipped the whole sidebar list to
       a sliver. Renamed to `.hk-roadmap*` to resolve it.
-- [x] **Badge thresholds made dynamic** (`js/badges.js`) — "Halfway
+- [x] **Badge thresholds made dynamic** (`js/badges.js`) - "Halfway
       There" and "Curriculum Complete" now compute against the real,
       current `LESSONS.length` (102) instead of a hardcoded "37."
 
@@ -560,20 +560,20 @@ why) — this pass rebuilt the whole first-run experience end to end.
 
 - The chord-symbol-to-notes parser used for "Master this song" lessons
   intentionally folds extensions beyond a plain triad/7th (9ths,
-  altered 5ths, 6/9 chords) into their nearest simple quality — e.g. a
+  altered 5ths, 6/9 chords) into their nearest simple quality - e.g. a
   song charted as "G7b9" plays as a plain G7 shape. This teaches a
   beginner-playable chord, not a full jazz voicing; it's the same
   parser already used elsewhere in the app, not a new simplification
   invented for this feature.
 - "Master this song" lessons teach the chord loop only (press each
-  chord in sequence once) — they do not use the full verse/chorus/
+  chord in sequence once) - they do not use the full verse/chorus/
   bridge `SONG_STRUCTURES` data (only 12 songs have that) or the
   falling-note highway. A genuinely deeper per-song lesson using full
   structure data for more songs remains real future work.
 - The kid-friendly "one clear instruction, zero assumed context" bar
   was applied by review to Lesson 1, "Get Started," and the piano-buying
   card specifically; it was not re-applied line-by-line across all 37
-  pre-existing theory lessons (Lessons 2-37) in this pass — those still
+  pre-existing theory lessons (Lessons 2-37) in this pass - those still
   use the copy style from earlier audits, which is numbers-first but not
   rewritten to this stricter bar.
 
@@ -587,7 +587,7 @@ rest of that page.
       shared by Practice/Camera Overlay/Lessons): suffixes like "mMaj7"
       and "m6" were being swallowed by the plain "m" (minor) rule
       because of check ordering, silently dropping their defining color
-      note — e.g. "CmMaj7" played as a bare C minor triad. Found while
+      note - e.g. "CmMaj7" played as a bare C minor triad. Found while
       building the My Funny Valentine lesson (whose whole point is the
       Cm -> CmMaj7 -> Cm7 -> Cm6 line) and fixed by reordering/adding
       more-specific suffix checks before shorter ones.
@@ -596,39 +596,39 @@ rest of that page.
       sources confirm D-Bm-Em-A for the verse/intro/interlude, including
       exact lyric-to-chord alignment. Upgraded from needs-verification
       to confirmed. Important honesty catch: this is I-vi-ii-V, **not**
-      Lesson 1's I-V-vi-IV — shares 2 of 4 chords but is a genuinely
+      Lesson 1's I-V-vi-IV - shares 2 of 4 chords but is a genuinely
       different progression. The lesson that teaches it says so plainly
       instead of overstating the connection, even though the original
       brief for this lesson assumed it was "the same 4 chords."
 - [x] **Lesson sequence front-loaded per Sid's exact spec**: Pre-lesson
       (piano), Pre-lesson (Get Started/calibration), Lesson 1 ("The 4
       keys to play 100 songs"), 2 (Last Christmas), 3 (Choose your
-      song — a real 10-song choice menu, not a forced montage), 4 (Left
+      song - a real 10-song choice menu, not a forced montage), 4 (Left
       hand vs. right hand, an early two-hand preview), 5 (The jazz
       trick, an early improv preview), 6 (Train your ear), 7-10 (four
       more real songs). By Lesson 10 the user has completed exactly 5
       real Beginner-tier songs (1 from Lesson 3 + 4 from Lessons 7-10)
-      — exactly the existing 5-songs-to-unlock threshold — so
+      - exactly the existing 5-songs-to-unlock threshold - so
       Intermediate unlocks naturally without changing that number.
 - [x] **"Master this song" lessons now mark the song itself completed**
-      (`markSongStatus`), not just the lesson — a real latent bug from
+      (`markSongStatus`), not just the lesson - a real latent bug from
       the previous pass: Discover's tier-gating and the "Leveling Up"/
       "Going Pro" badges read `getSavedSongs()`, which lesson completion
       alone never touched. Fixed so finishing a song-mastery lesson
       genuinely counts toward unlocking the next tier.
 - [x] **Exact repertoire placements** (update mid-pass, overriding the
       earlier generic "Lesson 11 = any popular Intermediate song" plan):
-      Lesson 11 = Almost Blue (Chet Baker) — honestly scoped to just its
+      Lesson 11 = Almost Blue (Chet Baker) - honestly scoped to just its
       two confidently-sourced intro chords (Am, Dm9); its data's third
       "chord" is literal placeholder text ("see notes"), correctly
       excluded. Lesson 15 = My Funny Valentine (the real "minor line
       cliché," Cm-CmMaj7-Cm7-Cm6). Lesson 25 = Für Elise (reuses the
       existing verified excerpt). Lesson 30 = Vivaldi's Spring, Sid's
-      own word "attempt" — honestly scoped down to just the iconic
+      own word "attempt" - honestly scoped down to just the iconic
       repeated opening E major chord gesture (extremely well-documented,
       structural, not guessed), explicitly NOT the full violin melodic
       theme, which no independently-confirmed simplified transcription
-      was found for. Lesson 35 = Chopin's Nocturne Op. 9 No. 2 — kept
+      was found for. Lesson 35 = Chopin's Nocturne Op. 9 No. 2 - kept
       catalog-only with an honest in-lesson explanation (a web search
       confirmed the piece's key/structure/character but not a specific
       note-by-note opening phrase trustworthy enough to teach as real).
@@ -640,9 +640,9 @@ rest of that page.
 - [x] **Lesson numbering now excludes pre-lessons**: "Get yourself a
       piano" and "Get Started" show as "Pre-lesson," not "Lesson 1/2,"
       so Lesson 1 is genuinely "The 4 keys to play 100 songs" as asked.
-      Top-of-tab title added: "100 Lessons to Learn Any Song — START
+      Top-of-tab title added: "100 Lessons to Learn Any Song - START
       HERE." Honest real count: **101 total entries** (2 pre-lessons +
-      99 numbered lessons) — close to but not exactly 100, stated
+      99 numbered lessons) - close to but not exactly 100, stated
       plainly rather than padded.
 - [x] **Discover tab redesigned**: album art now fetched live from the
       iTunes Search API (`itunes.apple.com/search`, free, no API key,
@@ -653,12 +653,12 @@ rest of that page.
       visually distinct banner at the very top of the tab.
       **Verification caveat, stated honestly**: this sandbox's shared
       outbound IP hit iTunes' rate limiting partway through testing
-      (confirmed via direct `curl` — real `access-control-allow-origin:
+      (confirmed via direct `curl` - real `access-control-allow-origin:
       *` header present on a successful request, then 403s on
       subsequent ones from the same IP). Album art genuinely loaded and
       rendered correctly for several songs before the rate limit kicked
       in (confirmed visually), and the fallback correctly took over for
-      the rest with zero layout breakage — but a full, unthrottled
+      the rest with zero layout breakage - but a full, unthrottled
       verification should be re-checked on the real production domain,
       same pattern as the service-worker registration quirk documented
       earlier in this file.
@@ -667,35 +667,35 @@ rest of that page.
 
 - Lesson 25 (Für Elise) and Lesson 37 (the existing "Bonus: Advanced
   repertoire" lesson) both independently show the same Für Elise
-  excerpt — intentional light duplication (Lesson 25 is an early taste,
+  excerpt - intentional light duplication (Lesson 25 is an early taste,
   Lesson 37 is the fuller catalog context) rather than a refactor risk
   taken under time pressure; not a bug, but worth noting as duplicated
   content rather than a single shared touchpoint.
 - The "Choose your song" and front-loaded song lessons (Lessons 2-10)
   reuse the same lightweight chord-walkthrough format as every other
-  "Master this song" lesson — no deeper per-song structure than that.
+  "Master this song" lesson - no deeper per-song structure than that.
 - Jazz/classical showcase lessons at 11/15/25/30/35 are deliberately
-  thin (a handful of chords/notes each) — real, verified, honestly
+  thin (a handful of chords/notes each) - real, verified, honestly
   scoped, but not full performances of those pieces/tunes.
 
 ## 2026-10-05 update: mascot syncs, purple lesson buttons, real overflow fix, upload "Play it"
 
 - [x] **Mascot kept in sync across two more of Sid's own redraws**
       (wallaby -> panda "bamboo stick" pose -> fatter/fluffier/bigger-eyed/
-      no-mouth version) — PNG icons regenerated via `sips` and
+      no-mouth version) - PNG icons regenerated via `sips` and
       `assets/mascot-face.svg` (the cropped narrator avatar) rebuilt to
       match each time, verified visually in the header and in-lesson
       mascot bubble.
 - [x] **Lesson-progression buttons now consistently use `--hk-purple`**
       (the same exact variable the roadmap's "completed" accent uses,
-      not a separate shade) — scoped specifically to the lesson flow
+      not a separate shade) - scoped specifically to the lesson flow
       (`js/lessons-ui.js`'s ~99 Next/Start/Continue/Try-it buttons got a
       new `.hk-btn-lesson-next` class) rather than recoloring every
       `.hk-btn-primary` site-wide, since Practice/calibration/camera
       buttons elsewhere were never asked to change.
 - [x] **The piano-buying intro's "let's go" button was real navigation
       already** (calls `showMap()`), but landed on the lesson map instead
-      of continuing straight into the next lesson — changed it (and the
+      of continuing straight into the next lesson - changed it (and the
       "Get Started" calibration's finish/skip) to call `startNextLesson()`
       instead, so the whole pre-lesson run-up is genuinely zero-friction,
       not just the very first tab load. Verified by clicking through from
@@ -703,7 +703,7 @@ rest of that page.
 - [x] **Real text-overflow bug found and fixed**: `.hk-mascot-bubble`
       (the card wrapping every mascot-narrated lesson screen, including
       the piano-buying intro Sid screenshotted) was a flex item with no
-      `min-width: 0` — the classic flexbox bug where a flex child's
+      `min-width: 0` - the classic flexbox bug where a flex child's
       default `min-width: auto` can let it refuse to shrink/wrap below
       its content's intrinsic width and overflow its container. Fixed
       with `min-width: 0; overflow-wrap: break-word;`. Verified by
@@ -712,41 +712,41 @@ rest of that page.
 - [x] **Discover upload: added a real "Play it" button** after a
       successful transcription, reusing the exact same keyboard-highlight
       + Web Audio synth (`keyboard.js`'s `renderKeyboard`/`playTone`)
-      every other part of the app already uses for playback — no second
+      every other part of the app already uses for playback - no second
       parallel audio path. Verified end-to-end: synthesized a real WAV
       tone in-browser, uploaded it through the actual file input (via a
       `DataTransfer`-constructed `File`, dispatching a real `change`
-      event — not a mocked function call), confirmed a real transcription
+      event - not a mocked function call), confirmed a real transcription
       result, clicked "Play it," and confirmed the keyboard rendered and
       highlighted the correct key with zero console errors.
 - [x] **Investigated "it doesn't work after transcribing" as its own bug,
       per explicit instruction not to assume the Play-it button alone
       fixes it.** Traced the exact real user path: after a transcription,
       the old status message said "head to the Practice tab," but the
-      transcribed notes were never passed or stored anywhere — clicking
+      transcribed notes were never passed or stored anywhere - clicking
       through to Practice (confirmed by actually doing it) shows the
       Practice tab's unrelated default song (`SONGS[0]`) with zero
       connection to the upload. **Finding: this is a real dead end, not a
-      crash** — no console error, no broken state, just nothing useful to
+      crash** - no console error, no broken state, just nothing useful to
       do with the old guidance. The misleading "head to Practice" message
       was removed and replaced with accurate copy; the new "Play it"
       button is the actual fix. Applied the identical fix to the Practice
       tab's own (separate, pre-existing) upload flow too, for the same
-      honesty reason — it had the exact same "Playback is Phase 2" claim,
+      honesty reason - it had the exact same "Playback is Phase 2" claim,
       which would otherwise now be stale/inaccurate.
 
-## 2026-10-05 update: new MIDI tab — computer-keyboard-playable virtual piano
+## 2026-10-05 update: new MIDI tab - computer-keyboard-playable virtual piano
 
-- [x] **New "MIDI" tab** (`js/midi.js`, 6th nav tab) — a fully playable
+- [x] **New "MIDI" tab** (`js/midi.js`, 6th nav tab) - a fully playable
       on-screen keyboard driven by the computer's physical keyboard, for
       anyone exploring the app without a real piano nearby. Reuses
       `keyboard.js`'s existing `renderKeyboard`/`playTone`/
-      `highlightHands` exactly as-is — no second parallel
+      `highlightHands` exactly as-is - no second parallel
       piano-rendering or audio implementation.
 - [x] **Left/right-hand row split, per Sid's exact refinement**: the
       home row (`A S D F G H J K L ; '`, 11 keys) is the left hand's
       range (C3-A#3); the top letter row (`Q W E R T Y U I O P [ ]`,
-      12 keys) is the right hand's range (C4-B4) — a continuous 25-note
+      12 keys) is the right hand's range (C4-B4) - a continuous 25-note
       span, left hand lower/right hand higher, the same register
       convention real two-hand playing uses. Wired into the exact same
       `highlightHands()` left/right color coding (pink/blue) already
@@ -760,7 +760,7 @@ rest of that page.
 - [x] **Real touch/pointer support, verified, not assumed**: `keyboard.js`
       already binds `pointerdown`/`pointerup` (the unified Pointer
       Events API covers mouse AND touch natively), so tapping keys
-      works for free — verified directly by dispatching a real
+      works for free - verified directly by dispatching a real
       `PointerEvent` with `pointerType: "touch"` at a 375px mobile
       viewport and confirming the correct `hk-key-pressed` /
       `hk-key-hand-left` classes applied and cleared correctly. Also
@@ -774,40 +774,40 @@ rest of that page.
 - [x] **No regression to other tabs' keyboard input**: the computer-key
       listener is attached to `document` but checks the MIDI panel's own
       visibility before acting, and ignores input while focus is in a
-      text field — verified by typing "asdf quick" into Discover's
+      text field - verified by typing "asdf quick" into Discover's
       search box (which overlaps several mapped letters) while on a
       different tab and confirming it types normally.
-- [x] Standalone-tab scope only this pass — not wired as an alternate
+- [x] Standalone-tab scope only this pass - not wired as an alternate
       input method inside Practice/Lessons (explicitly left as "your
       call" in the brief; the standalone tab works fully on its own).
 
 ## 2026-10-05 update: visual Middle C + keyboard highlight color sweep
 
 - [x] **"Get Started" calibration now shows Middle C visually, not just
-      text** (`js/calibration.js`) — renders the same `renderKeyboard` +
+      text** (`js/calibration.js`) - renders the same `renderKeyboard` +
       `highlightChord` component used everywhere else (Lesson 1's "the
       1/G," etc.), with Middle C highlighted right above the explanation
       text instead of after it, so the learner sees exactly which key is
       meant instead of reading a description and guessing. No new visual
-      language invented — same highlight mechanism reused directly.
+      language invented - same highlight mechanism reused directly.
       Verified the audio pitch-match flow right after it still works
       (confirmed the expected "Microphone access failed (Permission
       denied)" graceful fallback in this sandbox, same as previously
       documented).
 - [x] **Keyboard highlight color swept from blue to pastel pink**
-      (`.hk-key-highlight` in css/style.css) — this is the generic
+      (`.hk-key-highlight` in css/style.css) - this is the generic
       single-note/chord highlight used in calibration, lessons, Practice,
       and the MIDI tab; it's now pink so it can't be visually confused
       with the deliberate two-hand right-hand blue coloring
       (`.hk-key-hand-right`), which was explicitly left untouched. Also
       updated the badge letter text color to match (dark pink instead of
       dark blue). General UI blue elsewhere (buttons, informational
-      badges) was intentionally left alone — that's the established
+      badges) was intentionally left alone - that's the established
       item-17 pastel blue+pink dual-tone theme, not a stray accent.
 - [x] **Real bug caught and fixed while verifying the color sweep**: the
       "Left hand vs. right hand" preview lesson's right-hand note
       (`js/lessons-ui.js`, `runTwoHandPreview`) was computed as one
-      octave above the chord's top note — for the G chord, MIDI 86 — but
+      octave above the chord's top note - for the G chord, MIDI 86 - but
       the keyboard was only rendered up to MIDI 79. `highlightHands()`
       silently did nothing for a note outside the rendered range, so the
       right hand's note never appeared at all (looked like only the left
@@ -823,11 +823,11 @@ rest of that page.
       text instead of dark-on-purple (a real contrast/readability bug),
       and moved to bottom-right via `.hk-lesson-controls` becoming a
       `flex; justify-content: flex-end` row instead of left-aligned flow
-      — both fixed once in CSS, so every lesson screen picked it up
+      - both fixed once in CSS, so every lesson screen picked it up
       automatically, not just the one screen Sid screenshotted.
 - [x] **Mascot-narration consistency extended through the original Day
       1-10 arc** (`runLesson3` through `runLesson10` in `js/lessons-ui.js`)
-      — these predated the mascot pattern introduced in items 21/25 and
+      - these predated the mascot pattern introduced in items 21/25 and
       were plain-paragraph text; now wrapped in the same `mascotSay()`
       bubble as every newer lesson, matching the screenshot's template
       (title → step indicator → big visual → mascot-narrated card →
@@ -835,7 +835,7 @@ rest of that page.
 - [x] **Playback controls added where something actually plays
       continuously through time**: the early "jazz trick" preview and
       the deeper "Jazz comping & improv" bonus lesson both loop a chord
-      progression via `setInterval` while the user free-plays — these
+      progression via `setInterval` while the user free-plays - these
       now have a real Pause/Resume toggle alongside "Mark complete,"
       bringing them to parity with Practice's playback controls.
       Verified by clicking Pause mid-loop and confirming it stops/
@@ -845,7 +845,7 @@ rest of that page.
 
 - **Days 11-37** (scales, two-hand coordination, 7ths, Canon in D, the
   classical/advanced-repertoire catalog lesson) still use plain-paragraph
-  text, not the mascot-narrated card — a real, explicitly-scoped gap,
+  text, not the mascot-narrated card - a real, explicitly-scoped gap,
   not hidden. The *structural* template (title, step indicator, keyboard,
   bottom-right white-on-purple Next) is now universal across all ~100
   lessons via the shared `lessonShell()` + CSS fix, since every lesson
@@ -855,19 +855,19 @@ rest of that page.
   the mascot wrap for Days 11-37 is real, well-scoped future work, not
   a different kind of change.
 - No other lesson types were found to need playback controls beyond the
-  two jazz-loop lessons — every other lesson type is genuinely a
+  two jazz-loop lessons - every other lesson type is genuinely a
   user-paced "look at this, press Next" flow with nothing actually
   playing through time on its own, which per the brief doesn't need
   pause/rewind/speed controls.
 
 ## 2026-10-05 update: mascot switched from vector SVG to Sid's own illustration
 
-- [x] **Mascot is now a raster illustration, not an SVG** — Sid replaced
+- [x] **Mascot is now a raster illustration, not an SVG** - Sid replaced
       the code-drawn panda with his own original hand-drawn-style
       artwork (confirmed directly with him it's his own work, same
       provenance standard applied to every asset here): `assets/
       mascot-full.png` (1408x768, panda at an upright piano with sheet
-      music — used as a hero illustration on the About page) and
+      music - used as a hero illustration on the About page) and
       `assets/mascot-square.png` (768x768, used for the header logo,
       favicon, and all PWA/iOS icon generation).
 - [x] Regenerated all 5 PWA icon sizes from `mascot-square.png` via the
@@ -875,11 +875,11 @@ rest of that page.
 - [x] **New narrator avatar**: `assets/mascot-face.png`, a 420x420 crop
       of `mascot-square.png` tight on the panda's face (cropped with
       PIL, checked visually that it still reads clearly at the small
-      48px avatar size) — replaces `assets/mascot-face.svg` everywhere
+      48px avatar size) - replaces `assets/mascot-face.svg` everywhere
       it was referenced (`js/lessons-ui.js`'s `mascotSay()`, `js/midi.js`'s
       caveat card).
 - [x] `assets/mascot-full.png` used as a hero illustration on the About
-      page (`js/about.js`) — a natural fit for the wider image per the
+      page (`js/about.js`) - a natural fit for the wider image per the
       "use it where a wide illustration fits better" guidance.
 - [x] Old `assets/mascot.svg` / `assets/mascot-face.svg` left in the repo
       unreferenced (same "don't delete, just stop using as primary"
@@ -895,7 +895,7 @@ because the mascot was hand-coded SVG shapes that could be edited
 directly. That's no longer true: future requests like "change the
 mascot's pose" or "make it a different color" need a **new image
 supplied by Sid**, the same way `mascot-full.png`/`mascot-square.png`
-themselves arrived — not something achievable by editing code.
+themselves arrived - not something achievable by editing code.
 
 ## 2026-10-05 update: iOS App Store submission prep + a content tweak
 
@@ -904,7 +904,7 @@ themselves arrived — not something achievable by editing code.
       stores removed), with the school/church suggestion reframed as
       "borrow access to one" so it doesn't read redundant against a
       single-marketplace mention.
-- [x] **iOS App Store icon regenerated for real** — the asset catalog's
+- [x] **iOS App Store icon regenerated for real** - the asset catalog's
       `AppIcon-512@2x.png` was still the generic Capacitor placeholder
       (a plain blue "X" logo), never replaced since the item-12
       scaffolding. Now a real 1024x1024 icon cropped from
@@ -912,10 +912,10 @@ themselves arrived — not something achievable by editing code.
       to cut excess empty margin, so it reads clearly at home-screen
       size), no alpha channel, no pre-applied corner rounding. Confirmed
       Apple's current icon spec for this Capacitor/Xcode version only
-      needs this one "universal" 1024x1024 entry — Xcode 14+ generates
+      needs this one "universal" 1024x1024 entry - Xcode 14+ generates
       every other size automatically; there is no longer a long list of
       individual sizes to fill in by hand.
-- [x] **Launch screen rebranded** — `Splash.imageset` was also still the
+- [x] **Launch screen rebranded** - `Splash.imageset` was also still the
       generic Capacitor default (plain white, tiny blue logo). Replaced
       with the site's pastel background color and the mascot centered,
       generated with PIL from the same source image.
@@ -927,24 +927,24 @@ themselves arrived — not something achievable by editing code.
       (calibration + Ear Check, live/never recorded), `basic-pitch`
       transcription (on-device, vendored, never uploaded), localStorage
       contents (progress/streaks/badges/saved songs, never transmitted),
-      and — caught and fixed while verifying this — the **iTunes Search
+      and - caught and fixed while verifying this - the **iTunes Search
       API album-art lookup (item 25) is a real network request that a
       stale "zero third-party network requests" claim in
       `THIRD_PARTY_NOTICES.md` didn't disclose**; fixed that file too so
       both documents now honestly describe the one real external call
       the app makes.
 - [x] **App Store Connect listing drafted**: `ios/APP_STORE_LISTING.md`
-      — name, subtitle options (one over the 30-char limit in Sid's own
+      - name, subtitle options (one over the 30-char limit in Sid's own
       draft phrasing, flagged with compliant alternatives), promotional
       text, full description, keywords, support/marketing/privacy URLs,
       category, and a full age-rating question-by-question table with
       reasoning (every category "None"/"No," should land on 4+).
 - [x] **Bundle identifier and version confirmed sane**: already
       `com.haydenkeys.app` / marketing version 1.0 / build 1 from the
-      item-12 scaffolding — flagged in the checklist for Sid to confirm
+      item-12 scaffolding - flagged in the checklist for Sid to confirm
       before registering, not silently assumed correct.
 - [x] **Final numbered submission checklist**: `ios/SUBMISSION_CHECKLIST.md`
-      — exactly what's done vs. what Sid needs to do himself in Xcode/
+      - exactly what's done vs. what Sid needs to do himself in Xcode/
       App Store Connect (sign with his own account, take real
       screenshots, paste in the drafted listing copy and privacy URL,
       answer export compliance with the standard "no custom encryption"
@@ -955,13 +955,13 @@ themselves arrived — not something achievable by editing code.
 ### Honestly, what's still not done (and genuinely can't be, from here)
 
 - The actual build/sign/archive/submit steps need Xcode running
-  interactively with Sid's own Apple Developer account — stated plainly
+  interactively with Sid's own Apple Developer account - stated plainly
   in the checklist, not glossed over.
 - Real device/simulator screenshots for the App Store listing weren't
-  (and couldn't be) captured from this environment — that's listed as
+  (and couldn't be) captured from this environment - that's listed as
   step 6 in `ios/SUBMISSION_CHECKLIST.md` for Sid to do himself.
 - The Privacy Policy URL (`https://haydenkeys.com/privacy.html`) will
-  only actually resolve once the site is deployed with this change —
+  only actually resolve once the site is deployed with this change -
   GitHub Pages deployment is still blocked on the one-time manual
   enablement step documented earlier in this file.
 
@@ -974,16 +974,16 @@ themselves arrived — not something achievable by editing code.
       `maestro-conducting`, `maestro-flute`, `grand-piano`, `harp`,
       `trombone`, `violin-dozing`, `metronome`, `mozart-scores`,
       `music-stand`, `sheet-music-pile`. Cropped by eye against the
-      actual cell boundaries (the grid isn't uniform — the grand-piano
+      actual cell boundaries (the grid isn't uniform - the grand-piano
       panel spans two rows' worth of height), iterated twice to trim
       caption-label bleed-through at the bottom of several crops.
 - [x] **Primary brand mark stays fixed**: header, favicon, and app icon
-      still only ever use `mascot-square.png`/`mascot-full.png` —
+      still only ever use `mascot-square.png`/`mascot-full.png` -
       intentionally not randomized, per the explicit instruction to keep
       the recognizable brand mark consistent.
 - [x] **Contextual variety wired into specific moments**, not random
       everywhere: `mascotSay()` (`js/lessons-ui.js`) now takes an
-      optional `pose` argument — classical showcase lessons (Beethoven,
+      optional `pose` argument - classical showcase lessons (Beethoven,
       Vivaldi, Chopin) use `composer`/`music-stand`/`mozart-scores`;
       jazz lessons (Almost Blue, My Funny Valentine, both jazz-comping
       lessons) use `trombone`/`harp`/`maestro-flute`; genuine level-up/
@@ -996,7 +996,7 @@ themselves arrived — not something achievable by editing code.
       rather than one static face on every one of dozens of song
       screens, each song's title is hashed to pick one of 6 poses
       (`grand-piano`/`harp`/`trombone`/`violin-dozing`/`metronome`/
-      `maestro-flute`) — the same song always shows the same pose (not
+      `maestro-flute`) - the same song always shows the same pose (not
       re-randomized on every visit), but different songs genuinely show
       different poses. Verified directly: "No Woman No Cry" and "With or
       Without You" render two different poses back to back.
@@ -1007,124 +1007,124 @@ themselves arrived — not something achievable by editing code.
       service-worker noise; all 12 new pose assets confirmed loading
       with 200 OK via the network request log (no broken images).
 
-## Full project audit, 2026-10-05 (item 36 — items 21-35 re-verified)
+## Full project audit, 2026-10-05 (item 36 - items 21-35 re-verified)
 
 Sid asked directly "is everything we spoke about done?" Same rigor as
 item 20's audit of items 1-19, now for 21-35: every line below was
 checked by actually exercising it in a real browser (local server AND
 the live production site), not just read from code. One real bug was
-found and fixed during this pass (see below) — this audit isn't a
+found and fixed during this pass (see below) - this audit isn't a
 rubber stamp.
 
-- [x] **Lesson 1 redesign** (item 21) — explicit per-note chord
+- [x] **Lesson 1 redesign** (item 21) - explicit per-note chord
       explanations, the real-song walkthrough, the montage, and the
       level-up screen all confirmed working end to end earlier this
       session and re-spot-checked now; structure unchanged by later work.
-- [x] **Simplified copy, numbers-first** (item 22) — piano-buying intro
+- [x] **Simplified copy, numbers-first** (item 22) - piano-buying intro
       and Lesson 1/2 confirmed reading plainly on the live site.
-- [x] **Purple roadmap/timeline** (item 22) — confirmed on both the live
+- [x] **Purple roadmap/timeline** (item 22) - confirmed on both the live
       site and local server: completed nodes fill purple, current node
       gets "you are here," pre-lesson steps correctly excluded from the
       numbered count.
 - [x] **Mascot narrating lessons, final illustration** (item 23,
-      superseded by 32/33/35) — re-grepped the entire codebase for
+      superseded by 32/33/35) - re-grepped the entire codebase for
       `mascot.svg`/`mascot-face.svg`: zero leftover references anywhere.
       Every narrator moment uses the real PNG illustration or one of the
       12 extracted poses.
-- [x] **Piano-buying intro, Facebook-Marketplace-only** (items 24+34) —
+- [x] **Piano-buying intro, Facebook-Marketplace-only** (items 24+34) -
       confirmed live: "Check Facebook Marketplace" only, no Craigslist/
       OfferUp/thrift-store list, school/church reframed as "borrow
       access to one."
-- [x] **Kid-friendly quality bar** — spot-checked Lesson 1's chord
+- [x] **Kid-friendly quality bar** - spot-checked Lesson 1's chord
       screens, the MIDI tab caveat, and the jazz-trick preview: short
       sentences, one instruction per screen, holding up. (As already
       documented honestly in earlier STATUS.md entries, this bar was
       never claimed to be retrofitted onto Days 11-37's older plain-text
-      lessons — that gap is pre-existing and still open, not new.)
+      lessons - that gap is pre-existing and still open, not new.)
 - [x] **Discover: real album art, chords on cards, upload banner top**
-      (item 25) — confirmed live: real cover art loading for multiple
+      (item 25) - confirmed live: real cover art loading for multiple
       songs, chords shown directly under each title, upload banner is
       the first thing in the tab.
-- [x] **Early lesson resequence matches Sid's exact spec** (item 25) —
+- [x] **Early lesson resequence matches Sid's exact spec** (item 25) -
       confirmed via the live roadmap's full text dump: Pre-lesson(piano)
       → Pre-lesson(Get Started) → 1 The 4 keys → 2 Last Christmas → 3
       Choose your song → 4 Left hand vs. right hand → 5 The jazz trick →
       6 Train your ear → 7-10 four more songs → 11 Almost Blue → 12 Day
       11 scale → 13 Intermediate unlocked: Bad Guy → ... exact order,
       no drift.
-- [x] **Interstellar ear-training example, honestly scoped** (item 25) —
+- [x] **Interstellar ear-training example, honestly scoped** (item 25) -
       confirmed the live lesson's actual text: explicitly explains why
       Interstellar was skipped (modern film score, living composer, not
       reducible without misrepresenting it) and substitutes Ode to Joy.
-- [x] **Showcase placements 11/15/25/30/35** (item 25 update) — confirmed
+- [x] **Showcase placements 11/15/25/30/35** (item 25 update) - confirmed
       programmatically against the live site's own loaded `LESSONS`
       array: Almost Blue/My Funny Valentine/Für Elise/Vivaldi/Chopin
       land at exactly positions 11/15/25/30/35.
-- [x] **Hz explanation in How It Works** — confirmed live, full correct
+- [x] **Hz explanation in How It Works** - confirmed live, full correct
       text (Heinrich Hertz, 1880s, cycles-per-second renaming).
-- [x] **In-app About/Credits page, README tightened** (item 26) —
+- [x] **In-app About/Credits page, README tightened** (item 26) -
       confirmed live: About page renders with the mascot-full.png hero,
       live-computed counts, Privacy Policy link.
 - [x] **Vivaldi + difficulty tiers with real 5-songs gating** (item 19,
-      re-confirmed) — Discover live shows "Beginner unlocked ·
-      Intermediate: 0/5 Beginner songs completed · Advanced: 0/5..." —
+      re-confirmed) - Discover live shows "Beginner unlocked ·
+      Intermediate: 0/5 Beginner songs completed · Advanced: 0/5..." -
       gating logic unaffected by any later change.
-- [x] **Daily goal + real badges** (item 20, re-confirmed) — confirmed
+- [x] **Daily goal + real badges** (item 20, re-confirmed) - confirmed
       live on the lesson map: streak counter, daily-goal progress bar,
       and the 9-badge strip all render and read from real localStorage
       state, not hardcoded.
-- [x] **Mascot pose variety live, not regressed** (item 35) — re-verified
+- [x] **Mascot pose variety live, not regressed** (item 35) - re-verified
       after the duplicate-lesson fix below (which changes lesson
       ordering/count): poses still resolve correctly per-context.
-- [x] **Purple Next buttons, white text, bottom-right** (items 27/31) —
+- [x] **Purple Next buttons, white text, bottom-right** (items 27/31) -
       confirmed on multiple lesson screens; CSS rule and the 99
       `.hk-btn-lesson-next` call sites in `js/lessons-ui.js` intact.
-- [x] **MIDI tab** (item 28) — left/right-hand row split and caveat
+- [x] **MIDI tab** (item 28) - left/right-hand row split and caveat
       confirmed rendering correctly live; touch/pointer support was
       verified with a real dispatched `PointerEvent` earlier this
       session and the underlying `keyboard.js` code is unchanged since.
-- [x] **Discover upload "Play it" + the dead-end bug fix** (item 27) —
+- [x] **Discover upload "Play it" + the dead-end bug fix** (item 27) -
       code and the real end-to-end verification (synthesized WAV through
       the actual file input) both still in place; not re-run with a real
       file this pass to save time, but nothing touched that code path
       since.
-- [x] **Text-overflow fix holding** (item 27) — `.hk-mascot-bubble`'s
+- [x] **Text-overflow fix holding** (item 27) - `.hk-mascot-bubble`'s
       `min-width: 0` rule confirmed still present in `css/style.css`.
 - [x] **Middle-C visual highlight + pink key-highlight sweep**
-      (items 29-30) — confirmed live: Middle C renders pink-highlighted
+      (items 29-30) - confirmed live: Middle C renders pink-highlighted
       with the "Middle/C" badge before the explanation text.
-- [x] **iOS submission prep reflects the final mascot** — confirmed: the
+- [x] **iOS submission prep reflects the final mascot** - confirmed: the
       iOS `AppIcon-512@2x.png` was generated from `mascot-square.png`
       (Sid's real illustration), not the old SVG; item 35's pose
       additions only added *new* files under `assets/mascot-poses/` and
       never touched `mascot-square.png`/`mascot-full.png` themselves, so
       the iOS assets remain valid with no further action needed.
-- [x] **Playback speed control still synced** (item 18) — confirmed live
+- [x] **Playback speed control still synced** (item 18) - confirmed live
       in Practice: clicking 0.5× actually re-renders the falling-note
       highway at the new speed, with the new metronome mascot icon next
       to the control, unaffected by everything added since.
-- [x] **No lyrics, no YouTube import anywhere** — re-grepped the entire
+- [x] **No lyrics, no YouTube import anywhere** - re-grepped the entire
       codebase fresh for this audit: zero real lyric text (only policy/
       doc mentions of the *rule* itself, plus one unrelated use of the
       word "lyrical" and basic-pitch's own internal MIDI-event-type
       strings), zero YouTube-import code (only the Discover/About pages'
       own explanations of why it's *not* supported).
 - [x] **GitHub Pages deploying cleanly, live site matches latest commit**
-      — **this had previously been documented as blocked** (GitHub's
+      - **this had previously been documented as blocked** (GitHub's
       one-time admin-only first-enablement restriction). Re-checked via
       the GitHub Actions API for real: the latest run (triggered by
       commit `61030f0`) shows every step, including "Configure Pages,"
-      completing with `success` — someone with admin access (presumably
+      completing with `success` - someone with admin access (presumably
       Sid) must have done the one-time manual toggle at some point.
       `https://haydenkeys.com` now resolves (via a 301 from
       `astryks.github.io/haydenkeys`) and serves the exact latest commit
-      — confirmed directly via `curl` (MIDI tab in the nav, `privacy.html`
+      - confirmed directly via `curl` (MIDI tab in the nav, `privacy.html`
       live, the new CSS rules all present server-side).
 
 ### A real regression caught and fixed during this audit
 
 **Duplicate lesson content**: "My Funny Valentine" was being taught
-*twice* — once at its dedicated showcase slot (Lesson 15, the real
+*twice* - once at its dedicated showcase slot (Lesson 15, the real
 "minor line cliché" 4-chord teaching), and a second time as a generic
 "Master: My Funny Valentine" song-mastery lesson generated by the
 Advanced-tier sweep, with the exact same chords. Root cause: when the
@@ -1138,7 +1138,7 @@ confirmed, parseable Advanced-tier song and slipped through. **Fixed**:
 `ADVANCED_SONGS` is now filtered against `consumedTitles` like the other
 two tiers, and both showcase songs are added to that set explicitly.
 This also corrects the real total lesson count from a stale 101 down to
-a genuine, duplicate-free **100** — the "100 Lessons" title is now
+a genuine, duplicate-free **100** - the "100 Lessons" title is now
 literally accurate, not just close. Verified: only one "My Funny
 Valentine" entry remains, all five showcase positions (11/15/25/30/35)
 are unaffected, and all lesson IDs remain unique.
@@ -1151,7 +1151,7 @@ frozen old version (confirmed directly: an already-cached tab showed the
 old key-shaped logo and a 5-tab nav with no MIDI tab, despite the server
 having the correct latest files) until the user clears site data or lets
 the standard two-reload service-worker update cycle complete. The
-*deployment itself* is genuinely correct and current — this is a
+*deployment itself* is genuinely correct and current - this is a
 client-side caching lag for returning visitors specifically, inherent to
 the cache-first PWA strategy chosen back in item 12, not something any
 of today's changes broke. Worth knowing about, not something this pass
@@ -1160,7 +1160,7 @@ attempted to redesign.
 ### Bottom line
 
 Everything explicitly asked for across items 21-35 is genuinely built,
-wired up, and re-verified working — with one real bug found and fixed
+wired up, and re-verified working - with one real bug found and fixed
 (the My Funny Valentine duplicate) and one pre-existing caching
 behavior surfaced and explained (not fixed, since redesigning the SW
 update strategy wasn't asked for). The lesson count is now a clean,
@@ -1177,13 +1177,13 @@ duplicate-free 100. No other regressions found.
       cutout with no holes bled through the fur or sheet music.
 - [x] **Apple's no-alpha requirement for the iOS App Store icon handled
       correctly**: the new transparent `mascot-square.png` is NOT used
-      directly for `AppIcon-512@2x.png` — it's flattened onto a solid
+      directly for `AppIcon-512@2x.png` - it's flattened onto a solid
       opaque cream background (`#fdf6fa`, the site's own background
       color) first, then the same tightened crop from item 32 is
       reapplied, confirmed via `file`/PIL that the saved icon has mode
       `RGB` (no alpha channel at all).
 - [x] **PWA/app-icon-style sizes flattened, favicon sizes kept
-      transparent** — per Sid's own guidance ("flattening is the safer
+      transparent** - per Sid's own guidance ("flattening is the safer
       default for app-icon-style uses, reserve pure transparency for
       in-page display: header/favicon/narrator avatar"): `icon-16.png`/
       `icon-32.png` (favicon `<link>` tags) stay transparent (`RGBA`);
@@ -1193,13 +1193,13 @@ duplicate-free 100. No other regressions found.
       the new art for consistency.
 - [x] **Narrator avatar (`assets/mascot-face.png`) regenerated as
       transparent** too, from the new source, same crop region as
-      before — explicitly one of the "in-page display" uses Sid called
+      before - explicitly one of the "in-page display" uses Sid called
       out for keeping transparency.
 - [x] **Tagline changed** to Sid's exact wording, "Learn any song in
       piano for free!", replacing "Learn piano the way four chords
       taught the world a hundred songs." in both `index.html` and
       `privacy.html` (the only two places it appeared).
-- [ ] **`assets/mascot-poses/*.png` background removal** — explicitly
+- [x] ~~**`assets/mascot-poses/*.png` background removal**~~ **Obsolete (2026-10-07 audit):** these PNGs are no longer shown anywhere; `chat.js` maps each pose path to the animated SVG panda. Was: explicitly
       flagged by Sid as optional/not required this pass. Not done; those
       12 files still have their original cream background. Flagging as
       a real, known follow-up rather than silently leaving it undone.
@@ -1218,51 +1218,51 @@ noise.
       ("This chord is called G. It's 3 keys, all lit up below: G, B, D")
       used "G" for two different things with nothing distinguishing them.
       New wording for each chord explicitly separates the two: *"This
-      chord's name is G — named after its lowest note. It's made of 3
+      chord's name is G - named after its lowest note. It's made of 3
       individual keys, named G, B, D: press all 3 together and that's the
       G chord."* Verified live for all 4 chords (G/D/Em/C) in a real
-      browser — each one correctly names the chord once, then lists its
+      browser - each one correctly names the chord once, then lists its
       individual notes once, with explanatory text in between.
 - [x] **Middle-C physical anchor added to all 4 chords**, reusing the
       exact landmark from the Get Started calibration lesson (the "two
       black keys nearest the middle" method), not re-explaining it from
       scratch:
-      - G — "5 white keys to the right of Middle C — count them: C, D, E, F, G."
-      - D — "2 white keys to the right of Middle C (C, D — that's it)."
-      - Em — "3 white keys to the right of Middle C (C, D, E)."
-      - C — "Middle C itself — the exact key you found in Get Started."
+      - G - "5 white keys to the right of Middle C - count them: C, D, E, F, G."
+      - D - "2 white keys to the right of Middle C (C, D - that's it)."
+      - Em - "3 white keys to the right of Middle C (C, D, E)."
+      - C - "Middle C itself - the exact key you found in Get Started."
       Verified live, each anchor line renders under its corresponding
       chord.
 - [x] **New optional, non-blocking reference page built**: `reference.html`.
-      Checked first whether something suitable already existed — How It
+      Checked first whether something suitable already existed - How It
       Works covers the pitch-detection ML model specifically, not a
       keys/chords glossary, so it's genuinely different content, not a
       duplicate. The new page has a full 2-octave keyboard diagram with
       every key labeled with its real note name, plus a chord glossary
-      (G, D, Em, C, Am, Bm) spelled out note-by-note — all pulled from the
+      (G, D, Em, C, Am, Bm) spelled out note-by-note - all pulled from the
       same already-verified chord data the lessons themselves use
       (`LESSON1_CHORDS`, `LESSON5_CHORD`, `LESSON2_DEGREES`), not invented
       fresh. Linked from Lesson 1's "these 4 are the most useful to
       start" screen via a small, clearly secondary line: *"Curious about
-      all the keys and chords? Tap here — you don't need this right now
-      to keep going."* — opens in a new tab (`target="_blank"`), never
+      all the keys and chords? Tap here - you don't need this right now
+      to keep going."* - opens in a new tab (`target="_blank"`), never
       inserted into the main lesson flow. Verified live: keyboard renders
       with every note correctly labeled (C, C#, D, D#, E, F, F#, G, G#,
       A, A#, B repeating across both octaves), glossary shows all 6
       chords with correct notes, zero console errors.
-- [x] **"Make You Feel My Love" (Adele) checked before adding** — given
+- [x] **"Make You Feel My Love" (Adele) checked before adding** - given
       the real duplicate-lesson bug item 36 found (My Funny Valentine
       taught twice), explicitly grepped the library first rather than
       assuming. Confirmed it already exists (added in item 16) with
       honest data: `confidence: "needs-verification"`, chords left as
       "insufficient agreement for a simple chart" with notes explaining
-      the Dylan-original vs. Adele-cover dispute. Left untouched — no
+      the Dylan-original vs. Adele-cover dispute. Left untouched - no
       duplicate created.
 - [x] **"My Love Mine All Mine" (Mitski) added**, genuinely new. Chords
-      (Amaj7, Db7, D, Dm — the "Creep progression": a borrowed major III
+      (Amaj7, Db7, D, Dm - the "Creep progression": a borrowed major III
       and a minor iv) cross-checked across multiple independent sources
       that agree on the exact chord set and independently name the same
-      Creep-progression connection — not one chart copied around — so
+      Creep-progression connection - not one chart copied around - so
       marked `confidence: "confirmed"`, not needs-verification. Verified
       via node: parses correctly, classifies as Intermediate difficulty,
       brings the real song count to 103 and `TOTAL_LESSON_COUNT` to 101
@@ -1270,26 +1270,26 @@ noise.
       confirmed no ID collisions. Verified live in the roadmap sidebar at
       position 88.
 - [x] **Lesson 1's opening restructured into the exact 6-step arc**:
-      1. **Teaser, before any teaching** — "You can play 100 songs with
+      1. **Teaser, before any teaching** - "You can play 100 songs with
          just 4 chords. Here they are. Here's proof," cycling through 3
          real library songs (Love Story, Someone You Loved, Perfect) with
          "Next proof" / final "Okay, show me how" buttons. Verified live,
          all 3 play through correctly.
-      2. **Explicit slow-down transition** — "Okay — let's slow down and
+      2. **Explicit slow-down transition** - "Okay - let's slow down and
          actually learn this," into the existing what's-a-chord explainer.
          Verified live.
-      3. **Finding G, equipment-agnostic** — "First, find G — no matter
+      3. **Finding G, equipment-agnostic** - "First, find G - no matter
          what keyboard you've got," using the same Middle-C-anchored,
          count-don't-assume-edge method as calibration: "count 5 white
          keys to the right, including Middle C itself... This works the
-         same way whether your keyboard has 25 keys or 88 — always count
+         same way whether your keyboard has 25 keys or 88 - always count
          from Middle C, never from the edge." Verified live with the G key
          correctly highlighted and labeled on the keyboard.
       4. **All 4 chords taught with the item-38 clarity fix** (see above).
-      5. **"Other chords exist" + optional reference link** — "These 4 are
+      5. **"Other chords exist" + optional reference link** - "These 4 are
          the most useful to start... There are other chords out there
          too," with the `reference.html` link. Verified live.
-      6. **Return to real songs, framed as the teaser's payoff** — the
+      6. **Return to real songs, framed as the teaser's payoff** - the
          montage-intro screen now explicitly says "Remember the proof from
          the very start? Here's the rest of it," and the montage pool
          correctly excludes the 3 songs already shown in the teaser
@@ -1304,25 +1304,25 @@ noise.
       `node --check js/lessons-ui.js` passes. Network tab shows all
       requests 200 OK; only console message is the single known
       sandbox-only "unknown error... fetching the script" service-worker
-      noise already documented in earlier audits — no new errors.
+      noise already documented in earlier audits - no new errors.
 
 ## 2026-10-05 update: Lesson 1's opening hook rewritten to be concrete (item 41)
 
 - [x] **Old abstract, cycling "proof" teaser replaced** with a single
       concrete hook screen: "Did you know 4 chords play over 100 songs?
-      From 'Love Story' by Taylor Swift to '[X]' by [artist] — same 4
+      From 'Love Story' by Taylor Swift to '[X]' by [artist] - same 4
       chords, every time," followed by an explicit, non-jargon-dump
       explanation of why numbers are taught before letters ("the same
       numbers work in any key"), then the actual 4 chords shown as
       number+letter pills (1 G, 5 D, 6 Em, 4 C) right up front, ending in
       "Let's start with G."
 - [x] **Sid's suggested second example song, "Careless Whisper" (George
-      Michael), checked before use and found NOT to fit** — its real,
+      Michael), checked before use and found NOT to fit** - its real,
       sourced chords are Dm–Gm7–Bb–Am (i–iv–VI–v in D minor), a
       genuinely different progression, not the I-V-vi-IV / G-D-Em-C
       family. Rather than use an inaccurate example in the single most
       important hook line in the app, swapped in "Let It Be" (The
-      Beatles) — already in the library as a `confidence: "confirmed"`,
+      Beatles) - already in the library as a `confidence: "confirmed"`,
       `oneFiveSixFourMatch: "exact"` match (C-G-Am-F, sources directly
       naming it I-V-vi-IV).
 - [x] **Montage pool adjusted** to exclude both named hook songs (Love
@@ -1330,7 +1330,7 @@ noise.
       so nothing repeats twice in one lesson; montage-intro's callback
       line updated to reference the two songs actually named in the new
       hook instead of the old 3-song cycling "proof."
-- [x] Sid again wrote "G A C D" out of habit for the chord names — kept
+- [x] Sid again wrote "G A C D" out of habit for the chord names - kept
       the real, correct G-D-Em-C throughout, same correction applied
       every other time this has come up.
 
@@ -1345,7 +1345,7 @@ the known sandbox-only service-worker noise.
 ## 2026-10-05 update: tuner-style "match this note" button on chord screens (item 41, part 2)
 
 - [x] **New shared `createTunerWidget()` added to `js/pitch.js`**, built
-      directly on `startLivePitchDetection()` — the exact same real
+      directly on `startLivePitchDetection()` - the exact same real
       mic/autocorrelation pitch detector already used by Get Started's
       Middle-C calibration (item 29) and Practice's Ear Check (item
       4/27). No second pitch-detection implementation was written; this
@@ -1355,7 +1355,7 @@ the known sandbox-only service-worker noise.
       call sites already consume.
 - [x] **Wired into Lesson 1's "find G" screen and all 4 chord-teach
       screens** (G/D/Em/C) as a small, clearly optional "Tune this note"
-      button — never auto-started, never blocks the Next/Got it button,
+      button - never auto-started, never blocks the Next/Got it button,
       exactly as asked ("not forced into the flow for someone who
       already knows they're on the right key").
 - [x] **Mic lifecycle bug caught and fixed before shipping**: each lesson
@@ -1372,7 +1372,7 @@ the known sandbox-only service-worker noise.
       the display panel was hidden via the HTML `hidden` attribute, but
       `.hk-tuner-display { display: flex; ... }` has the same CSS
       specificity as the browser's built-in `[hidden]` rule and came
-      later in the stylesheet, so it silently won — the dial was visible
+      later in the stylesheet, so it silently won - the dial was visible
       before the button was even clicked. Fixed by toggling
       `style.display` directly in JS instead of relying on the `hidden`
       attribute.
@@ -1382,12 +1382,12 @@ the known sandbox-only service-worker noise.
       oscillator + `MediaStreamAudioDestinationNode` in place of
       `getUserMedia`'s camera/mic stream, so the exact same
       `AnalyserNode` + `detectPitchInFrame` autocorrelation code in
-      `pitch.js` processed genuine audio samples end-to-end — nothing
+      `pitch.js` processed genuine audio samples end-to-end - nothing
       about the detection path itself was mocked or stubbed. Confirmed
-      live: 392.00 Hz correctly read as "In tune — 392.0 Hz. Nice." with
+      live: 392.00 Hz correctly read as "In tune - 392.0 Hz. Nice." with
       a centered green needle (G4's real frequency); 415 Hz showed a
-      sharp-tilted pink needle with "Sharp — a bit higher... try a key
-      to the left"; 370 Hz showed a flat-tilted needle with "Flat — a
+      sharp-tilted pink needle with "Sharp - a bit higher... try a key
+      to the left"; 370 Hz showed a flat-tilted needle with "Flat - a
       bit lower... try a key to the right." This is the same genuine
       detector real microphone input would drive on a real device.
 
@@ -1403,7 +1403,7 @@ console errors beyond the known sandbox-only service-worker noise.
 
 - [x] **Real Back button added to Lesson 1 and the shared "Master: X"
       song template** (`runMasterSongLesson`, which drives the large
-      majority of auto-generated lesson screens in the app) — a history
+      majority of auto-generated lesson screens in the app) - a history
       stack of full state snapshots is pushed on every forward
       transition; Back pops it and restores the exact same variables
       `renderStep()` reads, so the previous screen's real content comes
@@ -1413,7 +1413,7 @@ console errors beyond the known sandbox-only service-worker noise.
       Honest scope note: the ~37 individually hand-built Lesson 2-37
       functions use the same step-machine pattern but were NOT swept
       this pass (each would need the same history-stack treatment
-      individually) — flagging this as a real, known follow-up rather
+      individually) - flagging this as a real, known follow-up rather
       than claiming full coverage.
 - [x] **Computer-keyboard play extended to lesson screens**: factored
       the MIDI tab's key-mapping/listener (item 28) out of `js/midi.js`
@@ -1424,7 +1424,7 @@ console errors beyond the known sandbox-only service-worker noise.
       visible (`offsetParent !== null`), so multiple tabs/screens can
       each render their own keyboard without conflicting.
 - [x] **Touch tap confirmed already working** on lesson screens (not
-      just assumed) — `keyboard.js`'s shared pointerdown/pointerup
+      just assumed) - `keyboard.js`'s shared pointerdown/pointerup
       handling covers mouse and touch with no extra code; verified live
       at a 375x812 mobile viewport.
 - [x] **Typing-elsewhere guard carried over**: the shared listener
@@ -1448,22 +1448,22 @@ errors beyond the known sandbox-only service-worker noise.
       existing About/Privacy/README footer links. Genuinely marked as
       not wired up yet, not silently broken: `data-stripe-link-pending="true"`,
       a dashed-underline style, and a clear "not wired up to a real
-      payment page yet" message if clicked — Sid is creating the actual
+      payment page yet" message if clicked - Sid is creating the actual
       Stripe Payment Link himself; the href and `target="_blank" rel="noopener"`
       are left as one-line code comments for whoever swaps in the real
       URL once he has it.
 - [x] **iOS re-review, not a redo**: confirmed the App Store icon and
       launch screen are still current (both were last regenerated in
-      the item 37 commit, which is also the most recent mascot change —
+      the item 37 commit, which is also the most recent mascot change -
       nothing stale). Confirmed `ios/APP_STORE_LISTING.md`'s song/lesson
       counts and feature list still match the real current app (103
       songs, 101 lessons, MIDI tab and upload-your-own-recording both
-      mentioned) — no stale tagline or feature references found.
+      mentioned) - no stale tagline or feature references found.
 - [x] **A real gap found and fixed, not just reviewed**: `www/` (the
       directory Capacitor actually bundles for the native app) only had
       symlinks for the files that existed when it was first scaffolded.
       `reference.html` (item 38) and `privacy.html` were missing their
-      own symlinks entirely — tapping the in-lesson "Curious about all
+      own symlinks entirely - tapping the in-lesson "Curious about all
       the keys and chords?" link would have 404'd inside the native iOS
       app specifically, even though it worked fine on the web (the web
       serves from the repo root directly, not through `www/`). Fixed by
@@ -1482,32 +1482,32 @@ sandbox-only service-worker noise.
 ## 2026-10-05 update: song-card display bug, upload tile, and upload playback fixes (item 44)
 
 - [x] **Real display bug found and fixed**: a handful of songs stored a
-      prose caveat ("insufficient agreement for a simple chart — see
+      prose caveat ("insufficient agreement for a simple chart - see
       notes") as a literal entry in their `chords` array, meant for the
-      notes field, not a chord chip — so Discover's cards rendered that
+      notes field, not a chord chip - so Discover's cards rendered that
       whole sentence as if it were the chord list (the exact bug in
       Sid's screenshot of Still D.R.E./Someday). Fixed generally in
       `js/discover.js` with a `chordsDisplay()` helper that filters out
       any placeholder/prose string before joining, falling back to a
-      plain "Chords: still being verified — see details" when nothing
-      real is left — fixes this for all 13 affected songs, not just the
+      plain "Chords: still being verified - see details" when nothing
+      real is left - fixes this for all 13 affected songs, not just the
       two screenshotted.
 - [x] **"Someday" (Michael Learns to Rock) re-researched and fixed for
       real**: the earlier "insufficient data" tag was from a search that
       returned other same-titled songs instead. Found real chord/tab
-      data this pass — Bm-G-D-A repeating, Em later — cross-checked
+      data this pass - Bm-G-D-A repeating, Em later - cross-checked
       across two independent tab sources (Ultimate Guitar, Chordu), now
       `confidence: "confirmed"` with real chords in `js/songs-data.js`.
 - [x] **"Still D.R.E." re-checked, genuinely stays disputed**: fresh
       research found the same real disagreement as before (A minor vs.
-      C major vs. G major readings) — several "how to play on piano"
+      C major vs. G major readings) - several "how to play on piano"
       results sharing identical text turned out to be the same article
       mirrored across different domains, not independent corroboration.
       Notes updated to explain this explicitly rather than picking an
       answer arbitrarily; still honestly `needs-verification`.
 - [x] **"+ Upload any song" tile added** at the end of Discover's song
       grid, styled to match the existing cards (dashed border, "+"),
-      clicking it scrolls to and focuses the existing upload banner —
+      clicking it scrolls to and focuses the existing upload banner -
       verified live.
 - [x] **Upload playback rebuilt** (`renderTranscribedPlayback()`, now
       shared from `js/transcribe.js` and used by both Discover's and
@@ -1524,7 +1524,7 @@ sandbox-only service-worker noise.
 - [x] **The real cause of "6233 notes for one song" investigated and
       fixed, not just styled around**: `transcribe.js` was calling
       basic-pitch's `outputToNotesPoly` with `onsetThresh`/`frameThresh`
-      loosened to 0.25/0.25 — the library's own real defaults (read
+      loosened to 0.25/0.25 - the library's own real defaults (read
       directly from its vendored source) are 0.5/0.3. The looser
       thresholds make the detector far more sensitive to noise/harmonic
       blips. Reverted to the library's real defaults, and added a
@@ -1548,24 +1548,24 @@ service-worker noise.
 - [x] **Checked the Dawsons sibling project first, per the instruction**:
       `website/js/synth.js`'s `DRUM_VOICES` (procedural kick/snare/hihat
       DSP, no samples) adapted cleanly as live-triggered Web Audio nodes
-      in a new `js/drums.js` — reused the actual synthesis approach
+      in a new `js/drums.js` - reused the actual synthesis approach
       (pitch-dropping sine for kick, filtered noise for snare/hihat),
       re-expressed for real-time triggering instead of Dawsons'
       offline-buffer-write usage. `website/js/dj-mixer.js` didn't have
       drum-pattern logic (it's a DJ-deck crossfader/EQ module) and
-      wasn't a fit — not forced in.
+      wasn't a fit - not forced in.
 - [x] **Drum toggle added to Practice's Follow Along view**, next to
       the existing Speed control, default off. Driven by the same
       `currentTime()`/`chordDuration()` clock the highway/keyboard
       already use (one bar = 4 beats: kick on beat 1, snare on beat 3,
-      hi-hat every beat) — speed-aware and can't drift out of sync with
+      hi-hat every beat) - speed-aware and can't drift out of sync with
       the falling notes since there's no separate scheduling clock.
       Verified live: toggle switches "Beat: Off" -> "Beat: On" with
       distinct styling.
 - [x] **Real sampled-piano timbre added** (`js/piano-sample.js` +
       vendored `js/vendor/smplr-1.1.0.mjs`, MIT, the exact same
       already-vetted library + `SplendidGrandPiano` sample set already
-      in production in the Dawsons project — not re-researched,
+      in production in the Dawsons project - not re-researched,
       directly reused). Wired into `keyboard.js`'s shared `playTone()`,
       so every caller across the whole app (lessons, Practice's Follow
       Along, uploaded-song playback) gets the richer timbre automatically
@@ -1578,7 +1578,7 @@ service-worker noise.
       sample AUDIO files stream from smplr's own public sample host
       (`smpldsnds.github.io`) on first use. Documented in both
       `THIRD_PARTY_NOTICES.md` and `privacy.html`, same standard as the
-      iTunes album-art lookup (item 25) — this app is no longer
+      iTunes album-art lookup (item 25) - this app is no longer
       zero-network-request once this feature is used, and says so
       plainly.
 - [x] **Verified it's not a mock**: loaded the real sampled piano in a
@@ -1588,16 +1588,16 @@ service-worker noise.
       sandbox-only service-worker noise.
 
 Honest scope note: the drum toggle only exists in Practice's Follow
-Along mode (the one Sid screenshotted) — Ear Check and Camera Overlay
+Along mode (the one Sid screenshotted) - Ear Check and Camera Overlay
 modes, and the curated lesson screens' own chord-teaching playback,
 were not wired up with a beat layer this pass.
 
-## 2026-10-05 update: new lesson — touch, dynamics, rubato, legato (item 46)
+## 2026-10-05 update: new lesson - touch, dynamics, rubato, legato (item 46)
 
 - [x] **New lesson added**: `lesson-touch` ("Touch matters, not just
       which keys"), inserted into `THEORY_LESSONS` in `js/lessons-data.js`
       right after Lesson 7 (inversions) and before Lesson 8 (7th
-      chords) — Lesson 7 itself was already a different, full topic, so
+      chords) - Lesson 7 itself was already a different, full topic, so
       this is a new lesson slotted in rather than crammed into an
       existing one. Display position/roadmap numbering is purely
       array-index-based in this codebase (confirmed by reading
@@ -1613,18 +1613,18 @@ were not wired up with a beat layer this pass.
 - [x] **"Make You Feel My Love" (Adele) used as the worked example**,
       confirmed still in the library before writing the lesson. Claims
       kept deliberately general and defensible (soft verses building to
-      a more intense emotional peak, legato phrasing, slight rubato) —
+      a more intense emotional peak, legato phrasing, slight rubato) -
       explicitly NOT inventing bar-by-bar dynamic markings for one
       specific recording nobody here has transcribed; the lesson says
       this limitation out loud rather than presenting invented specifics
       as fact.
 - [x] **Real Back support added**, same lightweight history-stack
-      pattern as the shared "Master: X" template (item 42) — verified
+      pattern as the shared "Master: X" template (item 42) - verified
       live: Next -> Next (now on the rubato step) -> Back correctly
       restored the velocity step's exact original content.
 - [x] **Lesson count/numbering double-checked, not assumed correct**:
       `TOTAL_LESSON_COUNT` went from 101 to 103, not 101 to 102 as a
-      naive single-insertion guess might assume — verified why: the
+      naive single-insertion guess might assume - verified why: the
       second +1 is "Master: Someday" now being auto-generated, because
       item 44 upgraded Someday's `confidence` from `needs-verification`
       to `confirmed` with real parseable chords (auto-generated
@@ -1648,10 +1648,10 @@ sandbox-only service-worker noise.
       (not inserted arbitrarily), so `insertAfter(theoryRest,
       "lesson-30", intermediateRemainingLessons)` places it immediately
       after every Intermediate-tier song-mastery lesson and before
-      Lesson 31 (the Canon in D capstone arc) continues — verified live
+      Lesson 31 (the Canon in D capstone arc) continues - verified live
       by position: lands right after "Master: My Love Mine All Mine."
 - [x] **Reuses real already-taught chords only**: the quiz pool is
-      `LESSON2_DEGREES` (G, Am, Bm, C, D, Em — Lesson 2's real diatonic
+      `LESSON2_DEGREES` (G, Am, Bm, C, D, Em - Lesson 2's real diatonic
       data, filtering out the diminished vii), not new invented chords.
       Distractors are 3 other real chords from that same pool, a
       genuine same-key ear-training challenge rather than a random
@@ -1661,8 +1661,8 @@ sandbox-only service-worker noise.
       every other chord sound in the app uses), shows 4 multiple-choice
       buttons, and a "Play it again" replay button. Verified live, both
       directions: an incorrect guess shows the picked button in red,
-      the real answer in green, and "Not quite — that was X, not Y";
-      a correct guess shows green and "Correct — that was X" plus a
+      the real answer in green, and "Not quite - that was X, not Y";
+      a correct guess shows green and "Correct - that was X" plus a
       short confirmation tone. A results screen at the end shows the
       real score ("1 of 5 by ear" in this test run) with encouraging,
       non-judgmental framing either way.
@@ -1671,7 +1671,7 @@ sandbox-only service-worker noise.
       confirmed zero duplicate lesson IDs; confirmed via direct array
       inspection that `lesson-chordquiz` sits between the last
       Intermediate song lesson and `lesson-31`, matching "end of
-      Intermediate, before Advanced" — this app has had real
+      Intermediate, before Advanced" - this app has had real
       lesson-numbering bugs before (see the item 36 audit), so this was
       checked directly rather than assumed from the code's intent.
 
@@ -1685,28 +1685,28 @@ beyond the known sandbox-only service-worker noise.
 
 - [x] **New, separate practice feature** (distinct from item 47's
       in-lesson multiple-choice quiz) added as its own section inside
-      the existing Practice tab, right after the upload section — easy
+      the existing Practice tab, right after the upload section - easy
       to find without being jammed into the fixed 100+-lesson sequence,
       per the explicit instruction that this is a drill/practice mode,
       not a graded lesson.
 - [x] **Song pool pulled from the real library**: the first 15 songs
-      from `ONE_FIVE_SIX_FOUR_SONGS` (`js/songs-data.js`) — genuinely
+      from `ONE_FIVE_SIX_FOUR_SONGS` (`js/songs-data.js`) - genuinely
       simple, well-known progressions, not an arbitrary or difficult
       pick, per the instruction to start with reasonable ear-training
       difficulty.
 - [x] **Reuses the existing chord-progression audio path**: "Play clip"
       calls the same `playChord()`/`chordSymbolToMidi()` every lesson
-      already uses to sound out a song's real chords in sequence — no
+      already uses to sound out a song's real chords in sequence - no
       second audio implementation. Replayable as many times as wanted
       (just re-triggers the same function, no play-once lockout).
       Verified live: clicking Play clip produces zero console errors.
 - [x] **"Reveal chords" shows the real answer**, pulled directly from
       the song's own verified data (title, artist, chord list, degree
-      sequence) — verified live: revealed "Love Story by Taylor Swift:
+      sequence) - verified live: revealed "Love Story by Taylor Swift:
       D - A - Bm - G (I - V - vi - IV). How close did you get?"
       matching the real song data exactly, not a placeholder.
 - [x] No sheet music, no chord names, and no falling notes are shown
-      before reveal — genuinely ear-first, per the spec.
+      before reveal - genuinely ear-first, per the spec.
 
 Verified live in a real browser: song picker populated with real
 titles/artists, Play clip triggers real chord audio with zero console
@@ -1719,7 +1719,7 @@ service-worker noise.
 - [x] **Computer-keyboard mapping redesigned** (`js/computer-keys.js`):
       the real bug was that the old RIGHT_KEYS (top row, 12 keys,
       MIDI 60-71) didn't reach high enough for Lesson 1's own G chord
-      (which needs D5/MIDI 74) — a real, reproducible "ran out of keys
+      (which needs D5/MIDI 74) - a real, reproducible "ran out of keys
       mid-chord" bug, not a vague complaint. Redesigned to QWERTY row
       -> LEFT hand (10 keys, MIDI 60-69/C4-A4) and ASDF row -> RIGHT
       hand (9 keys, MIDI 70-78/A#4-F#5), chosen so ASDF (the real
@@ -1731,7 +1731,7 @@ service-worker noise.
 - [x] **Real step-ordering bug fixed, not just reworded**: the teaser
       step's closing button literally said "Let's start with G" but
       clicking it led to the generic "what's a chord" explainer, not G
-      — exactly the jump Sid reported. Fixed by keeping the teaser's
+      - exactly the jump Sid reported. Fixed by keeping the teaser's
       promise generic ("Okay, show me how") and moving the "let's find
       G" framing to the button that actually leads into the find-G
       step.
@@ -1739,7 +1739,7 @@ service-worker noise.
       physical**, not just described in text: Get Started's calibration
       screen (`js/calibration.js`) now highlights the actual 2-black-key
       landmark (MIDI 61 and 63) on the keyboard alongside Middle C
-      itself, not just Middle C alone — so the learner sees exactly
+      itself, not just Middle C alone - so the learner sees exactly
       which black-key pair to look for, the same way the text describes
       it. Verified live via screenshot: the C key and both adjacent
       black keys are all visibly highlighted together.
@@ -1754,7 +1754,7 @@ service-worker noise.
       of silently falling outside the keyboard's range.
 - [x] **Re-read the whole Get Started -> Lesson 1 sequence end to end
       as a first-time user**, per Sid's explicit instruction, to catch
-      anything beyond the 4 named bugs — the finger-placement and
+      anything beyond the 4 named bugs - the finger-placement and
       step-ordering fixes above both came from that full re-read, not
       just the literal bullet points.
 
@@ -1776,7 +1776,7 @@ errors beyond the known sandbox-only service-worker noise.
       Added a one-time clarification in Lesson 1's `runLesson1()`,
       shown only the first time a scale-degree number appears right
       after physical counting was just used (G's teach step,
-      `teachIdx === 0`) — explicitly contrasting "that counting was
+      `teachIdx === 0`) - explicitly contrasting "that counting was
       about location... this numbering is about position in the SONG."
       Verified live: renders exactly once on chord 1 (G), confirmed via
       a second check that it does NOT repeat on chord 2 (D), so it
@@ -1791,7 +1791,7 @@ console errors beyond the known sandbox-only service-worker noise.
 ## 2026-10-05 update: explain "key" and why numbers beat letters, kid-level (item 52)
 
 - [x] **New step added to Lesson 1** (`step: "key-and-numbers"`,
-      between the teaser and the chord-definition "slowdown" step) —
+      between the teaser and the chord-definition "slowdown" step) -
       checked first whether "key" (the musical sense) had ever actually
       been defined plainly anywhere in the app before this: it hadn't,
       it was just used casually starting in the teaser's own line ("the
@@ -1801,10 +1801,10 @@ console errors beyond the known sandbox-only service-worker noise.
       verbatim to Sid's suggested wording: "Every song has a 'home'
       note... We call that G's 'key'... that's a totally different
       'key' from the piano keys you press with your fingers. Same
-      word, two different things — sorry about that!"
+      word, two different things - sorry about that!"
 - [x] **Numbers-vs-letters explained with the "dance moves" analogy**:
       same pattern starting from G is G-D-Em-C, starting from C
-      becomes C-G-Am-F — "different letters, but it's still the same
+      becomes C-G-Am-F - "different letters, but it's still the same
       dance moves, just done in a different spot... Learn the
       number-dance once, and you can spot it in ANY song, in ANY key."
 - [x] **Both placed at the exact first point of confusion**, same
@@ -1824,7 +1824,7 @@ service-worker noise.
 
 - [x] **White/black key explanation added to Get Started**, right
       before the black-key-group landmark teaching (same screen, same
-      spirit as the item 50 Middle-C/finger fixes) — checked first
+      spirit as the item 50 Middle-C/finger fixes) - checked first
       whether this had ever been plainly taught: it hadn't, the app
       used "white key"/"black keys" constantly without ever defining
       them. Kept simple: white keys = the musical alphabet (A-G,
@@ -1832,14 +1832,14 @@ service-worker noise.
       to WHY they're grouped in 2s/3s (so the repeating landmark is
       visible/feelable) rather than teaching sharp/flat naming rules.
       The visual is the real piano-key rendering already shown above
-      the text (keyboard.js's existing white/black key layout) — no
+      the text (keyboard.js's existing white/black key layout) - no
       extra highlighting needed since the shapes/colors are already
       genuinely distinct.
 - [x] **New fun bonus lesson added**: `lesson-pedals` ("Pedals! (just
       for fun)"), appended to the end of the Intermediate tier right
       after the chord-recognition quiz (item 47), landing before
       Advanced content begins, same placement pattern. Explicitly
-      framed as "just for fun," not rigorous, not gating anything —
+      framed as "just for fun," not rigorous, not gating anything -
       completing it is a normal lesson-complete call like any other,
       no special test/pass-fail mechanic.
 - [x] **Real, audible before/after**: explains the sustain pedal (holds
@@ -1847,7 +1847,7 @@ service-worker noise.
       briefly mentions soft/sostenuto pedals without dwelling on them.
       "Without pedal" plays a 4-note arpeggio with short, non-overlapping
       note durations (0.21s each); "with pedal" plays the exact same
-      notes with long, overlapping durations (1.225s each) — genuinely
+      notes with long, overlapping durations (1.225s each) - genuinely
       different audio, not a fake toggle, reusing `keyboard.js`'s shared
       `playTone()` (which also means it automatically benefits from item
       45's sampled-piano upgrade once that's loaded, no extra wiring
@@ -1863,34 +1863,34 @@ service-worker noise.
 
 ## 2026-10-05 update: keep both iOS orientations, make the keyboard actually usable in portrait (item 54)
 
-**Superseded by item 55 below**: Sid's final call reversed this —
+**Superseded by item 55 below**: Sid's final call reversed this -
 the app is now locked to landscape-only everywhere, and the portrait
 scroll workaround this section describes was removed as dead code.
 Left here for the historical record of what was tried and why, not as
 a description of current behavior.
 
-- [x] **`ios/App/App/Info.plist` left untouched** — both portrait and
+- [x] **`ios/App/App/Info.plist` left untouched** - both portrait and
       landscape stay enabled for iPhone, per Sid's correction (an
       earlier instruction to lock to landscape-only was retracted
       before any Info.plist edit was made).
 - [x] **Real portrait usability bug found and fixed**: verified at an
       actual 375x812 viewport that the keyboard's existing "scale keys
       down to fit the viewport" approach made individual keys too thin
-      to tell apart or tap — confirmed visually via screenshot, not
+      to tell apart or tap - confirmed visually via screenshot, not
       assumed.
 - [x] **Fixed with a portrait-specific scroll, not a redesign**: a new
       `@media (orientation: portrait) and (max-width: 480px)` rule
       gives `.hk-keyboard-wrap`/`.hk-highway-wrap` a legible fixed
       `min-width: 640px` and makes their real parent panels
       (`.hk-lesson-player`, `.hk-practice`, `.hk-calibration`,
-      `.hk-midi`) horizontally scrollable — landscape at any phone
+      `.hk-midi`) horizontally scrollable - landscape at any phone
       width is completely untouched (confirmed live: `overflow-x` stays
       `visible` and `scrollWidth === clientWidth` at 812x375, zero
       difference from before this change).
 - [x] **Real DOM-structure bug caught while implementing this**:
       `keyboard.js`'s `renderKeyboard()` adds the `.hk-keyboard` class
       onto the SAME element the caller already marked
-      `.hk-keyboard-wrap` — not a nested child. A single element can't
+      `.hk-keyboard-wrap` - not a nested child. A single element can't
       both scroll its own overflow and be the oversized content at the
       same time, so the scroll container has to be each context's real
       parent panel instead. Caught this by checking actual rendered
@@ -1900,7 +1900,7 @@ a description of current behavior.
       viewport-driven responsive layout (no JS listens for an
       orientation-change event or reloads anything), so rotating the
       device mid-lesson/mid-playback doesn't reset progress or stop
-      audio — confirmed by reading the code path, not assumed.
+      audio - confirmed by reading the code path, not assumed.
 
 Verified live by resizing the same page between 375x812 (portrait) and
 812x375 (landscape): portrait now renders legibly wide piano keys with
@@ -1909,16 +1909,16 @@ and a visual before/after screenshot); landscape is provably unchanged
 from its pre-item-54 behavior. Honest scope note, given a tight time
 budget: scrolling the panel horizontally also scrolls the lesson text
 above the keyboard along with it (simplest fix available without a
-deeper DOM restructure) — functional, not polished; a future pass
+deeper DOM restructure) - functional, not polished; a future pass
 could give the keyboard its own independent scroll region if that
 rougher edge matters later. Zero new console errors beyond the known
 sandbox-only service-worker noise.
 
-## 2026-10-05 update: final orientation call — landscape-only, polished (item 55)
+## 2026-10-05 update: final orientation call - landscape-only, polished (item 55)
 
 - [x] **Final reversal applied**: `ios/App/App/Info.plist` now locks
       both iPhone and iPad to landscape only (`UIInterfaceOrientationLandscapeLeft`/
-      `Right` only — portrait and portrait-upside-down removed from
+      `Right` only - portrait and portrait-upside-down removed from
       both orientation arrays).
 - [x] **Item 54's portrait workaround removed as dead code**: the
       portrait horizontal-scroll media query is gone from
@@ -1927,14 +1927,14 @@ sandbox-only service-worker noise.
 - [x] **Plain web version handled honestly**: the web can't force
       orientation the way the native wrapper can, so a new
       `.hk-rotate-prompt` (in `index.html`, shown only via a
-      `(orientation: portrait) and (max-width: 700px)` media query —
+      `(orientation: portrait) and (max-width: 700px)` media query -
       never on desktop or landscape) replaces the entire page with a
       friendly "Rotate your phone" message instead of showing a
       cramped layout. Verified live via screenshot at 375x812.
 - [x] **Landscape vertical-space polish**: found via actual screenshot
       at 812x375 that the full-size header/logo/tagline alone pushed
       the falling-notes highway and keyboard below the fold before any
-      music content was visible at all — arguably the real "not
+      music content was visible at all - arguably the real "not
       polished" issue at phone landscape heights. Added a
       `(orientation: landscape) and (max-height: 500px)` rule that
       compacts the header/logo/tagline/tabs and gives the highway a
@@ -1943,7 +1943,7 @@ sandbox-only service-worker noise.
 - [x] **Real hand-color inconsistency found and fixed**: `note-highway.js`'s
       falling blocks were still hardcoded to an old amber/light-purple
       pair from before item 30 repainted every other hand-colored
-      element (the keyboard itself) to pastel pink/light-blue — the
+      element (the keyboard itself) to pastel pink/light-blue - the
       highway and the keyboard beneath it had silently disagreed on
       hand colors ever since. Fixed by reading the live
       `--hk-accent-2-soft`/`--hk-accent-soft` CSS custom properties
@@ -1952,13 +1952,13 @@ sandbox-only service-worker noise.
 - [x] **Uploaded-song playback (item 44) brought in line too**: its
       keyboard highlight was using a single generic color during
       playback even though the highway above it already computes a
-      real left/right hand split per note — switched to
+      real left/right hand split per note - switched to
       `highlightHands()` with that same split so the keyboard and
       highway agree. Checked the ear-training quiz (item 47) and
       "play what you hear" (item 48) too: the quiz highlights one
       chord as a single unit (not two-handed content, left as-is
       correctly), and the practice mode shows no visual at all by
-      design (audio-only, "no falling notes" is the whole point) — so
+      design (audio-only, "no falling notes" is the whole point) - so
       neither needed a hand-color fix.
 
 Verified live: landscape at 812x375 shows a compact header with the
@@ -1990,7 +1990,7 @@ service-worker noise. `node --check` passes on every touched JS file.
 
 **Review fixes (bugs found reading the whole project):**
 - Practice was re-created on every song opened from Discover/Saved
-  without stopping the old copy — ghost chords, mic/camera left on. Now
+  without stopping the old copy - ghost chords, mic/camera left on. Now
   one live instance; leaving the Practice tab stops audio/mic/camera.
 - Practice: Pause restarted from the last Play press; changing speed
   mid-song jumped back; Camera Overlay never advanced (now Prev/Next
@@ -2012,7 +2012,7 @@ service-worker noise. `node --check` passes on every touched JS file.
   samples download automatically; album art images from Apple's
   servers; iOS data-deletion note).
 
-**iOS submission sweep** — see `ios/SUBMISSION_CHECKLIST.md` "Item 56":
+**iOS submission sweep** - see `ios/SUBMISSION_CHECKLIST.md` "Item 56":
 `UIRequiresFullScreen` (iPad landscape-only upload blocker), removed the
 unused `@capacitor/camera` plugin (photo-library purpose-string
 rejection), `arm64`, `ITSAppUsesNonExemptEncryption`, an app
@@ -2022,12 +2022,12 @@ de-duplicated. `xcodebuild` Debug + Release both succeed.
 
 **MIDI tab redesign** (Sid's report: the right hand sat directly under
 the left, keys didn't feel like a piano). `js/computer-keys.js` now uses
-a piano-shaped layout — white notes on one row, black notes on the row
-above in the gaps — with octave shifting across all 88 keys (A0-C8):
+a piano-shaped layout - white notes on one row, black notes on the row
+above in the gaps - with octave shifting across all 88 keys (A0-C8):
 - *Two hands* (default): left Z-M whites / S D G H J blacks (C3-B3, ↓/↑),
   right T–\ whites / 6 7 9 0 - blacks (C4-D5, ←/→). Hands sit
   bottom-left and top-right instead of stacked.
-- *One hand*: GarageBand Musical Typing — A-' whites, W E T Y U O P
+- *One hand*: GarageBand Musical Typing - A-' whites, W E T Y U O P
   blacks, Z/X octave.
 Physical key codes, so Shift/Caps/other layouts don't break it. The MIDI
 tab shows the whole 88-key piano with each hand's zone tinted and
@@ -2037,7 +2037,7 @@ hand down to A0, one-hand up to C8).
 ### Honestly, what's not done
 - Nothing was run on an iOS device or simulator (no runtime installed).
 - Stripe link still needs Sid's Stripe account.
-- Easy mode is a heuristic, not chord recognition — it can keep an odd
+- Easy mode is a heuristic, not chord recognition - it can keep an odd
   passing note.
 
 ## 2026-10-05 update: upload accuracy, original-audio sync, backing instruments, beginner-clarity fixes (item 57)
@@ -2050,11 +2050,11 @@ progression, both together) and Sid's own "Fortnight" (Taylor Swift) file:
   semitones, under 60% of the louder note's amplitude, same onset) and short quiet blips are dropped.
   Results: melody 80%→100% of notes found with 0 false notes; chords 24%→9% false; mixed 40%→16% false.
 - Fortnight (4 min): 1,872 notes in ~31s, every one in B major (7 pitch classes, zero outside), bass cycling
-  F#→G#→E. 60% of notes are bass, the vocal line is only partly captured — a limit of transcribing a full
+  F#→G#→E. 60% of notes are bass, the vocal line is only partly captured - a limit of transcribing a full
   band mix, stated honestly in the summary.
 - Hands now split at Middle C (was the median note, which painted bass as right hand).
 
-**"Where am I in the song?"** No lyrics (copyrighted; would need a license — same rule as before). Instead,
+**"Where am I in the song?"** No lyrics (copyrighted; would need a license - same rule as before). Instead,
 uploads now play the **original recording in sync** (default on; the media element is the clock, pitch kept at
 slower speeds), with the piano re-play as a toggle.
 
@@ -2063,9 +2063,9 @@ the test clips, ~97 BPM for Fortnight). Practice: new 🎸 Bass toggle (chord ro
 the existing 🥁 Beat.
 
 **Beginner-clarity audit fixes:**
-- Wrong theory fixed: "F# is inside the Em chord" (3 places) — it's only in D.
-- "Same 4 chords" claims → "same 1-5-6-4 pattern, letters change with the key" (teaser, Choose your song —
-  which now lists each song's chords, Lesson 1 montage — which now shows each song's key and chords).
+- Wrong theory fixed: "F# is inside the Em chord" (3 places) - it's only in D.
+- "Same 4 chords" claims → "same 1-5-6-4 pattern, letters change with the key" (teaser, Choose your song -
+  which now lists each song's chords, Lesson 1 montage - which now shows each song's key and chords).
 - Sharps/flats/half-steps explained at the first black key (Lesson 1's D chord) and in calibration;
   "m" = minor explained at Em; Roman numerals explained in the montage; "note G" vs "the G chord" spelled out.
 - Every key of a lit chord shows its letter (G · B · D); Middle C has a permanent purple marker on every
@@ -2079,30 +2079,30 @@ the existing 🥁 Beat.
   "named after its lowest note" → "named after its root"; cross-references by title, not stale numbers.
 
 ### Honestly, not changed
-- Lesson 1's title "The 4 keys to play 100 songs" (Sid's own wording) still uses "keys" to mean chords —
+- Lesson 1's title "The 4 keys to play 100 songs" (Sid's own wording) still uses "keys" to mean chords -
   suggest "The 4 chords to play 100 songs".
 - Lesson order unchanged: minor-key songs and 7th chords still appear before "Major or minor?" and the 7th-
-  chord lessons (reordering would re-lock progress for existing users) — suggest moving "Major or minor?"
+  chord lessons (reordering would re-lock progress for existing users) - suggest moving "Major or minor?"
   right after Lesson 1.
 
 ## 2026-10-05 update: falling blocks everywhere, real chord Easy mode, song data audit, new advanced lessons (item 58)
 
 - **Falling-notes bug fixed (affected Practice, uploads, everything).** `note-highway.js` computed each block's
-  top/bottom the wrong way round, so every note — however long — was drawn as a 6px sliver. Blocks are now as
+  top/bottom the wrong way round, so every note - however long - was drawn as a 6px sliver. Blocks are now as
   tall as the note is long.
 - **"Tetris" blocks in every lesson.** `lessonKeyboard()` adds a short highway above every lesson keyboard;
   whenever a lesson lights keys, matching blocks drop onto them. Song lessons get "▶ Play along (falling
   blocks)", a timed run-through with sound; new lessons use the same `playTimeline()`.
-- **Uploads: three listening modes** — 🎵 Original song / 🎹 Piano only (recording muted) / 🎵+🎹 Piano + song.
+- **Uploads: three listening modes** - 🎵 Original song / 🎹 Piano only (recording muted) / 🎵+🎹 Piano + song.
 - **Easy mode = real chords.** Recognizes the major/minor triad in each 2-beat window (24-triad template
   match, bass-root bonus, song-key tie-break for root+fifth moments) and shows it as a beginner shape: left-hand
   root + right-hand triad near Middle C, with the chord name. Tested: G-D-Em-C and an arpeggiated A-F#m-D-E clip
   recognized exactly; melody-over-chords 7/8; Fortnight → only B major's six chords (B C#m D#m E F# G#m).
 - **Song data audit** (scripted: every song's chords re-derived against its stated key and number pattern):
   fixed Shake It Off (ii-IV-I, was "vi-IV-I"), One Dance (i-III-iv, was "v"), Don't Stop Believin' (all 8 loop
-  chords), As It Was (teaching key G, not C), Love Story's final chorus (E-B-C#m-A — the A was missing),
+  chords), As It Was (teaching key G, not C), Love Story's final chorus (E-B-C#m-A - the A was missing),
   I'm Yours' full structure (was written in capo-4 G shapes under a "B major" label; transposed to B).
-- **Timing.** Practice now gives each chord its real share of its section (`bars` / chords — e.g. 2 bars each in
+- **Timing.** Practice now gives each chord its real share of its section (`bars` / chords - e.g. 2 bars each in
   an 8-bar, 4-chord verse); it used to give every chord one equal slot. The default tempo is labelled honestly as
   a practice tempo (no verified per-song BPM data exists here); new 👆 Tap tempo matches a recording's real speed.
 - **Curriculum:** Lesson 1 renamed "The 4 chords to play 100 songs"; "Major or minor?" moved to right after it;
@@ -2111,7 +2111,7 @@ the existing 🥁 Beat.
 - **New lessons:** "Building speed: fast, relaxed fingers" (after Day 25: slow practice + metronome ladder,
   relaxed hand, rhythms/bursts, a five-finger drill at ♩ 60-120, daily routine, Hanon 1873 / Czerny Op. 299);
   "Beethoven: harmony vs. form" (Für Elise's i-V pull and G# leading tone, its A-B-A-C-A rondo, sonata form,
-  motifs); "Bach: Prelude in C major" (WTC I, 1722 — bars 1-8 note-for-note, each bar playable in time).
+  motifs); "Bach: Prelude in C major" (WTC I, 1722 - bars 1-8 note-for-note, each bar playable in time).
   Catalog adds Bach's Prelude, Moonlight (1801) and Pathétique (1799) first movements.
 
 ## 2026-10-05 update: Middle C tuner, wait mode, sheet music, hands/looping, daily review (items 58-59)
@@ -2119,9 +2119,9 @@ the existing 🥁 Beat.
 - **Middle C sound match (Get Started).** The shared tuner widget (pitch.js) now works like a guitar tuner for
   "did I find the right key": a needle shows flat/sharp, the whole meter turns green once the target note holds
   steady (~0.35s, within ±40 cents so a slightly out-of-tune acoustic still counts), and wrong notes say how many
-  keys away and which way, including octave mix-ups. Verified with generated tones (D4 → "2 keys too high — move
+  keys away and which way, including octave mix-ups. Verified with generated tones (D4 → "2 keys too high - move
   LEFT"; C5 → "1 octave too high"; slightly flat C4 → green, auto-advance).
-- **Input hub** (`input-hub.js`): on-screen taps, laptop keys, Web MIDI keyboards (Chromium only — not Safari/iOS)
+- **Input hub** (`input-hub.js`): on-screen taps, laptop keys, Web MIDI keyboards (Chromium only - not Safari/iOS)
   and the mic (single notes) all feed one note-on stream.
 - **Practice engine** (`play-engine.js`): wait mode (blocks stop until you play the right notes; right/wrong keys
   flash), timed mode (±0.25s hit window, score + early/late), hands separately (the other hand is played for you,
@@ -2135,7 +2135,7 @@ the existing 🥁 Beat.
   Advanced: "Reading sheet music" (staff, treble E-G-B-D-F / F-A-C-E, bass G-B-D-F-A / A-C-E-G, Middle C ledger,
   landmarks, note values, time signatures, sharps/flats/key signatures, chords, 10-note reading quiz); "Sheet music:
   Ode to Joy / Minuet in G / Bach's Prelude"; "Hands separately & looping"; "Play in time: no waiting" (timed,
-  no key hints — the harder mode).
+  no key hints - the harder mode).
 - **2-minute daily review** (`daily-review.js`): items only from completed lessons (chords, finding notes, staff
   notes, chords by ear), Leitner spacing (1/2/4/7/14/30 days; misses come back the same day), counts toward the
   daily goal. Reachable from the lesson map and a banner on every lesson screen until done for the day.
@@ -2143,18 +2143,18 @@ the existing 🥁 Beat.
 ## 2026-10-05 update: vendored piano samples, 81 more songs, Tom & Jerry, gamification, phone layout, screenshots (item 60)
 
 - **Everything third-party now lives in the repo.** basic-pitch code + model weights were already vendored; now
-  the piano SAMPLE AUDIO is too (`assets/piano-samples/`, 226 m4a files, Splendid Grand Piano — Steinway samples
+  the piano SAMPLE AUDIO is too (`assets/piano-samples/`, 226 m4a files, Splendid Grand Piano - Steinway samples
   released into the public domain by Akai). The app loads only the velocity layer it plays (62 files, ~7 MB) from
   its own files: 0 third-party requests. Vendoring exposed a real bug: smplr 1.1.0 put sample names like "Mf D#0"
   in URLs unencoded, so every sharp-named sample 404'd (verified against the original host); now encoded.
   The only remaining third-party request is the iTunes album-art lookup (a live service, can't be vendored).
 - **Songs: 103 → 184.** 12 easy (incl. two simplified Chet Baker pieces), 10 intermediate, 10 advanced (incl. Tom
-  and Jerry's Hungarian Rhapsody No. 2 and a Strauss waltz), plus 50 optional **World songs** — 5 in each of
+  and Jerry's Hungarian Rhapsody No. 2 and a Strauss waltz), plus 50 optional **World songs** - 5 in each of
   French, Spanish, Portuguese (Brazil), Italian, German, Hindi, Japanese, Korean, Mandarin and Arabic, each
   checked against two chord sources (`js/world-songs.js`). `difficulty` field overrides the tier rule.
 - **World songs are optional and skippable:** 11 lessons at the very end, never locked, never picked as "next
   lesson", labelled Optional, numbered separately.
-- **Tom and Jerry's concert pieces** lesson: The Cat Concerto (Liszt's Hungarian Rhapsody No. 2 — credited to Jakob
+- **Tom and Jerry's concert pieces** lesson: The Cat Concerto (Liszt's Hungarian Rhapsody No. 2 - credited to Jakob
   Gimpel, with historian Keith Scott attributing the recording to Calvin Jackson), Johann Mouse (Strauss waltzes,
   played by Gimpel; last Tom and Jerry Oscar), the lassan/friska home chords, and a waltz "oom-pah-pah" drill.
 - **Gamification:** XP + 10 levels (Newcomer → Virtuoso) in the header; XP toasts; confetti on first completion;
@@ -2168,7 +2168,7 @@ the existing 🥁 Beat.
   iPad 13" 2752×2064), captured with `shoot.mjs` (headless Chrome) in the native look (Support link hidden).
 
 
-## 2026-10-06 — any orientation, text size, zoom, iOS sound
+## 2026-10-06 - any orientation, text size, zoom, iOS sound
 - **Orientation:** no longer locked to landscape. The iOS app supports portrait and landscape (iPad: all four). The web "rotate your phone" blocker is replaced by a dismissible tip that fades after a few seconds.
 - **Text size:** `-webkit-text-size-adjust: 100%` stops iOS from inflating text in landscape, which made everything look zoomed in.
 - **Zoom:** pinch and double-tap zoom are disabled (`maximum-scale=1`, `touch-action: manipulation`). Zooming in over the keyboard could get stuck, because the keyboard captures touches, so you couldn't pinch back out.
@@ -2177,7 +2177,7 @@ the existing 🥁 Beat.
   - The web app sets `navigator.audioSession.type = "playback"`.
   - The first touch unlocks Web Audio, so the first key press makes a sound.
 
-## 2026-10-06 — falling-note celebrations, photos and videos in fun facts
+## 2026-10-06 - falling-note celebrations, photos and videos in fun facts
 - **Celebration:** finishing a lesson now drops tiny musical notes (♪ ♫ ♩ ♬) from the sky instead of confetti.
 - **Photos:** 11 "Did you know?" facts show a photo of the person. They're freely licensed Wikimedia Commons images bundled in `assets/people/`, with author and licence under each photo and in THIRD_PARTY_NOTICES.
 - **Videos:** 4 facts have click-to-load videos from official channels (Steinway & Sons, Deutsche Grammophon, Neuma Records). On the web they play from youtube-nocookie.com; in the iOS app they open in YouTube. The privacy policy is updated to match.
@@ -2349,16 +2349,16 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
 - **iOS build 14.**
 - **Auto-advance:** after a correct answer Hayden cheers, then the next lesson opens by itself after 2s (3s when there's a real-piano tip to read). The Next button fills up as a countdown and can be tapped to skip the wait. "Finish Day N" still waits for a tap. Build 15.
 
-## 2026-10-06 — iOS build 16
+## 2026-10-06 - iOS build 16
 - Tabs: Lessons / Practice / My songs. Practice = "Upload any song" on top, "Or try these songs" below; tapping a song opens the piano and auto-plays the falling chords (← All songs / Next song →). My songs = uploads (saved on device, IndexedDB, max 12) + practiced songs.
 - Lessons never stop: day ends show a "Day N complete" card (streak + unlocks) and continue. Song cards after the 4 chords (The A Team, Perfect, Viva La Vida, Country Roads), "any pop song" card, quizzes that must be answered correctly.
 - Rewards: streak/day unlocks (songs, party hat, golden keys, streak freeze, crown). Next-reward teaser on Today.
 - Custom drawn icons everywhere (emoji only inside chats). New flat panda logo with animated poses. Intro screen (Start now / Continue, Lesson N of total).
 - Share: "I just learned <song> on Hayden Keys! Check it out haydenkeys.com" (native share sheet).
 - Header respects the notch / Dynamic Island (verified in simulator).
-- Build 17: cuter panda — no mouth, bigger sparkly eyes, happy ^ ^ eyes when cheering/singing, smaller nose, rosier cheeks.
+- Build 17: cuter panda - no mouth, bigger sparkly eyes, happy ^ ^ eyes when cheering/singing, smaller nose, rosier cheeks.
 
-## 2026-10-06 — iOS build 18
+## 2026-10-06 - iOS build 18
 - Panda redrawn cuter: no mouth, purple bowtie, shiny eyes, softer cheeks, hands with paw pads, stubby legs with toe beans; holds a mini piano. Props rotate in chats (sunglasses, headphones, maracas, bamboo, mic, balloon). Calm idle (breathing, blinking, glancing); big moves play once then settle.
 - Tricks: right answers → quick spin / kung fu / noodles / qi energy ball / pushups / cheer; wrong answers → struggling situps / oops.
 - New app icon, web icons and launch splash from the new panda (old hand-drawn one had a mouth).
@@ -2371,7 +2371,7 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
 - After Hayden Keys and Jaxx Guitar, we are launching a **fitness app** and a **jiu jitsu app** next.
 - More app ideas after those: **public speaking**, **singing**, **investing and markets**, and **dance**.
 
-## 2026-10-07 — iOS build 21
+## 2026-10-07 - iOS build 21
 - Numbers card: "Let's try something new: numbers instead of chord names!"
 - New card after "Make one key sing": how hard you press changes a song's emotion; listen to acoustic versions and follow the piano.
 - "Day N complete" → "Lesson N complete" (+ a line under it; Lesson 1: "4 chords are all you need to play over 100 songs. Try singing along!"). "Day N:" removed from lesson titles.
@@ -2386,7 +2386,7 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
 - Practice song screen shows the song's official video too.
 - Build 22: Lesson 3 adds "Interstellar" (Hans Zimmer): left hand A F C G low, right hand keeps the ticking high E on top (Am, Fmaj7, C, G6 sounds); a simple version, not the film score.
 - Build 23:
-  - **Lesson 4: genres** — music has flavours: pop (1 5 6 4), rock (D C G, Sweet Home Alabama), blues (12-bar, C7 F7 G7, play-along), jazz (2 5 1: Dm7 G7 Cmaj7), classical (broken chords, Bach's Prelude in C), a quiz, "find your style". "Lesson 4 complete" line.
+  - **Lesson 4: genres** - music has flavours: pop (1 5 6 4), rock (D C G, Sweet Home Alabama), blues (12-bar, C7 F7 G7, play-along), jazz (2 5 1: Dm7 G7 Cmaj7), classical (broken chords, Bach's Prelude in C), a quiz, "find your style". "Lesson 4 complete" line.
   - **Wait for me** in the Practice song player: the chords stop at the line until you play them (screen, MIDI keyboard, or microphone). Microphone message: "We'll use your phone's microphone only to hear your piano keys, nothing else." Mic hears single notes (pitch) and whole chords (12-pitch-class chroma match); app doesn't play the chord itself while waiting. Info.plist microphone text and privacy policy updated.
   - "Guess the song (Shazam)" renamed to "Guess the song" (feature unchanged; privacy policy still discloses ShazamKit). Upload settings use our own icons instead of emoji.
   - **Chord Ear Gym** (final lesson, after the whole curriculum): round 1 happy or sad (8), round 2 all 24 chords one by one with 4 options (incl. the same-letter major/minor twin), round 3 the chords anywhere on the piano (random octave + inversion). Streaks, panda tricks, wrong answers play both chords to compare, retry a round, play again.
@@ -2411,7 +2411,7 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
 - **App Store submission:** not submitted. Screenshots, content rights, age rating, App Privacy and review contact are still to do in App Store Connect.
 - **Sibling app:** Jaxx Guitar has the same changes, adapted for guitar (its build 8).
 - Build 25: "Four scales, one shape" quiz gets a Show me button (it had no way forward for a stuck learner). Final one-by-one lesson test: no errors anywhere.
-- Build 26: new app icon — the hand-drawn panda at an upright piano (supplied by Sid), cropped square; web icons (16–512) updated too.
+- Build 26: new app icon - the hand-drawn panda at an upright piano (supplied by Sid), cropped square; web icons (16–512) updated too.
 - Build 27:
   - **Song library, Netflix-style** (Practice → "Or try these songs"): genre rows stacked vertically (Popular right now, Pop, Rock & alternative, Folk & country, R&B/soul/disco, Hip-hop, Reggae & Latin, Jazz, Film & classical, Christmas, Around the world), each scrolling sideways with album-cover cards; tapping a card opens the falling-notes player and starts playing right away. Covers: iTunes Search looked up once at build time for 165/188 songs (js/song-art-data.js), coloured letter tile otherwise.
   - **Chord fact-check** (all 139 songs + 49 world songs, 5 parallel checks against Hooktheory/Musicnotes/chord sites): fixed All I Want for Christmas Is You (G: G B7 Em Cm), Sweater Weather, Levitating, Love Story bridge, Riptide chorus, Yellow, Chasing Cars, Mr. Brightside, Autumn Leaves (full Gm cycle), Summer of '69 (D major), Wonderful Tonight, Amazing Grace, Lucid Dreams, Photograph chorus, Mas Que Nada; key labels for Budapest, Let Her Go, Sweet Child O' Mine, Say You Won't Let Go, When I Was Your Man, Die for You, Livin' on a Prayer, 99 Luftballons, Trem-Bala. Unverifiable ones left unchanged.
@@ -2427,7 +2427,7 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
 - Build 31: tip jar removed for the first version (no In-App Purchases, no StoreKit plugin; the website's placeholder "Support Hayden Keys" link removed too). The home link now just says "How it works" (technology tour kept).
 - Build 32: cassette icon on "Choose a song" (Practice) and the uploads list (My songs), matching the home card.
 - Build 33:
-  - **Main chords / Whole song** buttons on every song. Whole song plays the song start to finish from its section map, including bridges, solos and key changes. New maps for 84 songs (researched from chord charts, marked "our best guide" — APPROX_STRUCTURES in songs-data.js); 6 rejected by a safety check (wrong key or unplayable chord types) stay on Main chords. Every chord in every map checked playable.
+  - **Main chords / Whole song** buttons on every song. Whole song plays the song start to finish from its section map, including bridges, solos and key changes. New maps for 84 songs (researched from chord charts, marked "our best guide" - APPROX_STRUCTURES in songs-data.js); 6 rejected by a safety check (wrong key or unplayable chord types) stay on Main chords. Every chord in every map checked playable.
   - **Official YouTube video under every song**: 170 more, verified with oEmbed (183 of 185 songs have one), embedded below the piano.
   - Share button uses a piano icon.
   - **Wait for me microphone fixed**: the web sound was set to "playback", which iOS won't record in ("AudioSession category is not compatible with audio capture"); it now switches to play-and-record while listening. Tested in the simulator. Microphone permission errors now explain how to turn it on in Settings.
@@ -2449,7 +2449,7 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
 
 **To do next (in order):**
 1. **Spot-check chords:** many of the new maps (and the 15 fixed songs) were written by research agents from memory, not checked against a chord site. They're labelled "our best guide" / "close version". Spot-check the popular ones (Bohemian Rhapsody, Africa, November Rain, Happy, Wildest Dreams, the Metallica songs) against Ultimate Guitar or Hooktheory.
-2. **Full click-through test of both apps** (not finished). Steps:
+2. **Full click-through test of both apps.** Hayden Keys: **done in the 2026-10-07 audit** (see the section at the bottom). Jaxx Guitar still to do. Steps:
    - Open every lesson, step through with Next and Back, then close.
    - Open songs, switch Main / Whole song, turn on Wait for me (microphone), then close.
    - Visit every tab and check for page errors and screens with no way back.
@@ -2512,3 +2512,86 @@ All done 2026-10-07 (see the notes under each item).
 - **Scenes:** the two pianos, running across the keys, chasing over the piano, balancing on a plank (side-view cats with jointed legs that walk and trot), a steaming latte and croissant, tea and cookies, a ticking metronome, a rainy window with a lamp, the Christmas tree, the goldfish bowl. Each action plays once; then they wait naturally (slow blinks, tail flicks, looking around, head tilts).
 - **App icon:** the two cats on the piano (all web sizes + iOS AppIcon).
 - **New song:** Something Just Like This (The Chainsmokers & Coldplay), B minor, 103 BPM, with the official BRITs live video. Duplicate Creep entry removed.
+
+## 2026-10-07 (night): piano logo, home stage, real proportions, second chord check
+- **Logo and app icon:** a glossy grand piano with gold notes (`pianoLogo()` in js/cats.js), in the header, on the splash and as the app icon.
+- **Home stage:** the home screen opens on the pianos with Ginger and Pepper doing something different on every visit (dealt so none repeats until all have shown): swapping pianos, a duet on the bench, a nap on the upright, Pepper peeking out of the grand while Ginger tiptoes over, the metronome, trotting across the keys, chasing over the piano.
+- **Real proportions:** wide scenes are drawn at 1.2 px/cm (a ~25 cm sitting cat is ~30 px next to a ~120 cm upright; the tree is ~1.7 m; 45 cm stools; real key widths, 2.35 cm per white key). Close-ups (table, keyboard) are 2.4 px/cm with props at real size (mug, teapot, cup, cookies, fishbowl).
+- **Second chord check:** every song re-checked against lyric-free sources (mostly Hooktheory): 196 confirmed, 12 corrected (Total Eclipse of the Heart, You Belong With Me, Wildest Dreams, No Woman No Cry, Mr. Brightside capo shapes, My Funny Valentine, Sweet Dreams, Fly Me to the Moon, The Blue Danube, Atemlos, Fairy Tale, Fade to Black), the rest still "our best guide" (mostly world songs with no lyric-free chord source online).
+- **TestFlight:** build 35 uploaded 2026-10-07.
+
+
+## 2026-10-07 audit: bugs, sound, wordy text, facts, to-do list
+
+**Bugs fixed**
+- **Silent soft/strong notes (biggest one):** only the velocity 85-100 piano sample layer is loaded, and the sampler made *no sound* for any other velocity. "Soft", "Strong", "Make one key sing" and other dynamics were silent once the real piano had loaded. `keyboard.js` now keeps the velocity inside the loaded layer and plays a second voice for strong notes (+6 dB), so soft vs strong is still clear.
+- **Minor scale lessons:** A/E/D minor marked the wrong lesson complete (`lesson-${scale.day}` is one behind the lesson id), so D minor could never be finished and "Next lesson" kept reopening it; "Next lesson" also went to the home screen instead of the next lesson. Fixed with explicit lesson ids.
+- **Lesson 1 song step crash:** Shallow's chart is now `Em7 D/F# ...`; looking those up in the 4 basic shapes returned nothing and threw. Colour chords now map to the plain shape.
+- **Back on every lesson:** pre-lessons and optional World songs lessons had no Back; they now go to the previous entry. Every one of the 258 lessons has a working Back (except the very first) and Close.
+- "Finish Lesson N" could open two "Lesson complete" cards on a double tap; guarded.
+- Lesson 9 quiz only accepted F#4; any F# now counts. Grammar of its "is/are in the key of G" line.
+- 7th chord quiz: wrong keys gave no feedback; added a message and a Show me button.
+- Lesson 2 / Lesson 6 quizzes: Lesson 6 never outlined the keys you can tap; both now clear the outlines when done.
+- Staff drawing (Lessons 3, 9, 10): ledger lines were drawn through D4, F5 and G5; now only C4 and below, A5 and above.
+- Chord Ear Gym round 3: the chord name sat on the lowest key, not the root, for inversions.
+- Jazz trick: Stop/Loop restarts stacked timers that were never cleared.
+- Upload player: the "Use my microphone" button never updated (read `e.currentTarget` after an `await`); each new upload leaked a note listener; leaving a library song now destroys the song player (listeners too) instead of pausing it.
+- Tuner: a second tap while the mic permission prompt was open started a second session.
+- Calibration step 2 accepted any key; now it needs a C, then the C an octave up.
+- How it works: the wave animation ran forever in the hidden tab from app start; now it only runs while visible.
+- Computer-keyboard targets list grew by one detached keyboard per lesson screen; pruned.
+- Discover sort could get NaN for songs without a rank. `index.html` had an invalid `--` inside an HTML comment.
+- Service worker cache bumped to v14.
+
+**Sound on every card**
+- Added hear buttons where a card talked about a sound but had none: Touch matters (Hear soft / Hear strong, Steady / With rubato, Legato / Staccato) and the A3/A2 card.
+- Tested: all 59 Day 1-4 cards (every Hear it, Soft/Strong, Main part, Whole song, 12-bar blues, Interstellar both hands, the 24-chord chart) schedule notes.
+
+**Wordy / messy text (about 530 strings)**
+- Cut long explanations to 1-2 short sentences across every lesson, Practice/upload, My songs, MIDI, About, How it works, fun facts, rewards and the privacy policy (all disclosures kept).
+- Removed developer language: "Phase 2 roadmap item (see the README)", "Honest heads-up", "Real, verified chords", "real and clickable, nothing padded", "Day 31-35 capstone", "flagged needs verification", "detected N notes", etc. Removed "Day N:" from lesson titles.
+- Upload panel: "Done! Saved to My songs."; fine print is now "(For learning only. Please support the artists you love. Your song stays on your device.)"; hands legend "L left hand · R right hand"; one-line Settings summary; consistent labels (Speed: Slow / 0.75× / Normal, Notes: Easy / Hard, Sound: Song / Piano / Both, On / Off), also in the lesson practice panels (was 50% / 75% / 100%).
+- Long generated song lists at the end of lessons (up to 95 titles) cut to a count plus 3-4 examples. Duplicate G2 tip on the left-hand card removed; the "3 keys at once" note shortened.
+- No em dashes left in user-facing text in the files we own.
+
+**Facts corrected** (checked against Wikipedia and other sources)
+- Cristofori's first pianos had 4 octaves (about 49 keys), not 54 or 60; Liszt didn't name his concerts "recitals" (his 1840 London concert was among the first called that); John Cage "around 1940".
+- Overtones are *almost* whole-number multiples; overtones are a big part (not the whole reason) of why instruments differ; the piano sound is recordings of a Steinway, not "key by key"; How it works no longer says "92-song library" or "no servers" (ShazamKit and cover art do use the network).
+- Let It Be's *main* chords are white keys (the full song has Bb). Jazz standards aren't public domain (About page). Reference page shows about 2.5 octaves, not 2.
+- Privacy policy: third-party requests listed together (iTunes art, ShazamKit, YouTube), cover art *is* saved on the device in Practice, Web MIDI works in Firefox too, uploads are saved in My songs.
+- Lessons: Shallow isn't G D Em C in that order; "same order" montage; C first inversion keeps G in place (top note is C); Canon in D is a "cousin" of 1-5-6-4 (shares 1-5-6), not its ancestor; right pedal = sustain, sostenuto is mainly on grands; Interstellar's ticking E is our simple version, not the score; My Funny Valentine is by Rodgers and Hart (Chet Baker's version), last A is longer; Chopin Op. 9 No. 2's theme returns four times; Vivaldi Spring opens straight into the tune; Calvin Jackson credit; "a chord is 3 or more notes"; minor-key songs are "lots", not "most"; the two-hands card now describes the G2 + G chord it shows; "count G as 1"; calibration "a C every 7 white keys".
+- **For the song-data owner (files we didn't edit):** songs-data.js: George **McCrae** (Gin and Juice); Vintersaga was Ted Ström's own 1984 release, Törnell's breakthrough was 1972; Tadhana is 2012; Canon in D year is uncertain (c. 1680-1706, not 1694); Minuet in G artist should read "Christian Petzold (formerly attributed to J.S. Bach)". world-songs.js: Ya Lili is 2017 with ~700M views (not billions); Bailando's 41 weeks was a then-record (Despacito beat it); Bella Ciao's partisan version was first published 1953. media-data.js: Cristofori caption should say "oldest *surviving* piano"; Sekai ni Hitotsu video is Makihara, not SMAP; Hungarian Rhapsody No. 2 video is the orchestral D minor version. song-art-data.js: Atemlos, Channa Mereya and Kesariya art are remix/lofi versions.
+
+**To-do list**
+- Stripe link: obsolete, code removed. Mascot-pose background removal: obsolete. 15 placeholder songs: already done. "Never run on a simulator": obsolete. Full click-through (Hayden): done (below).
+- Still open (not code we own / owner-only): spot-check chords in `song-verified.js`, Jaxx click-through and guitar solos, YouTube-synced play-along (future), App Store Connect steps, real-phone tests.
+
+**Tested (headless Chrome, no-cache server)**
+- Every lesson (258): opened, clicked through (Hear it / Play / quiz / Next), Back and Close: 0 console errors, 0 runtime exceptions.
+- Every Day 1-4 card (59/59) completes with its real answer, and every sound button schedules notes.
+- Every Practice library song (241/241): Whole song and Main chords both play notes, Back to the library works, no errors and no NaN/undefined on screen.
+- Every tab (Lessons, Roadmap, Practice, My songs, How it works, About, MIDI) renders without errors.
+
+**Left / notes**
+- Camera Overlay ignores saved calibration (`camera-overlay.js`), and Discover / Saved / MIDI tabs have no button to reach them; left as is.
+- Discover and the old Practice upload panel don't save uploads to My songs (only the Practice home upload does).
+- The tagline "Learn any song in the piano for free!" is the owner's wording; "on the piano" would be standard English.
+
+## 2026-10-07 (late night): teacher and inspiration videos, Tip jar, App Store setup
+
+**Videos**
+- **Teacher videos** (`js/teach-videos.js`): a collapsible "Watch a teacher" strip on 14 lessons (finding C, first chords, both hands, changing chords, left hand loops, blues, jazz, pedals), using reputable YouTube teachers, all checked with YouTube oEmbed.
+- **Get inspired** (`js/inspire.js`, `js/inspire-data.js`): live performances for 41 songs (mostly advanced ones), plus 14 general picks shown on advanced lessons. Picked for official uploads with very high views.
+- **Song videos re-checked:** piano versions by the artist where one exists, otherwise the official live or music video. Known gaps: Sekai ni Hitotsu (no official SMAP upload; Makihara's version used), Hungarian Rhapsody No. 2 (orchestral), Ya Lili (embedding disabled by the uploader).
+
+**Tip jar (owner asked 2026-10-07)**
+- A quiet, collapsed "Tip jar · optional" line at the bottom of the home screen (`js/tipjar.js`), iPhone/iPad app only, never on the website. Opening it shows one sentence and three buttons (Thank you, Bravo, Encore) with Apple's localized prices, and "Paid securely through Apple".
+- Native StoreKit 2 plugin restored (`ios/App/App/TipJarPlugin.swift`, registered in HKBridgeViewController).
+- In-App Purchases created in App Store Connect (consumable, all 175 regions, US base price): `com.haydenkeys.app.tip.small` US$1.00, `.medium` US$5.00, `.large` US$10.00, with display names, descriptions and review notes. Each still needs a review screenshot (owner uploads; the file is in `ios/screenshots/review/`).
+- Privacy policy and App Review notes describe the tip jar.
+
+**App Store Connect (filled in 2026-10-07)**
+- Name "Hayden Keys: Learn Piano", subtitle "Lessons, Chords & Easy Songs", keywords, promotional text, description, support and marketing URLs, copyright, review notes; English (Australia) and English (UK) listings with their own keyword sets. Version set to manual release.
+- Age rating and categories were already done. App Privacy is filled ("Data Not Collected") but not published.
+- **Left for the owner:** upload screenshots (`ios/screenshots/app-store-v2/`) and IAP review screenshots; App Review contact (name, phone, email); Content Rights answer; Publish App Privacy; Paid Applications Agreement, tax and banking (tips can't be sold until then); select build 36 once processed; Add for Review with the three tips; submit when ready.
+- **SEO:** new title, description, Open Graph, structured data (app + FAQ), Smart App Banner (app ID 6819420632), `robots.txt` and `sitemap.xml`. Search Ads plan in `ios/SEARCH_ADS_PLAN.md` (budget is the owner's call). Owner: verify haydenkeys.com in Google Search Console and submit the sitemap.

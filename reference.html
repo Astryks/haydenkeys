@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Keyboard &amp; Chord Reference — Hayden Keys</title>
+<title>Piano Keyboard Notes &amp; Chord Chart Reference - Hayden Keys</title>
 <meta name="description" content="An optional reference: every note name on the keyboard, and a short glossary of common chords. You don't need this to follow the lessons." />
+<link rel="canonical" href="https://haydenkeys.com/reference.html" />
 <link rel="icon" href="assets/icons/icon-32.png" sizes="32x32" type="image/png" />
 <link rel="apple-touch-icon" href="assets/icons/icon-180.png" />
 <meta name="theme-color" content="#fdf6fa" />
@@ -12,7 +13,7 @@
 </head>
 <body>
   <header class="hk-header">
-    <img src="assets/mascot-square.png" alt="Hayden Keys mascot — a hand-drawn panda playing an upright piano" class="hk-logo" />
+    <img src="assets/mascot-square.png" alt="Hayden Keys mascot: a hand-drawn panda playing an upright piano" class="hk-logo" />
     <h1>Hayden Keys</h1>
     <p class="hk-tagline">Learn any song in the piano for free!</p>
   </header>
@@ -21,19 +22,19 @@
     <section class="hk-panel">
       <div class="hk-how">
         <h2>Keyboard &amp; chord reference</h2>
-        <p class="hk-how-sub">Totally optional. The lessons teach you everything you need, when you need it — this
-           page is just here for anyone curious to look ahead. Bookmark it and come back any time.</p>
+        <p class="hk-how-sub">Totally optional. The lessons teach you everything when you need it. This page is here
+           if you're curious to look ahead.</p>
 
         <section class="hk-how-section">
           <h3>Every note name, labeled</h3>
-          <p>Piano keys repeat in a pattern of 12 (7 white, 5 black), over and over, low to high. Here are two
-             octaves' worth, each key labeled with its real name:</p>
+          <p>Piano keys repeat in a pattern of 12 (7 white, 5 black), from low to high. Here are about two and a half
+             octaves, each key labeled with its name:</p>
           <div id="hk-reference-keyboard" class="hk-keyboard-wrap"></div>
         </section>
 
         <section class="hk-how-section">
           <h3>Common chords, spelled out</h3>
-          <p>A chord is named after its <strong>root</strong> — the note it's built up from (usually, but not always, its lowest note). Here are the ones you'll run into earliest:</p>
+          <p>A chord is named after its <strong>root</strong>, the note it's built from (usually its lowest note). Here are the ones you'll meet first:</p>
           <div id="hk-reference-glossary"></div>
         </section>
       </div>
@@ -79,7 +80,7 @@
     }
     const glossaryEl = document.getElementById("hk-reference-glossary");
     glossaryEl.innerHTML = `<ul class="hk-ref-glossary-list">${chords.map((c) =>
-      `<li><strong>${c.letter}</strong> — ${c.notes.map(noteName).join(", ")}</li>`
+      `<li><strong>${c.letter}</strong>: ${c.notes.map(noteName).join(", ")}</li>`
     ).join("")}</ul>`;
   </script>
 </body>

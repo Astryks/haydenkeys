@@ -9,11 +9,21 @@
 // catsSvg("logo"): the header logo. The two snuggled up on a little piano,
 //   tails swishing, blinking, a heart floating up now and then.
 
+// A supporter's keepsake: a little gold bow on a gold collar (hidden unless
+// <html> has .hk-supporter, see css/cats.css). Front view and side view.
+const CHARM = `<g class="hc-charm" aria-hidden="true"><path d="M35 57.5 Q50 66 65 57.5" class="hc-collar"/>
+    <path d="M50 63 C44 56 38 59 40.5 64 C42 68 46.5 67 50 63 Z M50 63 C56 56 62 59 59.5 64 C58 68 53.5 67 50 63 Z" class="hc-gold"/>
+    <path d="M48.8 64 L45.5 71 L48 70.2 L49.6 72 Z M51.2 64 L54.5 71 L52 70.2 L50.4 72 Z" class="hc-gold"/>
+    <circle cx="50" cy="63.4" r="2.4" class="hc-gold"/><circle cx="48.6" cy="61.4" r="0.9" fill="#fff" opacity="0.85"/></g>`;
+const CHARM_SIDE = `<g class="hc-charm" aria-hidden="true"><path d="M90 24 Q88 38 99 46" class="hc-collar"/>
+    <g style="transform-box:view-box" transform="translate(93.5 42) scale(0.75) translate(-50 -63)"><path d="M50 63 C44 56 38 59 40.5 64 C42 68 46.5 67 50 63 Z M50 63 C56 56 62 59 59.5 64 C58 68 53.5 67 50 63 Z" class="hc-gold"/>
+    <circle cx="50" cy="63.4" r="2.4" class="hc-gold"/><circle cx="48.6" cy="61.4" r="0.9" fill="#fff" opacity="0.85"/></g></g>`;
+
 // One cat in a 100 x 110 box, sitting, facing us a little to the side;
 // its feet are at y = 105. Drawn to look like a real cat: a pear-shaped
 // body, front legs as columns, tail curled round the paws, almond eyes
 // with slit pupils, fur texture and light from the top left.
-function cat(coat, { blink = 0 } = {}) {
+function cat(coat, { blink = 0, sleep = false, face = "" } = {}) {
   const calico = coat === "calico";
   const head = calico ? "hc-black" : "hc-ginger";
   const iris = "url(#hc-gr-iris-green)";
@@ -41,7 +51,7 @@ function cat(coat, { blink = 0 } = {}) {
         <path d="M20 40 C20 23 33 15 50 15 C67 15 80 23 80 40 C80 50 74 56 66 58 Q50 63 34 58 C26 56 20 50 20 40 Z" class="${head}"/>
         ${calico ? '<path d="M50 16 C40 16 30 22 28 32 Q38 34 46 28 Q50 22 50 16 Z" class="hc-orange"/>' : '<path d="M50 17 v7 M44 18 l2 6 M56 18 l-2 6 M24 38 h6 M24 43 h5 M76 38 h-6 M76 43 h-5" class="hc-stripe"/>'}
         <path d="M50 26 C45 34 40 44 38 52 Q50 60 62 52 C60 44 55 34 50 26 Z" class="hc-white"/>
-        <g class="hc-eyes" style="animation-delay:${blink}s">${eye(37)}${eye(63)}</g>
+        ${sleep ? '<g class="hc-sleep-eyes"><path d="M30 37 Q37 41 44 37" class="hc-lid"/><path d="M56 37 Q63 41 70 37" class="hc-lid"/></g>' : `<g class="hc-eyes" style="animation-delay:${blink}s">${eye(37)}${eye(63)}</g>`}
         <ellipse cx="44.5" cy="51" rx="6" ry="4.4" class="hc-pad"/><ellipse cx="55.5" cy="51" rx="6" ry="4.4" class="hc-pad"/>
         <path d="M46.6 45.5 Q50 44.4 53.4 45.5 L50 49.4 Z" class="hc-nose"/><path d="M48 45.7 q2 -0.6 3.5 0" stroke="#fff" stroke-width="0.6" opacity="0.6" fill="none"/>
         <path d="M50 49.4 v2.2 M50 51.6 q-2.6 2.4 -5 0.8 M50 51.6 q2.6 2.4 5 0.8" class="hc-mouth"/>
@@ -49,8 +59,10 @@ function cat(coat, { blink = 0 } = {}) {
           <circle cx="42" cy="50" r="0.5"/><circle cx="41" cy="52.5" r="0.5"/><circle cx="58" cy="50" r="0.5"/><circle cx="59" cy="52.5" r="0.5"/></g>
         <path d="M24 30 C30 20 40 17 50 17" class="hc-rim"/>
         <path d="M21 44 l-3 2 M22 48 l-3 3 M24 52 l-2 3 M79 44 l3 2 M78 48 l3 3 M76 52 l2 3 M44 20 l1 -3 M50 18 v-3 M56 20 l-1 -3" class="hc-strands"/>
+        ${face}
       </g>
     </g>
+    ${CHARM}
   </g>`;
 }
 
@@ -94,14 +106,16 @@ function catSide(coat, { blink = 0 } = {}) {
         <path d="M117 36 Q128 34 136 33 M117 37.5 Q127 38 134 40" class="hc-whisker"/>
       </g>
     </g>
+    ${CHARM_SIDE}
   </g>`;
 }
 
 // An upright piano (left) and a grand (right) on a 400 x 240 stage.
 function upright(x, y, w = 132) {
-  const kw = (w - 16) / 11;
-  const keys = Array.from({ length: 11 }, (_, i) => `<rect x="${x + 8 + i * kw}" y="${y + 70}" width="${kw - 1.2}" height="18" rx="1" class="hc-wkey"/>`).join("");
-  const blacks = [0, 1, 3, 4, 5, 7, 8].map((i) => `<rect x="${x + 8 + (i + 0.68) * kw}" y="${y + 70}" width="6" height="11" rx="1" class="hc-bkey"/><rect x="${x + 9 + (i + 0.68) * kw}" y="${y + 70}" width="1.6" height="9" fill="#fff" opacity="0.25"/>`).join("");
+  // Real proportions: a white key is about 2.35 cm, drawn at w/150 px per cm.
+  const kw = 2.35 * (w / 150), n = Math.floor((w - 16) / kw), x0 = x + (w - n * kw) / 2;
+  const keys = `<rect x="${x0}" y="${y + 70}" width="${n * kw}" height="18" rx="1" class="hc-wkey"/>` + Array.from({ length: n - 1 }, (_, i) => `<path d="M${(x0 + (i + 1) * kw).toFixed(1)} ${y + 70} v18" class="hc-keyline"/>`).join("");
+  const blacks = Array.from({ length: n }, (_, i) => [0, 1, 3, 4, 5].includes(i % 7) && i < n - 1 ? `<rect x="${(x0 + (i + 0.68) * kw).toFixed(1)}" y="${y + 70}" width="${(kw * 0.62).toFixed(1)}" height="11" rx="0.5" class="hc-bkey"/>` : "").join("");
   return `<g class="hc-upright">
     <ellipse cx="${x + w / 2}" cy="${y + 151}" rx="${w / 2 + 6}" ry="4" fill="#2a1d10" opacity="0.18"/>
     <g filter="url(#hc-vol-big)">
@@ -120,8 +134,9 @@ function upright(x, y, w = 132) {
   </g>`;
 }
 function grand(x, y) {
-  const keys = Array.from({ length: 10 }, (_, i) => `<rect x="${x + 14 + i * 12}" y="${y + 52}" width="10.8" height="16" rx="1" class="hc-wkey"/>`).join("");
-  const blacks = [0, 1, 3, 4, 5, 7, 8].map((i) => `<rect x="${x + 14 + i * 12 + 8}" y="${y + 52}" width="5" height="10" rx="1" class="hc-bkey"/>`).join("");
+  const kw = 2.82, n = 42, x0 = x + 14;
+  const keys = `<rect x="${x0}" y="${y + 52}" width="${n * kw}" height="16" rx="1" class="hc-wkey"/>` + Array.from({ length: n - 1 }, (_, i) => `<path d="M${(x0 + (i + 1) * kw).toFixed(1)} ${y + 52} v16" class="hc-keyline"/>`).join("");
+  const blacks = Array.from({ length: n }, (_, i) => [0, 1, 3, 4, 5].includes(i % 7) && i < n - 1 ? `<rect x="${(x0 + (i + 0.68) * kw).toFixed(1)}" y="${y + 52}" width="1.75" height="10" rx="0.4" class="hc-bkey"/>` : "").join("");
   return `<g class="hc-grand">
     <ellipse cx="${x + 80}" cy="${y + 133}" rx="84" ry="4" fill="#000" opacity="0.18"/>
     <g filter="url(#hc-vol-big)">
@@ -166,10 +181,12 @@ const tree = (x, y) => {
   </g>`;
 };
 const keyboardStrip = (y) => {
-  const w = Array.from({ length: 24 }, (_, i) => `<rect x="${8 + i * 16}" y="${y}" width="15" height="40" class="hc-wkey"/>`).join("");
-  const b = Array.from({ length: 24 }, (_, i) => [0, 1, 3, 4, 5].includes(i % 7) && i < 23 ? `<rect x="${8 + i * 16 + 11}" y="${y}" width="9" height="24" class="hc-bkey"/>` : "").join("");
-  const g = Array.from({ length: 12 }, (_, i) => `<rect x="${8 + i * 32}" y="${y}" width="15" height="40" class="hc-glow hc-run-glow" style="animation-delay:${(i * 0.16).toFixed(2)}s"/>`).join("");
-  return `<rect x="0" y="${y - 14}" width="400" height="14" class="hc-black-wood"/>${w}${b}${g}`;
+  // Close-up: 2.4 px per cm, so a white key is about 5.6 px and a cat spans ~13 keys.
+  const kw = 5.64, n = 72;
+  const keys = `<rect x="0" y="${y}" width="400" height="40" class="hc-wkey"/>` + Array.from({ length: n }, (_, i) => `<path d="M${(i * kw).toFixed(1)} ${y} v40" class="hc-keyline"/>`).join("");
+  const b = Array.from({ length: n }, (_, i) => [0, 1, 3, 4, 5].includes(i % 7) ? `<rect x="${(i * kw + kw * 0.66).toFixed(1)}" y="${y}" width="${(kw * 0.6).toFixed(1)}" height="25" rx="0.6" class="hc-bkey"/>` : "").join("");
+  const g = Array.from({ length: 24 }, (_, i) => `<rect x="${(i * kw * 3).toFixed(1)}" y="${y}" width="${(kw * 2).toFixed(1)}" height="40" class="hc-glow hc-run-glow" style="animation-delay:${(i * 0.16).toFixed(2)}s"/>`).join("");
+  return `<rect x="0" y="${y - 14}" width="400" height="14" class="hc-black-wood"/>${keys}${b}${g}<rect x="0" y="${y + 40}" width="400" height="${240 - y - 40}" class="hc-black-wood"/>`;
 };
 const actor = (coat, cls, blink = 0) => `<g class="hc-actor ${cls}"><g class="hc-bob">${cat(coat, { blink })}</g></g>`;
 
@@ -268,7 +285,72 @@ Object.assign(SCENES, {
     ${sideActor("calico", "hc-c-calico", 0.5)}${sideActor("ginger", "hc-c-ginger")}`,
 });
 
-const SCENE_ORDER = ["show", "coffee", "run", "tea", "metronome", "xmas", "window", "fish", "chase", "plank"];
+const SCENES_V4_SRC = { window: SCENES.window, fish: SCENES.fish };
+// ----- Real proportions (v5) -----
+// Wide scenes are drawn at 1.2 px per cm: a sitting cat (~25 cm) is ~30 px
+// next to a ~120 cm upright piano. Close-ups (table top, keyboard) are at
+// 2.4 px per cm. These replace the earlier, too-big layouts.
+const FAR = 0.29, FAR_SIDE = 0.3;
+const at = (x, y, s) => `transform:translate(${x}px,${y}px) scale(${s})`;
+const sit = (coat, cls, x, floorY, s = FAR, opts = {}) => `<g class="hc-actor ${cls}" style="${at(x, floorY - 105 * s, s)}"><g class="hc-bob">${cat(coat, opts)}</g></g>`;
+const walker = (coat, cls, x, floorY, s = FAR_SIDE, opts = {}) => `<g class="hc-actor ${cls}" style="${at(x, floorY - 88 * s, s)}"><g class="hc-bob">${catSide(coat, opts)}</g></g>`;
+const scaled = (cx, cy, k, inner) => `<g style="transform-box:view-box" transform="translate(${cx} ${cy}) scale(${k}) translate(${-cx} ${-cy})">${inner}</g>`;
+const zzz = (x, y) => `<g class="hc-zzz"><text x="${x}" y="${y}">z</text><text x="${x + 8}" y="${y - 10}">z</text><text x="${x + 17}" y="${y - 22}">Z</text></g>`;
+const bench = (x, w, top) => `<g filter="url(#hc-vol-big)"><rect x="${x}" y="${top}" width="${w}" height="9" rx="3" fill="#2a2630"/><rect x="${x + 6}" y="${top + 9}" width="6" height="${232 - top - 9}" fill="#1e1b24"/><rect x="${x + w - 12}" y="${top + 9}" width="6" height="${232 - top - 9}" fill="#1e1b24"/></g>`;
+
+const SCENES_V4 = {};
+Object.assign(SCENES, {
+  // The two pianos: they swap with big leaps, walk the keys, then snuggle.
+  show: () => `<path d="M0 232 H400" class="hc-floor"/>${upright(26, 82)}${grand(228, 92)}${GLOWS}${NOTES}
+    ${sit("ginger", "hc-a2-ginger", 64, 82)}${sit("calico", "hc-a2-calico", 322, 112, FAR, { blink: 1.7 })}${HEART(92, 40)}`,
+  // A duet: both on the bench at the grand, taking turns on the keys.
+  duet: () => `<path d="M0 232 H400" class="hc-floor"/>${grand(130, 92)}${bench(150, 120, 186)}
+    <g class="hc-glows">${[0, 1, 2, 3, 4, 5].map((k) => `<rect x="${170 + k * 14}" y="144" width="2.6" height="16" class="hc-glow hc-duet-glow" style="animation-delay:${(k * 0.35).toFixed(2)}s"/>`).join("")}</g>
+    <g class="hc-notes hc-duet-notes"><text x="190" y="120">♪</text><text x="230" y="110">♫</text><text x="210" y="96">♪</text></g>
+    ${sit("ginger", "hc-du-ginger", 176, 186)}${sit("calico", "hc-du-calico", 214, 186, FAR, { blink: 0.9 })}`,
+  // A nap on top of the upright, curled up together.
+  nap: () => `<path d="M0 232 H400" class="hc-floor"/>${upright(110, 82, 180)}
+    <rect x="128" y="76" width="70" height="7" rx="3" fill="#c96f8a"/><rect x="128" y="76" width="70" height="2" rx="1" fill="#f4b6c4"/>
+    ${sit("ginger", "hc-nap-ginger", 140, 82, FAR, { sleep: true })}${sit("calico", "hc-nap-calico", 166, 82, FAR, { sleep: true })}${zzz(196, 50)}`,
+  // Pepper peeks out from under the grand's lid; Ginger tiptoes over.
+  peek: () => `<path d="M0 232 H400" class="hc-floor"/>${grand(150, 92)}
+    <defs><clipPath id="hc-peek-clip"><rect x="150" y="40" width="170" height="72"/></clipPath></defs>
+    <g clip-path="url(#hc-peek-clip)">${sit("calico", "hc-pk-calico", 250, 140, FAR, { blink: 0.4 })}</g>
+    <g filter="url(#hc-vol-big)"><path d="M154 110 L272 60 L280 66 L172 110 Z" class="hc-black-wood"/></g>
+    ${walker("ginger", "hc-pk-ginger", 40, 232)}`,
+  // The metronome ticks on the piano; Ginger's head follows it.
+  metronome: () => `<path d="M0 232 H400" class="hc-floor"/>${upright(100, 82, 200)}
+    ${scaled(283, 82, 0.5, `<g class="hc-metro"><g filter="url(#hc-vol)"><path d="M262 82 L276 30 L290 30 L304 82 Z" fill="url(#hc-gr-wood)"/></g><rect x="270" y="58" width="26" height="18" rx="2" fill="#f3e6cf"/><g class="hc-metro-arm"><path d="M283 74 L283 34" stroke="#c9ced6" stroke-width="2.4"/><rect x="279" y="44" width="8" height="6" rx="1.5" fill="#d4af6a"/></g></g>`)}
+    ${scaled(170, 82, 0.6, `<g class="hc-sheet"><path d="M150 80 l40 -8 l6 30 l-40 8 z" fill="#fffdf6" stroke="#d8d0c2"/><path d="M156 82 l32 -6 M157 88 l32 -6 M158 94 l32 -6" stroke="#9b8f7c" stroke-width="0.8"/></g>`)}
+    ${sit("ginger", "hc-mt2-ginger", 216, 82)}${sit("calico", "hc-mt2-calico", 118, 82, FAR, { blink: 0.8 })}`,
+  // The Christmas tree (about 1.7 m) towers over two curious cats.
+  xmas: () => `<path d="M0 232 H400" class="hc-floor"/>${scaled(250, 220, 1.3, tree(250, 86))}
+    ${sit("ginger", "hc-x2-ginger", 150, 232)}${sit("calico", "hc-x2-calico", 330, 232, FAR, { blink: 1.2 })}
+    <g class="hc-sniff"><circle cx="172" cy="210" r="1.6"/><circle cx="177" cy="205" r="1.3"/><circle cx="181" cy="210" r="1"/></g>`,
+  // On the windowsill, watching the rain.
+  window: () => SCENES_V4.window().replace(/<g class="hc-actor hc-w-ginger">[\s\S]*$/, "") + `${sit("ginger", "hc-w2-ginger", 150, 168)}${sit("calico", "hc-w2-calico", 222, 168, FAR, { blink: 1.4 })}`,
+  // Chase: round the floor, over the piano, down the other side.
+  chase: () => `<path d="M0 232 H400" class="hc-floor"/>${upright(134, 82)}
+    ${walker("calico", "hc-c2-calico", 300, 232, FAR_SIDE, { blink: 0.5 })}${walker("ginger", "hc-c2-ginger", 168, 82)}`,
+  // The plank between two stools (a thin board, 45 cm stools).
+  plank: () => `<path d="M0 232 H400" class="hc-floor"/>
+    <g filter="url(#hc-vol-big)"><rect x="34" y="178" width="40" height="54" class="hc-wood-dark"/><rect x="326" y="178" width="40" height="54" class="hc-wood-dark"/></g>
+    <g class="hc-plank"><g filter="url(#hc-vol-big)"><rect x="30" y="173" width="340" height="5" rx="2" class="hc-wood"/></g></g>
+    ${walker("ginger", "hc-p2-ginger", 150, 173)}${sit("calico", "hc-p2-calico", 330, 173, FAR, { blink: 0.9 })}`,
+  // Close-up on the keys: real key widths, the cats trot across.
+  run: () => `${keyboardStrip(186)}<g class="hc-notes hc-run-notes"><text x="90" y="120">♪</text><text x="200" y="100">♫</text><text x="300" y="120">♪</text></g>
+    ${walker("ginger", "hc-r2-ginger", 220, 186, 0.62)}${walker("calico", "hc-r2-calico", 80, 186, 0.62, { blink: 0.7 })}`,
+  // Close-up on the table: both cats beside a real-sized goldfish bowl.
+  fish: () => SCENES_V4.fish()
+    .replace('<path d="M0 232 H400" class="hc-floor"/>', '')
+    .replace('<rect x="104" y="170" width="200" height="10" rx="3" class="hc-wood"/><rect x="116" y="180" width="8" height="52" class="hc-wood-dark"/><rect x="284" y="180" width="8" height="52" class="hc-wood-dark"/>',
+      `<g filter="url(#hc-vol-big)"><rect x="20" y="170" width="360" height="12" rx="3" class="hc-wood"/></g><rect x="20" y="182" width="360" height="58" fill="#efe4d4"/>`)
+    .replace(/<g class="hc-actor hc-f-calico">[\s\S]*$/, `${sit("calico", "hc-f2-calico", 268, 170, 0.6, { blink: 1.5 })}`),
+});
+Object.assign(SCENES_V4, SCENES_V4_SRC);
+const HOME_SCENES = ["show", "duet", "nap", "peek", "metronome", "run", "chase"];
+
+const SCENE_ORDER = ["show", "coffee", "run", "tea", "metronome", "xmas", "window", "fish", "chase", "plank", "duet", "nap", "peek"];
 // Deals scenes like a shuffled deck, so no card repeats a scene until every
 // other one has been shown; the deck is remembered between visits.
 function dealFrom(all, key) {
@@ -288,6 +370,10 @@ function dealFrom(all, key) {
 // Every scene once before any repeats (dealFrom).
 function nextCatScene() {
   return dealFrom(SCENE_ORDER, "hk_cat_scene_deck");
+}
+// The home screen: the pianos, with the cats doing something different on every visit.
+function nextHomeScene() {
+  return dealFrom(HOME_SCENES, "hk_home_scene_deck");
 }
 
 // Soft shading so the cats and pianos look round rather than flat.
@@ -324,8 +410,24 @@ const DEFS = `<defs>
   <linearGradient id="hc-gr-pot" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9cc8ec"/><stop offset="0.45" stop-color="#cfe6f8"/><stop offset="1" stop-color="#5a9bd0"/></linearGradient>
   <linearGradient id="hc-gr-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fa8c4"/><stop offset="1" stop-color="#c9d6e4"/></linearGradient>
   <radialGradient id="hc-gr-glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffe7a8" stop-opacity="0.85"/><stop offset="1" stop-color="#ffe7a8" stop-opacity="0"/></radialGradient>
+  <radialGradient id="hc-gr-gold" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#fff6c8"/><stop offset="0.45" stop-color="#f2c94c"/><stop offset="1" stop-color="#a8761a"/></radialGradient>
   <linearGradient id="hc-gr-ebony" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3742"/><stop offset="1" stop-color="#17151b"/></linearGradient>
 </defs>`;
+
+// The Hayden Keys logo/app icon: a glossy grand piano with its lid up,
+// gold notes floating out of it.
+function pianoLogo({ label = "Hayden Keys", tile = true } = {}) {
+  return `<svg class="hc-cats hc-piano-logo" viewBox="0 0 200 200" role="img" aria-label="${label}">${DEFS}
+    <defs><radialGradient id="hc-logo-bg" cx="40%" cy="30%" r="75%"><stop offset="0" stop-color="#b79cf0"/><stop offset="0.6" stop-color="#7d5bd0"/><stop offset="1" stop-color="#4f3496"/></radialGradient>
+      <radialGradient id="hc-logo-gold" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#fff3c4"/><stop offset="0.6" stop-color="#f2c94c"/><stop offset="1" stop-color="#c9921f"/></radialGradient></defs>
+    <rect width="200" height="200" rx="${tile ? 44 : 0}" fill="url(#hc-logo-bg)"/>
+    <ellipse cx="100" cy="168" rx="70" ry="8" fill="#000" opacity="0.25"/>
+    <g style="transform-box:view-box" transform="translate(100 168) scale(0.95) translate(-212 -232)">${grand(130, 92)}</g>
+    <g class="hc-logo-notes" fill="url(#hc-logo-gold)" font-family="system-ui" font-weight="900">
+      <text x="34" y="62" font-size="30">♪</text><text x="150" y="40" font-size="26">♫</text><text x="164" y="92" font-size="20">♪</text></g>
+    <circle cx="58" cy="34" r="2.4" fill="#fff" opacity="0.8"/><circle cx="132" cy="22" r="1.8" fill="#fff" opacity="0.7"/>
+  </svg>`;
+}
 
 function catsSvg(mode = "scene", { label = "Hayden Keys" } = {}) {
   if (mode === "logo") {
@@ -341,4 +443,4 @@ function catsSvg(mode = "scene", { label = "Hayden Keys" } = {}) {
   return `<svg class="hc-cats hc-scene hc-s-${name}" viewBox="0 0 400 240" role="img" aria-label="${label}">${DEFS}${SCENES[name]()}</svg>`;
 }
 
-export { catsSvg, nextCatScene, SCENES };
+export { catsSvg, nextCatScene, nextHomeScene, pianoLogo, SCENES, cat, DEFS };
