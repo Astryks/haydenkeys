@@ -2500,7 +2500,7 @@ All done 2026-10-07 (see the notes under each item).
 - Power chords (E5) now parse as root + fifth (before, they played as major chords).
 - Service worker now caches every app file (7 were missing), cache v12.
 
-**Tested:** every lesson (258) opened, stepped Next/Back and closed in the browser with 0 page errors; every library song (240) opened, Whole song and Main chords played, Back works: 0 page errors.
+**Tested:** every lesson (258, and again 260 after the cats) opened, stepped Next/Back and closed in the browser with 0 page errors; every library song (240) opened, Whole song and Main chords played, Back works: 0 page errors.
 
 **Other:** HTTPS is now enforced on haydenkeys.com (certificate was approved but not enforced).
 
