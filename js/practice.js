@@ -12,6 +12,7 @@ import { transcribeFile, renderTranscribedPlayback } from "./transcribe.js";
 import { playBeat } from "./drums.js";
 import { getAudioContext } from "./keyboard.js";
 import { onNoteOn, onChroma, enableMic, disableMic, micOn } from "./input-hub.js";
+import { songSteps, barSeconds } from "./song-map.js";
 
 const BASE_CHORD_DURATION_SEC = 1.6; // duration per chord at 1x (normal) speed
 const SPEEDS = [0.5, 0.75, 1];
@@ -40,16 +41,9 @@ function getSongSteps(song, part = "whole") {
   const isReal = (c) => parseChordSymbol(c) !== null;
   const structure = part === "main" ? null : SONG_STRUCTURES[song.title];
   if (structure) {
-    const steps = [];
-    // Item 57: each chord gets its real share of the section's length
-    // (`bars` / number of chords — e.g. 4 chords over an 8-bar verse =
-    // 2 bars each). This used to give every chord the same length, so
-    // a section's timing only matched the song when bars = chords.
-    structure.forEach((section) => {
-      const real = section.chords.filter(isReal);
-      const len = section.bars && real.length ? section.bars / real.length : 1;
-      real.forEach((chord) => steps.push({ chord, section: section.section, len }));
-    });
+    // Each section's pattern loops until its bars are filled, like the
+    // recording (see song-map.js).
+    const steps = songSteps(structure);
     if (steps.length) return withTiming({ steps, loops: false });
   }
   const steps = song.chords.filter(isReal).map((c) => ({ chord: c, section: null, len: 1 }));
@@ -110,11 +104,10 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
   // default rule and same clock.
   let bassOn = false;
   let lastBassSlot = -1;
-  // Item 57: the default practice tempo is the same for every song (one
-  // bar = BASE_CHORD_DURATION_SEC at 1x) — this app has no verified
-  // per-song BPM data, and says so. Tap tempo lets you match the real
-  // recording: tap 4+ times on the beat, and one bar becomes 4 of those
-  // beats.
+  // 1x is the recording's own tempo (song.bpm), so Whole song lines up
+  // with the video; songs without a known tempo use BASE_CHORD_DURATION_SEC
+  // per bar. Tap tempo still lets you match any recording: tap 4+ times on
+  // the beat, and one bar becomes a bar of those beats.
   let tappedBpm = null;
   let tapTimes = [];
 
@@ -194,8 +187,11 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
   // value, so they can't disagree or drift out of sync with each other.
   // 0.5x genuinely doubles each chord's on-screen duration (slower), not
   // just a CSS animation slowed down independently of the real timing.
+  // One bar at 1x: the recording's real tempo when we know it, so Whole
+  // song lines up with the official video.
+  const barSec = () => barSeconds(currentSong) || BASE_CHORD_DURATION_SEC;
   function chordDuration() {
-    return BASE_CHORD_DURATION_SEC / playbackSpeed;
+    return barSec() / playbackSpeed;
   }
 
   // Changing speed preserves *which chord* is currently at the playhead
@@ -351,7 +347,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
       const gaps = tapTimes.slice(1).map((t, i) => t - tapTimes[i]);
       const beatSec = gaps.reduce((a, b) => a + b, 0) / gaps.length / 1000;
       tappedBpm = Math.round(60 / beatSec);
-      const speed = Math.min(2.5, Math.max(0.25, BASE_CHORD_DURATION_SEC / (4 * beatSec)));
+      const speed = Math.min(2.5, Math.max(0.25, barSec() / ((currentSong.beatsPerBar || 4) * beatSec)));
       setSpeed(speed);
       btn.innerHTML = `${icon("tap", 18)} Tap tempo (♩ = ${tappedBpm})`;
     });

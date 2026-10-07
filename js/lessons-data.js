@@ -122,6 +122,7 @@ const MICRO_LESSONS = [
   { id: "q-number", title: "Quiz: numbers", subtitle: "Quick check", description: "What number is D in the key of G?" },
   { id: "m-num-shape", title: "Same shape every time", subtitle: "Press, skip, press, skip, press", description: "Every chord is the same 3-finger shape." },
   { id: "m-boom", title: "Boom! 4 chords", subtitle: "Play them in a row", description: "Play G, D, Em and C in a row." },
+  { id: "m-two-hands", title: "Two hands: L and R", subtitle: "Pink = left, blue = right", description: "Songs use both hands. The colours show which hand plays each key." },
   { id: "m-song-ateam", title: "Song: The A Team", subtitle: "Ed Sheeran · G D Em C", description: "Play The A Team with your 4 chords." },
   { id: "m-song-perfect", title: "Song: Perfect", subtitle: "Ed Sheeran · G Em C D", description: "Same chords, new order." },
   { id: "m-song-viva", title: "Song: Viva La Vida", subtitle: "Coldplay · C D G Em", description: "Same chords, another order." },

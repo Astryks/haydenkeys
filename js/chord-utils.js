@@ -42,6 +42,7 @@ const QUALITY_INTERVALS = [
   { suffix: "6", intervals: [0, 4, 7, 9] },
   { suffix: "9", intervals: [0, 4, 7, 10, 14] },
   { suffix: "7", intervals: [0, 4, 7, 10] },
+  { suffix: "5", intervals: [0, 7] }, // power chord: root + fifth
   { suffix: "m", intervals: [0, 3, 7] },
   { suffix: "", intervals: [0, 4, 7] }, // bare major, must be last (empty match)
 ];

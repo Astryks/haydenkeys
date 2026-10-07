@@ -101,6 +101,15 @@ function renderNoteHighway(container, keyLayout, { lookaheadSec = 2.2, hitLineFr
       // hands-separately practice) are drawn faded.
       ctx.globalAlpha = note.ghost ? 0.3 : note.time <= now && endTime > now ? 1 : 0.85;
       ctx.fillRect(x + 1, topY, Math.max(2, blockWidth - 2), blockHeight);
+      // "L" / "R" on each block (when there's room), so the hand is
+      // clear from the falling notes too, not only from the colour.
+      if (!note.ghost && blockHeight >= 16 && blockWidth >= 12) {
+        ctx.fillStyle = note.hand === "left" ? "#7a2e49" : "#1d4f6e";
+        ctx.font = `800 ${Math.min(13, Math.floor(blockWidth * 0.6))}px system-ui, sans-serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        ctx.fillText(note.hand === "left" ? "L" : "R", x + blockWidth / 2, bottomY - 3);
+      }
       ctx.globalAlpha = 1;
     });
   }

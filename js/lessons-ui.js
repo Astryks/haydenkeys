@@ -28,6 +28,7 @@ import {
   CHOOSE_SONGS,
 } from "./lessons-data.js";
 import { SONGS, SONG_STRUCTURES, ONE_FIVE_SIX_FOUR_SONGS, WORLD_LANGUAGES } from "./songs-data.js";
+import { songSteps, barSeconds } from "./song-map.js";
 import { watchChats, chatHtml } from "./chat.js";
 import { pandaSvg, nextTrick } from "./panda.js";
 import { icon } from "./icons.js";
@@ -295,15 +296,38 @@ function voiceIn(notes, lo, hi) {
   while (n.length && Math.min(...n) < lo) n = n.map((m) => m + 12);
   return n;
 }
-// A song's chords bar by bar, start to finish: each section's chords
-// repeat until the section's bars are filled.
+// A song's whole-song map as timed chords ({ chord, len } in bars), with
+// each section's pattern looping until its bars are filled (song-map.js).
 function wholeSongChords(structure) {
-  const out = [];
-  structure.forEach((part) => {
-    const bars = part.bars || part.chords.length;
-    for (let i = 0; i < bars; i++) out.push(part.chords[i % part.chords.length]);
+  return songSteps(structure);
+}
+// Whole-song steps as falling-note events at the song's real tempo:
+// lowest note left hand, the rest right hand.
+// A chord that fits the lesson keyboard: the root low in the left hand,
+// every chord note above it folded into range for the right hand.
+function fitChord(symbol, lo, hi) {
+  const notes = chordSymbolToMidi(symbol);
+  if (!notes.length) return [];
+  let bass = notes[0];
+  while (bass >= lo + 12) bass -= 12;
+  while (bass < lo) bass += 12;
+  const upper = [...new Set(notes.map((m) => {
+    let n = m;
+    while (n > hi) n -= 12;
+    while (n <= bass) n += 12;
+    return n;
+  }).filter((n) => n <= hi))].sort((a, b) => a - b);
+  return [bass, ...upper];
+}
+function stepsToEvents(steps, barSec, voice) {
+  const events = [];
+  let at = 0;
+  steps.forEach(({ chord, len }) => {
+    const notes = voice(chord);
+    notes.forEach((midi, k) => events.push({ midi, start: at * barSec, dur: len * barSec * 0.95, hand: k === 0 && notes.length > 1 ? "left" : "right" }));
+    at += len;
   });
-  return out;
+  return events;
 }
 // Chord voicings (MIDI arrays) in time, one per bar: lowest note left hand.
 function voicingsToEvents(voicings, barSec = 2.2) {
@@ -347,6 +371,7 @@ const MICRO_CARDS = {
   "q-number": { say: "Quick quiz! 🧠<br>In the key of G, what <b>number</b> is <b>D</b>?", want: { choice: "5" }, options: ["1", "4", "5", "6"], noKeys: true, done: "Yes! D is 5 🎉" },
   "m-num-shape": { say: "See the pattern? ✋<br>Every chord is the <b>same shape</b>:<br><b>press · skip · press · skip · press</b><br>Play <b>G</b>, then slide the shape to <b>C</b>!", want: { seq: [G, C] }, demoSeq: [[G, "G"], [C, "C"], [EM, "Em"], [D, "D ⚫"]], tip: "The only twist: <b>D</b> uses one <b>black key</b> (F♯) ⚫", done: "Same shape, any chord! ✋🎉" },
   "m-boom": { say: "<b>Boom!</b> You know 4 chords 💥<br>Play them in a row:<br><b>G → D → Em → C</b>", want: { seq: [G, D, EM, C] }, demoSeq: [[G, "G"], [D, "D"], [EM, "Em"], [C, "C"]], tip: "🎹 Now play the loop on your <b>real piano</b>!", done: "That's the loop in 100+ songs! 🎉" },
+  "m-two-hands": { say: `Two hands! 🙌<br>Songs use <b>both hands</b>: your <b>left hand</b> plays the low note, your <b>right hand</b> plays the chord.<br>This can get confusing, so we use <b>colours</b>:<br><span class="hk-hand-l">L</span> pink = <b>left hand</b><br><span class="hk-hand-r">R</span> blue = <b>right hand</b><br>Watch the keys: the left hand might be on <b>D1</b> while the right is on <b>G6</b>, far apart, but you get the idea! 😄`, want: { tap: true }, ok: "Got it! 🙌", range: [36, 76], hands: { left: [43], right: [67, 71, 74], leftLabel: "G", rightLabel: "G chord" }, demo: [43, 67, 71, 74], done: "Pink = left, blue = right 🎨" },
   "m-song-ateam": { say: "Now try <b>The A Team</b> by Ed Sheeran 🎶<br><b>G → D → Em → C</b><br><small>(Shown in the easy key of G.)</small>", want: { seq: [G, D, EM, C] }, demoSeq: [[G, "G"], [D, "D"], [EM, "Em"], [C, "C"]], tip: "🎹 Now play along with the real song!", done: "You just played The A Team! 🎉" , video: "the-a-team", song: "The A Team", shareSong: "The A Team" },
   "m-song-perfect": { say: "Now <b>Perfect</b> by Ed Sheeran 💕<br>Same chords, new order:<br><b>G → Em → C → D</b><br><small>(Shown in the easy key of G.)</small>", want: { seq: [G, EM, C, D] }, demoSeq: [[G, "G"], [EM, "Em"], [C, "C"], [D, "D"]], tip: "🎹 Now play along with the real song!", done: "You just played Perfect! 💕" , video: "perfect", song: "Perfect", shareSong: "Perfect" },
   "m-song-viva": { say: "Now <b>Viva La Vida</b> by Coldplay 👑<br><b>C → D → G → Em</b><br><small>(Shown in the easy key of G.)</small>", want: { seq: [C, D, G, EM] }, demoSeq: [[C, "C"], [D, "D"], [G, "G"], [EM, "Em"]], tip: "🎹 Now play along with the real song!", done: "You just played Viva La Vida! 👑" , video: "viva-la-vida", song: "Viva La Vida", shareSong: "Viva La Vida" },
@@ -855,13 +880,18 @@ function initLessonsTab(root) {
     };
     // Chord symbols in time: left hand root + right hand chord, one
     // chord per `barSec`.
+    // `chords` are symbols (one bar each) or { chord, len } steps.
     kb.playAlong = (chords, { barSec = 2.4, onDone } = {}) => {
       const events = [];
-      chords.forEach((chord, i) => {
+      let at = 0;
+      chords.forEach((item) => {
+        const { chord, len = 1 } = typeof item === "string" ? { chord: item } : item;
         const midis = chordSymbolToMidi(chord);
+        const start = at * barSec;
+        at += len;
         if (!midis.length) return;
-        events.push({ midi: midis[0] - 12, start: i * barSec, dur: barSec * 0.92, hand: "left" });
-        midis.forEach((midi) => events.push({ midi, start: i * barSec, dur: barSec * 0.92, hand: "right" }));
+        events.push({ midi: midis[0] - 12, start, dur: len * barSec * 0.92, hand: "left" });
+        midis.forEach((midi) => events.push({ midi, start, dur: len * barSec * 0.92, hand: "right" }));
       });
       return kb.playTimeline(events, { onDone });
     };
@@ -967,7 +997,12 @@ function initLessonsTab(root) {
     setTimeout(() => { if (!finished) say.innerHTML = card.say; }, 550);
     // Chord cards: pressing 3 keys at once on a phone is hard; say so.
     const w0 = card.want;
-    if ((w0.notes && w0.notes.length >= 3) || (w0.seq && w0.seq.some((c) => c.length >= 3))) {
+    // Shown once, the first time a chord card appears, then never again.
+    const PHONE_NOTE_KEY = "hk_phone_note_seen";
+    let phoneNoteSeen = false;
+    try { phoneNoteSeen = localStorage.getItem(PHONE_NOTE_KEY) === "1"; } catch (e) { /* ignore */ }
+    if (!phoneNoteSeen && ((w0.notes && w0.notes.length >= 3) || (w0.seq && w0.seq.some((c) => c.length >= 3)))) {
+      try { localStorage.setItem(PHONE_NOTE_KEY, "1"); } catch (e) { /* ignore */ }
       thread.insertAdjacentHTML("beforeend", `<div class="hk-phone-note">${icon("piano", 20)}<span>I know it's hard to press 3 keys at once on the app! On your phone you can tap them <b>one at a time</b>. The real practice is on <b>your piano</b>: there, play them <b>together</b>.</span></div>`);
     }
     const reply = (html, cls = "") => {
@@ -1007,6 +1042,7 @@ function initLessonsTab(root) {
     kb.clearHighlights = () => { clr(); relabel(); };
     relabel();
     if (card.show) kb.highlightChord(card.show);
+    if (card.hands) kb.highlightHands(card.hands);
     const say = content.querySelector("#hk-micro-say");
     const demoNotes = card.demo || card.show || card.help || (card.want.notes || []);
     controls.innerHTML = `
@@ -1015,7 +1051,8 @@ function initLessonsTab(root) {
       ${card.cantFind ? `<button class="hk-btn" id="hk-micro-cant">I can't find it 🤔</button>` : ""}
       ${card.want.tap ? `<button class="hk-btn hk-btn-primary" id="hk-micro-ok">${card.ok || "Got it!"}</button>` : ""}
       ${card.want.choice ? (card.options || ["happy", "sad"]).map((o) => `<button class="hk-btn hk-micro-choice" data-choice="${o}">${o === "happy" ? "😀 Happy" : o === "sad" ? "🥲 Sad" : o}</button>`).join("") : ""}
-      ${card.extra === "pop" ? `<button class="hk-btn" data-go-tab="practice">${icon("song", 20)} Find a song in Practice</button>` : ""}`;
+      ${card.extra === "pop" ? `<button class="hk-btn" data-go-tab="practice">${icon("song", 20)} Find a song in Practice</button>` : ""}
+      ${card.song || card.video ? `<button class="hk-btn hk-micro-skip" id="hk-micro-skip">Next →</button>` : ""}`;
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     async function playSeq(seq) {
       for (const [notes, label] of seq) {
@@ -1109,11 +1146,13 @@ function initLessonsTab(root) {
         const label = b.innerHTML;
         if (b.dataset.running) { kb.stopPlayAlong(); return; }
         thread.querySelectorAll("[data-along]").forEach((x) => { if (x.dataset.running) { delete x.dataset.running; x.innerHTML = x.dataset.label; } });
-        const voicings = b.dataset.along === "whole" ? wholeSongChords(structure).map((c) => voiceIn(chordSymbolToMidi(c), lo, hi)) : [...loop, ...loop, ...loop, ...loop];
+        const events = b.dataset.along === "whole"
+          ? stepsToEvents(wholeSongChords(structure), barSeconds(SONGS.find((x) => x.title === card.song)) || 2.2, (c) => fitChord(c, lo, hi))
+          : voicingsToEvents([...loop, ...loop, ...loop, ...loop], 2.2);
         b.dataset.label = label;
         b.dataset.running = "1";
         b.innerHTML = "■ Stop";
-        kb.playTimeline(voicingsToEvents(voicings, 2.2), { onDone: () => { delete b.dataset.running; b.innerHTML = label; } });
+        kb.playTimeline(events, { onDone: () => { delete b.dataset.running; b.innerHTML = label; } });
       }));
     }
 
@@ -1165,6 +1204,8 @@ function initLessonsTab(root) {
     onLessonExit(unsub);
     if (card.want.seq) kb.highlightChord(card.want.seq[0]);
     if (card.want.tap) controls.querySelector("#hk-micro-ok").addEventListener("click", success);
+    // Song cards: you can always move on without pressing the chords.
+    controls.querySelector("#hk-micro-skip")?.addEventListener("click", () => success({ skipped: true }));
     controls.querySelectorAll("[data-go-tab]").forEach((b) => b.addEventListener("click", () => {
       success();
       setTimeout(() => window.dispatchEvent(new CustomEvent("hk-show-tab", { detail: b.dataset.goTab === "discover" ? "practice" : b.dataset.goTab })), 200);
@@ -1176,13 +1217,13 @@ function initLessonsTab(root) {
       else { say.innerHTML = card.say + '<div class="hk-micro-progress">Listen again 👂</div>'; playChord(demoNotes, { duration: 1.2 }); }
     }));
 
-    function success() {
+    function success({ skipped = false } = {}) {
       if (finished) return;
       finished = true;
       unsub();
       say.innerHTML = card.say;
-      if (card.tip) reply(card.tip);
-      reply(`<div class="hk-micro-done">${card.done}</div>`, "hk-micro-yay");
+      if (card.tip && !skipped) reply(card.tip);
+      reply(`<div class="hk-micro-done">${skipped ? "No problem! This song is waiting for you in Songs anytime 🎶" : card.done}</div>`, "hk-micro-yay");
       const ids = MICRO_LESSONS.map((l) => l.id);
       const nextId = ids[ids.indexOf(id) + 1];
       const dayEnd = DAY_ENDS[id];
@@ -1424,7 +1465,7 @@ function initLessonsTab(root) {
         if (last && last.chords.join() === part.chords.join()) { if (!last.names.includes(name)) last.names.push(name); }
         else out.push({ names: [name], chords: part.chords });
       });
-      return out.map((r) => ({ label: r.names.join(" · "), chords: r.chords }));
+      return out.map((r) => ({ label: r.names.join(" · "), chords: r.chords.filter((c, i) => c !== r.chords[i - 1]) }));
     })() : [{ label: "Main part", chords: song.chords }];
     const video = SONG_VIDEOS[song.title];
     content.innerHTML = chatHtml(intro || `<h3>${song.title} 🎶</h3><p>By <b>${song.artist}</b>. Watch the chords fall onto the keys and play along on your piano.</p>`, "idle") + `
@@ -1449,8 +1490,8 @@ function initLessonsTab(root) {
         btn.dataset.label = label;
         btn.dataset.running = "1";
         btn.innerHTML = "■ Stop";
-        const chords = btn.dataset.along === "whole" ? wholeSongChords(structure) : [...song.chords, ...song.chords, ...song.chords, ...song.chords];
-        kb.playAlong(chords, { barSec: 2.2, onDone: () => { delete btn.dataset.running; btn.innerHTML = label; } });
+        const steps = btn.dataset.along === "whole" ? wholeSongChords(structure) : [...song.chords, ...song.chords, ...song.chords, ...song.chords].map((chord) => ({ chord, len: 1 }));
+        kb.playAlong(steps, { barSec: barSeconds(song) || 2.2, onDone: () => { delete btn.dataset.running; btn.innerHTML = label; } });
       });
     });
     controls.querySelector("#hk-song-next").addEventListener("click", () => { kb.stopPlayAlong(); onNext(); });

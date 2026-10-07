@@ -222,31 +222,21 @@ function renderKeyboard(container, { startMidi = 60, endMidi = 84, markMiddleC =
   // keyboard always spans real piano key widths across its MIDI range,
   // never compressed), with a distinct color per hand so register
   // separation is visible at a glance, not just implied by which notes
-  // happen to be highlighted. Each note also gets a small "L"/"R" tag.
+  // happen to be highlighted. Each note also gets its own "L"/"R" tag.
   function highlightHands({ left = [], right = [], leftLabel, rightLabel } = {}) {
     clearHighlights();
-    left.forEach((midi, i) => {
+    // Every lit key says which hand plays it: a pink "L" or a blue "R".
+    const mark = (list, hand, label) => list.forEach((midi, i) => {
       const el = keyElements.get(midi);
       if (!el) return;
-      el.classList.add("hk-key-hand-left");
-      if (i === 0) {
-        const badge = document.createElement("div");
-        badge.className = "hk-key-badge hk-key-badge-left";
-        badge.innerHTML = `<span class="hk-badge-hand">L</span><span class="hk-badge-letter">${leftLabel ?? ""}</span>`;
-        el.appendChild(badge);
-      }
+      el.classList.add(`hk-key-hand-${hand}`);
+      const badge = document.createElement("div");
+      badge.className = `hk-key-badge hk-key-badge-${hand}`;
+      badge.innerHTML = `<span class="hk-badge-hand">${hand === "left" ? "L" : "R"}</span>${i === 0 && label ? `<span class="hk-badge-letter">${label}</span>` : ""}`;
+      el.appendChild(badge);
     });
-    right.forEach((midi, i) => {
-      const el = keyElements.get(midi);
-      if (!el) return;
-      el.classList.add("hk-key-hand-right");
-      if (i === 0) {
-        const badge = document.createElement("div");
-        badge.className = "hk-key-badge hk-key-badge-right";
-        badge.innerHTML = `<span class="hk-badge-hand">R</span><span class="hk-badge-letter">${rightLabel ?? ""}</span>`;
-        el.appendChild(badge);
-      }
-    });
+    mark(left, "left", leftLabel);
+    mark(right, "right", rightLabel);
   }
 
   function onKeyPress(cb) {

@@ -99,7 +99,8 @@ function progressionRows(song) {
       if (!last.names.includes(name)) last.names.push(name);
     } else rows.push({ names: [name], chords: part.chords });
   });
-  return rows.map((r) => ({ label: r.names.join(" · "), chords: r.chords }));
+  // A chord held for two bars is listed once.
+  return rows.map((r) => ({ label: r.names.join(" · "), chords: r.chords.filter((c, i) => c !== r.chords[i - 1]) }));
 }
 
 const initials = (name) => name.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
