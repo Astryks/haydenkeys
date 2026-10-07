@@ -4754,6 +4754,843 @@ const VERIFIED = {
    }
   ]
  },
+ "Anak": {
+  "status": "uncertain",
+  "key": "A minor",
+  "bpm": 78,
+  "beatsPerBar": 4,
+  "durationSec": 233,
+  "chords": [
+   "Am",
+   "Dm",
+   "G",
+   "C",
+   "F",
+   "Dm",
+   "E",
+   "Am"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "Am",
+     "Dm",
+     "G",
+     "C",
+     "F",
+     "Dm",
+     "E",
+     "Am"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Am",
+     "Dm",
+     "G",
+     "C",
+     "F",
+     "Dm",
+     "E",
+     "Am"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Am",
+     "Dm",
+     "G",
+     "C",
+     "F",
+     "Dm",
+     "E",
+     "Am"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Instrumental",
+    "chords": [
+     "Am",
+     "Dm",
+     "G",
+     "C",
+     "F",
+     "Dm",
+     "E",
+     "Am"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "Am",
+     "Dm",
+     "G",
+     "C",
+     "F",
+     "Dm",
+     "E",
+     "Am"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "Am",
+     "Dm",
+     "G",
+     "C",
+     "F",
+     "Dm",
+     "E",
+     "Am"
+    ],
+    "bars": 8
+   }
+  ]
+ },
+ "Tadhana": {
+  "status": "uncertain",
+  "key": "F# major (D# minor feel)",
+  "bpm": 78,
+  "beatsPerBar": 4,
+  "durationSec": 222,
+  "chords": [
+   "B",
+   "C#",
+   "D#m"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "B",
+     "C#",
+     "D#m",
+     "D#m"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "B",
+     "C#",
+     "D#m",
+     "D#m",
+     "B",
+     "C#",
+     "D#m",
+     "D#m",
+     "B",
+     "C#",
+     "D#m",
+     "D#m",
+     "G#m",
+     "A#m",
+     "B",
+     "B"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "B",
+     "C#",
+     "D#m",
+     "D#m",
+     "B",
+     "C#",
+     "D#m",
+     "D#m",
+     "B",
+     "C#",
+     "D#m",
+     "D#m",
+     "G#m",
+     "A#m",
+     "B",
+     "B"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "B",
+     "D#m",
+     "B",
+     "D#m",
+     "B",
+     "D#m",
+     "G#m",
+     "A#m"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Instrumental",
+    "chords": [
+     "B",
+     "D#m",
+     "B",
+     "C#",
+     "D#m",
+     "G#m",
+     "B",
+     "C#"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "B",
+     "C#",
+     "D#m",
+     "D#m",
+     "B",
+     "C#",
+     "D#m",
+     "D#m",
+     "B",
+     "C#",
+     "D#m",
+     "D#m",
+     "G#m",
+     "A#m",
+     "B",
+     "B"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "B",
+     "D#m",
+     "B",
+     "D#m",
+     "B",
+     "D#m",
+     "G#m",
+     "A#m"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "B",
+     "D#m",
+     "B",
+     "D#m",
+     "B",
+     "D#m",
+     "G#m",
+     "A#m"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "B",
+     "D#m",
+     "B",
+     "C#",
+     "D#m",
+     "D#m",
+     "B",
+     "B"
+    ],
+    "bars": 8
+   }
+  ]
+ },
+ "Sukiyaki": {
+  "status": "uncertain",
+  "key": "G major",
+  "bpm": 76,
+  "beatsPerBar": 4,
+  "durationSec": 185,
+  "chords": [
+   "G",
+   "Em",
+   "C",
+   "D"
+  ],
+  "structure": [
+   {
+    "section": "Intro (whistling)",
+    "chords": [
+     "G",
+     "D7"
+    ],
+    "bars": 2
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "G",
+     "Em",
+     "G",
+     "Em",
+     "G",
+     "Bm",
+     "Em",
+     "D"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "G",
+     "Am",
+     "C6",
+     "B7",
+     "Em",
+     "C",
+     "D7",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "C",
+     "G",
+     "G7",
+     "Cm",
+     "G/B",
+     "A7",
+     "D7",
+     "D7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "G",
+     "Am",
+     "C6",
+     "B7",
+     "Em",
+     "C",
+     "D7",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Whistling interlude",
+    "chords": [
+     "G",
+     "Em",
+     "G",
+     "Em",
+     "G",
+     "Bm",
+     "Em",
+     "D"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "C",
+     "G",
+     "G7",
+     "Cm",
+     "G/B",
+     "A7",
+     "D7",
+     "D7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 4",
+    "chords": [
+     "G",
+     "Am",
+     "C6",
+     "B7",
+     "Em",
+     "C",
+     "D7",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Outro (whistling)",
+    "chords": [
+     "C",
+     "G"
+    ],
+    "bars": 2
+   }
+  ]
+ },
+ "Kal Ho Naa Ho": {
+  "status": "uncertain",
+  "key": "Db major",
+  "capoNote": "Guitar: capo 1 and play the C-major shapes (C, Am, F, G, Dm7, Gm7)",
+  "bpm": 86,
+  "beatsPerBar": 4,
+  "durationSec": 323,
+  "chords": [
+   "Db",
+   "Bbm",
+   "Gb",
+   "Abm7"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "Gb",
+     "Fm/Ab",
+     "Db",
+     "Db"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Mukhda (verse)",
+    "chords": [
+     "Db",
+     "Bbm"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Refrain",
+    "chords": [
+     "Gb",
+     "Db",
+     "Gb",
+     "Abm7",
+     "Db",
+     "Db",
+     "Gb",
+     "Db"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Mukhda (verse)",
+    "chords": [
+     "Db",
+     "Bbm"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Refrain",
+    "chords": [
+     "Gb",
+     "Db",
+     "Gb",
+     "Abm7",
+     "Db",
+     "Db",
+     "Gb",
+     "Db"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Instrumental interlude",
+    "chords": [
+     "Gb",
+     "Fm/Ab",
+     "Db",
+     "Db"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Antara 1",
+    "chords": [
+     "Ab",
+     "Ebm7",
+     "Ab",
+     "Ebm7",
+     "Db",
+     "Db",
+     "Db",
+     "Db"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Refrain",
+    "chords": [
+     "Gb",
+     "Db",
+     "Gb",
+     "Abm7",
+     "Db",
+     "Db",
+     "Gb",
+     "Db"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Instrumental interlude",
+    "chords": [
+     "Gb",
+     "Fm/Ab",
+     "Db",
+     "Db"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Antara 2",
+    "chords": [
+     "Ab",
+     "Ebm7",
+     "Ab",
+     "Ebm7",
+     "Db",
+     "Db",
+     "Db",
+     "Db"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Refrain",
+    "chords": [
+     "Gb",
+     "Db",
+     "Gb",
+     "Abm7",
+     "Db",
+     "Db",
+     "Gb",
+     "Db"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Mukhda (verse)",
+    "chords": [
+     "Db",
+     "Bbm"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Refrain / Outro",
+    "chords": [
+     "Gb",
+     "Db",
+     "Gb",
+     "Abm7",
+     "Db",
+     "Db",
+     "Gb",
+     "Db"
+    ],
+    "bars": 8
+   }
+  ]
+ },
+ "Volare (Nel blu, dipinto di blu)": {
+  "status": "uncertain",
+  "key": "Bb major",
+  "bpm": 129,
+  "beatsPerBar": 4,
+  "durationSec": 209,
+  "chords": [
+   "Bb",
+   "Gm",
+   "Cm7",
+   "F7"
+  ],
+  "structure": [
+   {
+    "section": "Intro / prelude (rubato verse)",
+    "chords": [
+     "Bb",
+     "Bb",
+     "Cm",
+     "F7",
+     "Bb",
+     "Dm",
+     "Cm",
+     "F7"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Chorus A",
+    "chords": [
+     "Bb",
+     "Gm",
+     "Cm7",
+     "F7",
+     "Cm7",
+     "F7",
+     "Bb",
+     "Bb"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Chorus B (secondary dominants)",
+    "chords": [
+     "D7",
+     "D7",
+     "Gm",
+     "Gm",
+     "C7",
+     "C7",
+     "F7",
+     "F7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus A (return)",
+    "chords": [
+     "Bb",
+     "Gm",
+     "Cm7",
+     "F7",
+     "Cm7",
+     "F7",
+     "Bb",
+     "Bb"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus A",
+    "chords": [
+     "Bb",
+     "Gm",
+     "Cm7",
+     "F7",
+     "Cm7",
+     "F7",
+     "Bb",
+     "Bb"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Chorus B (secondary dominants)",
+    "chords": [
+     "D7",
+     "D7",
+     "Gm",
+     "Gm",
+     "C7",
+     "C7",
+     "F7",
+     "F7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus A (return)",
+    "chords": [
+     "Bb",
+     "Gm",
+     "Cm7",
+     "F7",
+     "Cm7",
+     "F7",
+     "Bb",
+     "Bb"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus A",
+    "chords": [
+     "Bb",
+     "Gm",
+     "Cm7",
+     "F7",
+     "Cm7",
+     "F7",
+     "Bb",
+     "Bb"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Chorus B (secondary dominants)",
+    "chords": [
+     "D7",
+     "D7",
+     "Gm",
+     "Gm",
+     "C7",
+     "C7",
+     "F7",
+     "F7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus A (return) / Outro",
+    "chords": [
+     "Bb",
+     "Gm",
+     "Cm7",
+     "F7",
+     "Cm7",
+     "F7",
+     "Bb",
+     "Bb"
+    ],
+    "bars": 8
+   }
+  ]
+ },
+ "Dragostea Din Tei": {
+  "status": "corrected",
+  "key": "A minor",
+  "bpm": 130,
+  "beatsPerBar": 4,
+  "durationSec": 213,
+  "chords": [
+   "F",
+   "C",
+   "G",
+   "Am"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "F",
+     "C",
+     "G",
+     "Am"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Post-chorus hook",
+    "chords": [
+     "F",
+     "C",
+     "G",
+     "Am"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Am",
+     "F",
+     "C",
+     "G"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F",
+     "C",
+     "G",
+     "Am"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Post-chorus hook",
+    "chords": [
+     "F",
+     "C",
+     "G",
+     "Am"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Am",
+     "F",
+     "C",
+     "G"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F",
+     "C",
+     "G",
+     "Am"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Post-chorus hook",
+    "chords": [
+     "F",
+     "C",
+     "G",
+     "Am"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F",
+     "C",
+     "G",
+     "Am"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "F",
+     "C",
+     "G",
+     "Am"
+    ],
+    "bars": 4
+   }
+  ]
+ },
  "Jerusalema": {
   "status": "uncertain",
   "key": "Db major",
@@ -4887,6 +5724,696 @@ const VERIFIED = {
      "Ab"
     ],
     "bars": 8
+   }
+  ]
+ },
+ "Vintersaga": {
+  "status": "uncertain",
+  "key": "A minor",
+  "bpm": 113,
+  "beatsPerBar": 4,
+  "durationSec": 229,
+  "chords": [
+   "Am",
+   "C",
+   "Dm",
+   "Em",
+   "F",
+   "G"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "Am",
+     "Em",
+     "F",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Am",
+     "C",
+     "Dm",
+     "Am",
+     "Em",
+     "Dm",
+     "Am",
+     "Am"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F",
+     "G",
+     "Am",
+     "Am",
+     "F",
+     "G",
+     "Em",
+     "Am"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Am",
+     "C",
+     "Dm",
+     "Am",
+     "Em",
+     "Dm",
+     "Am",
+     "Am"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F",
+     "G",
+     "Am",
+     "Am",
+     "F",
+     "G",
+     "Em",
+     "Am"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Instrumental interlude",
+    "chords": [
+     "Am",
+     "Em",
+     "F",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "Am",
+     "C",
+     "Dm",
+     "Am",
+     "Em",
+     "Dm",
+     "Am",
+     "Am"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F",
+     "G",
+     "Am",
+     "Am",
+     "F",
+     "G",
+     "Em",
+     "Am"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "Am",
+     "Em",
+     "F",
+     "G",
+     "Am",
+     "Am"
+    ],
+    "bars": 12
+   }
+  ]
+ },
+ "Creep": {
+  "status": "corrected",
+  "key": "G major",
+  "bpm": 92,
+  "beatsPerBar": 4,
+  "durationSec": 235,
+  "chords": [
+   "G",
+   "B",
+   "C",
+   "Cm"
+  ],
+  "structure": [
+   {
+    "section": "Intro (clean arpeggios)",
+    "chords": [
+     "G",
+     "B",
+     "C",
+     "Cm"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "G",
+     "B",
+     "C",
+     "Cm"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "G",
+     "B",
+     "C",
+     "Cm"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "G",
+     "B",
+     "C",
+     "Cm"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "G",
+     "B",
+     "C",
+     "Cm"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Bridge (loud, high vocal)",
+    "chords": [
+     "G",
+     "B",
+     "C",
+     "Cm"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 3 (quiet)",
+    "chords": [
+     "G",
+     "B",
+     "C",
+     "Cm"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "G",
+     "B",
+     "C",
+     "Cm"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Outro (ends on G)",
+    "chords": [
+     "G",
+     "B",
+     "C",
+     "Cm",
+     "G",
+     "G"
+    ],
+    "bars": 6
+   }
+  ]
+ },
+ "Linger": {
+  "status": "verified",
+  "key": "D major",
+  "bpm": 95,
+  "beatsPerBar": 4,
+  "durationSec": 263,
+  "chords": [
+   "D",
+   "A",
+   "C",
+   "G"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "D",
+     "A",
+     "C",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "D",
+     "A",
+     "C",
+     "G"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "D",
+     "A",
+     "C",
+     "G"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "D",
+     "A",
+     "C",
+     "G"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "D",
+     "A",
+     "C",
+     "G"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Instrumental interlude (strings)",
+    "chords": [
+     "D",
+     "A",
+     "C",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Final chorus",
+    "chords": [
+     "D",
+     "A",
+     "C",
+     "G"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "D",
+     "A",
+     "C",
+     "G"
+    ],
+    "bars": 8
+   }
+  ]
+ },
+ "Love Story": {
+  "status": "corrected",
+  "key": "D major",
+  "capoNote": "Capo 2, C shapes (C G Am F); final chorus up a whole step to E (capo 4 with C shapes, or capo 2 with D shapes)",
+  "bpm": 119,
+  "beatsPerBar": 4,
+  "durationSec": 234,
+  "chords": [
+   "D",
+   "A",
+   "Bm",
+   "G"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "D",
+     "A",
+     "Bm",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "D",
+     "G",
+     "Bm",
+     "G"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "G",
+     "A",
+     "Bm",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "D",
+     "A",
+     "Bm",
+     "G",
+     "D",
+     "A",
+     "G",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "D",
+     "G",
+     "Bm",
+     "G"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "G",
+     "A",
+     "Bm",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "D",
+     "A",
+     "Bm",
+     "G",
+     "D",
+     "A",
+     "G",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Bridge (quiet)",
+    "chords": [
+     "Bm",
+     "G",
+     "D",
+     "A"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Build into key change",
+    "chords": [
+     "G",
+     "A",
+     "Bm",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Final chorus (key change to E major)",
+    "chords": [
+     "E",
+     "B",
+     "C#m",
+     "A",
+     "E",
+     "B",
+     "A",
+     "B"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Outro (E major)",
+    "chords": [
+     "E",
+     "B",
+     "C#m",
+     "A"
+    ],
+    "bars": 4
+   }
+  ]
+ },
+ "Bad Guy": {
+  "status": "corrected",
+  "key": "G minor",
+  "bpm": 135,
+  "beatsPerBar": 4,
+  "durationSec": 192,
+  "chords": [
+   "Gm",
+   "Cm",
+   "D7"
+  ],
+  "structure": [
+   {
+    "section": "Intro (bass and snaps)",
+    "chords": [
+     "Gm",
+     "Gm",
+     "Cm",
+     "D7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Gm",
+     "Gm",
+     "Cm",
+     "D7"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "Gm",
+     "Gm",
+     "Cm",
+     "D7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Gm",
+     "Gm",
+     "Cm",
+     "D7"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Drop (synth instrumental)",
+    "chords": [
+     "Gm",
+     "Gm",
+     "Cm",
+     "D7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Gm",
+     "Gm",
+     "Cm",
+     "D7"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "Gm",
+     "Gm",
+     "Cm",
+     "D7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Gm",
+     "Gm",
+     "Cm",
+     "D7"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Drop (synth instrumental)",
+    "chords": [
+     "Gm",
+     "Gm",
+     "Cm",
+     "D7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Outro (slow half-time beat switch)",
+    "chords": [
+     "Gm",
+     "Gm",
+     "Cm",
+     "D7"
+    ],
+    "bars": 28
+   }
+  ]
+ },
+ "Last Christmas": {
+  "status": "corrected",
+  "key": "D major",
+  "bpm": 107,
+  "beatsPerBar": 4,
+  "durationSec": 260,
+  "chords": [
+   "D",
+   "Bm",
+   "Em",
+   "A"
+  ],
+  "structure": [
+   {
+    "section": "Intro (synth bells)",
+    "chords": [
+     "D",
+     "Bm",
+     "Em",
+     "A"
+    ],
+    "per": 2,
+    "bars": 8
+   },
+   {
+    "section": "Chorus 1",
+    "chords": [
+     "D",
+     "Bm",
+     "Em",
+     "A"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "D",
+     "Bm",
+     "Em",
+     "A"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Chorus 2",
+    "chords": [
+     "D",
+     "Bm",
+     "Em",
+     "A"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "D",
+     "Bm",
+     "Em",
+     "A"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Chorus 3",
+    "chords": [
+     "D",
+     "Bm",
+     "Em",
+     "A"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Instrumental",
+    "chords": [
+     "D",
+     "Bm",
+     "Em",
+     "A"
+    ],
+    "per": 2,
+    "bars": 8
+   },
+   {
+    "section": "Outro (chorus fade)",
+    "chords": [
+     "D",
+     "Bm",
+     "Em",
+     "A"
+    ],
+    "per": 2,
+    "bars": 20
    }
   ]
  },
@@ -8741,7 +10268,7 @@ const VERIFIED = {
   "capoNote": "Capo 2, Em-G-D-C shapes for the verse (sounds F#m-A-E-D)",
   "bpm": 100,
   "beatsPerBar": 4,
-  "durationSec": 170,
+  "durationSec": 171,
   "chords": [
    "F#m",
    "A",
@@ -8840,6 +10367,651 @@ const VERIFIED = {
      "D"
     ],
     "bars": 4
+   }
+  ]
+ },
+ "Drop It Like It's Hot": {
+  "status": "corrected",
+  "key": "C# minor",
+  "bpm": 92,
+  "beatsPerBar": 4,
+  "durationSec": 266,
+  "chords": [
+   "F#m7",
+   "E7",
+   "A7",
+   "G#sus4",
+   "G#"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "F#m7",
+     "E7",
+     "A7",
+     "G#sus4",
+     "G#"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F#m7",
+     "E7",
+     "A7",
+     "G#sus4",
+     "G#"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "F#m7",
+     "E7",
+     "A7",
+     "G#sus4",
+     "G#"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F#m7",
+     "E7",
+     "A7",
+     "G#sus4",
+     "G#"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "F#m7",
+     "E7",
+     "A7",
+     "G#sus4",
+     "G#"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F#m7",
+     "E7",
+     "A7",
+     "G#sus4",
+     "G#"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "F#m7",
+     "E7",
+     "A7",
+     "G#sus4",
+     "G#"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F#m7",
+     "E7",
+     "A7",
+     "G#sus4",
+     "G#"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "F#m7",
+     "E7",
+     "A7",
+     "G#sus4",
+     "G#"
+    ],
+    "bars": 8
+   }
+  ]
+ },
+ "Gin and Juice": {
+  "status": "corrected",
+  "key": "F minor (F Phrygian)",
+  "bpm": 95,
+  "beatsPerBar": 4,
+  "durationSec": 211,
+  "chords": [
+   "Fm",
+   "Fm",
+   "Ebm/Gb",
+   "Cm7b5"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "Fm",
+     "Fm",
+     "Ebm/Gb",
+     "Cm7b5"
+    ],
+    "per": 0.5,
+    "bars": 4
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Fm",
+     "Fm",
+     "Ebm/Gb",
+     "Cm7b5"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Fm",
+     "Ebm/Gb"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Fm",
+     "Fm",
+     "Ebm/Gb",
+     "Cm7b5"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Fm",
+     "Ebm/Gb"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "Fm",
+     "Fm",
+     "Ebm/Gb",
+     "Cm7b5"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Fm",
+     "Ebm/Gb"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Outro (instrumental)",
+    "chords": [
+     "Fm",
+     "Fm",
+     "Ebm/Gb",
+     "Cm7b5"
+    ],
+    "per": 0.5,
+    "bars": 8
+   }
+  ]
+ },
+ "Young, Wild & Free": {
+  "status": "verified",
+  "key": "D major",
+  "bpm": 95,
+  "beatsPerBar": 4,
+  "durationSec": 207,
+  "chords": [
+   "G",
+   "D",
+   "G",
+   "Bm"
+  ],
+  "structure": [
+   {
+    "section": "Intro (chorus)",
+    "chords": [
+     "G",
+     "D",
+     "G",
+     "Bm"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1 (rap)",
+    "chords": [
+     "G",
+     "D",
+     "G",
+     "Bm"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "G",
+     "D",
+     "G",
+     "Bm"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2 (rap)",
+    "chords": [
+     "G",
+     "D",
+     "G",
+     "Bm"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "G",
+     "D",
+     "G",
+     "Bm"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 3 (rap)",
+    "chords": [
+     "G",
+     "D",
+     "G",
+     "Bm"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "G",
+     "D",
+     "G",
+     "Bm"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "G",
+     "D"
+    ],
+    "bars": 4
+   }
+  ]
+ },
+ "Let It Be": {
+  "status": "corrected",
+  "key": "C major",
+  "bpm": 72,
+  "beatsPerBar": 4,
+  "durationSec": 230,
+  "chords": [
+   "C",
+   "G",
+   "Am",
+   "F"
+  ],
+  "structure": [
+   {
+    "section": "Intro (piano)",
+    "chords": [
+     "C",
+     "G",
+     "Am",
+     "F",
+     "C",
+     "G",
+     "F",
+     "C"
+    ],
+    "per": 0.5,
+    "bars": 4
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "C",
+     "G",
+     "Am",
+     "F",
+     "C",
+     "G",
+     "F",
+     "C"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Am",
+     "G",
+     "F",
+     "C",
+     "C",
+     "G",
+     "F",
+     "C"
+    ],
+    "per": 0.5,
+    "bars": 4
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "C",
+     "G",
+     "Am",
+     "F",
+     "C",
+     "G",
+     "F",
+     "C"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Chorus (x2)",
+    "chords": [
+     "Am",
+     "G",
+     "F",
+     "C",
+     "C",
+     "G",
+     "F",
+     "C"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Instrumental interlude (x2)",
+    "chords": [
+     "F",
+     "C/E",
+     "Dm7",
+     "C",
+     "Bb",
+     "F/A",
+     "G",
+     "F"
+    ],
+    "per": 0.25,
+    "bars": 4
+   },
+   {
+    "section": "Guitar solo",
+    "chords": [
+     "C",
+     "G",
+     "Am",
+     "F",
+     "C",
+     "G",
+     "F",
+     "C"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "C",
+     "G",
+     "Am",
+     "F",
+     "C",
+     "G",
+     "F",
+     "C"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Chorus (x2)",
+    "chords": [
+     "Am",
+     "G",
+     "F",
+     "C",
+     "C",
+     "G",
+     "F",
+     "C"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Outro tag",
+    "chords": [
+     "C",
+     "G",
+     "F",
+     "C"
+    ],
+    "per": 0.5,
+    "bars": 2
+   },
+   {
+    "section": "Outro (descending ending)",
+    "chords": [
+     "F",
+     "C/E",
+     "Dm7",
+     "C",
+     "Bb",
+     "F/A",
+     "G",
+     "F"
+    ],
+    "per": 0.25,
+    "bars": 2
+   },
+   {
+    "section": "Final chord",
+    "chords": [
+     "C"
+    ],
+    "bars": 2
+   }
+  ],
+  "solos": [
+   {
+    "section": "Guitar solo",
+    "scale": "C major pentatonic (A minor pentatonic box 1 at the 5th fret), adding F for a full C major colour",
+    "tips": "Play the solo over the verse changes: aim for C on the C chord, B or D on G, A on Am and A or C on F. Keep it lyrical and slow, using a few bends from D to E on the G string rather than fast runs.",
+    "chords": [
+     "C",
+     "G",
+     "Am",
+     "F",
+     "C",
+     "G",
+     "F",
+     "C"
+    ]
+   }
+  ],
+  "pianoVideo": {
+   "id": "CGj85pVzRJs",
+   "title": "The Beatles - The Beatles - Let It Be (Official Music Video) [Remastered 2015]",
+   "channel": "TheBeatlesVEVO"
+  }
+ },
+ "No Woman No Cry": {
+  "status": "uncertain",
+  "key": "C major (the famous Live! 1975 recording sounds sharp of C, near Db)",
+  "bpm": 78,
+  "beatsPerBar": 4,
+  "durationSec": 427,
+  "chords": [
+   "C",
+   "G/B",
+   "Am",
+   "F"
+  ],
+  "structure": [
+   {
+    "section": "Intro (organ)",
+    "chords": [
+     "C",
+     "G/B",
+     "Am",
+     "F"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "C",
+     "G/B",
+     "Am",
+     "F"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "C",
+     "G/B",
+     "Am",
+     "F"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "C",
+     "G/B",
+     "Am",
+     "F"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "C",
+     "G/B",
+     "Am",
+     "F"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Bridge (chant section)",
+    "chords": [
+     "C",
+     "G/B",
+     "Am",
+     "F"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "C",
+     "G/B",
+     "Am",
+     "F"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Guitar solo",
+    "chords": [
+     "C",
+     "G/B",
+     "Am",
+     "F"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "C",
+     "G/B",
+     "Am",
+     "F"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus (x2)",
+    "chords": [
+     "C",
+     "G/B",
+     "Am",
+     "F"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "C",
+     "G/B",
+     "Am",
+     "F"
+    ],
+    "bars": 8
+   }
+  ],
+  "solos": [
+   {
+    "section": "Guitar solo",
+    "scale": "C major pentatonic (A minor pentatonic box 1 at the 5th fret)",
+    "tips": "Use short, laid-back phrases that start just after the beat to sit with the reggae groove. Target C over C, B over G/B and A over Am so the solo follows the walking bass line.",
+    "chords": [
+     "C",
+     "G/B",
+     "Am",
+     "F"
+    ]
    }
   ]
  },
@@ -9179,6 +11351,257 @@ const VERIFIED = {
    }
   ]
  },
+ "I'm Yours": {
+  "status": "corrected",
+  "key": "B major",
+  "capoNote": "Capo 4, G shapes (G, D, Em, C; bridge G, D/F#, Em, D, C)",
+  "bpm": 151,
+  "beatsPerBar": 4,
+  "durationSec": 243,
+  "chords": [
+   "B",
+   "F#",
+   "G#m",
+   "E"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "B",
+     "F#",
+     "G#m",
+     "E"
+    ],
+    "per": 2,
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "B",
+     "F#",
+     "G#m",
+     "E"
+    ],
+    "per": 2,
+    "bars": 24
+   },
+   {
+    "section": "Chorus 1",
+    "chords": [
+     "B",
+     "F#",
+     "G#m",
+     "E"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "B",
+     "F#",
+     "G#m",
+     "E"
+    ],
+    "per": 2,
+    "bars": 24
+   },
+   {
+    "section": "Chorus 2",
+    "chords": [
+     "B",
+     "F#",
+     "G#m",
+     "E"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "B",
+     "B",
+     "F#/A#",
+     "F#/A#",
+     "G#m",
+     "G#m",
+     "F#",
+     "E"
+    ],
+    "bars": 24
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "B",
+     "F#",
+     "G#m",
+     "E"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Chorus 3",
+    "chords": [
+     "B",
+     "F#",
+     "G#m",
+     "E"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "B",
+     "F#",
+     "G#m",
+     "E"
+    ],
+    "per": 2,
+    "bars": 8
+   }
+  ]
+ },
+ "Despacito": {
+  "status": "corrected",
+  "key": "B minor",
+  "bpm": 89,
+  "beatsPerBar": 4,
+  "durationSec": 228,
+  "chords": [
+   "Bm",
+   "G",
+   "D",
+   "A"
+  ],
+  "structure": [
+   {
+    "section": "Intro (cuatro and guitar)",
+    "chords": [
+     "Bm",
+     "G",
+     "D",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1 (Fonsi)",
+    "chords": [
+     "Bm",
+     "G",
+     "D",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Pre-chorus 1",
+    "chords": [
+     "Bm",
+     "G",
+     "D",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus 1",
+    "chords": [
+     "Bm",
+     "G",
+     "D",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Post-chorus 1",
+    "chords": [
+     "Bm",
+     "G",
+     "D",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2 (Daddy Yankee rap)",
+    "chords": [
+     "Bm",
+     "G",
+     "D",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Pre-chorus 2",
+    "chords": [
+     "Bm",
+     "G",
+     "D",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus 2",
+    "chords": [
+     "Bm",
+     "G",
+     "D",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Post-chorus 2",
+    "chords": [
+     "Bm",
+     "G",
+     "D",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "Bm",
+     "G",
+     "D",
+     "A"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Final chorus",
+    "chords": [
+     "Bm",
+     "G",
+     "D",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Outro (a cappella hook)",
+    "chords": [
+     "Bm",
+     "G"
+    ],
+    "bars": 2
+   }
+  ]
+ },
  "Someone Like You": {
   "status": "corrected",
   "key": "A major",
@@ -9457,6 +11880,119 @@ const VERIFIED = {
      "D"
     ],
     "bars": 4
+   }
+  ]
+ },
+ "Stand By Me": {
+  "status": "corrected",
+  "key": "A major",
+  "bpm": 119,
+  "beatsPerBar": 4,
+  "durationSec": 178,
+  "chords": [
+   "A",
+   "F#m",
+   "D",
+   "E"
+  ],
+  "structure": [
+   {
+    "section": "Intro (bass line)",
+    "chords": [
+     "A",
+     "A",
+     "F#m",
+     "F#m",
+     "D",
+     "E",
+     "A",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "A",
+     "A",
+     "F#m",
+     "F#m",
+     "D",
+     "E",
+     "A",
+     "A"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "A",
+     "A",
+     "F#m",
+     "F#m",
+     "D",
+     "E",
+     "A",
+     "A"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "A",
+     "A",
+     "F#m",
+     "F#m",
+     "D",
+     "E",
+     "A",
+     "A"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "A",
+     "A",
+     "F#m",
+     "F#m",
+     "D",
+     "E",
+     "A",
+     "A"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "String interlude",
+    "chords": [
+     "A",
+     "A",
+     "F#m",
+     "F#m",
+     "D",
+     "E",
+     "A",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus (fade out)",
+    "chords": [
+     "A",
+     "A",
+     "F#m",
+     "F#m",
+     "D",
+     "E",
+     "A",
+     "A"
+    ],
+    "bars": 8
    }
   ]
  },
@@ -14368,6 +16904,550 @@ const VERIFIED = {
     ]
    }
   ]
+ },
+ "My Funny Valentine": {
+  "status": "corrected",
+  "key": "C minor",
+  "bpm": 64,
+  "beatsPerBar": 4,
+  "durationSec": 146,
+  "chords": [
+   "Cm",
+   "Cm",
+   "Cm7",
+   "Cm6"
+  ],
+  "structure": [
+   {
+    "section": "Piano intro",
+    "chords": [
+     "Cm",
+     "G7"
+    ],
+    "bars": 2
+   },
+   {
+    "section": "A1",
+    "chords": [
+     "Cm",
+     "Cm",
+     "Cm7",
+     "Cm6",
+     "Abmaj7",
+     "Fm7",
+     "Dm7b5",
+     "G7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "A2",
+    "chords": [
+     "Cm",
+     "Cm",
+     "Cm7",
+     "Cm6",
+     "Abmaj7",
+     "Fm7",
+     "Fm7",
+     "Bb7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Bridge (B)",
+    "chords": [
+     "Ebmaj7",
+     "Fm7",
+     "Gm7",
+     "Fm7",
+     "Ebmaj7",
+     "Fm7",
+     "Gm7",
+     "Fm7",
+     "Ebmaj7",
+     "Gm7",
+     "Am7b5",
+     "D7",
+     "Gm",
+     "Gm/F",
+     "Dm7b5",
+     "G7"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "A3 (extended)",
+    "chords": [
+     "Cm",
+     "Cm",
+     "Cm",
+     "Cm",
+     "Cm7",
+     "Cm7",
+     "Cm6",
+     "Cm6",
+     "Abmaj7",
+     "Abmaj7",
+     "Dm7b5",
+     "Dm7b5",
+     "Fm7",
+     "Fm7",
+     "Bb7",
+     "Bb7",
+     "Ebmaj7",
+     "Ebmaj7",
+     "Abmaj7",
+     "Abmaj7",
+     "Dm7b5",
+     "G7",
+     "Cm",
+     "Cm"
+    ],
+    "per": 0.5,
+    "bars": 12
+   },
+   {
+    "section": "Ending",
+    "chords": [
+     "Cm"
+    ],
+    "bars": 1
+   }
+  ]
+ },
+ "Almost Blue": {
+  "status": "corrected",
+  "key": "A minor",
+  "bpm": 60,
+  "beatsPerBar": 4,
+  "durationSec": 184,
+  "chords": [
+   "Am",
+   "Am/G#",
+   "Am7/G",
+   "Bm7b5",
+   "E7"
+  ],
+  "structure": [
+   {
+    "section": "Piano intro",
+    "chords": [
+     "Am",
+     "Am",
+     "Am/G#",
+     "Am/G#",
+     "Am7/G",
+     "Am7/G",
+     "Bm7b5",
+     "E7"
+    ],
+    "per": 0.5,
+    "bars": 2
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Am",
+     "Am",
+     "Am/G#",
+     "Am/G#",
+     "Am7/G",
+     "Am7/G",
+     "Bm7b5",
+     "E7"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Am",
+     "Am",
+     "Bm7b5",
+     "Adim",
+     "C",
+     "C",
+     "Bb6",
+     "A",
+     "Dm",
+     "Dm/C",
+     "Bm7b5",
+     "E7",
+     "Am",
+     "Am",
+     "Am",
+     "Am"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "F",
+     "F",
+     "Bm7b5",
+     "Bm7b5",
+     "C",
+     "C#dim",
+     "Dm",
+     "Dm",
+     "Bm7b5",
+     "Bm7b5",
+     "E7",
+     "E7",
+     "Am",
+     "Am",
+     "E7",
+     "E7"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Piano solo",
+    "chords": [
+     "Am",
+     "Am",
+     "Am/G#",
+     "Am/G#",
+     "Am7/G",
+     "Am7/G",
+     "Bm7b5",
+     "E7"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "Am",
+     "Am",
+     "Bm7b5",
+     "Adim",
+     "C",
+     "C",
+     "Bb6",
+     "A",
+     "Dm",
+     "Dm/C",
+     "Bm7b5",
+     "E7",
+     "Am",
+     "Am",
+     "Am",
+     "Am"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "Am",
+     "Am/G#",
+     "Am7/G",
+     "Am"
+    ],
+    "bars": 4
+   }
+  ],
+  "solos": [
+   {
+    "section": "Piano solo",
+    "scale": "A harmonic minor (G# leading note) over the descending Am line; A natural minor elsewhere",
+    "tips": "Follow the falling bass line (A, G#, G, F#) with your left hand and keep the right hand to a few slow, sustained notes. Let the E7 resolve to Am every time.",
+    "chords": [
+     "Am",
+     "Am",
+     "Am/G#",
+     "Am/G#",
+     "Am7/G",
+     "Am7/G",
+     "Bm7b5",
+     "E7"
+    ]
+   }
+  ]
+ },
+ "Amazing Grace": {
+  "status": "corrected",
+  "key": "G major",
+  "bpm": 72,
+  "beatsPerBar": 3,
+  "durationSec": 180,
+  "chords": [
+   "G",
+   "C",
+   "D",
+   "Em"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "G",
+     "C",
+     "D",
+     "G"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "G",
+     "G",
+     "C",
+     "G",
+     "G",
+     "Em",
+     "D",
+     "D",
+     "G",
+     "G7",
+     "C",
+     "G",
+     "Em",
+     "D",
+     "G",
+     "G"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "G",
+     "G",
+     "C",
+     "G",
+     "G",
+     "Em",
+     "D",
+     "D",
+     "G",
+     "G7",
+     "C",
+     "G",
+     "Em",
+     "D",
+     "G",
+     "G"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "G",
+     "G",
+     "C",
+     "G",
+     "G",
+     "Em",
+     "D",
+     "D",
+     "G",
+     "G7",
+     "C",
+     "G",
+     "Em",
+     "D",
+     "G",
+     "G"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 4 (slower ending)",
+    "chords": [
+     "G",
+     "G",
+     "C",
+     "G",
+     "G",
+     "Em",
+     "D",
+     "D",
+     "G",
+     "G7",
+     "C",
+     "G",
+     "Em",
+     "D",
+     "G",
+     "G"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Ending",
+    "chords": [
+     "G"
+    ],
+    "bars": 4
+   }
+  ]
+ },
+ "When I Was Your Man": {
+  "status": "verified",
+  "key": "C major",
+  "bpm": 73,
+  "beatsPerBar": 4,
+  "durationSec": 204,
+  "chords": [
+   "F",
+   "G",
+   "Em",
+   "Am",
+   "Dm",
+   "G",
+   "C"
+  ],
+  "structure": [
+   {
+    "section": "Intro (piano)",
+    "chords": [
+     "C",
+     "Am"
+    ],
+    "bars": 2
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Am",
+     "Am",
+     "C",
+     "C",
+     "Dm",
+     "G",
+     "C",
+     "C"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "Am",
+     "Am",
+     "Em",
+     "Em",
+     "Bb",
+     "Bb",
+     "C/G",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 4
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F",
+     "G",
+     "Em",
+     "Am",
+     "Dm",
+     "G",
+     "C",
+     "C"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Am",
+     "Am",
+     "C",
+     "C",
+     "Dm",
+     "G",
+     "C",
+     "C"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "Am",
+     "Am",
+     "Em",
+     "Em",
+     "Bb",
+     "Bb",
+     "C/G",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 4
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F",
+     "G",
+     "Em",
+     "Am",
+     "Dm",
+     "G",
+     "C",
+     "C"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "F",
+     "G",
+     "C",
+     "G/B",
+     "Am",
+     "Am",
+     "Dm",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F",
+     "G",
+     "Em",
+     "Am",
+     "Dm",
+     "G",
+     "C",
+     "C"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "F",
+     "G",
+     "C",
+     "C"
+    ],
+    "bars": 4
+   }
+  ],
+  "pianoVideo": {
+   "id": "ekzHIouo8Q4",
+   "title": "Bruno Mars - When I Was Your Man (Official Music Video)",
+   "channel": "Bruno Mars"
+  }
  },
  "Break My Heart Again": {
   "status": "uncertain",
@@ -20274,6 +23354,806 @@ const VERIFIED = {
    }
   ]
  },
+ "Summertime": {
+  "status": "corrected",
+  "key": "A minor",
+  "bpm": 90,
+  "beatsPerBar": 4,
+  "durationSec": 192,
+  "chords": [
+   "Am6",
+   "E7",
+   "Dm6",
+   "Bm7b5",
+   "E7",
+   "Am6"
+  ],
+  "structure": [
+   {
+    "section": "Intro (vamp)",
+    "chords": [
+     "Am6",
+     "E7"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Head - verse 1 (16 bars)",
+    "chords": [
+     "Am6",
+     "Am6",
+     "Bm7b5",
+     "E7",
+     "Am6",
+     "Am6",
+     "Am6",
+     "Am6",
+     "Dm6",
+     "Dm6",
+     "Dm6",
+     "Dm6",
+     "Bm7b5",
+     "Bm7b5",
+     "E7",
+     "E7",
+     "Am6",
+     "Am6",
+     "Bm7b5",
+     "E7",
+     "Am6",
+     "Am6",
+     "Am6",
+     "Am6",
+     "C",
+     "C",
+     "A7",
+     "A7",
+     "Dm7",
+     "E7",
+     "Am6",
+     "E7"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Verse 2 (16 bars)",
+    "chords": [
+     "Am6",
+     "Am6",
+     "Bm7b5",
+     "E7",
+     "Am6",
+     "Am6",
+     "Am6",
+     "Am6",
+     "Dm6",
+     "Dm6",
+     "Dm6",
+     "Dm6",
+     "Bm7b5",
+     "Bm7b5",
+     "E7",
+     "E7",
+     "Am6",
+     "Am6",
+     "Bm7b5",
+     "E7",
+     "Am6",
+     "Am6",
+     "Am6",
+     "Am6",
+     "C",
+     "C",
+     "A7",
+     "A7",
+     "Dm7",
+     "E7",
+     "Am6",
+     "E7"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Solo (16-bar form)",
+    "chords": [
+     "Am6",
+     "Am6",
+     "Bm7b5",
+     "E7",
+     "Am6",
+     "Am6",
+     "Am6",
+     "Am6",
+     "Dm6",
+     "Dm6",
+     "Dm6",
+     "Dm6",
+     "Bm7b5",
+     "Bm7b5",
+     "E7",
+     "E7",
+     "Am6",
+     "Am6",
+     "Bm7b5",
+     "E7",
+     "Am6",
+     "Am6",
+     "Am6",
+     "Am6",
+     "C",
+     "C",
+     "A7",
+     "A7",
+     "Dm7",
+     "E7",
+     "Am6",
+     "E7"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Head out (16 bars)",
+    "chords": [
+     "Am6",
+     "Am6",
+     "Bm7b5",
+     "E7",
+     "Am6",
+     "Am6",
+     "Am6",
+     "Am6",
+     "Dm6",
+     "Dm6",
+     "Dm6",
+     "Dm6",
+     "Bm7b5",
+     "Bm7b5",
+     "E7",
+     "E7",
+     "Am6",
+     "Am6",
+     "Bm7b5",
+     "E7",
+     "Am6",
+     "Am6",
+     "Am6",
+     "Am6",
+     "C",
+     "C",
+     "A7",
+     "A7",
+     "Dm7",
+     "E7",
+     "Am6",
+     "E7"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Ending vamp",
+    "chords": [
+     "Am6",
+     "E7",
+     "Am6",
+     "Am6"
+    ],
+    "bars": 4
+   }
+  ],
+  "solos": [
+   {
+    "section": "Solo (16-bar form)",
+    "scale": "A minor pentatonic (box 1 at the 5th fret on guitar; white keys A C D E G on piano), adding F# from A Dorian over the Am6 bars and G# over E7",
+    "tips": "The melody itself is pentatonic, so start by decorating it before improvising freely. Leave space - it is a slow lullaby, so hold notes longer than you think.",
+    "chords": [
+     "Am6",
+     "Am6",
+     "Bm7b5",
+     "E7",
+     "Am6",
+     "Am6",
+     "Am6",
+     "Am6",
+     "Dm6",
+     "Dm6",
+     "Dm6",
+     "Dm6",
+     "Bm7b5",
+     "Bm7b5",
+     "E7",
+     "E7",
+     "Am6",
+     "Am6",
+     "Bm7b5",
+     "E7",
+     "Am6",
+     "Am6",
+     "Am6",
+     "Am6",
+     "C",
+     "C",
+     "A7",
+     "A7",
+     "Dm7",
+     "E7",
+     "Am6",
+     "E7"
+    ]
+   }
+  ]
+ },
+ "Satin Doll": {
+  "status": "corrected",
+  "key": "C major",
+  "bpm": 120,
+  "beatsPerBar": 4,
+  "durationSec": 184,
+  "chords": [
+   "Dm7",
+   "G7",
+   "Em7",
+   "A7",
+   "Am7",
+   "D7",
+   "Abm7",
+   "Db7",
+   "Cmaj7"
+  ],
+  "structure": [
+   {
+    "section": "Intro (piano)",
+    "chords": [
+     "Dm7",
+     "G7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Head - A1",
+    "chords": [
+     "Dm7",
+     "G7",
+     "Dm7",
+     "G7",
+     "Em7",
+     "A7",
+     "Em7",
+     "A7",
+     "Am7",
+     "D7",
+     "Abm7",
+     "Db7",
+     "Cmaj7",
+     "Cmaj7",
+     "Dm7",
+     "G7"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Head - A2",
+    "chords": [
+     "Dm7",
+     "G7",
+     "Dm7",
+     "G7",
+     "Em7",
+     "A7",
+     "Em7",
+     "A7",
+     "Am7",
+     "D7",
+     "Abm7",
+     "Db7",
+     "Cmaj7",
+     "Cmaj7",
+     "Dm7",
+     "G7"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Head - B (bridge, up to F)",
+    "chords": [
+     "Gm7",
+     "C7",
+     "Gm7",
+     "C7",
+     "Fmaj7",
+     "Fmaj7",
+     "Fmaj7",
+     "Fmaj7",
+     "Am7",
+     "D7",
+     "Am7",
+     "D7",
+     "Dm7",
+     "Dm7",
+     "G7",
+     "G7"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Head - A3",
+    "chords": [
+     "Dm7",
+     "G7",
+     "Dm7",
+     "G7",
+     "Em7",
+     "A7",
+     "Em7",
+     "A7",
+     "Am7",
+     "D7",
+     "Abm7",
+     "Db7",
+     "Cmaj7",
+     "Cmaj7",
+     "Dm7",
+     "G7"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Solo chorus (AABA)",
+    "chords": [
+     "Dm7",
+     "G7",
+     "Dm7",
+     "G7",
+     "Em7",
+     "A7",
+     "Em7",
+     "A7",
+     "Am7",
+     "D7",
+     "Abm7",
+     "Db7",
+     "Cmaj7",
+     "Cmaj7",
+     "Dm7",
+     "G7",
+     "Dm7",
+     "G7",
+     "Dm7",
+     "G7",
+     "Em7",
+     "A7",
+     "Em7",
+     "A7",
+     "Am7",
+     "D7",
+     "Abm7",
+     "Db7",
+     "Cmaj7",
+     "Cmaj7",
+     "Dm7",
+     "G7",
+     "Gm7",
+     "C7",
+     "Gm7",
+     "C7",
+     "Fmaj7",
+     "Fmaj7",
+     "Fmaj7",
+     "Fmaj7",
+     "Am7",
+     "D7",
+     "Am7",
+     "D7",
+     "Dm7",
+     "Dm7",
+     "G7",
+     "G7",
+     "Dm7",
+     "G7",
+     "Dm7",
+     "G7",
+     "Em7",
+     "A7",
+     "Em7",
+     "A7",
+     "Am7",
+     "D7",
+     "Abm7",
+     "Db7",
+     "Cmaj7",
+     "Cmaj7",
+     "Dm7",
+     "G7"
+    ],
+    "per": 0.5,
+    "bars": 32
+   },
+   {
+    "section": "Head out - B (bridge)",
+    "chords": [
+     "Gm7",
+     "C7",
+     "Gm7",
+     "C7",
+     "Fmaj7",
+     "Fmaj7",
+     "Fmaj7",
+     "Fmaj7",
+     "Am7",
+     "D7",
+     "Am7",
+     "D7",
+     "Dm7",
+     "Dm7",
+     "G7",
+     "G7"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Head out - A (ending)",
+    "chords": [
+     "Dm7",
+     "G7",
+     "Dm7",
+     "G7",
+     "Em7",
+     "A7",
+     "Em7",
+     "A7",
+     "Am7",
+     "D7",
+     "Abm7",
+     "Db7",
+     "Cmaj7",
+     "Cmaj7",
+     "Cmaj7",
+     "Cmaj7"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Tag",
+    "chords": [
+     "Am7",
+     "D7",
+     "Abm7",
+     "Db7",
+     "Cmaj7",
+     "Cmaj7",
+     "Cmaj7",
+     "Cmaj7"
+    ],
+    "per": 0.5,
+    "bars": 4
+   }
+  ],
+  "solos": [
+   {
+    "section": "Solo chorus (AABA)",
+    "scale": "C major scale over the A sections, but follow each ii-V pair (Dm7-G7, Em7-A7, Am7-D7, Abm7-Db7) as a short trip into a new key; F major over the bridge",
+    "tips": "Practise one chord-tone arpeggio per half bar so you hear each ii-V move. Over Abm7-Db7 just slide your Am7-D7 idea down a half step.",
+    "chords": [
+     "Dm7",
+     "G7",
+     "Dm7",
+     "G7",
+     "Em7",
+     "A7",
+     "Em7",
+     "A7",
+     "Am7",
+     "D7",
+     "Abm7",
+     "Db7",
+     "Cmaj7",
+     "Cmaj7",
+     "Dm7",
+     "G7",
+     "Dm7",
+     "G7",
+     "Dm7",
+     "G7",
+     "Em7",
+     "A7",
+     "Em7",
+     "A7",
+     "Am7",
+     "D7",
+     "Abm7",
+     "Db7",
+     "Cmaj7",
+     "Cmaj7",
+     "Dm7",
+     "G7",
+     "Gm7",
+     "C7",
+     "Gm7",
+     "C7",
+     "Fmaj7",
+     "Fmaj7",
+     "Fmaj7",
+     "Fmaj7",
+     "Am7",
+     "D7",
+     "Am7",
+     "D7",
+     "Dm7",
+     "Dm7",
+     "G7",
+     "G7",
+     "Dm7",
+     "G7",
+     "Dm7",
+     "G7",
+     "Em7",
+     "A7",
+     "Em7",
+     "A7",
+     "Am7",
+     "D7",
+     "Abm7",
+     "Db7",
+     "Cmaj7",
+     "Cmaj7",
+     "Dm7",
+     "G7"
+    ]
+   }
+  ]
+ },
+ "Cantaloupe Island": {
+  "status": "corrected",
+  "key": "F minor",
+  "bpm": 116,
+  "beatsPerBar": 4,
+  "durationSec": 333,
+  "chords": [
+   "Fm7",
+   "Db7",
+   "Dm7",
+   "Fm7"
+  ],
+  "structure": [
+   {
+    "section": "Intro (piano vamp)",
+    "chords": [
+     "Fm7"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Head (x2)",
+    "chords": [
+     "Fm7",
+     "Fm7",
+     "Fm7",
+     "Fm7",
+     "Db7",
+     "Db7",
+     "Db7",
+     "Db7",
+     "Dm7",
+     "Dm7",
+     "Dm7",
+     "Dm7",
+     "Fm7",
+     "Fm7",
+     "Fm7",
+     "Fm7"
+    ],
+    "bars": 32
+   },
+   {
+    "section": "Cornet solo (Freddie Hubbard, 3 choruses)",
+    "chords": [
+     "Fm7",
+     "Fm7",
+     "Fm7",
+     "Fm7",
+     "Db7",
+     "Db7",
+     "Db7",
+     "Db7",
+     "Dm7",
+     "Dm7",
+     "Dm7",
+     "Dm7",
+     "Fm7",
+     "Fm7",
+     "Fm7",
+     "Fm7"
+    ],
+    "bars": 48
+   },
+   {
+    "section": "Piano solo (3 choruses)",
+    "chords": [
+     "Fm7",
+     "Fm7",
+     "Fm7",
+     "Fm7",
+     "Db7",
+     "Db7",
+     "Db7",
+     "Db7",
+     "Dm7",
+     "Dm7",
+     "Dm7",
+     "Dm7",
+     "Fm7",
+     "Fm7",
+     "Fm7",
+     "Fm7"
+    ],
+    "bars": 48
+   },
+   {
+    "section": "Head out (x2)",
+    "chords": [
+     "Fm7",
+     "Fm7",
+     "Fm7",
+     "Fm7",
+     "Db7",
+     "Db7",
+     "Db7",
+     "Db7",
+     "Dm7",
+     "Dm7",
+     "Dm7",
+     "Dm7",
+     "Fm7",
+     "Fm7",
+     "Fm7",
+     "Fm7"
+    ],
+    "bars": 32
+   }
+  ],
+  "solos": [
+   {
+    "section": "Cornet solo",
+    "scale": "F minor pentatonic / F Dorian over Fm7 (box 1 at the 1st or 13th fret on guitar); Db Lydian (Db mixolydian #4 colour) over Db7; D Dorian over Dm7",
+    "tips": "Hold a long note through each 4-bar chord change and notice how it changes colour. Try the same short riff on Fm7 and move it up a half step to D Dorian for the Dm7 bars.",
+    "chords": [
+     "Fm7",
+     "Fm7",
+     "Fm7",
+     "Fm7",
+     "Db7",
+     "Db7",
+     "Db7",
+     "Db7",
+     "Dm7",
+     "Dm7",
+     "Dm7",
+     "Dm7",
+     "Fm7",
+     "Fm7",
+     "Fm7",
+     "Fm7"
+    ]
+   },
+   {
+    "section": "Piano solo",
+    "scale": "Same as cornet: F Dorian, Db7 (Db mixolydian), D Dorian",
+    "tips": "Keep the left-hand comping riff going while the right hand plays short pentatonic phrases.",
+    "chords": [
+     "Fm7",
+     "Fm7",
+     "Fm7",
+     "Fm7",
+     "Db7",
+     "Db7",
+     "Db7",
+     "Db7",
+     "Dm7",
+     "Dm7",
+     "Dm7",
+     "Dm7",
+     "Fm7",
+     "Fm7",
+     "Fm7",
+     "Fm7"
+    ]
+   }
+  ]
+ },
+ "Gymnopédie No. 1": {
+  "status": "uncertain",
+  "key": "D major (second half turns to D minor / Dorian)",
+  "bpm": 77,
+  "beatsPerBar": 3,
+  "durationSec": 182,
+  "chords": [
+   "Gmaj7",
+   "Dmaj7"
+  ],
+  "structure": [
+   {
+    "section": "Intro (left-hand sway)",
+    "chords": [
+     "Gmaj7",
+     "Dmaj7"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Theme A (first half)",
+    "chords": [
+     "Gmaj7",
+     "Dmaj7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Middle phrase (first half)",
+    "chords": [
+     "Em7",
+     "A",
+     "Bm",
+     "F#m7"
+    ],
+    "bars": 9
+   },
+   {
+    "section": "Closing phrase (first half)",
+    "chords": [
+     "Bm",
+     "Bm",
+     "Em7",
+     "Em7"
+    ],
+    "bars": 18
+   },
+   {
+    "section": "Interlude (sway returns)",
+    "chords": [
+     "Gmaj7",
+     "Dmaj7"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Theme A (second half)",
+    "chords": [
+     "Gmaj7",
+     "Dmaj7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Middle phrase (second half)",
+    "chords": [
+     "Em7",
+     "A",
+     "Bm",
+     "F#m7"
+    ],
+    "bars": 9
+   },
+   {
+    "section": "Closing phrase in D minor (Dorian) to final cadence",
+    "chords": [
+     "Dm",
+     "Am",
+     "Em7/D",
+     "Dm"
+    ],
+    "bars": 18
+   }
+  ]
+ },
  "Prelude in C major, BWV 846": {
   "status": "corrected",
   "key": "C major",
@@ -20809,6 +24689,361 @@ const VERIFIED = {
      "E",
      "B7",
      "E"
+    ],
+    "bars": 8
+   }
+  ]
+ },
+ "Je veux": {
+  "status": "uncertain",
+  "key": "D minor",
+  "bpm": 155,
+  "beatsPerBar": 4,
+  "durationSec": 217,
+  "chords": [
+   "Dm",
+   "C",
+   "Bb",
+   "A"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "Dm",
+     "C",
+     "Bb",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Dm",
+     "C",
+     "Bb",
+     "A"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Dm",
+     "C",
+     "Bb",
+     "A"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Dm",
+     "C",
+     "Bb",
+     "A"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Dm",
+     "C",
+     "Bb",
+     "A"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Instrumental (vocal scat / mouth-trumpet break)",
+    "chords": [
+     "Dm",
+     "C",
+     "Bb",
+     "A"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "Dm",
+     "C",
+     "Bb",
+     "A"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Dm",
+     "C",
+     "Bb",
+     "A"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Outro (scat and final cadence)",
+    "chords": [
+     "Dm",
+     "C",
+     "Bb",
+     "A",
+     "Dm",
+     "C",
+     "Bb",
+     "A",
+     "Dm",
+     "C",
+     "Bb",
+     "A",
+     "Dm",
+     "C",
+     "Bb",
+     "A",
+     "Bb",
+     "A",
+     "Dm",
+     "Dm"
+    ],
+    "bars": 20
+   }
+  ]
+ },
+ "Papaoutai": {
+  "status": "corrected",
+  "key": "Bb minor",
+  "capoNote": "Capo 1 with F, Dm, G, Am shapes (or capo 6 with C, Am, D, Em shapes)",
+  "bpm": 116,
+  "beatsPerBar": 4,
+  "durationSec": 232,
+  "chords": [
+   "Gb",
+   "Ebm",
+   "Ab",
+   "Bbm"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "Gb",
+     "Ebm",
+     "Ab",
+     "Bbm"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Gb",
+     "Ebm",
+     "Ab",
+     "Bbm"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "Gb",
+     "Ebm",
+     "Ab",
+     "Bbm"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Gb",
+     "Ebm",
+     "Ab",
+     "Bbm"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Gb",
+     "Ebm",
+     "Ab",
+     "Bbm"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "Gb",
+     "Ebm",
+     "Ab",
+     "Bbm"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Gb",
+     "Ebm",
+     "Ab",
+     "Bbm"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Bridge (chant breakdown)",
+    "chords": [
+     "Gb",
+     "Ebm",
+     "Ab",
+     "Bbm"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Final chorus",
+    "chords": [
+     "Gb",
+     "Ebm",
+     "Ab",
+     "Bbm"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "Gb",
+     "Ebm",
+     "Ab",
+     "Bbm"
+    ],
+    "bars": 4
+   }
+  ]
+ },
+ "La Vie en rose": {
+  "status": "uncertain",
+  "key": "G major",
+  "bpm": 80,
+  "beatsPerBar": 4,
+  "durationSec": 188,
+  "chords": [
+   "G",
+   "Bm",
+   "Em7",
+   "Am7",
+   "D7"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "Am7",
+     "D7"
+    ],
+    "bars": 2
+   },
+   {
+    "section": "Verse",
+    "chords": [
+     "G",
+     "Edim7",
+     "Am7",
+     "D7"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Refrain A1",
+    "chords": [
+     "G",
+     "G",
+     "Bm",
+     "Em7",
+     "Am7",
+     "D7",
+     "G",
+     "D7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Refrain A2",
+    "chords": [
+     "G",
+     "G",
+     "Bm",
+     "Em7",
+     "Am7",
+     "D7",
+     "G",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Refrain B (bridge)",
+    "chords": [
+     "C",
+     "C",
+     "G",
+     "G",
+     "A7",
+     "A7",
+     "Am7",
+     "D7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Refrain A3",
+    "chords": [
+     "G",
+     "G",
+     "Bm",
+     "Em7",
+     "Am7",
+     "D7",
+     "G",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Instrumental (orchestra, bridge)",
+    "chords": [
+     "C",
+     "C",
+     "G",
+     "G",
+     "A7",
+     "A7",
+     "Am7",
+     "D7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Final refrain A",
+    "chords": [
+     "G",
+     "G",
+     "Bm",
+     "Em7",
+     "Am7",
+     "D7",
+     "G",
+     "G"
     ],
     "bars": 8
    }
@@ -22628,6 +26863,2540 @@ const VERIFIED = {
      "B"
     ],
     "bars": 4
+   }
+  ]
+ },
+ "99 Luftballons": {
+  "status": "corrected",
+  "key": "E major",
+  "capoNote": "Capo 2, D shapes (D-Em-G-A)",
+  "bpm": 97,
+  "beatsPerBar": 4,
+  "durationSec": 231,
+  "chords": [
+   "E",
+   "F#m",
+   "A",
+   "B"
+  ],
+  "structure": [
+   {
+    "section": "Verse 1 (slow, rubato intro)",
+    "chords": [
+     "E",
+     "F#m",
+     "A",
+     "B"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Instrumental",
+    "chords": [
+     "E",
+     "E",
+     "E",
+     "E",
+     "E",
+     "E",
+     "E",
+     "B"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "E",
+     "F#m",
+     "A",
+     "B"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Riff",
+    "chords": [
+     "E",
+     "F#m",
+     "A",
+     "B"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "E",
+     "F#m",
+     "A",
+     "B"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Instrumental",
+    "chords": [
+     "E",
+     "E",
+     "E",
+     "E",
+     "E",
+     "E",
+     "E",
+     "B"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 4",
+    "chords": [
+     "E",
+     "F#m",
+     "A",
+     "B"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Break (instrumental)",
+    "chords": [
+     "E",
+     "F#m",
+     "A",
+     "B",
+     "E",
+     "F#m",
+     "A",
+     "B",
+     "E",
+     "E",
+     "E",
+     "E",
+     "E",
+     "E",
+     "E",
+     "B"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 5 (quiet ending)",
+    "chords": [
+     "E",
+     "F#m",
+     "A",
+     "B"
+    ],
+    "bars": 8
+   }
+  ]
+ },
+ "Atemlos durch die Nacht": {
+  "status": "corrected",
+  "key": "B major",
+  "capoNote": "Capo 4, G shapes (G-Em-D-C) or capo 2 with A shapes",
+  "bpm": 128,
+  "beatsPerBar": 4,
+  "durationSec": 219,
+  "chords": [
+   "E",
+   "B",
+   "F#",
+   "G#m"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "B",
+     "B",
+     "G#m",
+     "G#m"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "B",
+     "B",
+     "G#m",
+     "F#"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "E",
+     "B",
+     "F#",
+     "G#m",
+     "E",
+     "B",
+     "F#",
+     "F#"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "E",
+     "B",
+     "F#",
+     "G#m"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "B",
+     "B",
+     "G#m",
+     "F#"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "E",
+     "B",
+     "F#",
+     "G#m",
+     "E",
+     "B",
+     "F#",
+     "F#"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "E",
+     "B",
+     "F#",
+     "G#m"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Interlude",
+    "chords": [
+     "E",
+     "B",
+     "F#",
+     "G#m"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "E",
+     "B",
+     "F#",
+     "G#m"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "E",
+     "B",
+     "F#",
+     "G#m"
+    ],
+    "bars": 4
+   }
+  ]
+ },
+ "Tage wie diese": {
+  "status": "corrected",
+  "key": "D major",
+  "bpm": 97,
+  "beatsPerBar": 4,
+  "durationSec": 268,
+  "chords": [
+   "D",
+   "G",
+   "Em",
+   "Cadd9"
+  ],
+  "structure": [
+   {
+    "section": "Intro (guitar riff)",
+    "chords": [
+     "D",
+     "D",
+     "G",
+     "G"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "D",
+     "G",
+     "Bm7",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "Cadd9",
+     "G",
+     "D",
+     "D"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "D",
+     "G",
+     "Bm7",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "Cadd9",
+     "G",
+     "D",
+     "D"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "D",
+     "G",
+     "Em",
+     "G",
+     "Cadd9",
+     "G",
+     "D",
+     "D"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "D",
+     "G",
+     "Bm7",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "Cadd9",
+     "G",
+     "D",
+     "D"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "D",
+     "G",
+     "Em",
+     "G",
+     "Cadd9",
+     "G",
+     "D",
+     "D"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "G",
+     "G",
+     "Bm7",
+     "Bm7",
+     "G",
+     "G",
+     "A",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "D",
+     "G",
+     "Em",
+     "G",
+     "Cadd9",
+     "G",
+     "D",
+     "D"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Outro (chorus repeats, fade)",
+    "chords": [
+     "D",
+     "G",
+     "Em",
+     "G",
+     "Cadd9",
+     "G",
+     "D",
+     "D",
+     "G",
+     "A",
+     "D",
+     "D"
+    ],
+    "bars": 16
+   }
+  ]
+ },
+ "Auf uns": {
+  "status": "corrected",
+  "key": "D major",
+  "capoNote": "Capo 2, C shapes (C-Am-G-F)",
+  "bpm": 128,
+  "beatsPerBar": 4,
+  "durationSec": 241,
+  "chords": [
+   "D",
+   "Bm",
+   "G",
+   "A"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "D",
+     "D",
+     "Bm",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "D",
+     "D",
+     "Bm",
+     "A"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "Bm",
+     "Bm",
+     "G",
+     "A",
+     "G",
+     "A",
+     "D",
+     "D"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "G",
+     "A",
+     "D",
+     "D"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "D",
+     "D",
+     "Bm",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "Bm",
+     "Bm",
+     "G",
+     "A",
+     "G",
+     "A",
+     "D",
+     "D"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "G",
+     "A",
+     "D",
+     "D"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "G",
+     "A",
+     "D",
+     "Bm"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Pre-chorus (quiet)",
+    "chords": [
+     "Bm",
+     "Bm",
+     "G",
+     "A",
+     "G",
+     "A",
+     "D",
+     "D"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "G",
+     "A",
+     "D",
+     "D"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "G",
+     "A",
+     "D",
+     "D"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "G",
+     "A",
+     "D",
+     "Bm",
+     "G",
+     "A",
+     "D",
+     "D"
+    ],
+    "bars": 8
+   }
+  ]
+ },
+ "Stille Nacht, heilige Nacht": {
+  "status": "corrected",
+  "key": "C major",
+  "capoNote": "Guitar: capo 5 with G shapes, or play C shapes open",
+  "bpm": 72,
+  "beatsPerBar": 3,
+  "durationSec": 200,
+  "chords": [
+   "C",
+   "G7",
+   "F",
+   "Am"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "C",
+     "C",
+     "G7",
+     "C"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "C",
+     "C",
+     "C",
+     "C",
+     "G7",
+     "G7",
+     "C",
+     "C",
+     "F",
+     "F",
+     "C",
+     "C",
+     "F",
+     "F",
+     "C",
+     "C",
+     "G7",
+     "G#dim7",
+     "C",
+     "Am",
+     "C/G",
+     "G7",
+     "C",
+     "C"
+    ],
+    "bars": 24
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "C",
+     "C",
+     "C",
+     "C",
+     "G7",
+     "G7",
+     "C",
+     "C",
+     "F",
+     "F",
+     "C",
+     "C",
+     "F",
+     "F",
+     "C",
+     "C",
+     "G7",
+     "G#dim7",
+     "C",
+     "Am",
+     "C/G",
+     "G7",
+     "C",
+     "C"
+    ],
+    "bars": 24
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "C",
+     "C",
+     "C",
+     "C",
+     "G7",
+     "G7",
+     "C",
+     "C",
+     "F",
+     "F",
+     "C",
+     "C",
+     "F",
+     "F",
+     "C",
+     "C",
+     "G7",
+     "G#dim7",
+     "C",
+     "Am",
+     "C/G",
+     "G7",
+     "C",
+     "C"
+    ],
+    "bars": 24
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "F",
+     "C",
+     "G7",
+     "C"
+    ],
+    "bars": 4
+   }
+  ]
+ },
+ "Tum Hi Ho": {
+  "status": "corrected",
+  "key": "F minor",
+  "capoNote": "Capo 1, Em shapes (Em-C-D-Bm-Am)",
+  "bpm": 94,
+  "beatsPerBar": 4,
+  "durationSec": 262,
+  "chords": [
+   "Fm",
+   "Db",
+   "Eb",
+   "Cm",
+   "Bbm"
+  ],
+  "structure": [
+   {
+    "section": "Intro (piano)",
+    "chords": [
+     "Fm",
+     "Cm",
+     "Bbm",
+     "Fm"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Fm",
+     "Fm",
+     "Db",
+     "Db",
+     "Eb",
+     "Cm",
+     "Db",
+     "Db"
+    ],
+    "per": 0.5,
+    "bars": 12
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Fm",
+     "Fm",
+     "Bbm",
+     "Bbm",
+     "Eb",
+     "Cm",
+     "Db",
+     "Db"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Instrumental",
+    "chords": [
+     "Fm",
+     "Cm",
+     "Bbm",
+     "Fm"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Fm",
+     "Fm",
+     "Db",
+     "Db",
+     "Eb",
+     "Cm",
+     "Db",
+     "Db"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Build",
+    "chords": [
+     "Eb",
+     "Eb",
+     "Ab",
+     "Ab",
+     "C7",
+     "C7",
+     "Db",
+     "Eb"
+    ],
+    "per": 0.5,
+    "bars": 4
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Fm",
+     "Fm",
+     "Bbm",
+     "Bbm",
+     "Eb",
+     "Cm",
+     "Db",
+     "Db"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Bridge (interlude)",
+    "chords": [
+     "Fm",
+     "Cm",
+     "Bbm",
+     "Fm",
+     "Db",
+     "Fm",
+     "Db",
+     "Fm",
+     "Db",
+     "Eb",
+     "Fm",
+     "Fm"
+    ],
+    "bars": 12
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "Db",
+     "Cm",
+     "Db",
+     "Cm",
+     "Bbm",
+     "Fm",
+     "Bbm",
+     "Fm",
+     "Eb",
+     "Ab",
+     "C7",
+     "Db"
+    ],
+    "bars": 12
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Fm",
+     "Fm",
+     "Bbm",
+     "Bbm",
+     "Eb",
+     "Cm",
+     "Db",
+     "Db"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "Fm",
+     "Fm",
+     "Fm",
+     "Fm"
+    ],
+    "bars": 4
+   }
+  ]
+ },
+ "Channa Mereya": {
+  "status": "corrected",
+  "key": "A minor",
+  "bpm": 90,
+  "beatsPerBar": 4,
+  "durationSec": 289,
+  "chords": [
+   "Am",
+   "Fmaj7",
+   "Dm7",
+   "C",
+   "G"
+  ],
+  "structure": [
+   {
+    "section": "Intro (guitar)",
+    "chords": [
+     "Am",
+     "Am",
+     "Dm",
+     "Dm",
+     "G",
+     "C",
+     "G",
+     "C"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Am",
+     "Am",
+     "Fmaj7",
+     "Fmaj7",
+     "Dm7",
+     "C",
+     "G",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Am",
+     "Am",
+     "Fmaj7",
+     "Fmaj7",
+     "Dm7",
+     "C",
+     "G",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Interlude",
+    "chords": [
+     "Am",
+     "Fmaj7",
+     "Dm7",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Am",
+     "Am",
+     "Fmaj7",
+     "Fmaj7",
+     "Dm7",
+     "C",
+     "G",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Am",
+     "Am",
+     "Fmaj7",
+     "Fmaj7",
+     "Dm7",
+     "C",
+     "G",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Interlude",
+    "chords": [
+     "Am",
+     "Fmaj7",
+     "Dm7",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 3 (high)",
+    "chords": [
+     "Am",
+     "Fmaj7",
+     "Dm7",
+     "C",
+     "G",
+     "Am",
+     "Fmaj7",
+     "Fmaj7",
+     "Dm7",
+     "C",
+     "G",
+     "Am"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Am",
+     "Am",
+     "Fmaj7",
+     "Fmaj7",
+     "Dm7",
+     "C",
+     "G",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Am",
+     "Am",
+     "Fmaj7",
+     "Fmaj7",
+     "Dm7",
+     "C",
+     "G",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "Am",
+     "Fmaj7",
+     "Dm7",
+     "Am"
+    ],
+    "bars": 4
+   }
+  ]
+ },
+ "Kesariya": {
+  "status": "uncertain",
+  "key": "C major",
+  "bpm": 94,
+  "beatsPerBar": 4,
+  "durationSec": 269,
+  "chords": [
+   "C",
+   "G",
+   "Am",
+   "F"
+  ],
+  "structure": [
+   {
+    "section": "Intro (guitar)",
+    "chords": [
+     "F",
+     "G",
+     "C",
+     "G"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "C",
+     "G",
+     "C",
+     "G",
+     "C",
+     "Am",
+     "F",
+     "G",
+     "C",
+     "Am",
+     "F",
+     "G"
+    ],
+    "bars": 12
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F",
+     "C",
+     "F",
+     "C",
+     "C7",
+     "F",
+     "C",
+     "F",
+     "G",
+     "G"
+    ],
+    "bars": 20
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "C",
+     "C",
+     "Am",
+     "F",
+     "G",
+     "G",
+     "C",
+     "Am",
+     "F",
+     "G",
+     "C",
+     "Am",
+     "F",
+     "G"
+    ],
+    "bars": 28
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F",
+     "C",
+     "F",
+     "C",
+     "C7",
+     "F",
+     "C",
+     "F",
+     "G",
+     "G"
+    ],
+    "bars": 20
+   },
+   {
+    "section": "Chorus (repeat)",
+    "chords": [
+     "F",
+     "C",
+     "F",
+     "C",
+     "C7",
+     "F",
+     "C",
+     "F",
+     "G",
+     "G"
+    ],
+    "bars": 12
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "C",
+     "F",
+     "C",
+     "F",
+     "C",
+     "C"
+    ],
+    "bars": 6
+   }
+  ]
+ },
+ "Agar Tum Saath Ho": {
+  "status": "corrected",
+  "key": "Eb major",
+  "capoNote": "Capo 1, D shapes (D-G-A)",
+  "bpm": 62,
+  "beatsPerBar": 4,
+  "durationSec": 341,
+  "chords": [
+   "Eb",
+   "Ab",
+   "Bb"
+  ],
+  "structure": [
+   {
+    "section": "Intro (piano)",
+    "chords": [
+     "Eb",
+     "Ab",
+     "Bb",
+     "Eb"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 1 (female)",
+    "chords": [
+     "Eb",
+     "Ab",
+     "Eb",
+     "Ab",
+     "Eb",
+     "Ab",
+     "Bb",
+     "Bb",
+     "Eb",
+     "Ab",
+     "Bb",
+     "Bb",
+     "Ab",
+     "Bb",
+     "Eb",
+     "Eb"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Ab",
+     "Bb",
+     "Eb",
+     "Eb"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Instrumental",
+    "chords": [
+     "Ab",
+     "Bb",
+     "Ab",
+     "Eb"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 2 (male)",
+    "chords": [
+     "Eb",
+     "Ab",
+     "Eb",
+     "Ab",
+     "Eb",
+     "Ab",
+     "Bb",
+     "Bb",
+     "Eb",
+     "Ab",
+     "Bb",
+     "Bb",
+     "Ab",
+     "Bb",
+     "Eb",
+     "Eb"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Ab",
+     "Bb",
+     "Eb",
+     "Eb"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Instrumental",
+    "chords": [
+     "Ab",
+     "Bb",
+     "Ab",
+     "Eb"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "Ab",
+     "Bb",
+     "Ab",
+     "Eb",
+     "Ab",
+     "Bb",
+     "Ab",
+     "Bb",
+     "Eb",
+     "Ab",
+     "Bb",
+     "Bb",
+     "Ab",
+     "Bb",
+     "Eb",
+     "Eb"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "Eb",
+     "Ab",
+     "Eb",
+     "Ab",
+     "Eb",
+     "Ab",
+     "Bb",
+     "Bb",
+     "Eb",
+     "Ab",
+     "Bb",
+     "Bb",
+     "Ab",
+     "Bb",
+     "Eb",
+     "Eb"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Ab",
+     "Bb",
+     "Eb",
+     "Eb"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "Ab",
+     "Bb",
+     "Eb",
+     "Eb"
+    ],
+    "bars": 4
+   }
+  ]
+ },
+ "Pal Pal Dil Ke Paas": {
+  "status": "uncertain",
+  "key": "A major",
+  "capoNote": "Capo 2, G shapes (Em-D-C-G)",
+  "bpm": 100,
+  "beatsPerBar": 4,
+  "durationSec": 325,
+  "chords": [
+   "F#m",
+   "E",
+   "D",
+   "A"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "F#m",
+     "E",
+     "D",
+     "E",
+     "E",
+     "A",
+     "F#m",
+     "Bm",
+     "A",
+     "E",
+     "C#m",
+     "A",
+     "F#m",
+     "E",
+     "D",
+     "E",
+     "E",
+     "A"
+    ],
+    "per": 0.5,
+    "bars": 9
+   },
+   {
+    "section": "Mukhda",
+    "chords": [
+     "F#m",
+     "E",
+     "D",
+     "E",
+     "E",
+     "A"
+    ],
+    "bars": 12
+   },
+   {
+    "section": "Interlude",
+    "chords": [
+     "F#m",
+     "E",
+     "D",
+     "E",
+     "E",
+     "A",
+     "F#m",
+     "Bm",
+     "A",
+     "E",
+     "C#m",
+     "A",
+     "F#m",
+     "E",
+     "D",
+     "E",
+     "E",
+     "A"
+    ],
+    "per": 0.5,
+    "bars": 9
+   },
+   {
+    "section": "Antara 1",
+    "chords": [
+     "D",
+     "E",
+     "A",
+     "A",
+     "E",
+     "D",
+     "E",
+     "A",
+     "A",
+     "A",
+     "F#m",
+     "A",
+     "D",
+     "A",
+     "A",
+     "A",
+     "A",
+     "Bm",
+     "E",
+     "A"
+    ],
+    "bars": 20
+   },
+   {
+    "section": "Mukhda",
+    "chords": [
+     "F#m",
+     "E",
+     "D",
+     "E",
+     "E",
+     "A"
+    ],
+    "bars": 6
+   },
+   {
+    "section": "Interlude",
+    "chords": [
+     "F#m",
+     "E",
+     "D",
+     "E",
+     "E",
+     "A",
+     "F#m",
+     "Bm",
+     "A",
+     "E",
+     "C#m",
+     "A",
+     "F#m",
+     "E",
+     "D",
+     "E",
+     "E",
+     "A"
+    ],
+    "per": 0.5,
+    "bars": 9
+   },
+   {
+    "section": "Antara 2",
+    "chords": [
+     "D",
+     "E",
+     "A",
+     "A",
+     "E",
+     "D",
+     "E",
+     "A",
+     "A",
+     "A",
+     "F#m",
+     "A",
+     "D",
+     "A",
+     "A",
+     "A",
+     "A",
+     "Bm",
+     "E",
+     "A"
+    ],
+    "bars": 20
+   },
+   {
+    "section": "Mukhda",
+    "chords": [
+     "F#m",
+     "E",
+     "D",
+     "E",
+     "E",
+     "A"
+    ],
+    "bars": 6
+   },
+   {
+    "section": "Interlude",
+    "chords": [
+     "F#m",
+     "E",
+     "D",
+     "E",
+     "E",
+     "A",
+     "F#m",
+     "Bm",
+     "A",
+     "E",
+     "C#m",
+     "A",
+     "F#m",
+     "E",
+     "D",
+     "E",
+     "E",
+     "A"
+    ],
+    "per": 0.5,
+    "bars": 9
+   },
+   {
+    "section": "Antara 3",
+    "chords": [
+     "D",
+     "E",
+     "A",
+     "A",
+     "E",
+     "D",
+     "E",
+     "A",
+     "A",
+     "A",
+     "F#m",
+     "A",
+     "D",
+     "A",
+     "A",
+     "A",
+     "C#m",
+     "Bm",
+     "E",
+     "A"
+    ],
+    "bars": 20
+   },
+   {
+    "section": "Mukhda",
+    "chords": [
+     "F#m",
+     "E",
+     "D",
+     "E",
+     "E",
+     "A"
+    ],
+    "bars": 12
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "F#m",
+     "E",
+     "D",
+     "E",
+     "E",
+     "A"
+    ],
+    "bars": 6
+   }
+  ]
+ },
+ "Ue o Muite Arukō (Sukiyaki)": {
+  "status": "corrected",
+  "key": "G major",
+  "capoNote": "Capo 7, C shapes (C-Am-F-G)",
+  "bpm": 146,
+  "beatsPerBar": 4,
+  "durationSec": 185,
+  "chords": [
+   "G",
+   "Em",
+   "C",
+   "D"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "G",
+     "Em",
+     "C",
+     "D7"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "G",
+     "Em",
+     "G",
+     "Em",
+     "G",
+     "Em",
+     "C",
+     "D",
+     "G",
+     "D",
+     "Bm7",
+     "Em",
+     "C",
+     "D",
+     "G",
+     "D7"
+    ],
+    "bars": 32
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "C",
+     "C",
+     "G",
+     "G",
+     "C",
+     "Cm",
+     "Em",
+     "D"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "G",
+     "Em",
+     "G",
+     "Em",
+     "G",
+     "Em",
+     "C",
+     "D",
+     "G",
+     "D",
+     "Bm7",
+     "Em",
+     "C",
+     "D",
+     "G",
+     "D7"
+    ],
+    "bars": 32
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "C",
+     "C",
+     "G",
+     "G",
+     "C",
+     "Cm",
+     "Em",
+     "D"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 3 (with whistling)",
+    "chords": [
+     "G",
+     "Em",
+     "G",
+     "Em",
+     "G",
+     "Em",
+     "C",
+     "D",
+     "G",
+     "D",
+     "Bm7",
+     "Em",
+     "C",
+     "D",
+     "G",
+     "D7",
+     "C",
+     "D",
+     "G",
+     "D7"
+    ],
+    "bars": 20
+   },
+   {
+    "section": "Outro (whistle)",
+    "chords": [
+     "G",
+     "Em",
+     "G",
+     "Em",
+     "G"
+    ],
+    "bars": 5
+   }
+  ]
+ },
+ "Lemon": {
+  "status": "corrected",
+  "key": "B major",
+  "capoNote": "No capo in B; alternative: tune half step down and use C/Am shapes",
+  "bpm": 87,
+  "beatsPerBar": 4,
+  "durationSec": 256,
+  "chords": [
+   "E",
+   "B",
+   "F#",
+   "G#m"
+  ],
+  "structure": [
+   {
+    "section": "Verse 1",
+    "chords": [
+     "G#m",
+     "F#",
+     "E",
+     "B",
+     "E",
+     "B",
+     "Ddim7",
+     "D#7"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "C#m",
+     "G#m",
+     "F#",
+     "B",
+     "C#m",
+     "G#m",
+     "E",
+     "F#"
+    ],
+    "per": 0.5,
+    "bars": 4
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "E",
+     "B",
+     "F#",
+     "G#m",
+     "E",
+     "B",
+     "F#",
+     "D#7",
+     "E",
+     "B",
+     "A#m7b5",
+     "D#7",
+     "C#m",
+     "G#m",
+     "E",
+     "Fm7b5",
+     "C#m",
+     "G#m",
+     "F#",
+     "B"
+    ],
+    "per": 0.5,
+    "bars": 10
+   },
+   {
+    "section": "Interlude",
+    "chords": [
+     "G#m",
+     "F#",
+     "E",
+     "B"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "G#m",
+     "F#",
+     "E",
+     "B",
+     "E",
+     "B",
+     "Ddim7",
+     "D#7"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "C#m",
+     "G#m",
+     "F#",
+     "B",
+     "C#m",
+     "G#m",
+     "E",
+     "F#"
+    ],
+    "per": 0.5,
+    "bars": 4
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "E",
+     "B",
+     "F#",
+     "G#m",
+     "E",
+     "B",
+     "F#",
+     "D#7",
+     "E",
+     "B",
+     "A#m7b5",
+     "D#7",
+     "C#m",
+     "G#m",
+     "E",
+     "Fm7b5",
+     "C#m",
+     "G#m",
+     "F#",
+     "B"
+    ],
+    "per": 0.5,
+    "bars": 10
+   },
+   {
+    "section": "Bridge (Ab major)",
+    "chords": [
+     "Fm",
+     "Db",
+     "Eb",
+     "Ab",
+     "Db",
+     "Ab",
+     "Eb",
+     "Ab"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Final chorus",
+    "chords": [
+     "E",
+     "B",
+     "F#",
+     "G#m",
+     "E",
+     "B",
+     "F#",
+     "D#7",
+     "E",
+     "B",
+     "A#m7b5",
+     "D#7",
+     "C#m",
+     "G#m",
+     "E",
+     "Fm7b5",
+     "C#m",
+     "G#m",
+     "F#",
+     "B"
+    ],
+    "per": 0.5,
+    "bars": 20
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "C#m",
+     "G#m",
+     "E",
+     "F#",
+     "E",
+     "E"
+    ],
+    "bars": 4
+   }
+  ]
+ },
+ "Marigold": {
+  "status": "corrected",
+  "key": "D major",
+  "capoNote": "Open D shapes, or capo 2 with C shapes",
+  "bpm": 106,
+  "beatsPerBar": 4,
+  "durationSec": 307,
+  "chords": [
+   "D",
+   "A/C#",
+   "Bm",
+   "G"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "D",
+     "D",
+     "D",
+     "A/C#",
+     "Bm",
+     "F#m",
+     "G",
+     "D/F#",
+     "G",
+     "A"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "D",
+     "A/C#",
+     "Bm",
+     "A",
+     "G",
+     "D/F#",
+     "G",
+     "A"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "Bm",
+     "D/F#",
+     "G",
+     "A"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "D",
+     "A/C#",
+     "Bm",
+     "A",
+     "G",
+     "D/F#",
+     "Bm",
+     "Bm",
+     "G",
+     "A"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Interlude",
+    "chords": [
+     "D",
+     "A/C#",
+     "Bm",
+     "A",
+     "G",
+     "D/F#",
+     "G",
+     "A"
+    ],
+    "per": 0.5,
+    "bars": 4
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "D",
+     "A/C#",
+     "Bm",
+     "A",
+     "G",
+     "D/F#",
+     "G",
+     "A"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "Bm",
+     "D/F#",
+     "G",
+     "A"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "D",
+     "A/C#",
+     "Bm",
+     "A",
+     "G",
+     "D/F#",
+     "Bm",
+     "Bm",
+     "G",
+     "A"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "A/C#",
+     "D",
+     "A",
+     "Bm",
+     "A/C#",
+     "D",
+     "A",
+     "D"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Instrumental",
+    "chords": [
+     "G",
+     "A",
+     "Bm",
+     "Bm",
+     "G",
+     "A",
+     "A",
+     "A"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "D",
+     "A/C#",
+     "Bm",
+     "A",
+     "G",
+     "D/F#",
+     "Bm",
+     "Bm",
+     "G",
+     "A"
+    ],
+    "per": 0.5,
+    "bars": 24
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "D",
+     "A/C#",
+     "Bm",
+     "F#m",
+     "G",
+     "D/F#",
+     "G",
+     "A",
+     "D",
+     "D"
+    ],
+    "per": 0.5,
+    "bars": 8
+   }
+  ]
+ },
+ "Sekai ni Hitotsu Dake no Hana": {
+  "status": "corrected",
+  "key": "A major",
+  "bpm": 91,
+  "beatsPerBar": 4,
+  "durationSec": 281,
+  "chords": [
+   "A",
+   "D",
+   "E",
+   "C#"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "A",
+     "D",
+     "E",
+     "C#",
+     "F#m",
+     "D",
+     "E",
+     "A"
+    ],
+    "per": 0.5,
+    "bars": 4
+   },
+   {
+    "section": "Opening refrain",
+    "chords": [
+     "A",
+     "D",
+     "E",
+     "F#m"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "A",
+     "D",
+     "E",
+     "C#",
+     "F#m",
+     "D",
+     "B",
+     "E",
+     "A",
+     "D",
+     "E",
+     "C#",
+     "F#m",
+     "D",
+     "E",
+     "A"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "G",
+     "D",
+     "G",
+     "D",
+     "E",
+     "E/D",
+     "A",
+     "A",
+     "B",
+     "E7"
+    ],
+    "per": 0.5,
+    "bars": 5
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "E",
+     "E",
+     "A",
+     "D",
+     "E",
+     "C#",
+     "F#m",
+     "B",
+     "E7",
+     "E",
+     "A",
+     "D",
+     "E",
+     "C#",
+     "F#m",
+     "B",
+     "E",
+     "A"
+    ],
+    "per": 0.5,
+    "bars": 9
+   },
+   {
+    "section": "Interlude",
+    "chords": [
+     "A",
+     "D",
+     "E",
+     "F#m"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "A",
+     "D",
+     "E",
+     "C#",
+     "F#m",
+     "D",
+     "B",
+     "E",
+     "A",
+     "D",
+     "E",
+     "C#",
+     "F#m",
+     "D",
+     "E",
+     "A"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "G",
+     "D",
+     "G",
+     "D",
+     "E",
+     "E/D",
+     "A",
+     "A",
+     "B",
+     "E7"
+    ],
+    "per": 0.5,
+    "bars": 5
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "E",
+     "E",
+     "A",
+     "D",
+     "E",
+     "C#",
+     "F#m",
+     "B",
+     "E7",
+     "E",
+     "A",
+     "D",
+     "E",
+     "C#",
+     "F#m",
+     "B",
+     "E",
+     "A"
+    ],
+    "per": 0.5,
+    "bars": 9
+   },
+   {
+    "section": "Chorus (repeat)",
+    "chords": [
+     "D",
+     "E",
+     "C#",
+     "F#m",
+     "B",
+     "E7",
+     "E",
+     "A",
+     "D",
+     "E",
+     "C#",
+     "F#m",
+     "B",
+     "E",
+     "A",
+     "A"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "A",
+     "D",
+     "E",
+     "F#m"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Ending",
+    "chords": [
+     "D"
+    ],
+    "bars": 4
+   }
+  ]
+ },
+ "Plastic Love": {
+  "status": "corrected",
+  "key": "D minor",
+  "bpm": 103,
+  "beatsPerBar": 4,
+  "durationSec": 294,
+  "chords": [
+   "Gm9",
+   "C7b9",
+   "Am7",
+   "Dm7"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "Bbmaj7",
+     "Fmaj7/A",
+     "Gm9",
+     "Eb9",
+     "Bbmaj7",
+     "Am7",
+     "Gm9",
+     "Dm7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Gm9",
+     "C7b9",
+     "Am7",
+     "Dm7",
+     "Gm9",
+     "C7b9",
+     "Am7",
+     "Dm7",
+     "Gm9",
+     "Eb9",
+     "Dm7",
+     "G9",
+     "Gm9",
+     "C7b9",
+     "Dm7",
+     "Dm7"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Gm9",
+     "C7b9",
+     "Am7",
+     "Dm7",
+     "Gm9",
+     "C7b9",
+     "Am7",
+     "Dm7",
+     "Gm9",
+     "Eb9",
+     "Dm7",
+     "G9",
+     "Gm9",
+     "C7b9",
+     "Dm7",
+     "Dm7"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Bbmaj7",
+     "C",
+     "Bbmaj7",
+     "C",
+     "Em7",
+     "A7",
+     "Dm7",
+     "Dm7",
+     "Bbmaj7",
+     "C",
+     "Am7",
+     "Dm7",
+     "Bbmaj7",
+     "C",
+     "Am7",
+     "D7"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Guitar solo",
+    "chords": [
+     "Gm9",
+     "Eb9",
+     "Dm7",
+     "G9",
+     "Bbmaj7",
+     "C7b9",
+     "Dm7",
+     "D7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Bbmaj7",
+     "C",
+     "Bbmaj7",
+     "C",
+     "Em7",
+     "A7",
+     "Dm7",
+     "Dm7",
+     "Bbmaj7",
+     "C",
+     "Am7",
+     "Dm7",
+     "Bbmaj7",
+     "C",
+     "Am7",
+     "D7"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "Gm9",
+     "C7b9",
+     "Am7",
+     "Dm7",
+     "Gm9",
+     "C7b9",
+     "Am7",
+     "Dm7",
+     "Gm9",
+     "Eb9",
+     "Dm7",
+     "G9",
+     "Gm9",
+     "C7b9",
+     "Dm7",
+     "Dm7"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Bbmaj7",
+     "C",
+     "Bbmaj7",
+     "C",
+     "Em7",
+     "A7",
+     "Dm7",
+     "Dm7",
+     "Bbmaj7",
+     "C",
+     "Am7",
+     "Dm7",
+     "Bbmaj7",
+     "C",
+     "Am7",
+     "D7"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Outro (fade)",
+    "chords": [
+     "Gm9",
+     "C7b9",
+     "Am7",
+     "Dm7"
+    ],
+    "bars": 16
+   }
+  ],
+  "solos": [
+   {
+    "section": "Guitar solo",
+    "scale": "D minor pentatonic, box 1 at 10th fret (or 5th-fret A-shape box); add E (D Dorian) over Gm9 and Eb over Eb9",
+    "tips": "Target the chord tones: land on F or A over Dm7 and on D over Bbmaj7. Keep phrases short and leave space - this is a laid-back city-pop groove.",
+    "chords": [
+     "Gm9",
+     "Eb9",
+     "Dm7",
+     "G9",
+     "Bbmaj7",
+     "C7b9",
+     "Dm7",
+     "D7"
+    ]
    }
   ]
  },
@@ -29892,6 +36661,3059 @@ const VERIFIED = {
      "B",
      "E",
      "A"
+    ],
+    "bars": 8
+   }
+  ]
+ },
+ "While My Guitar Gently Weeps": {
+  "status": "corrected",
+  "key": "A minor (bridges in A major)",
+  "bpm": 114,
+  "beatsPerBar": 4,
+  "durationSec": 286,
+  "chords": [
+   "Am",
+   "Am/G",
+   "Am/F#",
+   "Fmaj7"
+  ],
+  "structure": [
+   {
+    "section": "Intro (piano)",
+    "chords": [
+     "Am",
+     "Am/G",
+     "Am/F#",
+     "Fmaj7",
+     "Am",
+     "G",
+     "D",
+     "E"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Am",
+     "Am/G",
+     "Am/F#",
+     "Fmaj7",
+     "Am",
+     "G",
+     "D",
+     "E",
+     "Am",
+     "Am/G",
+     "Am/F#",
+     "Fmaj7",
+     "Am",
+     "G",
+     "C",
+     "E"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Am",
+     "Am/G",
+     "Am/F#",
+     "Fmaj7",
+     "Am",
+     "G",
+     "D",
+     "E",
+     "Am",
+     "Am/G",
+     "Am/F#",
+     "Fmaj7",
+     "Am",
+     "G",
+     "C",
+     "E"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Bridge 1 (A major)",
+    "chords": [
+     "A",
+     "C#m",
+     "F#m",
+     "C#m",
+     "Bm",
+     "Bm",
+     "E",
+     "E"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "Am",
+     "Am/G",
+     "Am/F#",
+     "Fmaj7",
+     "Am",
+     "G",
+     "D",
+     "E",
+     "Am",
+     "Am/G",
+     "Am/F#",
+     "Fmaj7",
+     "Am",
+     "G",
+     "C",
+     "E"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Guitar solo (over verse)",
+    "chords": [
+     "Am",
+     "Am/G",
+     "Am/F#",
+     "Fmaj7",
+     "Am",
+     "G",
+     "D",
+     "E",
+     "Am",
+     "Am/G",
+     "Am/F#",
+     "Fmaj7",
+     "Am",
+     "G",
+     "C",
+     "E"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Bridge 2 (A major)",
+    "chords": [
+     "A",
+     "C#m",
+     "F#m",
+     "C#m",
+     "Bm",
+     "Bm",
+     "E",
+     "E"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 4",
+    "chords": [
+     "Am",
+     "Am/G",
+     "Am/F#",
+     "Fmaj7",
+     "Am",
+     "G",
+     "D",
+     "E",
+     "Am",
+     "Am/G",
+     "Am/F#",
+     "Fmaj7",
+     "Am",
+     "G",
+     "C",
+     "E"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Outro guitar solo (fade)",
+    "chords": [
+     "Am",
+     "Am/G",
+     "Am/F#",
+     "Fmaj7",
+     "Am",
+     "G",
+     "D",
+     "E"
+    ],
+    "bars": 16
+   }
+  ],
+  "solos": [
+   {
+    "section": "Guitar solo (over verse)",
+    "scale": "A minor pentatonic, box 1 at 5th fret, adding the F# (Dorian 6th) over Am/F# and G# over E",
+    "tips": "Use slow, singing bends with plenty of vibrato and leave space between phrases. Aim for the chord tone E or G# when the E chord arrives at the end of each line.",
+    "chords": [
+     "Am",
+     "Am/G",
+     "Am/F#",
+     "Fmaj7",
+     "Am",
+     "G",
+     "D",
+     "E",
+     "Am",
+     "Am/G",
+     "Am/F#",
+     "Fmaj7",
+     "Am",
+     "G",
+     "C",
+     "E"
+    ]
+   },
+   {
+    "section": "Outro guitar solo (fade)",
+    "scale": "A minor pentatonic, box 1 (5th fret) and box 2 (8th fret)",
+    "tips": "Repeat a short phrase and vary only its ending to build intensity. Practise whole-step bends on the G string at the 7th fret until they are in tune.",
+    "chords": [
+     "Am",
+     "Am/G",
+     "Am/F#",
+     "Fmaj7",
+     "Am",
+     "G",
+     "D",
+     "E"
+    ]
+   }
+  ]
+ },
+ "Comfortably Numb": {
+  "status": "corrected",
+  "key": "B minor (choruses in D major)",
+  "bpm": 64,
+  "beatsPerBar": 4,
+  "durationSec": 382,
+  "chords": [
+   "Bm",
+   "A",
+   "G",
+   "Em",
+   "D",
+   "C"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "Bm"
+    ],
+    "bars": 2
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Bm",
+     "Bm",
+     "A",
+     "A",
+     "G",
+     "G",
+     "Em",
+     "Bm"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus 1 (D major)",
+    "chords": [
+     "D",
+     "A",
+     "D",
+     "A",
+     "C",
+     "G",
+     "C",
+     "G",
+     "A",
+     "G",
+     "D",
+     "D"
+    ],
+    "bars": 12
+   },
+   {
+    "section": "Guitar solo 1 (over chorus chords)",
+    "chords": [
+     "D",
+     "A",
+     "D",
+     "A",
+     "C",
+     "G",
+     "C",
+     "G"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Bm",
+     "Bm",
+     "A",
+     "A",
+     "G",
+     "G",
+     "Em",
+     "Bm"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus 2 (D major)",
+    "chords": [
+     "D",
+     "A",
+     "D",
+     "A",
+     "C",
+     "G",
+     "C",
+     "G",
+     "A",
+     "G",
+     "D",
+     "D"
+    ],
+    "bars": 12
+   },
+   {
+    "section": "Outro guitar solo (fade)",
+    "chords": [
+     "Bm",
+     "A",
+     "G",
+     "D",
+     "Em",
+     "Em",
+     "Bm",
+     "Bm"
+    ],
+    "bars": 28
+   }
+  ],
+  "solos": [
+   {
+    "section": "Guitar solo 1 (over chorus chords)",
+    "scale": "D major pentatonic (same shape as B minor pentatonic, box 1 at 7th fret), adding C natural over the C chord",
+    "tips": "Play slow melodic phrases that follow the chord changes; land on A over the A chord and on G over C/G. Use one-and-a-half-step bends sparingly and check they are in tune.",
+    "chords": [
+     "D",
+     "A",
+     "D",
+     "A",
+     "C",
+     "G",
+     "C",
+     "G"
+    ]
+   },
+   {
+    "section": "Outro guitar solo (fade)",
+    "scale": "B minor pentatonic, box 1 at 7th fret and box 1 an octave up at 19th fret; B natural minor colour notes (C#, G)",
+    "tips": "Build intensity over the whole section: start low and sparse, finish high with faster repeated licks. Practise matching your bends to target pitches with a tuner.",
+    "chords": [
+     "Bm",
+     "A",
+     "G",
+     "D",
+     "Em",
+     "Em",
+     "Bm",
+     "Bm"
+    ]
+   }
+  ]
+ },
+ "Bamboléo": {
+  "status": "uncertain",
+  "key": "F# minor",
+  "capoNote": "Capo 2 with Em-Am-B7 shapes is an easier option",
+  "bpm": 120,
+  "beatsPerBar": 4,
+  "durationSec": 204,
+  "chords": [
+   "F#m",
+   "Bm",
+   "C#7"
+  ],
+  "structure": [
+   {
+    "section": "Intro (rumba guitar)",
+    "chords": [
+     "F#m",
+     "C#7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "F#m",
+     "C#7",
+     "Bm",
+     "C#7"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Bridge (circle of fifths)",
+    "chords": [
+     "Bm",
+     "E",
+     "A",
+     "D",
+     "Bm",
+     "C#7",
+     "F#m",
+     "F#m"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F#m",
+     "Bm",
+     "C#7",
+     "F#m"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "F#m",
+     "C#7",
+     "Bm",
+     "C#7"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Bridge (circle of fifths)",
+    "chords": [
+     "Bm",
+     "E",
+     "A",
+     "D",
+     "Bm",
+     "C#7",
+     "F#m",
+     "F#m"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F#m",
+     "Bm",
+     "C#7",
+     "F#m"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Guitar solo (flamenco break)",
+    "chords": [
+     "F#m",
+     "C#7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Outro chorus",
+    "chords": [
+     "F#m",
+     "Bm",
+     "C#7",
+     "F#m"
+    ],
+    "per": 2,
+    "bars": 6
+   }
+  ],
+  "solos": [
+   {
+    "section": "Guitar solo (flamenco break)",
+    "scale": "F# harmonic minor (E# leading note) around the 2nd to 5th frets, or F# Phrygian dominant over the C#7",
+    "tips": "Keep the rumba strum going in your head and play short bursts in time with it. Resolve each phrase from E# (F natural) up to F# when the chord returns to F#m.",
+    "chords": [
+     "F#m",
+     "C#7"
+    ]
+   }
+  ]
+ },
+ "Stairway to Heaven": {
+  "status": "corrected",
+  "key": "A minor",
+  "bpm": 72,
+  "beatsPerBar": 4,
+  "durationSec": 480,
+  "chords": [
+   "Am",
+   "Am/G#",
+   "C/G",
+   "D/F#",
+   "Fmaj7",
+   "G"
+  ],
+  "structure": [
+   {
+    "section": "Intro (fingerpicked, recorders)",
+    "chords": [
+     "Am",
+     "Am/G#",
+     "C/G",
+     "D/F#",
+     "Fmaj7",
+     "G",
+     "Am",
+     "Am",
+     "C",
+     "D",
+     "Fmaj7",
+     "Am",
+     "C",
+     "G",
+     "D",
+     "D"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Am",
+     "Am/G#",
+     "C/G",
+     "D/F#",
+     "Fmaj7",
+     "G",
+     "Am",
+     "Am",
+     "C",
+     "D",
+     "Fmaj7",
+     "Am",
+     "C",
+     "G",
+     "D",
+     "D"
+    ],
+    "per": 0.5,
+    "bars": 12
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Am",
+     "Am/G#",
+     "C/G",
+     "D/F#",
+     "Fmaj7",
+     "G",
+     "Am",
+     "Am",
+     "C",
+     "D",
+     "Fmaj7",
+     "Am",
+     "C",
+     "G",
+     "D",
+     "D"
+    ],
+    "per": 0.5,
+    "bars": 12
+   },
+   {
+    "section": "Middle section 1 (electric 12-string)",
+    "chords": [
+     "Am7",
+     "Dsus4",
+     "Am7",
+     "Em",
+     "D",
+     "D"
+    ],
+    "bars": 11
+   },
+   {
+    "section": "Fanfare interlude",
+    "chords": [
+     "C",
+     "D/F#",
+     "Fmaj7",
+     "Am",
+     "C",
+     "G",
+     "D",
+     "D"
+    ],
+    "per": 0.5,
+    "bars": 3
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "Am7",
+     "Dsus4",
+     "Am7",
+     "Em",
+     "D",
+     "D"
+    ],
+    "bars": 11
+   },
+   {
+    "section": "Middle section 2",
+    "chords": [
+     "Am7",
+     "Dsus4",
+     "Am7",
+     "Em",
+     "D",
+     "D"
+    ],
+    "bars": 11
+   },
+   {
+    "section": "Strummed section (drums enter, slightly faster)",
+    "chords": [
+     "C",
+     "G",
+     "Am",
+     "Am",
+     "C",
+     "G",
+     "F",
+     "F"
+    ],
+    "per": 0.5,
+    "bars": 20
+   },
+   {
+    "section": "Pre-solo fanfare",
+    "chords": [
+     "Am",
+     "G",
+     "D",
+     "C"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Guitar solo (about 98 BPM; bars counted at 72 BPM)",
+    "chords": [
+     "Am",
+     "G",
+     "F"
+    ],
+    "per": 0.75,
+    "bars": 21
+   },
+   {
+    "section": "Final hard-rock section (about 98 BPM; bars counted at 72 BPM)",
+    "chords": [
+     "Am",
+     "G",
+     "F",
+     "G"
+    ],
+    "per": 0.75,
+    "bars": 18
+   },
+   {
+    "section": "Ending (solo vocal)",
+    "chords": [
+     "Am"
+    ],
+    "bars": 5
+   }
+  ],
+  "solos": [
+   {
+    "section": "Guitar solo (about 98 BPM; bars counted at 72 BPM)",
+    "scale": "A minor pentatonic, box 1 at 5th fret and the extended box up to the 12th-17th frets; A natural minor colour notes (B, F)",
+    "tips": "Start with phrases that repeat over each Am-G-F cycle, then let them climb up the neck. Practise in time with a backing loop of Am-G-F before trying to match the record's speed.",
+    "chords": [
+     "Am",
+     "G",
+     "F"
+    ]
+   }
+  ]
+ },
+ "Angels": {
+  "status": "uncertain",
+  "key": "E major",
+  "bpm": 75,
+  "beatsPerBar": 4,
+  "durationSec": 256,
+  "chords": [
+   "B",
+   "C#m",
+   "A",
+   "E"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "E",
+     "E",
+     "A",
+     "A"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "E",
+     "E",
+     "A",
+     "A",
+     "E",
+     "E",
+     "A",
+     "A",
+     "C#m",
+     "C#m",
+     "B",
+     "B",
+     "A",
+     "A",
+     "A",
+     "A"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "B",
+     "C#m",
+     "A",
+     "E"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "E",
+     "E",
+     "A",
+     "A",
+     "E",
+     "E",
+     "A",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "B",
+     "C#m",
+     "A",
+     "E"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "C#m",
+     "B",
+     "A",
+     "A"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus (breakdown)",
+    "chords": [
+     "B",
+     "C#m",
+     "A",
+     "E"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "B",
+     "C#m",
+     "A",
+     "E"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Final chorus",
+    "chords": [
+     "B",
+     "C#m",
+     "A",
+     "E"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "E"
+    ],
+    "bars": 4
+   }
+  ]
+ },
+ "My Way": {
+  "status": "uncertain",
+  "key": "D major",
+  "bpm": 76,
+  "beatsPerBar": 4,
+  "durationSec": 272,
+  "chords": [
+   "D",
+   "F#m/C#",
+   "Am/C",
+   "B7",
+   "Em",
+   "A7"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "D",
+     "Dmaj7"
+    ],
+    "bars": 2
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "D",
+     "F#m/C#",
+     "Am/C",
+     "B7",
+     "Em",
+     "Em/D",
+     "A7",
+     "A7",
+     "D",
+     "D7",
+     "G",
+     "Gm",
+     "D/A",
+     "A7",
+     "D",
+     "D"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "D",
+     "F#m/C#",
+     "Am/C",
+     "B7",
+     "Em",
+     "Em/D",
+     "A7",
+     "A7",
+     "D",
+     "D7",
+     "G",
+     "Gm",
+     "D/A",
+     "A7",
+     "D",
+     "D"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "D",
+     "F#m/C#",
+     "Am/C",
+     "B7",
+     "Em",
+     "Em/D",
+     "A7",
+     "A7",
+     "D",
+     "D7",
+     "G",
+     "Gm",
+     "D/A",
+     "A7",
+     "D",
+     "D"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 4",
+    "chords": [
+     "D",
+     "F#m/C#",
+     "Am/C",
+     "B7",
+     "Em",
+     "Em/D",
+     "A7",
+     "A7",
+     "D",
+     "D7",
+     "G",
+     "Gm",
+     "D/A",
+     "A7",
+     "D",
+     "D"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 5 (key change to Eb)",
+    "chords": [
+     "Eb",
+     "Gm/D",
+     "Bbm/Db",
+     "C7",
+     "Fm",
+     "Fm/Eb",
+     "Bb7",
+     "Bb7",
+     "Eb",
+     "Eb7",
+     "Ab",
+     "Abm",
+     "Eb/Bb",
+     "Bb7",
+     "Eb",
+     "Eb"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Ending",
+    "chords": [
+     "Eb"
+    ],
+    "bars": 4
+   }
+  ]
+ },
+ "Lose Control": {
+  "status": "corrected",
+  "key": "F# minor",
+  "bpm": 54,
+  "beatsPerBar": 4,
+  "durationSec": 213,
+  "chords": [
+   "F#m",
+   "A",
+   "D",
+   "C#sus4",
+   "C#"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "F#m",
+     "A"
+    ],
+    "bars": 2
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "F#m",
+     "F#m",
+     "A",
+     "A",
+     "D",
+     "D",
+     "C#sus4",
+     "C#"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F#m",
+     "F#m",
+     "A",
+     "A",
+     "D",
+     "D",
+     "C#sus4",
+     "C#"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "F#m",
+     "F#m",
+     "A",
+     "A",
+     "D",
+     "D",
+     "C#sus4",
+     "C#"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F#m",
+     "F#m",
+     "A",
+     "A",
+     "D",
+     "D",
+     "C#sus4",
+     "C#"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Bridge (breakdown)",
+    "chords": [
+     "F#m",
+     "F#m",
+     "A",
+     "A",
+     "D",
+     "D",
+     "C#sus4",
+     "C#"
+    ],
+    "per": 0.5,
+    "bars": 4
+   },
+   {
+    "section": "Final chorus",
+    "chords": [
+     "F#m",
+     "F#m",
+     "A",
+     "A",
+     "D",
+     "D",
+     "C#sus4",
+     "C#"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "F#m"
+    ],
+    "bars": 2
+   }
+  ]
+ },
+ "Aïcha": {
+  "status": "corrected",
+  "key": "G minor",
+  "bpm": 85,
+  "beatsPerBar": 4,
+  "durationSec": 260,
+  "chords": [
+   "Gm",
+   "Eb",
+   "Bb",
+   "F"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "Gm",
+     "Eb",
+     "Bb",
+     "F"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Gm",
+     "Eb",
+     "Bb",
+     "F"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Gm",
+     "Eb",
+     "Bb",
+     "F"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Gm",
+     "Eb",
+     "Bb",
+     "F"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Gm",
+     "Eb",
+     "Bb",
+     "F"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 3 (Arabic)",
+    "chords": [
+     "Gm",
+     "Eb",
+     "Bb",
+     "F"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Instrumental",
+    "chords": [
+     "Gm",
+     "Eb",
+     "Bb",
+     "F"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Gm",
+     "Eb",
+     "Bb",
+     "F"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "Gm",
+     "Eb",
+     "Bb",
+     "F"
+    ],
+    "bars": 8
+   }
+  ],
+  "solos": [
+   {
+    "section": "Instrumental",
+    "scale": "G minor pentatonic, box 1 at 3rd fret; add A and Eb from G natural minor for colour (F# from G harmonic minor gives the raï flavour)",
+    "tips": "Land on the root of each chord (G, Eb, Bb, F) on beat 1 of every bar. Use slow slides between notes to imitate the vocal ornaments.",
+    "chords": [
+     "Gm",
+     "Eb",
+     "Bb",
+     "F"
+    ]
+   }
+  ]
+ },
+ "Shchedryk": {
+  "status": "uncertain",
+  "key": "G minor",
+  "bpm": 150,
+  "beatsPerBar": 3,
+  "durationSec": 90,
+  "chords": [
+   "Gm",
+   "F",
+   "Eb",
+   "D"
+  ],
+  "structure": [
+   {
+    "section": "Ostinato intro",
+    "chords": [
+     "Gm"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Theme A",
+    "chords": [
+     "Gm"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Theme A (more voices)",
+    "chords": [
+     "Gm",
+     "Gm",
+     "F",
+     "Gm"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Theme B (descending bass)",
+    "chords": [
+     "Gm",
+     "F",
+     "Eb",
+     "D"
+    ],
+    "per": 2,
+    "bars": 8
+   },
+   {
+    "section": "Theme B repeat",
+    "chords": [
+     "Gm",
+     "F",
+     "Eb",
+     "D"
+    ],
+    "per": 2,
+    "bars": 8
+   },
+   {
+    "section": "Middle section",
+    "chords": [
+     "Eb",
+     "Bb",
+     "F",
+     "Gm",
+     "Cm",
+     "Gm",
+     "D",
+     "Gm"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Theme return",
+    "chords": [
+     "Gm",
+     "F",
+     "Eb",
+     "D"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Coda (fading ostinato, ritardando)",
+    "chords": [
+     "Gm"
+    ],
+    "bars": 8
+   }
+  ]
+ },
+ "Zorba's Dance": {
+  "status": "uncertain",
+  "key": "G major",
+  "bpm": 120,
+  "beatsPerBar": 4,
+  "durationSec": 240,
+  "chords": [
+   "G",
+   "Am",
+   "D7",
+   "G"
+  ],
+  "structure": [
+   {
+    "section": "Slow intro (bouzouki, free tempo)",
+    "chords": [
+     "G",
+     "Am",
+     "G",
+     "Am",
+     "G",
+     "Am",
+     "D7",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Slow theme A",
+    "chords": [
+     "G",
+     "Am",
+     "G",
+     "Am",
+     "G",
+     "Am",
+     "D7",
+     "G"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Slow theme B",
+    "chords": [
+     "G7",
+     "C",
+     "G",
+     "Am",
+     "G",
+     "Am",
+     "D7",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Theme A (tempo picks up)",
+    "chords": [
+     "G",
+     "Am",
+     "G",
+     "Am",
+     "G",
+     "Am",
+     "D7",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Fast theme A",
+    "chords": [
+     "G",
+     "Am",
+     "G",
+     "Am",
+     "G",
+     "Am",
+     "D7",
+     "G"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Fast theme B",
+    "chords": [
+     "G7",
+     "C",
+     "G",
+     "Am",
+     "G",
+     "Am",
+     "D7",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Fast section (dominant-tonic vamp)",
+    "chords": [
+     "D7",
+     "G"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Faster theme A",
+    "chords": [
+     "G",
+     "Am",
+     "G",
+     "Am",
+     "G",
+     "Am",
+     "D7",
+     "G"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Fastest section",
+    "chords": [
+     "D7",
+     "G"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Coda",
+    "chords": [
+     "D7",
+     "G",
+     "D7",
+     "G",
+     "G",
+     "G"
+    ],
+    "bars": 6
+   }
+  ]
+ },
+ "Şımarık": {
+  "status": "uncertain",
+  "key": "A minor",
+  "bpm": 97,
+  "beatsPerBar": 4,
+  "durationSec": 237,
+  "chords": [
+   "Am",
+   "G",
+   "Em",
+   "Am"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "Am",
+     "Em",
+     "G",
+     "Am"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Am",
+     "G",
+     "Em",
+     "Am"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "F",
+     "G",
+     "F",
+     "G",
+     "F",
+     "G",
+     "F",
+     "E"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Am",
+     "G",
+     "Em",
+     "Am",
+     "Am",
+     "G",
+     "Em",
+     "Am"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Instrumental",
+    "chords": [
+     "Am",
+     "Em",
+     "G",
+     "Am"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Am",
+     "G",
+     "Em",
+     "Am"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "F",
+     "G",
+     "F",
+     "G",
+     "F",
+     "G",
+     "F",
+     "E"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Am",
+     "G",
+     "Em",
+     "Am",
+     "Am",
+     "G",
+     "Em",
+     "Am"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "Am",
+     "E7",
+     "Am",
+     "F",
+     "E",
+     "Am",
+     "E7",
+     "Am"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Final chorus",
+    "chords": [
+     "Am",
+     "G",
+     "Em",
+     "Am",
+     "Am",
+     "G",
+     "Em",
+     "Am"
+    ],
+    "bars": 16
+   }
+  ]
+ },
+ "Blank Space": {
+  "status": "corrected",
+  "key": "F major",
+  "bpm": 96,
+  "beatsPerBar": 4,
+  "durationSec": 231,
+  "chords": [
+   "F",
+   "Dm",
+   "Gm",
+   "Bb"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "F"
+    ],
+    "bars": 2
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "F",
+     "Dm",
+     "Bb",
+     "C"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "F",
+     "Dm",
+     "Gm",
+     "Bb"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F",
+     "Dm",
+     "Gm",
+     "Bb"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "F",
+     "Dm",
+     "Bb",
+     "C"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "F",
+     "Dm",
+     "Gm",
+     "Bb"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F",
+     "Dm",
+     "Gm",
+     "Bb"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "F",
+     "Dm",
+     "Gm",
+     "Bb"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Final chorus",
+    "chords": [
+     "F",
+     "Dm",
+     "Gm",
+     "Bb"
+    ],
+    "bars": 16
+   }
+  ]
+ },
+ "Bad Romance": {
+  "status": "corrected",
+  "key": "A minor",
+  "bpm": 119,
+  "beatsPerBar": 4,
+  "durationSec": 294,
+  "chords": [
+   "F",
+   "G",
+   "Am",
+   "C"
+  ],
+  "structure": [
+   {
+    "section": "Intro (a cappella chorus)",
+    "chords": [
+     "F",
+     "G",
+     "Am",
+     "C",
+     "F",
+     "G",
+     "E",
+     "Am"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Hook",
+    "chords": [
+     "Am",
+     "Am",
+     "Fmaj7",
+     "Fmaj7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Synth intro",
+    "chords": [
+     "Am"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Am",
+     "C",
+     "F",
+     "F",
+     "Am",
+     "C",
+     "G",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "F",
+     "G",
+     "Am",
+     "C"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F",
+     "G",
+     "Am",
+     "C",
+     "F",
+     "G",
+     "E",
+     "Am"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Post-chorus hook",
+    "chords": [
+     "Am",
+     "Am",
+     "Fmaj7",
+     "Fmaj7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Am",
+     "C",
+     "F",
+     "F",
+     "Am",
+     "C",
+     "G",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Pre-chorus",
+    "chords": [
+     "F",
+     "G",
+     "Am",
+     "C"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "F",
+     "G",
+     "Am",
+     "C",
+     "F",
+     "G",
+     "E",
+     "Am"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Post-chorus hook",
+    "chords": [
+     "Am",
+     "Am",
+     "Fmaj7",
+     "Fmaj7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Spoken bridge",
+    "chords": [
+     "Am"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "F",
+     "G",
+     "Am",
+     "C"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Final chorus",
+    "chords": [
+     "F",
+     "G",
+     "Am",
+     "C",
+     "F",
+     "G",
+     "E",
+     "Am"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Outro hook",
+    "chords": [
+     "Am",
+     "Am",
+     "Fmaj7",
+     "Fmaj7"
+    ],
+    "bars": 8
+   }
+  ]
+ },
+ "What Was I Made For?": {
+  "status": "uncertain",
+  "key": "C major",
+  "bpm": 78,
+  "beatsPerBar": 4,
+  "durationSec": 222,
+  "chords": [
+   "C",
+   "Em",
+   "Fmaj7"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "C",
+     "Em",
+     "Fmaj7",
+     "Fmaj7"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "C",
+     "Em",
+     "Fmaj7",
+     "Fmaj7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "C",
+     "Em",
+     "Fmaj7",
+     "Fmaj7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Fmaj7",
+     "Fmaj7",
+     "C",
+     "Em"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "C",
+     "Em",
+     "Fmaj7",
+     "Fmaj7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Fmaj7",
+     "Fmaj7",
+     "C",
+     "Em"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Bridge (wordless)",
+    "chords": [
+     "C",
+     "Em",
+     "Fmaj7",
+     "Fmaj7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Final chorus",
+    "chords": [
+     "Fmaj7",
+     "Fmaj7",
+     "C",
+     "Em"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "C",
+     "Em",
+     "Fmaj7",
+     "C"
+    ],
+    "bars": 8
+   }
+  ]
+ },
+ "Ocean Eyes": {
+  "status": "corrected",
+  "key": "E minor",
+  "bpm": 145,
+  "beatsPerBar": 4,
+  "durationSec": 200,
+  "chords": [
+   "C",
+   "D",
+   "Em"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "C",
+     "D",
+     "Em",
+     "Em"
+    ],
+    "per": 2,
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "C",
+     "D",
+     "Em",
+     "Em"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "C",
+     "D",
+     "Em",
+     "Em"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "C",
+     "D",
+     "Em",
+     "Em"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "C",
+     "D",
+     "Em",
+     "Em"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "C",
+     "D",
+     "Em",
+     "Em"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Final chorus",
+    "chords": [
+     "C",
+     "D",
+     "Em",
+     "Em"
+    ],
+    "per": 2,
+    "bars": 16
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "C",
+     "D",
+     "Em",
+     "Em"
+    ],
+    "per": 2,
+    "bars": 16
+   }
+  ]
+ },
+ "When the Party's Over": {
+  "status": "corrected",
+  "key": "C# minor (relative of E major)",
+  "bpm": 124,
+  "beatsPerBar": 3,
+  "durationSec": 196,
+  "chords": [
+   "A",
+   "B",
+   "C#m",
+   "E"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "A",
+     "A",
+     "B",
+     "B",
+     "C#m",
+     "C#m",
+     "B",
+     "E"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1 (near a cappella)",
+    "chords": [
+     "A",
+     "A",
+     "B",
+     "B",
+     "C#m",
+     "C#m",
+     "B",
+     "E"
+    ],
+    "bars": 32
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Amaj7",
+     "Amaj7",
+     "Bsus4",
+     "Bsus4",
+     "C#m7",
+     "C#m7",
+     "B",
+     "E"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "A",
+     "A",
+     "B",
+     "B",
+     "C#m",
+     "C#m",
+     "B",
+     "E"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Amaj7",
+     "Amaj7",
+     "Bsus4",
+     "Bsus4",
+     "C#m7",
+     "C#m7",
+     "B",
+     "E"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "A",
+     "A",
+     "B",
+     "B",
+     "C#m",
+     "C#m",
+     "B",
+     "E"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Final chorus",
+    "chords": [
+     "Amaj7",
+     "Amaj7",
+     "Bsus4",
+     "Bsus4",
+     "C#m7",
+     "C#m7",
+     "B",
+     "E"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "A",
+     "A",
+     "B",
+     "B",
+     "C#m",
+     "C#m",
+     "B",
+     "E"
+    ],
+    "bars": 16
+   }
+  ]
+ },
+ "Karma Police": {
+  "status": "corrected",
+  "key": "A minor (verse, A Dorian colour); chorus centres on G major; outro in B minor",
+  "bpm": 75,
+  "beatsPerBar": 4,
+  "durationSec": 264,
+  "chords": [
+   "Am",
+   "D/F#",
+   "Em",
+   "G"
+  ],
+  "structure": [
+   {
+    "section": "Intro (piano)",
+    "chords": [
+     "Am",
+     "D/F#",
+     "Em",
+     "G",
+     "Am",
+     "F",
+     "Em",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 4
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Am",
+     "D/F#",
+     "Em",
+     "G",
+     "Am",
+     "F",
+     "Em",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Chorus 1",
+    "chords": [
+     "C",
+     "D",
+     "G",
+     "F#"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Am",
+     "D/F#",
+     "Em",
+     "G",
+     "Am",
+     "F",
+     "Em",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Chorus 2",
+    "chords": [
+     "C",
+     "D",
+     "G",
+     "F#"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Outro section (B minor)",
+    "chords": [
+     "Bm",
+     "D",
+     "G",
+     "D",
+     "G",
+     "D",
+     "E",
+     "F#"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Ending (delay feedback)",
+    "chords": [
+     "Bm"
+    ],
+    "bars": 12
+   }
+  ]
+ },
+ "No Surprises": {
+  "status": "corrected",
+  "key": "F major",
+  "bpm": 76,
+  "beatsPerBar": 4,
+  "durationSec": 229,
+  "chords": [
+   "F",
+   "Bb/D",
+   "Gm7",
+   "C"
+  ],
+  "structure": [
+   {
+    "section": "Intro (guitar and glockenspiel)",
+    "chords": [
+     "F",
+     "Bbm6"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "F",
+     "Bb/D",
+     "Gm7",
+     "C"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus 1",
+    "chords": [
+     "Gm7",
+     "C7"
+    ],
+    "bars": 6
+   },
+   {
+    "section": "Interlude",
+    "chords": [
+     "F",
+     "Bbm6"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "F",
+     "Bb/D",
+     "Gm7",
+     "C"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus 2",
+    "chords": [
+     "Gm7",
+     "C7"
+    ],
+    "bars": 6
+   },
+   {
+    "section": "Interlude",
+    "chords": [
+     "F",
+     "Bbm6"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "C",
+     "Bbm7"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "F",
+     "Bb/D",
+     "Gm7",
+     "C"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Chorus 3",
+    "chords": [
+     "Gm7",
+     "C7"
+    ],
+    "bars": 6
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "F",
+     "Bbm6"
+    ],
+    "bars": 8
+   }
+  ]
+ },
+ "Sweet Home Alabama": {
+  "status": "corrected",
+  "key": "D Mixolydian (D major with C natural)",
+  "bpm": 98,
+  "beatsPerBar": 4,
+  "durationSec": 284,
+  "chords": [
+   "D",
+   "Cadd9",
+   "G"
+  ],
+  "structure": [
+   {
+    "section": "Intro (count-in and riff)",
+    "chords": [
+     "D",
+     "Cadd9",
+     "G",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "D",
+     "Cadd9",
+     "G",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Chorus 1",
+    "chords": [
+     "D",
+     "Cadd9",
+     "G",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Guitar solo 1 (short)",
+    "chords": [
+     "D",
+     "Cadd9",
+     "G",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "D",
+     "Cadd9",
+     "G",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Chorus 2",
+    "chords": [
+     "D",
+     "Cadd9",
+     "G",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "F",
+     "C",
+     "D",
+     "D"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Guitar solo 2",
+    "chords": [
+     "D",
+     "Cadd9",
+     "G",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Verse 3 (quiet)",
+    "chords": [
+     "D",
+     "Cadd9",
+     "G",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Chorus 3",
+    "chords": [
+     "D",
+     "Cadd9",
+     "G",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 8
+   },
+   {
+    "section": "Outro solo with piano (fade)",
+    "chords": [
+     "D",
+     "Cadd9",
+     "G",
+     "G"
+    ],
+    "per": 0.5,
+    "bars": 12
+   }
+  ],
+  "solos": [
+   {
+    "section": "Guitar solo 1 (short)",
+    "scale": "D major pentatonic (same shape as B minor pentatonic box 1 at 7th fret), add C natural for D Mixolydian colour",
+    "tips": "Aim phrase endings at the D, C or G chord tone under each change. Keep it bright and bouncy with double-stops and light bends.",
+    "chords": [
+     "D",
+     "Cadd9",
+     "G",
+     "G"
+    ]
+   },
+   {
+    "section": "Guitar solo 2",
+    "scale": "D major pentatonic / D Mixolydian, moving up to the 10th-14th fret area (D major pentatonic shape rooted at 10th fret)",
+    "tips": "Practise the D-C-G two-bar cycle slowly with a metronome at 70 BPM before soloing over it. Use repeated short licks that land on the 3rd (F#) over D.",
+    "chords": [
+     "D",
+     "Cadd9",
+     "G",
+     "G"
+    ]
+   },
+   {
+    "section": "Outro solo with piano (fade)",
+    "scale": "D major pentatonic / D Mixolydian",
+    "tips": "Leave space for the piano fills; trade short phrases rather than playing constantly.",
+    "chords": [
+     "D",
+     "Cadd9",
+     "G",
+     "G"
+    ]
+   }
+  ]
+ },
+ "Wonderful Tonight": {
+  "status": "verified",
+  "key": "G major",
+  "bpm": 95,
+  "beatsPerBar": 4,
+  "durationSec": 225,
+  "chords": [
+   "G",
+   "D/F#",
+   "C",
+   "D"
+  ],
+  "structure": [
+   {
+    "section": "Intro (guitar riff)",
+    "chords": [
+     "G",
+     "D/F#",
+     "C",
+     "D"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "G",
+     "D/F#",
+     "C",
+     "D"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1b",
+    "chords": [
+     "C",
+     "D",
+     "G",
+     "D/F#",
+     "Em",
+     "C",
+     "D",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Guitar riff",
+    "chords": [
+     "G",
+     "D/F#",
+     "C",
+     "D"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "G",
+     "D/F#",
+     "C",
+     "D"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 2b",
+    "chords": [
+     "C",
+     "D",
+     "G",
+     "D/F#",
+     "Em",
+     "C",
+     "D",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Guitar riff",
+    "chords": [
+     "G",
+     "D/F#",
+     "C",
+     "D"
+    ],
+    "bars": 4
+   },
+   {
+    "section": "Bridge",
+    "chords": [
+     "C",
+     "D",
+     "G",
+     "D/F#",
+     "Em",
+     "C",
+     "D",
+     "C",
+     "D",
+     "G",
+     "G"
+    ],
+    "bars": 11
+   },
+   {
+    "section": "Verse 3",
+    "chords": [
+     "G",
+     "D/F#",
+     "C",
+     "D"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 3b",
+    "chords": [
+     "C",
+     "D",
+     "G",
+     "D/F#",
+     "Em",
+     "C",
+     "D",
+     "G"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Outro (guitar riff and lead)",
+    "chords": [
+     "G",
+     "D/F#",
+     "C",
+     "D"
+    ],
+    "bars": 12
+   }
+  ],
+  "solos": [
+   {
+    "section": "Outro (guitar riff and lead)",
+    "scale": "G major pentatonic (E minor pentatonic box 1 at 12th fret, or box at 3rd fret), G major scale colour notes",
+    "tips": "Play slowly and let each note ring; aim for the chord root on the first beat of each bar (G, F#, C, D). Use gentle bends and plenty of space rather than fast runs.",
+    "chords": [
+     "G",
+     "D/F#",
+     "C",
+     "D"
+    ]
+   }
+  ]
+ },
+ "Over the Rainbow": {
+  "status": "corrected",
+  "key": "C major",
+  "tuning": "standard (ukulele, GCEA)",
+  "bpm": 85,
+  "beatsPerBar": 4,
+  "durationSec": 308,
+  "chords": [
+   "C",
+   "Em",
+   "F",
+   "C",
+   "G",
+   "Am"
+  ],
+  "structure": [
+   {
+    "section": "Intro (hummed)",
+    "chords": [
+     "C",
+     "Em7",
+     "Am",
+     "F",
+     "C",
+     "G",
+     "Am",
+     "F"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse A",
+    "chords": [
+     "C",
+     "Em",
+     "F",
+     "C",
+     "F",
+     "E7",
+     "Am",
+     "F"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse B",
+    "chords": [
+     "C",
+     "G",
+     "Am",
+     "F"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse A",
+    "chords": [
+     "C",
+     "Em",
+     "F",
+     "C",
+     "F",
+     "E7",
+     "Am",
+     "F"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Wonderful World medley",
+    "chords": [
+     "C",
+     "Em",
+     "F",
+     "C",
+     "F",
+     "E7",
+     "Am",
+     "F",
+     "C",
+     "G",
+     "Am",
+     "F",
+     "C",
+     "G",
+     "Am",
+     "F"
+    ],
+    "bars": 32
+   },
+   {
+    "section": "Verse B",
+    "chords": [
+     "C",
+     "G",
+     "Am",
+     "F"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse A",
+    "chords": [
+     "C",
+     "Em",
+     "F",
+     "C",
+     "F",
+     "E7",
+     "Am",
+     "F"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Outro (hummed)",
+    "chords": [
+     "C",
+     "Em7",
+     "Am",
+     "F",
+     "C",
+     "G",
+     "Am",
+     "F"
+    ],
+    "bars": 16
+   }
+  ]
+ },
+ "Chasing Cars": {
+  "status": "corrected",
+  "key": "A major",
+  "bpm": 104,
+  "beatsPerBar": 4,
+  "durationSec": 267,
+  "chords": [
+   "A",
+   "E/G#",
+   "D"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "A",
+     "E/G#",
+     "D",
+     "D"
+    ],
+    "bars": 8
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "A",
+     "E/G#",
+     "D",
+     "D"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "A",
+     "E/G#",
+     "D",
+     "D"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "A",
+     "E/G#",
+     "D",
+     "D"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "A",
+     "E/G#",
+     "D",
+     "D"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Bridge (builds)",
+    "chords": [
+     "A",
+     "E/G#",
+     "D",
+     "D"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Final chorus",
+    "chords": [
+     "A",
+     "E/G#",
+     "D",
+     "D"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "A",
+     "E/G#",
+     "D",
+     "D"
+    ],
+    "bars": 12
+   }
+  ]
+ },
+ "Happy": {
+  "status": "corrected",
+  "key": "F minor (F Dorian verses)",
+  "bpm": 160,
+  "beatsPerBar": 4,
+  "durationSec": 233,
+  "chords": [
+   "Fm7",
+   "Bb7",
+   "Cm7",
+   "Dbmaj7"
+  ],
+  "structure": [
+   {
+    "section": "Intro",
+    "chords": [
+     "Fm7",
+     "Fm7/Ab",
+     "Bb7",
+     "Cm7"
+    ],
+    "per": 0.5,
+    "bars": 4
+   },
+   {
+    "section": "Verse 1",
+    "chords": [
+     "Fm7",
+     "Fm7/Ab",
+     "Bb7",
+     "Cm7"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Dbmaj7",
+     "Cm7",
+     "Fm7",
+     "Fm7"
+    ],
+    "bars": 32
+   },
+   {
+    "section": "Verse 2",
+    "chords": [
+     "Fm7",
+     "Fm7/Ab",
+     "Bb7",
+     "Cm7"
+    ],
+    "per": 0.5,
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Dbmaj7",
+     "Cm7",
+     "Fm7",
+     "Fm7"
+    ],
+    "bars": 32
+   },
+   {
+    "section": "Breakdown",
+    "chords": [
+     "Fm7"
+    ],
+    "bars": 16
+   },
+   {
+    "section": "Chorus",
+    "chords": [
+     "Dbmaj7",
+     "Cm7",
+     "Fm7",
+     "Fm7"
+    ],
+    "bars": 32
+   },
+   {
+    "section": "Outro",
+    "chords": [
+     "Dbmaj7",
+     "Cm7",
+     "Fm7",
+     "Fm7"
     ],
     "bars": 8
    }
