@@ -2465,20 +2465,41 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
 6. **Guitar solos:** add "Solo" cards (the scale and fret position each solo uses, plus original practice licks; no copied lead lines) for the top guitar songs: Metallica, Stairway, Sweet Child O' Mine, Comfortably Numb and others.
 7. Play-along isn't synced to the YouTube video timing (the chords play at the app's tempo). Possible future feature.
 
-## 📝 Owner feedback on Hayden Keys (2026-10-07), to do when we have credits
-Not started. Notes only; nothing changed yet.
+## 📝 Owner feedback on Hayden Keys (2026-10-07)
+All done 2026-10-07 (see the notes under each item).
 
 **Songs: Whole song and lessons**
-- [ ] **Whole song doesn't work** for The A Team (Ed Sheeran), and the owner says it doesn't work for any of the artist songs (Ed Sheeran, Chris Martin/Coldplay…). Debug the "Whole song" part in practice-home.js / practice.js `getSongSteps(song, "whole")` with SONG_STRUCTURES, and fix it for **every** song. Test each song in the browser.
-- [ ] In the artist-song lessons (Ed Sheeran, Chris Martin and everyone), **let users continue without pressing the chords** (a Next / Skip button that always works).
+- [x] **Whole song doesn't work** for The A Team (Ed Sheeran), and the owner says it doesn't work for any of the artist songs (Ed Sheeran, Chris Martin/Coldplay…). Debug the "Whole song" part in practice-home.js / practice.js `getSongSteps(song, "whole")` with SONG_STRUCTURES, and fix it for **every** song. Test each song in the browser.
+  - **Done 2026-10-07:** the cause was the player, not one song. A section like "16-bar verse, G D Em C" played each chord once for 4 bars (the song loops them every bar), at a fixed 150 BPM, often in the teaching key instead of the recording's key, so nothing lined up with the video. New `js/song-map.js` loops each section's pattern until its bars are filled (`per` = bars per chord), the player runs at the song's real `bpm`, and every song's map was re-researched against the recording (see "Song data re-check" below). Tested in the browser: library player, lesson song cards and song lessons.
+- [x] In the artist-song lessons (Ed Sheeran, Chris Martin and everyone), **let users continue without pressing the chords** (a Next / Skip button that always works). **Done:** every song card has a "Next →" button; song lessons already had one.
 
 **Videos: prefer piano**
-- [ ] Each song's video should be the artist **playing piano** where one exists (e.g. Chris Martin playing Viva la Vida on piano, not the guitar acoustic). Order of preference: the artist on piano → an acoustic version → the original. Re-check every song (The A Team currently shows Ed on guitar; find a piano version). Verify each with YouTube oEmbed; official channels only.
+- [x] Each song's video should be the artist **playing piano** where one exists (e.g. Chris Martin playing Viva la Vida on piano, not the guitar acoustic). Order of preference: the artist on piano → an acoustic version → the original. Re-check every song (The A Team currently shows Ed on guitar; find a piano version). Verify each with YouTube oEmbed; official channels only.
+  - **Done 2026-10-07:** ~105 non-classical songs searched; 29 switched (all oEmbed-checked, official artist/label/broadcaster channels): **piano** for Shallow, Million Reasons, Die With a Smile, What Was I Made For?, When the Party's Over, All of Me, Can You Feel the Love Tonight, Piano Man, Everything In Its Right Place, Pyramid Song, Clocks, Lover, Let It Be (Paul McCartney), Lose Control (piano version), Make You Feel My Love, Someone You Loved; **acoustic** for Thinking Out Loud, Photograph, Perfect (Live Lounge), Blank Space, Counting Stars, Chasing Cars, I'm Yours, Hey Soul Sister, Riptide, Bubbly, Wonderwall, I'm Like a Bird, Radioactive. A note under these videos says Whole song follows the studio recording. Not switched: Bohemian Rhapsody (Live Aid clip is only the ballad part), audio-only or lyric uploads (Take On Me, Believer, Shape of You, Love Story, Let Her Go). **No official piano version exists** for Viva La Vida (Chris Martin always plays guitar in official uploads; piano ones are fan uploads) or The A Team (Ed on guitar in every official version), so those keep their acoustic videos.
 
 **Left and right hands**
-- [ ] Every key shows "R" (right hand?). Add **L** for the left hand and make it clear.
-- [ ] Introduce left vs right hand in a lesson **before** songs use both. Say: "This can get confusing, so we use colours. Watch the keys: the left hand might be on D1 while the right is on G6, far apart, but you get the idea."
-- [ ] Decide on and show a consistent left/right display: colours plus L/R labels on the keys and the falling notes.
+- [x] Every key shows "R" (right hand?). Add **L** for the left hand and make it clear. **Done:** every lit key gets its own tag, pink L or blue R; Whole song puts the root in the left hand.
+- [x] Introduce left vs right hand in a lesson **before** songs use both. Say: "This can get confusing, so we use colours. Watch the keys: the left hand might be on D1 while the right is on G6, far apart, but you get the idea." **Done:** new Lesson 1 card "Two hands: L and R" (`m-two-hands`) right before The A Team, with that wording and a G bass + G chord example.
+- [x] Decide on and show a consistent left/right display: colours plus L/R labels on the keys and the falling notes. **Done:** pink = left, blue = right everywhere; the falling blocks are labelled L/R too.
 
 **Less repetition**
-- [ ] "I know it's hard to press 3 keys at once…" shows too often. Show it **once** (the first time) and never again (remember it in localStorage).
+- [x] "I know it's hard to press 3 keys at once…" shows too often. Show it **once** (the first time) and never again (remember it in localStorage). **Done:** `hk_phone_note_seen`.
+
+
+## 2026-10-07 (late): owner feedback done, every song re-checked
+
+**Song data re-check (both apps, shared file `js/song-verified.js`):**
+- All 270 songs (Hayden's 241 + Jaxx's guitar-only songs) were re-researched against the **original recording**: key at concert pitch (capo and tuning noted), tempo, time signature, length, and the whole song section by section (intro, verses, pre-choruses, choruses, bridges, instrumentals, every guitar solo with the chords underneath, outro), sized so the map's length matches the recording (all within ~10%, most within 5%).
+- Result: 8 were already right, 204 corrected, 58 marked "our best guide" because sources disagreed or bar counts had to be estimated. Biggest fixes: many songs were stored in the guitar capo/teaching key instead of the record's key (The A Team and Galway Girl are in A, Perfect Ab, Viva La Vida Ab, Wonderwall F#m, Yellow B, Someone You Loved Db, As It Was A, Don't Stop Believin' E, Sweet Caroline B, Mr. Brightside Db, Country Roads A...), half-speed or double-speed chord timing (Blinding Lights, Last Christmas, Stay, Knockin' on Heaven's Door, Let It Be, Thinking Out Loud), wrong sections (Bad Romance, Love Story, Happy, Sweet Home Alabama, Gin and Juice) and maps far shorter than the song.
+- Section format: `{ section, chords, per, bars }`; `chords` is one pass of the pattern, each chord lasts `per` bars (default 1), and the pattern repeats until `bars` are filled. Song fields added: `bpm`, `beatsPerBar`, `tuning`, `capoNote`, `solos`, `durationSec`, `verified`.
+- Research limits, honestly: the session's web-search quota ran out early and several chord sites blocked automated access, so most songs rest on 2-3 lyric-free sources (Hooktheory, songbpm, Musicnotes, Wikipedia) and section bar counts are often fitted to the recording length rather than counted bar by bar. Worth an ear check: the 58 "best guide" songs, and live/alternate versions (I Will Survive is mapped to the 3:15 single; No Woman No Cry to the 1975 live version; Despacito's official video has about a minute of non-music around the song).
+- Colour chords the guitar app can't draw are simplified the same way in both apps (e.g. Dadd9 → D, B7sus4 → B7, Bbm9 → Bbm7).
+
+**Player:**
+- Whole song = the song map at the recording's tempo (1× = real speed), new `js/song-map.js` (same file in Jaxx). Lesson song cards play the whole song in the recording's key with the bass in the left hand.
+- Power chords (E5) now parse as root + fifth (before, they played as major chords).
+- Service worker now caches every app file (7 were missing), cache v12.
+
+**Tested:** every lesson (258) opened, stepped Next/Back and closed in the browser with 0 page errors; every library song (240) opened, Whole song and Main chords played, Back works: 0 page errors.
+
+**Other:** HTTPS is now enforced on haydenkeys.com (certificate was approved but not enforced).

@@ -26,7 +26,7 @@ function videoHtml(topic) {
   if (!v) return "";
   return `<div class="hk-video" data-yt="${esc(v.id)}"${v.noEmbed ? ' data-noembed="1"' : ""}>
     <button class="hk-btn hk-video-load" type="button">▶ Watch: ${esc(v.title)}</button>
-    <span class="hk-note">${esc(v.author_name)} · plays from YouTube when you tap</span>
+    <span class="hk-note">${esc(v.author_name)} · plays from YouTube when you tap${v.kind ? `<br>${v.kind === "piano" ? "🎹 Live piano version" : "🎸 Acoustic version"}: Whole song follows the studio recording, so the timing can differ a little.` : ""}</span>
   </div>`;
 }
 
