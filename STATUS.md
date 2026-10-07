@@ -2464,3 +2464,21 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
    - **Submit only when the owner says so.**
 6. **Guitar solos:** add "Solo" cards (the scale and fret position each solo uses, plus original practice licks; no copied lead lines) for the top guitar songs: Metallica, Stairway, Sweet Child O' Mine, Comfortably Numb and others.
 7. Play-along isn't synced to the YouTube video timing (the chords play at the app's tempo). Possible future feature.
+
+## 📝 Owner feedback on Hayden Keys (2026-10-07), to do when we have credits
+Not started. Notes only; nothing changed yet.
+
+**Songs: Whole song and lessons**
+- [ ] **Whole song doesn't work** for The A Team (Ed Sheeran), and the owner says it doesn't work for any of the artist songs (Ed Sheeran, Chris Martin/Coldplay…). Debug the "Whole song" part in practice-home.js / practice.js `getSongSteps(song, "whole")` with SONG_STRUCTURES, and fix it for **every** song. Test each song in the browser.
+- [ ] In the artist-song lessons (Ed Sheeran, Chris Martin and everyone), **let users continue without pressing the chords** (a Next / Skip button that always works).
+
+**Videos: prefer piano**
+- [ ] Each song's video should be the artist **playing piano** where one exists (e.g. Chris Martin playing Viva la Vida on piano, not the guitar acoustic). Order of preference: the artist on piano → an acoustic version → the original. Re-check every song (The A Team currently shows Ed on guitar; find a piano version). Verify each with YouTube oEmbed; official channels only.
+
+**Left and right hands**
+- [ ] Every key shows "R" (right hand?). Add **L** for the left hand and make it clear.
+- [ ] Introduce left vs right hand in a lesson **before** songs use both. Say: "This can get confusing, so we use colours. Watch the keys: the left hand might be on D1 while the right is on G6, far apart, but you get the idea."
+- [ ] Decide on and show a consistent left/right display: colours plus L/R labels on the keys and the falling notes.
+
+**Less repetition**
+- [ ] "I know it's hard to press 3 keys at once…" shows too often. Show it **once** (the first time) and never again (remember it in localStorage).
