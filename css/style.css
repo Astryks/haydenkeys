@@ -1569,3 +1569,25 @@ body.hk-lesson-open .hk-lesson-topbar { padding-top: 6px !important; }
   .hk-practice-simple #hk-practice-controls { margin-top: 4px !important; display: flex; gap: 8px; }
   .hk-practice-simple #hk-playpause { min-height: 42px !important; font-size: 1.05rem !important; flex: 1; }
 }
+
+/* Upload player: tidy settings */
+.hk-upload-settings { border: none !important; background: none !important; padding: 0 !important; margin: 12px 0 !important; }
+.hk-upload-settings > summary { display: inline-flex !important; align-items: center; gap: 8px; padding: 10px 18px !important; border-radius: 999px; background: linear-gradient(135deg, #a99cf5, #8a63d2); color: #fff; font-weight: 800; font-size: 1.05rem; box-shadow: 0 6px 16px rgba(138, 99, 210, 0.3); }
+.hk-upload-settings > summary .hk-icon { filter: brightness(0) invert(1); }
+.hk-upload-settings[open] > summary { margin-bottom: 10px; }
+.hk-set-row { display: grid; grid-template-columns: 96px 1fr; align-items: center; gap: 10px; padding: 8px 12px; background: #fff; border: 1px solid #ece6fb; border-radius: 14px; margin-bottom: 8px; }
+.hk-set-row > span { font-weight: 800; color: #3a2d6b; font-size: 0.92rem; }
+.hk-seg { display: flex; background: #f1ecff; border-radius: 12px; padding: 3px; gap: 3px; }
+.hk-seg button { flex: 1; border: none; background: none; padding: 8px 6px; border-radius: 9px; font-weight: 700; font-size: 0.88rem; color: #5a4a8a; cursor: pointer; white-space: nowrap; }
+.hk-seg button.hk-speed-active { background: #fff; color: #6a45b5; box-shadow: 0 1px 4px rgba(90, 60, 160, 0.2); }
+.hk-upload-hands { font-size: 0.85rem; color: var(--hk-text-dim); margin: 6px 0; text-align: center; }
+.hk-hand-l, .hk-hand-r { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; font-weight: 900; font-size: 0.75rem; color: #fff; }
+.hk-hand-l { background: #e7849c; } .hk-hand-r { background: #4a9bc9; }
+.hk-notename-l { color: #b4415f !important; } .hk-notename-r { color: #2c6f96 !important; }
+.hk-upload-wait { margin: 6px 0; padding: 10px 12px; border-radius: 14px; background: #fff7e0; border: 2px solid #f2b630; font-size: 0.98rem; }
+.hk-upload-wait.hk-wait-ok { background: #e6f7ea; border-color: #3fb363; }
+.hk-upload-wait small { color: var(--hk-text-dim); }
+.hk-upload-guess { width: 100%; margin: 6px 0; }
+.hk-seg button { overflow: hidden; text-overflow: ellipsis; min-width: 0; padding: 8px 4px; }
+.hk-upload-match-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.hk-match-chip { border: 1px solid #e6dcfb; background: #fff; border-radius: 999px; padding: 6px 12px; font-weight: 700; font-size: 0.85rem; color: #3a2d6b; cursor: pointer; }

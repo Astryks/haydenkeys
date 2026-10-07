@@ -22,6 +22,7 @@ const TIERS = ["Beginner", "Intermediate", "Advanced"];
 // The library, Netflix-style: one row per genre, each scrolling sideways.
 const GENRE_ROWS = [
   ["Popular right now", null],
+  ["Karaoke anthems", null],
   ["Pop", (g) => true],
   ["Rock & alternative", (g) => /Rock|Britpop|Alternative|Indie/i.test(g)],
   ["Folk & country", (g) => /Folk|Country|Traditional|Hymn|Ukulele/i.test(g)],
@@ -31,13 +32,14 @@ const GENRE_ROWS = [
   ["Jazz", (g) => /Jazz/i.test(g)],
   ["Film & classical", (g) => /Classical|Film|Soundtrack|Contemporary Piano|Piano duet/i.test(g)],
   ["Christmas", (g) => /Christmas|Holiday/i.test(g)],
-  ["Around the world", (g) => /^World/.test(g)],
+  ["International", (g) => /^World/.test(g)],
 ];
+const KARAOKE = ["Sweet Caroline", "Bohemian Rhapsody", "Don't Stop Believin'", "I Want It That Way", "Dancing Queen", "Mr. Brightside", "I Will Survive", "Wonderwall", "Piano Man", "Man! I Feel Like a Woman!", "Total Eclipse of the Heart", "Take On Me", "Like a Prayer", "Valerie", "Before He Cheats", "Tennessee Whiskey", "Angels", "My Way", "Africa", "Lose Control"];
 // Each song goes in the first matching row, checked from the most specific
 // genre to the broadest ("Pop" catches the rest).
 function genreRow(song) {
   const g = song.genre || "";
-  const order = ["Around the world", "Christmas", "Jazz", "Film & classical", "Hip-hop", "R&B, soul & disco", "Reggae & Latin", "Folk & country", "Rock & alternative", "Pop"];
+  const order = ["International", "Christmas", "Jazz", "Film & classical", "Hip-hop", "R&B, soul & disco", "Reggae & Latin", "Folk & country", "Rock & alternative", "Pop"];
   return order.find((name) => GENRE_ROWS.find(([n]) => n === name)[1](g));
 }
 function libraryRows() {
@@ -46,7 +48,9 @@ function libraryRows() {
   const rows = GENRE_ROWS.map(([name]) => ({ name, songs: [] }));
   rows[0].songs = playable.filter((s) => !s.genre?.startsWith("World")).sort(byRank).slice(0, 12);
   playable.forEach((s) => rows.find((r) => r.name === genreRow(s)).songs.push(s));
-  rows.slice(1).forEach((r) => r.songs.sort(byRank));
+  // A hand-picked row: the songs everyone sings at karaoke.
+  rows[1].songs = KARAOKE.map((t) => playable.find((s) => s.title === t)).filter(Boolean);
+  rows.slice(2).forEach((r) => r.songs.sort(byRank));
   return rows.filter((r) => r.songs.length);
 }
 

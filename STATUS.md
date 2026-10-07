@@ -1,5 +1,36 @@
 # Status
 
+## ▶ Start here: handoff summary (2026-10-07)
+
+**Hayden Keys** (piano), repo https://github.com/Astryks/haydenkeys, site https://haydenkeys.com, bundle `com.haydenkeys.app`. Sibling app: Jaxx Guitar (https://github.com/Astryks/jaxxguitar).
+
+**What's done (full history below):** beginner→advanced lessons as simple panda cards (Day 1–4, middle C, key names A0–A7, two hands, styles), falling-blocks player with Listen / Wait for me (microphone) / Play in time, upload a song → chords (Basic Pitch on device) with Easy/Hard, L/R hands and Wait for me, Guess the song (ShazamKit), Netflix-style song library (241 songs in genre rows incl. Karaoke anthems and International) with album art, Main chords / Whole song and the official YouTube video under each song, streaks/XP/rewards, How it works page, Astryks credit, App Store screenshots and listing text.
+
+**Latest build:** 34 (see bottom). **Not submitted to App Review yet.**
+
+### Next steps (in order)
+1. **TestFlight:** check the latest build appears in App Store Connect → TestFlight (processing takes 5–30 min; Apple emails if a build fails processing). Add it to the internal tester group and install on the phone.
+2. **Test on a phone:** Wait for me with the microphone, Guess the song with a real recording, Main/Whole song on a few new songs, landscape player.
+3. **App Store version page (owner, signed in):** select the latest build, upload screenshots from `ios/screenshots/app-store/`, paste text from `ios/APP_STORE_LISTING.md`, Age Rating, App Privacy ("Data Not Collected") → Publish, Content Rights, App Review contact + notes. **Submit for Review only when the owner says so.**
+4. Data clean-up: 15 older songs still have a placeholder instead of chords ("insufficient agreement…" — e.g. Wildest Dreams, Happy, Africa, Bohemian Rhapsody, Misty, Stella by Starlight, November Rain, Still D.R.E.). They rely on their notes/song map; research proper chords or hide them.
+5. Later (not in v1): tip jar via Apple In-App Purchase (code existed in build 30/12, removed); left-handed fretboard (Jaxx).
+6. Next apps after Hayden Keys and Jaxx Guitar: fitness, jiu jitsu, then public speaking, singing, investing & markets, dance.
+
+### How to build and upload (both apps)
+```
+npm run cap:sync
+# bump CURRENT_PROJECT_VERSION in ios/App/App.xcodeproj/project.pbxproj
+cd ios/App && xcodebuild -project App.xcodeproj -scheme App -configuration Release -destination 'generic/platform=iOS' -archivePath /tmp/app.xcarchive -allowProvisioningUpdates DEVELOPMENT_TEAM=96H39GP2A4 CODE_SIGN_STYLE=Automatic archive
+xcodebuild -exportArchive -archivePath /tmp/app.xcarchive -exportOptionsPlist ExportOptionsUpload.plist -exportPath /tmp/export -allowProvisioningUpdates
+```
+ExportOptionsUpload.plist: method `app-store-connect`, destination `upload`, teamID 96H39GP2A4. If Xcode says "Failed to Use Accounts", sign in again in Xcode → Settings → Accounts (owner only).
+
+### Rules we keep
+- Never print song lyrics or copyrighted melodies/tabs: chords, keys and song maps only. Videos are official uploads, verified with YouTube oEmbed.
+- No tip jar / payments in v1. Don't submit for review until the owner says so. The owner types all passwords.
+
+---
+
 ## TODO — not yet done (handoff for a future session)
 
 Item 56 (2026-10-05) finished the previous handoff list: Back on every
@@ -2402,3 +2433,7 @@ Day 1 is now **13 tiny lessons**. Each lesson card has one short message, one th
   - **Wait for me microphone fixed**: the web sound was set to "playback", which iOS won't record in ("AudioSession category is not compatible with audio capture"); it now switches to play-and-record while listening. Tested in the simulator. Microphone permission errors now explain how to turn it on in Settings.
   - Player order: falling notes → piano → chords → Play/Pause, then speed, Drum beat / Wait for me / Bass line, and the Wait for me microphone choice right under them.
   - **Landscape**: song player fits one screen (slim bar, falling notes, piano, chord names, Play/Pause); song details below. Swiping on the keyboard now scrolls the page. Portrait tip: turn off rotation lock and turn sideways.
+- Build 34:
+  - **Upload panel simplified:** purple Settings button; tidy one-line rows (Speed, Wait for me on/off, View Easy (chords) / Hard (all notes), Sound, Drum beat). **Wait for me for uploads** (holds until you play the chord). **Left/right hands clear:** note names coloured by hand, legend, and the now-line says e.g. "left hand C3 + right hand C4 E4 G4".
+  - **Guess the song fixed:** it was sending low-quality 22 kHz audio and only the first 12 s; now re-decodes the file at 44.1 kHz and tries 3 windows, and shows the real error. Still to test with a real song on a phone.
+  - **55 more songs** (owner's lists: classical masterpieces, Taylor Swift / Lady Gaga / Billie Eilish, Radiohead, karaoke anthems, international songs; plus Dilemma, Hot in Herre, I'm Like a Bird, Bubbly, Like a Star). Researched chords, song maps ("our best guide") and official videos; skipped: To a Wild Rose (no chord source). Total 241 songs.

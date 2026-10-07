@@ -14,6 +14,7 @@ import { playBeat } from "./drums.js";
 import { getAudioContext } from "./keyboard.js";
 import { SONGS } from "./songs-data.js";
 import { icon } from "./icons.js";
+import { onNoteOn, enableMic, micOn } from "./input-hub.js";
 import { parseChordSymbol } from "./chord-utils.js";
 
 // Item 44: a short cleanup pass on basic-pitch's raw note output.
@@ -222,6 +223,48 @@ async function recognizeSong(decoded) {
     console.warn("Hayden Keys: song recognition failed", e);
     return null;
   }
+}
+
+// "Guess the song": read the ORIGINAL file again at full quality (44.1 kHz;
+// the note-finding copy is 22 kHz, too dull for Shazam's fingerprint) and
+// try a few 12-second windows (start, ~10 s, ~20 s) until one matches.
+async function recognizeFile(file) {
+  const cap = window.Capacitor;
+  if (!cap?.isNativePlatform?.() || !file) return null;
+  const plugin = cap.registerPlugin ? cap.registerPlugin("SongRecognizer") : cap.Plugins?.SongRecognizer;
+  if (!plugin?.match || !plugin.beginFile) return null;
+  const ext = (file.name.match(/\.([a-z0-9]+)$/i)?.[1] || (file.type.split("/")[1] || "m4a")).toLowerCase().replace("quicktime", "mov");
+  const { id } = await plugin.beginFile();
+  const PIECE = 2 * 1024 * 1024;
+  for (let at = 0; at < file.size; at += PIECE) {
+    const bytes = new Uint8Array(await readFileBuffer(file.slice(at, at + PIECE)));
+    let bin = "";
+    for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    await plugin.appendFile({ id, data: btoa(bin) });
+  }
+  const RATE = 44100;
+  const res = await plugin.decodeAudio({ id, ext, sampleRate: RATE, maxSeconds: 40 });
+  const raw = Uint8Array.from(atob(res.pcm16), (c) => c.charCodeAt(0));
+  const samples = Math.floor(raw.length / 2);
+  const pcm = new Int16Array(raw.buffer, 0, samples);
+  let start = 0;
+  while (start < samples && Math.abs(pcm[start]) < 300) start++;
+  const WIN = RATE * 12;
+  let lastError = "";
+  for (const offset of [start, start + RATE * 10, start + RATE * 20]) {
+    if (offset >= samples - RATE * 3) break;
+    const slice = raw.subarray(offset * 2, Math.min(samples, offset + WIN) * 2);
+    let bin = "";
+    for (let i = 0; i < slice.length; i += 0x8000) bin += String.fromCharCode.apply(null, slice.subarray(i, i + 0x8000));
+    try {
+      const r = await plugin.match({ pcm16: btoa(bin), sampleRate: RATE });
+      if (r?.found) return r;
+      lastError = r?.error || lastError;
+    } catch (e) {
+      lastError = e?.message || String(e);
+    }
+  }
+  return { found: false, error: lastError };
 }
 
 // iPhone/iPad app: decode with AVFoundation (SongRecognizer.decodeAudio),
@@ -485,8 +528,7 @@ function showSongMatches(el, easyNotes) {
   if (!el) return;
   const m = songMatches(easyNotes);
   el.innerHTML = `<div class="hk-upload-recognized" id="hk-upload-recognized"></div>` + (m.length ? `<div class="hk-upload-match-box">${icon("song", 20)} <b>These songs use the same chords:</b>
-    <div class="hk-upload-match-list">${m.slice(0, 6).map((s) => `<button class="hk-btn hk-btn-small" data-match="${s.title.replace(/"/g, "&quot;")}">${s.title} <span>· ${s.artist}</span></button>`).join("")}</div>
-    <small>Lots of songs share the same chords, so this is a hint, not an exact match. Tap one to learn the whole song.</small></div>` : "");
+    <div class="hk-upload-match-list">${m.slice(0, 4).map((s) => `<button class="hk-match-chip" data-match="${s.title.replace(/"/g, "&quot;")}">${s.title}</button>`).join("")}</div></div>` : "");
   const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
   el.querySelectorAll(".hk-upload-match-box [data-match]").forEach((b) => b.addEventListener("click", () => {
@@ -497,15 +539,19 @@ function showSongMatches(el, easyNotes) {
 function showRecognition(box, btn) {
   if (!box || !lastRecognition) return;
   const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
-  box.innerHTML = `<div class="hk-upload-rec-box">🎧 Listening for the song name…</div>`;
+  box.innerHTML = `<div class="hk-upload-rec-box">Listening for the song name…</div>`;
   lastRecognition.then((r) => {
     if (btn) { btn.disabled = false; btn.innerHTML = `${icon("search", 20)} Guess the song`; }
     if (!box.isConnected) return;
-    if (!r || !r.found) { box.innerHTML = `<div class="hk-upload-rec-box">🤔 Couldn't find this song. Try a clearer part of it.</div>`; return; }
+    if (!r || !r.found) {
+      console.warn("Hayden Keys: Guess the song found nothing", r?.error);
+      box.innerHTML = `<div class="hk-upload-rec-box">Couldn't find this song. Try a recording of the original song (not someone playing it), with a clear chorus.${r?.error ? `<br><small>(${esc(r.error)})</small>` : ""}</div>`;
+      return;
+    }
     const inLib = SONGS.find((s) => s.title.toLowerCase() === String(r.title).toLowerCase());
     box.innerHTML = `<div class="hk-upload-rec-box">
       ${r.artworkURL ? `<img src="${esc(r.artworkURL)}" alt="" class="hk-upload-rec-art">` : ""}
-      <div><div>🎵 We think this is</div><b>${esc(r.title)}</b><div class="hk-upload-rec-artist">${esc(r.artist)}</div>
+      <div><div>We think this is</div><b>${esc(r.title)}</b><div class="hk-upload-rec-artist">${esc(r.artist)}</div>
       <div class="hk-upload-rec-links">${inLib ? `<button class="hk-btn hk-btn-small hk-btn-primary" data-match="${esc(inLib.title)}">Learn the whole song</button>` : ""}
       ${r.appleMusicURL ? `<a class="hk-btn hk-btn-small" href="${esc(r.appleMusicURL)}" target="_blank" rel="noopener">Open in Apple Music</a>` : ""}</div></div></div>`;
     box.querySelector("[data-match]")?.addEventListener("click", (e) => window.dispatchEvent(new CustomEvent("hk-open-song", { detail: { title: e.currentTarget.dataset.match } })));
@@ -615,27 +661,18 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
         <input type="range" id="hk-upload-seek" class="hk-upload-seek-range" min="0" step="0.05" value="0" aria-label="Playback position" />
         <span class="hk-upload-clock" id="hk-upload-total">0:00</span>
       </div>
+      <p class="hk-upload-hands"><span class="hk-hand-l">L</span> left hand: the low notes &nbsp;·&nbsp; <span class="hk-hand-r">R</span> right hand: the high notes &nbsp;·&nbsp; <b>C4</b> = middle C</p>
+      <div class="hk-upload-wait hk-hidden" id="hk-upload-wait"></div>
+      ${window.Capacitor?.isNativePlatform?.() ? `<button class="hk-btn hk-upload-guess" id="hk-upload-guess">${icon("search", 20)} Guess the song</button><div id="hk-upload-recognized"></div>` : ""}
+      <div class="hk-upload-match" id="hk-upload-match"></div>
       <details class="hk-upload-settings">
-        <summary>${icon("gear", 22)} Customise: speed, easy or hard, sound, guess the song</summary>
-      <div class="hk-speed-picker">
-        <span class="hk-speed-label">Speed:</span>
-        ${SPEEDS.map((s) => `<button class="hk-speed-btn ${s === 1 ? "hk-speed-active" : ""}" data-speed="${s}">${s}×${s === 1 ? " (normal)" : s === 0.5 ? " (slow)" : ""}</button>`).join("")}
-        <span class="hk-speed-label hk-upload-mode-label">View:</span>
-        <button class="hk-speed-btn ${easyNotes.length ? "hk-speed-active" : ""}" data-mode="easy" title="The song's chords as simple, playable shapes">${icon("star", 18)} Easy mode (just chords)</button>
-        <button class="hk-speed-btn ${easyNotes.length ? "" : "hk-speed-active"}" data-mode="detailed" title="Every note we heard">${icon("trophy", 18)} Hard mode (every note)</button>
-      </div>
-      <div class="hk-speed-picker">
-        <span class="hk-speed-label">Hear:</span>
-        ${originalEl ? `
-          <button class="hk-speed-btn hk-speed-active" data-sound="original" title="Your recording, in sync with the falling notes">${icon("song", 18)} Original song</button>
-          <button class="hk-speed-btn" data-sound="piano" title="Mutes the recording — only the notes on piano">${icon("piano", 18)} Piano only</button>
-          <button class="hk-speed-btn" data-sound="both" title="The notes on piano, on top of your recording">${icon("piano", 18)} Piano + song</button>` : `<span class="hk-speed-label">${icon("piano", 18)} Piano notes</span>`}
-        ${beat ? `<button class="hk-speed-btn" data-toggle="drums" title="A simple beat at the song's estimated tempo">${icon("drum", 18)} Beat (~${beat.bpm} BPM)</button>` : ""}
-      </div>
-        ${window.Capacitor?.isNativePlatform?.() ? `<div class="hk-speed-picker"><button class="hk-btn hk-upload-guess" id="hk-upload-guess">${icon("search", 20)} Guess the song</button></div>` : ""}
-        <div class="hk-upload-match" id="hk-upload-match"></div>
+        <summary>${icon("gear", 22)} Settings</summary>
+        <div class="hk-set-row"><span>Speed</span><div class="hk-seg">${SPEEDS.map((s) => `<button class="${s === 1 ? "hk-speed-active" : ""}" data-speed="${s}">${s === 1 ? "Normal" : s === 0.5 ? "Slow" : "0.75×"}</button>`).join("")}</div></div>
+        <div class="hk-set-row"><span>Wait for me</span><div class="hk-seg"><button class="hk-speed-active" data-wait="off">Off</button><button data-wait="on">On</button></div></div>
+        <div class="hk-set-row"><span>Notes</span><div class="hk-seg"><button class="${easyNotes.length ? "hk-speed-active" : ""}" data-mode="easy">Easy (chords)</button><button class="${easyNotes.length ? "" : "hk-speed-active"}" data-mode="detailed">Hard (all notes)</button></div></div>
+        ${originalEl ? `<div class="hk-set-row"><span>Sound</span><div class="hk-seg"><button class="hk-speed-active" data-sound="original">Song</button><button data-sound="piano">Piano</button><button data-sound="both">Both</button></div></div>` : ""}
+        ${beat ? `<div class="hk-set-row"><span>Drum beat</span><div class="hk-seg"><button class="hk-speed-active" data-beat="off">Off</button><button data-beat="on">On</button></div></div>` : ""}
         <p class="hk-honest-note" id="hk-upload-summary"></p>
-        <p class="hk-upload-legend">${icon("fact", 18)} <b>C4</b> = middle C. The number says which group of keys: <b>smaller = further left</b> (lower), bigger = further right. So <b>A3</b> is the A just left of middle C, and <b>A2</b> is the A one group further left.</p>
       </details>
     </div>`;
 
@@ -649,8 +686,8 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
 
   function updateSummary() {
     container.querySelector("#hk-upload-summary").textContent = highwayNotes === easyNotes
-      ? `Easy mode: the song as ${new Set(easyNotes.map((n) => n.chord)).size} simple chords (${easyNotes.filter((n) => n.hand === "left").length} chord changes) — left hand plays the root, right hand the 3-note chord near Middle C. A best guess from the recording; switch to Hard mode for every note.`
-      : `Detected ${detailedNotes.length} notes. This plays back exactly what was detected — try Easy mode for just the chords. Turning it into a full lesson (chords, structure, etc.) is still a Phase 2 item.`;
+      ? `Easy: ${new Set(easyNotes.map((n) => n.chord)).size} chords. Left hand plays the chord's letter, low; right hand plays the chord near middle C.`
+      : `Hard: all ${detailedNotes.length} notes we heard.`;
     seek.max = String(totalDuration);
     container.querySelector("#hk-upload-total").textContent = formatClock(totalDuration);
   }
@@ -660,8 +697,8 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
 
   container.querySelector("#hk-upload-guess")?.addEventListener("click", (e) => {
     e.currentTarget.disabled = true;
-    e.currentTarget.textContent = "🎧 Listening…";
-    lastRecognition = lastDecoded ? recognizeSong(lastDecoded) : Promise.resolve(null);
+    e.currentTarget.textContent = "Listening…";
+    lastRecognition = file ? recognizeFile(file).catch((err) => ({ found: false, error: err?.message || String(err) })) : (lastDecoded ? recognizeSong(lastDecoded) : Promise.resolve(null));
     showRecognition(container.querySelector("#hk-upload-recognized"), e.currentTarget);
   });
 
@@ -674,7 +711,7 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
   let lastActiveKey = "";
 
   function currentTime() {
-    if (!playing) return pausedAt;
+    if (!playing || holding) return pausedAt;
     if (originalOn && originalEl && !originalEl.paused) return originalEl.currentTime;
     return pausedAt + ((performance.now() - playStartedAt) / 1000) * speed;
   }
@@ -721,13 +758,15 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
           if (!el) return;
           const label = document.createElement("div");
           label.className = "hk-key-notename";
+          const isLeft = active.some((n) => n.midi === midi && n.hand === "left");
           label.textContent = midiToName(midi);
+          label.classList.add(isLeft ? "hk-notename-l" : "hk-notename-r");
           el.appendChild(label);
         });
         const chordLabel = active.find((n) => n.chord)?.chord;
-        nowEl.textContent = chordLabel
-          ? `Chord: ${chordLabel} — ${midis.map(midiToName).join(" · ")}`
-          : `Now playing: ${midis.map(midiToName).join(" · ")}`;
+        const lh = [...new Set(active.filter((n) => n.hand === "left").map((n) => n.midi))].sort((a, b) => a - b).map(midiToName);
+        const rh = [...new Set(active.filter((n) => n.hand === "right").map((n) => n.midi))].sort((a, b) => a - b).map(midiToName);
+        nowEl.innerHTML = `${chordLabel ? `<b>${chordLabel}</b> &nbsp;` : ""}${lh.length ? `<span class="hk-hand-l">L</span> ${lh.join(" ")}` : ""}${lh.length && rh.length ? " &nbsp; " : ""}${rh.length ? `<span class="hk-hand-r">R</span> ${rh.join(" ")}` : ""}`;
       } else {
         kb.clearHighlights();
         nowEl.innerHTML = "&nbsp;";
@@ -744,7 +783,8 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
       pause();
       return;
     }
-    const t = currentTime();
+    let t = holding ? pausedAt : currentTime();
+    if (waitOn && !holding && nextGroup && t >= nextGroup.time) { hold(nextGroup); t = pausedAt; }
     drawFrame(t);
     if (drumsOn && beat && t >= beat.offsetSec) {
       const slot = Math.floor((t - beat.offsetSec) / beat.beatSec);
@@ -764,6 +804,8 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
 
   function play() {
     if (pausedAt >= totalDuration) pausedAt = 0;
+    holding = false;
+    nextGroup = groupAt(pausedAt);
     playing = true;
     playStartedAt = performance.now();
     lastBeatSlot = null;
@@ -812,13 +854,77 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
       if (wasPlaying) play();
     });
   });
-  container.querySelectorAll("[data-toggle]").forEach((btn) => {
+  container.querySelectorAll("[data-beat]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      drumsOn = !drumsOn;
+      drumsOn = btn.dataset.beat === "on";
       lastBeatSlot = null;
-      btn.classList.toggle("hk-speed-active", drumsOn);
+      container.querySelectorAll("[data-beat]").forEach((b) => b.classList.toggle("hk-speed-active", b === btn));
     });
   });
+
+  // ----- Wait for me: the notes stop at the line until you play them -----
+  // (screen keys, a MIDI keyboard, or your real piano through the
+  // microphone, which is used only to hear your piano keys).
+  let waitOn = false;
+  let holding = false;
+  let heldGroup = null;
+  let heard = [];
+  const waitEl = container.querySelector("#hk-upload-wait");
+  const groupAt = (t0) => {
+    const first = highwayNotes.find((n) => n.time >= t0 - 0.001);
+    if (!first) return null;
+    return { time: first.time, notes: highwayNotes.filter((n) => Math.abs(n.time - first.time) < 0.06) };
+  };
+  let nextGroup = null;
+  const pcName = (m) => ["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "A♭", "A", "B♭", "B"][((m % 12) + 12) % 12];
+  function showWait(html, ok = false) {
+    waitEl.classList.toggle("hk-hidden", !waitOn);
+    waitEl.classList.toggle("hk-wait-ok", ok);
+    waitEl.innerHTML = html;
+  }
+  function hold(g) {
+    holding = true;
+    heldGroup = g;
+    heard = [];
+    pausedAt = g.time;
+    if (originalEl) originalEl.pause();
+    clearScheduled();
+    const left = g.notes.filter((n) => n.hand === "left").map((n) => midiToName(n.midi));
+    const right = g.notes.filter((n) => n.hand === "right").map((n) => midiToName(n.midi));
+    showWait(`${icon("hand", 20)} Your turn: ${left.length ? `<b>left hand</b> ${left.join(" ")}` : ""}${left.length && right.length ? " + " : ""}${right.length ? `<b>right hand</b> ${right.join(" ")}` : ""}`);
+  }
+  function release() {
+    if (!holding) return;
+    holding = false;
+    showWait(`${icon("check", 20)} Nice!`, true);
+    nextGroup = groupAt(heldGroup.time + 0.07);
+    playStartedAt = performance.now();
+    if (originalOn && originalEl) { originalEl.currentTime = pausedAt; originalEl.play().catch(() => {}); }
+    scheduleAudioFrom(pausedAt);
+  }
+  const offNote = onNoteOn((midi, source) => {
+    if (!waitOn || !holding || !container.isConnected) return;
+    const want = [...new Set(heldGroup.notes.map((n) => ((n.midi % 12) + 12) % 12))];
+    heard.push(((midi % 12) + 12) % 12);
+    const got = want.filter((pc) => heard.includes(pc)).length;
+    // The microphone hears one clear note at a time: one right note (or two
+    // for a chord) is enough. On screen or MIDI, play all of them.
+    if (source === "mic" ? got >= Math.min(2, want.length) : got >= Math.min(3, want.length)) release();
+  });
+  container._hkOffNote = offNote;
+  container.querySelectorAll("[data-wait]").forEach((btn) => btn.addEventListener("click", async () => {
+    waitOn = btn.dataset.wait === "on";
+    container.querySelectorAll("[data-wait]").forEach((b) => b.classList.toggle("hk-speed-active", b === btn));
+    holding = false;
+    nextGroup = groupAt(currentTime());
+    if (waitOn) {
+      showWait(`${icon("hand", 20)} The notes will wait for you. Play them on the screen, or on your piano. <button class="hk-btn hk-btn-small" id="hk-upload-mic">${icon("mic", 16)} Use my microphone</button><br><small>We use your phone's microphone only to hear your piano keys, nothing else.</small>`);
+      waitEl.querySelector("#hk-upload-mic")?.addEventListener("click", async (e) => {
+        try { if (!micOn()) await enableMic(); e.currentTarget.textContent = "Listening to your piano"; }
+        catch (err) { e.currentTarget.textContent = "Microphone not available"; }
+      });
+    } else showWait("");
+  }));
   container.querySelectorAll("[data-mode]").forEach((btn) => {
     btn.addEventListener("click", () => {
       const wasPlaying = playing;
