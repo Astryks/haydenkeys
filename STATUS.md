@@ -2631,3 +2631,8 @@ All done 2026-10-07 (see the notes under each item).
 ## 2026-10-11: Where Is My Mind? (Pixies) on piano
 - New Lesson 3 card **"Song: Where Is My Mind?"** (after Linger, card 50/247): the 4-chord loop **E → C#m → G# → A** (key of E, chords from Hooktheory), all near middle C, with Main part / Whole song and **Maxence Cyrin's piano version** (his official channel, 4NZdggNUvq0, embeddable).
 - Also in the song library (songs-data.js entry + whole-song map marked "our best guide", album art).
+
+## 2026-10-11: Glory Box and I Don't Want to Talk About It
+- **Glory Box** (Portishead, 1994): D# minor, one descending loop D#m → D#m/C# → Cm7b5 (B#ø7) → Bmaj7 all song (Hooktheory, Musicnotes), whole-song map incl. the guitar solo, official video (PortisheadVEVO 4qQyUi4zfDs).
+- **I Don't Want to Talk About It** (Rod Stewart, 1977; written by Danny Whitten): Bb major; verse Bb Cm F, chorus Eb F Bb F/A Gm, chorus ending Cm F7sus4 Bbadd9 (Hooktheory); Jaxx uses F7 / Bb for the two chords its fretboard can't draw. Official video (esUHMBHJsn8). Guitar: capo 3, G shapes.
+- Both in the song library of both apps (Rock & alternative row), album art from iTunes; maps marked "our best guide".
