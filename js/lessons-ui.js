@@ -244,10 +244,17 @@ const KC_C = [60, 64, 67], KC_G = [55, 59, 62], KC_AM = [57, 60, 64], KC_F = [53
 const LG_D = [62, 66, 69], LG_A = [57, 61, 64], LG_C = [60, 64, 67], LG_G = [55, 59, 62];
 // Where Is My Mind? (key of E): E, C#m, G#, A, all near middle C.
 const WM_E = [64, 68, 71], WM_CSM = [61, 64, 68], WM_GS = [56, 60, 63], WM_A = [57, 61, 64];
+// I Don't Want to Talk About It (key of Bb): Bb, Cm, F, Bb.
+const TA_BB = [58, 62, 65], TA_CM = [60, 63, 67], TA_F = [53, 57, 60];
+// Glory Box (D# minor): the right hand keeps D#m (D# F# A#, all black keys)
+// while the left hand walks down D#3, C#3, C3 (B#), B2. Over those basses the
+// same shape becomes D#m, D#m/C#, B#ø7 (Cm7b5) and Bmaj7.
+const GB_RH = [63, 66, 70];
+const GB_1 = [51, ...GB_RH], GB_2 = [49, ...GB_RH], GB_3 = [48, ...GB_RH], GB_4 = [47, ...GB_RH];
 const H_G = [43, ...G], H_D = [50, ...D], H_EM = [52, ...EM], H_C = [48, ...C];
 // The last card of each day also completes the older, wordier lessons it
 // replaces, so Today moves straight on (they stay in the Roadmap).
-const DAY_ENDS = { "m-pop-song": [1, ["lesson-1"]], "d2-key-c": [2, ["lesson-2", "lesson-4"]], "d3-song": [3, ["lesson-twohand-preview", "lesson-eartraining", "song-1"]], "d4-your-style": [4, []] };
+const DAY_ENDS = { "m-pop-song": [1, ["lesson-1"]], "d2-tears": [2, ["lesson-2", "lesson-4"]], "d3-song": [3, ["lesson-twohand-preview", "lesson-eartraining", "song-1"]], "d4-your-style": [4, []] };
 // A little picture of piano keys for chat bubbles. `marks` colours keys
 // and labels them: { midi: { fill, label, above } }.
 function keysPic(lo, hi, marks = {}, { w = 20, font = 0, captions = [] } = {}) {
@@ -455,12 +462,22 @@ const MICRO_CARDS = {
       <p>The whole song loops just <b>4 chords</b>: <b>D → A → C → G</b>.</p>
       <p>You know the shape! Press · skip · press · skip · press. Only <b>D</b> and <b>A</b> use one black key each.</p>`,
     say: "Play the loop: <b>D → A → C → G</b> 🎹", want: { seq: [LG_D, LG_A, LG_C, LG_G] }, demoSeq: [[LG_D, "D"], [LG_A, "A"], [LG_C, "C"], [LG_G, "G"]], tip: "🎹 Play along with the real song on your piano!", done: "That's Linger! 🎉💜", video: "linger", song: "Linger", shareSong: "Linger" },
+  "d2-tears": { chat: `<h3 data-q="A song in the key of C? 🎶">Yes! "Save Your Tears" by The Weeknd 🕶️</h3>
+      <p>A 2020 hit with an 80s sound. The verse and chorus loop <b>4 chords</b> in the key of <b>C</b>: <b>C → Am → Em → G</b>.</p>
+      <p>All <b>white keys</b>! Chords <b>1 · 6 · 3 · 5</b>: happy, sad, sad, happy.</p>`,
+    say: "Play the loop: <b>C → Am → Em → G</b> 🕶️", want: { seq: [C, AM, EM, G] }, demoSeq: [[C, "C"], [AM, "Am"], [EM, "Em"], [G, "G"]], tip: "🎹 It's quick (about 118 beats a minute): one chord every 4 beats.", done: "That's Save Your Tears! 🎉🕶️", video: "song-save-your-tears", song: "Save Your Tears", shareSong: "Save Your Tears" },
   "d3-mind": { chat: `<h3 data-q="Another real song? 🎶">Yes! "Where Is My Mind?" by the Pixies 🌀</h3>
       <p>A 1988 rock song that became famous on the piano: the French pianist <b>Maxence Cyrin</b> turned it into a slow, dreamy piano piece.</p>
       <p>The whole song loops <b>4 chords</b> in the key of <b>E</b>: <b>E → C#m → G# → A</b>.</p>
       <h3 data-q="That's a lot of black keys! 😬">A few, but it's the same shape every time 🙌</h3>
       <p>Each chord is still <b>press · skip · press · skip · press</b>. <b>E</b>, <b>C#m</b> and <b>A</b> each have one black key; <b>G#</b> has two. Watch the glowing keys and take it slowly.</p>`,
     say: "Play the loop: <b>E → C#m → G# → A</b> 🌀", want: { seq: [WM_E, WM_CSM, WM_GS, WM_A] }, demoSeq: [[WM_E, "E"], [WM_CSM, "C#m"], [WM_GS, "G#"], [WM_A, "A"]], tip: "🎹 Play it slowly and softly, like Maxence Cyrin's piano version!", done: "That's Where Is My Mind? 🎉🌀", video: "where-is-my-mind", song: "Where Is My Mind?", shareSong: "Where Is My Mind?" },
+  "d3-talk": { chat: `<h3 data-q="Can we do a slow one? 🎤">Yes! "I Don't Want to Talk About It" 💔</h3>
+      <p>Written by <b>Danny Whitten</b> (1971) and made famous by <b>Rod Stewart</b> (1977). A gentle ballad in the key of <b>B♭</b>.</p>
+      <p>The verse loops just <b>3 chords</b>: <b>B♭ → Cm → F → B♭</b>. That's chords <b>1 · 2 · 5 · 1</b>, the "going home" move you'll hear everywhere.</p>
+      <h3 data-q="Any black keys? 👀">Two: B♭ and E♭ 🙌</h3>
+      <p><b>B♭</b> starts on a black key, <b>Cm</b> has one black key in the middle (E♭) and <b>F</b> is all white. Same <b>press · skip · press · skip · press</b> shape every time.</p>`,
+    say: "Play the verse: <b>B♭ → Cm → F → B♭</b> 💔", want: { seq: [TA_BB, TA_CM, TA_F, TA_BB] }, demoSeq: [[TA_BB, "B♭"], [TA_CM, "Cm"], [TA_F, "F"], [TA_BB, "B♭"]], tip: "🎹 Play it slowly, one chord every 4 beats, and let each one ring.", done: "Beautiful! 💔🎹", video: "song-i-don-t-want-to-talk-about-it", song: "I Don't Want to Talk About It", shareSong: "I Don't Want to Talk About It" },
   "d3-interstellar": { chat: `<h3 data-q="Can I play some movie music? 🎬">Yes! Hans Zimmer's Interstellar 🚀</h3>
       <p>The theme from the film <b>Interstellar</b> (2014) by <b>Hans Zimmer</b> is in <b>A minor</b>: dreamy and a little sad.</p>
       <p>In this simple version, one high <b>E</b> keeps ticking on top ⏱️, like the ticking clock in the film, while the chords change underneath.</p>
@@ -487,6 +504,13 @@ const MICRO_CARDS = {
       <p><b>C C C C · F F C C · G F C G</b></p>
       <p>For that bluesy sound, add a 4th key on top: a <b>7th chord</b> (C7, F7, G7). Songs like <i>Johnny B. Goode</i> use it.</p>`,
     say: "Play the blues chords: <b>C7 → F7 → G7</b> 🎺", want: { seq: [C7, F7, G7] }, demoSeq: [[C7, "C7"], [F7, "F7"], [G7, "G7"]], along: "blues", done: "You've got the blues! 🎺😎" },
+  "d4-glory": { chat: `<h3 data-q="What's trip-hop? 🎧">Slow beats, dreamy chords 🎧</h3>
+      <p><b>Trip-hop</b> came from <b>Bristol</b>, England, in the 1990s: slow hip-hop beats with moody, jazzy chords. <b>Portishead's "Glory Box"</b> (1994) is a classic.</p>
+      <h3 data-q="Is it hard? 😬">Here's the trick: your right hand never moves 🙌</h3>
+      <p>🖐️ <b>Right hand</b>: hold <b>D♯ · F♯ · A♯</b> (three black keys in a row: a D♯ minor chord) the whole time.</p>
+      <p>👈 <b>Left hand</b> walks down, one key at a time: <b>D♯ → C♯ → C → B</b>.</p>
+      <p>Each new bass note turns the same right hand into a new chord: <b>D♯m → D♯m/C♯ → B♯ø7 → Bmaj7</b>. That's the whole song!</p>`,
+    say: "Right hand stays on <b>D♯ F♯ A♯</b> 🖐️<br>👈 Left hand walks down: <b>D♯ → C♯ → C → B</b>", want: { seq: [GB_1, GB_2, GB_3, GB_4] }, demoSeq: [[GB_1, "D♯m"], [GB_2, "/C♯"], [GB_3, "B♯ø7"], [GB_4, "Bmaj7"]], range: [45, 76], tip: "🎧 Play it slowly and softly, with a lazy beat.", done: "That's trip-hop! 🎧✨", video: "song-glory-box", song: "Glory Box", shareSong: "Glory Box" },
   "d4-jazz": { chat: `<h3 data-q="And jazz? 🎷">Rich chords and a famous move 🎷</h3>
       <p><b>Jazz</b> grew out of the blues in <b>New Orleans</b> in the early 1900s. It loves rich <b>4-note chords</b> and making things up as you go.</p>
       <p>Its most famous move is <b>2 · 5 · 1</b>. In C: <b>Dm7 → G7 → Cmaj7</b>. You'll hear it in <i>Autumn Leaves</i> and <i>Fly Me to the Moon</i>.</p>`,

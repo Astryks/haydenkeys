@@ -853,6 +853,10 @@ const SONG_ART = {
  "I Don't Want to Talk About It|Rod Stewart": {
   "img": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/ea/89/8d/ea898dc7-79a3-f8c7-fdcd-8fed21bf9973/mzi.fyjtoqdz.jpg/400x400bb.jpg",
   "url": "https://music.apple.com/us/album/i-dont-want-to-talk-about-it/295535258?i=295535372&uo=4"
+ },
+ "Save Your Tears|The Weeknd": {
+  "img": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/83/3a/f7/833af71b-2e0c-3303-24f5-8f5c546c073b/20UMGIM21167.rgb.jpg/400x400bb.jpg",
+  "url": "https://music.apple.com/us/album/save-your-tears/1505683624?i=1505683980&uo=4"
  }
 };
 export { SONG_ART };

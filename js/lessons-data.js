@@ -149,6 +149,7 @@ const MICRO_LESSONS = [
   { id: "q-chord-recipe", title: "Quiz: A major", subtitle: "Quick check", description: "Which notes make A major?" },
   { id: "d2-keys-chords", title: "Chords vs keys", subtitle: "A key is a family of chords", description: "A chord is 3 or more notes played together. A key is a family of chords with a home." },
   { id: "d2-key-c", title: "Same 4 chords, key of C", subtitle: "C · G · Am · F", description: "The 1-5-6-4 loop, moved to the key of C." },
+  { id: "d2-tears", title: "Song: Save Your Tears", subtitle: "The Weeknd · C Am Em G", description: "Play the 4-chord loop of Save Your Tears in the key of C." },
   // Lesson 3: two hands, and your ears
   { id: "d3-left", title: "Your left hand", subtitle: "Lesson 3", description: "The left hand plays the low notes." },
   { id: "d3-together", title: "Both hands", subtitle: "Low G + G chord", description: "Left hand low G, right hand G chord." },
@@ -157,6 +158,7 @@ const MICRO_LESSONS = [
   { id: "d3-ear-2", title: "Ears again", subtitle: "Happy or sad?", description: "One more: major or minor?" },
   { id: "d3-linger", title: "Song: Linger", subtitle: "The Cranberries · D A C G", description: "Play the 4-chord loop of Linger." },
   { id: "d3-mind", title: "Song: Where Is My Mind?", subtitle: "Pixies · piano version · E C#m G# A", description: "Play the 4-chord loop of Where Is My Mind? on the piano." },
+  { id: "d3-talk", title: "Song: I Don't Want to Talk About It", subtitle: "Rod Stewart · Bb Cm F", description: "Play the verse loop of I Don't Want to Talk About It." },
   { id: "d3-interstellar", title: "Interstellar", subtitle: "Hans Zimmer · both hands", description: "Left hand A F C G low, right hand keeps a ticking E on top." },
   { id: "d3-song", title: "Two-hand song", subtitle: "Both hands, 4 chords", description: "Play the 4-chord loop with both hands." },
   // Lesson 4: genres
@@ -165,6 +167,7 @@ const MICRO_LESSONS = [
   { id: "d4-rock", title: "Rock", subtitle: "D · C · G", description: "Big, strong chords, like Sweet Home Alabama." },
   { id: "d4-blues", title: "Blues", subtitle: "The 12-bar blues", description: "Chords 1, 4 and 5 over 12 bars, with 7th chords." },
   { id: "d4-jazz", title: "Jazz", subtitle: "2 · 5 · 1", description: "Rich 4-note chords: Dm7, G7, Cmaj7." },
+  { id: "d4-glory", title: "Song: Glory Box", subtitle: "Portishead · trip-hop", description: "One right-hand chord while the left hand walks down: D#, C#, C, B." },
   { id: "d4-classical", title: "Classical", subtitle: "Broken chords", description: "A chord played one key at a time." },
   { id: "q-genre", title: "Quiz: which style?", subtitle: "Quick check", description: "Which style is famous for the 12-bar pattern?" },
   { id: "d4-your-style", title: "Find your style", subtitle: "Play what you love", description: "Pick songs from the style you love most." },

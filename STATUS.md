@@ -2637,3 +2637,10 @@ All done 2026-10-07 (see the notes under each item).
 - **I Don't Want to Talk About It** (Rod Stewart, 1977; written by Danny Whitten): Bb major; verse Bb Cm F, chorus Eb F Bb F/A Gm, chorus ending Cm F7sus4 Bbadd9 (Hooktheory); Jaxx uses F7 / Bb for the two chords its fretboard can't draw. Official video (esUHMBHJsn8). Guitar: capo 3, G shapes.
 - Both in the song library of both apps (Rock & alternative row), album art from iTunes; maps marked "our best guide".
 - **Chord check 2026-10-11:** all 244 songs and their whole-song maps play on the piano (every chord symbol parses; 0 problems). Jaxx Guitar's 4 undrawable chords (G7#5, Daug, Abaug, Eaug) were fixed there with new guitar shapes; the piano never had that problem.
+
+## 2026-10-11: today's songs in lessons and the library (iOS build 40)
+- **Save Your Tears** (The Weeknd, 2020): C major, verse/chorus C Am Em G, pre-chorus Dm Am F G (Hooktheory, Musicnotes), official video (TheWeekndVEVO XXYlFuWEuKI). Library + new Lesson 2 card **"Song: Save Your Tears"** (now the last card of Lesson 2).
+- **I Don't Want to Talk About It**: new Lesson 3 card after Where Is My Mind? (verse Bb → Cm → F → Bb).
+- **Glory Box**: new Lesson 4 card after Jazz: the right hand holds D#m (three black keys) while the left hand walks D# → C# → C → B, which makes D#m, D#m/C#, B#ø7, Bmaj7.
+- **Where Is My Mind?**: Lesson 3 (added earlier today).
+- All 4 are in the song library. Tested in Chrome: every new card opens with its video, 0 page errors.

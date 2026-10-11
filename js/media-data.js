@@ -460,7 +460,8 @@ const VIDEOS = {
  "song-sekai-ni-hitotsu-dake-no-hana-v": {"id": "b7ruJQM0A0I", "title": "Sekai Ni Hitotsu Dake No Hana (Live At Nippon Budokan / 2005)", "author_name": "Noriyuki Makihara - Topic"},
  "song-ya-lili-v": {"id": "IJHPpTYtIqk", "title": "Balti feat. Hamouda - Ya Lili (Official Music Video)", "author_name": "Thisiz Balti", "noEmbed": true},
  "song-glory-box": {"id": "4qQyUi4zfDs", "title": "Portishead - Glory Box", "author_name": "PortisheadVEVO"},
- "song-i-don-t-want-to-talk-about-it": {"id": "esUHMBHJsn8", "title": "Rod Stewart - I Don't Want To Talk About It (Official Video)", "author_name": "Rod Stewart"}
+ "song-i-don-t-want-to-talk-about-it": {"id": "esUHMBHJsn8", "title": "Rod Stewart - I Don't Want To Talk About It (Official Video)", "author_name": "Rod Stewart"},
+ "song-save-your-tears": {"id": "XXYlFuWEuKI", "title": "The Weeknd - Save Your Tears (Official Music Video)", "author_name": "TheWeekndVEVO"}
 };
 const SONG_VIDEOS = {
  "Creep": "creep",
@@ -706,6 +707,7 @@ const SONG_VIDEOS = {
  "Sekai ni Hitotsu Dake no Hana": "song-sekai-ni-hitotsu-dake-no-hana-v",
  "Ya Lili": "song-ya-lili-v",
  "Glory Box": "song-glory-box",
- "I Don't Want to Talk About It": "song-i-don-t-want-to-talk-about-it"
+ "I Don't Want to Talk About It": "song-i-don-t-want-to-talk-about-it",
+ "Save Your Tears": "song-save-your-tears"
 };
 export { PEOPLE, VIDEOS, SONG_VIDEOS };
