@@ -2636,3 +2636,4 @@ All done 2026-10-07 (see the notes under each item).
 - **Glory Box** (Portishead, 1994): D# minor, one descending loop D#m → D#m/C# → Cm7b5 (B#ø7) → Bmaj7 all song (Hooktheory, Musicnotes), whole-song map incl. the guitar solo, official video (PortisheadVEVO 4qQyUi4zfDs).
 - **I Don't Want to Talk About It** (Rod Stewart, 1977; written by Danny Whitten): Bb major; verse Bb Cm F, chorus Eb F Bb F/A Gm, chorus ending Cm F7sus4 Bbadd9 (Hooktheory); Jaxx uses F7 / Bb for the two chords its fretboard can't draw. Official video (esUHMBHJsn8). Guitar: capo 3, G shapes.
 - Both in the song library of both apps (Rock & alternative row), album art from iTunes; maps marked "our best guide".
+- **Chord check 2026-10-11:** all 244 songs and their whole-song maps play on the piano (every chord symbol parses; 0 problems). Jaxx Guitar's 4 undrawable chords (G7#5, Daug, Abaug, Eaug) were fixed there with new guitar shapes; the piano never had that problem.
