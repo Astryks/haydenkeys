@@ -2627,3 +2627,7 @@ All done 2026-10-07 (see the notes under each item).
 - [ ] **Animation of hands playing the piano**, accurate fingers on the right keys.
 - [ ] **After middle C and the G chord:** show all 4 chords (G, Em, C, D) on **one** keyboard with middle C fixed in place, zoomed out a bit, so users see where each chord sits compared to middle C. Play the 4 chords in turn on that same keyboard.
 - [ ] Add **Passacaglia** (Handel/Halvorsen; owner's video link https://youtu.be/GAIZxaToV2A, check it with oEmbed).
+
+## 2026-10-11: Where Is My Mind? (Pixies) on piano
+- New Lesson 3 card **"Song: Where Is My Mind?"** (after Linger, card 50/247): the 4-chord loop **E → C#m → G# → A** (key of E, chords from Hooktheory), all near middle C, with Main part / Whole song and **Maxence Cyrin's piano version** (his official channel, 4NZdggNUvq0, embeddable).
+- Also in the song library (songs-data.js entry + whole-song map marked "our best guide", album art).

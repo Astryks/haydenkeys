@@ -156,6 +156,7 @@ const MICRO_LESSONS = [
   { id: "d3-ear-1", title: "Use your ears", subtitle: "Happy or sad?", description: "Listen: major or minor?" },
   { id: "d3-ear-2", title: "Ears again", subtitle: "Happy or sad?", description: "One more: major or minor?" },
   { id: "d3-linger", title: "Song: Linger", subtitle: "The Cranberries · D A C G", description: "Play the 4-chord loop of Linger." },
+  { id: "d3-mind", title: "Song: Where Is My Mind?", subtitle: "Pixies · piano version · E C#m G# A", description: "Play the 4-chord loop of Where Is My Mind? on the piano." },
   { id: "d3-interstellar", title: "Interstellar", subtitle: "Hans Zimmer · both hands", description: "Left hand A F C G low, right hand keeps a ticking E on top." },
   { id: "d3-song", title: "Two-hand song", subtitle: "Both hands, 4 chords", description: "Play the 4-chord loop with both hands." },
   // Lesson 4: genres

@@ -841,6 +841,10 @@ const SONG_ART = {
  "Şımarık|Tarkan": {
   "img": "https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/f1/95/04/f1950424-2ae5-55ff-580d-d52e8300ec1b/dj.iedkotfi.jpg/400x400bb.jpg",
   "url": "https://music.apple.com/us/album/%C5%9F%C4%B1mar%C4%B1k/499332675?i=499332705&uo=4"
+ },
+ "Where Is My Mind?|Pixies": {
+  "img": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/68/b7/c0/68b7c018-dc15-f44a-2611-be10237fc9a5/652637080308.png/400x400bb.jpg",
+  "url": "https://music.apple.com/us/album/where-is-my-mind-2007-remaster/1027465077?i=1027465608&uo=4"
  }
 };
 export { SONG_ART };
