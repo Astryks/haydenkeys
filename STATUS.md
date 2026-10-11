@@ -2619,3 +2619,11 @@ All done 2026-10-07 (see the notes under each item).
 
 ## 2026-10-07: website deploy fixed
 - haydenkeys.com had been stuck on the 2026-10-06 version: every "Deploy static site to GitHub Pages" Actions run since then sat in "pending" and was cancelled by the next push (a deployment from 2026-10-06 09:17 was stuck in "waiting"). Cleared it, and switched GitHub Pages to **Deploy from a branch** (main, root) with a `.nojekyll` file, so every push to main publishes directly without Actions. The live site now matches main (service worker cache hayden-keys-v17). The old workflow file is still in `.github/workflows/` but Pages no longer uses it.
+
+## 📝 Owner feedback, round 3 (2026-10-11)
+- [ ] **Logo:** the piano has thin legs and the keys face the user unnaturally. Redraw it as a nice **grand piano**, seen slightly from above so the keys show naturally (not inverted).
+- [ ] **Left vs right hand lesson:** replace the Pianote video with **Hans Zimmer – Interstellar** (left hand low and soft, right hand high). Use an official video, verified with oEmbed.
+- [ ] Add **Hello (Lionel Richie)** on piano (chords, map, piano video).
+- [ ] **Animation of hands playing the piano**, accurate fingers on the right keys.
+- [ ] **After middle C and the G chord:** show all 4 chords (G, Em, C, D) on **one** keyboard with middle C fixed in place, zoomed out a bit, so users see where each chord sits compared to middle C. Play the 4 chords in turn on that same keyboard.
+- [ ] Add **Passacaglia** (Handel/Halvorsen; owner's video link https://youtu.be/GAIZxaToV2A, check it with oEmbed).
