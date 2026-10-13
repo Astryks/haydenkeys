@@ -1630,3 +1630,6 @@ body.hk-lesson-open .hk-lesson-topbar { padding-top: 6px !important; }
 .hk-tip:disabled { opacity: 0.55; }
 .hk-tip-note { display: block; font-size: 0.74rem; opacity: 0.8; margin-top: 10px !important; }
 .hk-tip-thanks .hk-tip-icon { color: var(--hk-accent); }
+/* All 4 chords on one keyboard (lesson card "Count to 5"). */
+.hk-four-chords-wrap { margin: 8px 0; }
+.hk-four-chords { width: 100%; max-width: 420px; height: auto; display: block; }
