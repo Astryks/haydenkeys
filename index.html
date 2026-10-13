@@ -25,18 +25,35 @@
 <meta name="twitter:description" content="Learn piano with real songs from your first lesson. 250+ lessons, 240+ songs with chords, falling notes and Wait for me. Free, no ads, no account." />
 <meta name="twitter:image" content="https://haydenkeys.com/land.png" />
 <meta name="twitter:image:alt" content="Hayden Keys play-along: falling notes land on piano keys with the song's chords underneath" />
+<!-- SEO:JSONLD:START -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@graph": [
     {
+      "@type": "Organization",
+      "@id": "https://haydenkeys.com/#org",
+      "name": "Astryks",
+      "url": "https://astryks.com"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://haydenkeys.com/#website",
+      "url": "https://haydenkeys.com/",
+      "name": "Hayden Keys",
+      "publisher": {
+        "@id": "https://haydenkeys.com/#org"
+      },
+      "inLanguage": "en"
+    },
+    {
       "@type": "MobileApplication",
       "@id": "https://haydenkeys.com/#app",
       "name": "Hayden Keys",
-      "alternateName": "Hayden Keys: Learn Piano",
+      "alternateName": "Hayden Keys Free Piano Lessons",
       "url": "https://haydenkeys.com/",
-      "description": "A free piano app for beginners: 250+ bite-sized lessons, a 240+ song library with chords for every section, falling-note play-along, Wait for me that listens to your real piano, and upload any song to find its chords on your device. No ads, no account.",
-      "operatingSystem": "iOS, Web",
+      "description": "Learn piano for free with Ginger and Pepper, two cats who make practice fun. 250+ lessons and 240+ songs, with chords for every section and falling notes to play along. No ads. No account. No paywall.",
+      "operatingSystem": "iOS",
       "applicationCategory": "EducationalApplication",
       "applicationSubCategory": "Music education",
       "image": "https://haydenkeys.com/assets/icons/icon-512.png",
@@ -44,8 +61,22 @@
       "inLanguage": "en",
       "isAccessibleForFree": true,
       "installUrl": "https://apps.apple.com/app/id6819420632",
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-      "publisher": { "@type": "Organization", "name": "Astryks Group", "url": "https://astryks.com" }
+      "downloadUrl": "https://apps.apple.com/app/id6819420632",
+      "sameAs": [
+        "https://apps.apple.com/app/id6819420632"
+      ],
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      },
+      "publisher": {
+        "@id": "https://haydenkeys.com/#org"
+      },
+      "author": {
+        "@id": "https://haydenkeys.com/#org"
+      }
     },
     {
       "@type": "FAQPage",
@@ -54,38 +85,61 @@
         {
           "@type": "Question",
           "name": "Is Hayden Keys free?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every lesson and every song is free, with no ads and no subscription. The iPhone and iPad app has an optional tip jar, and a tip unlocks nothing extra." }
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Hayden Keys is completely free, with no ads, no subscription and no paywall. There is an optional tip jar in the iPhone and iPad app if you want to support development, and a tip unlocks nothing extra."
+          }
         },
         {
           "@type": "Question",
-          "name": "Can I learn piano without an account?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. There is no sign-up. Your progress, streaks and saved songs are stored on your own device." }
+          "name": "Do I need an account?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. There is no sign-up, so you can start in seconds. Your progress and streaks stay on your own device."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the best beginner piano chords?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Start with G, D, Em and C. Hayden Keys' first lesson teaches these as the 1 - 5 - 6 - 4 pattern in G major, the I - V - vi - IV loop behind a huge number of pop songs."
+          }
         },
         {
           "@type": "Question",
           "name": "Do I need a real piano or keyboard?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Hayden Keys is made for practising on your own piano or keyboard. Wait for me uses the microphone to hear the notes you play. You can also explore on the on-screen keyboard." }
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Hayden Keys works with a real piano or keyboard, and Wait for me listens to the notes you play. No piano nearby? Use the on-screen keyboard."
+          }
         },
         {
           "@type": "Question",
           "name": "Is my microphone audio recorded or uploaded?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. The microphone is optional and the sound is analysed on your device to hear your piano keys. It is never recorded or sent anywhere." }
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The microphone is optional and the sound is analysed on your device. It is never recorded or sent anywhere."
+          }
         },
         {
           "@type": "Question",
-          "name": "What songs can I learn?",
-          "acceptedAnswer": { "@type": "Answer", "text": "A library of 240+ songs across pop, rock, ballads, jazz, film, classical and international hits, each with its key and chords section by section. Song pages show chords only, never lyrics. You can also upload a recording and the app finds the chords on your device." }
-        },
-        {
-          "@type": "Question",
-          "name": "Where can I use Hayden Keys?",
-          "acceptedAnswer": { "@type": "Answer", "text": "In any modern web browser at haydenkeys.com, and as an app for iPhone and iPad." }
+          "name": "Do the song pages include lyrics?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Song pages show the key and chord names only, never lyrics."
+          }
         }
       ]
     }
   ]
 }
 </script>
+<script>if(location.protocol==="capacitor:"||window.Capacitor)document.documentElement.classList.add("native");</script>
+<style>.seo-landing{max-width:760px;margin:24px auto;padding:0 20px;font-size:16px;line-height:1.6}.seo-landing h2{margin-top:1.4em}
+.seo-landing h3{margin:1em 0 .2em;font-size:1.05em}.seo-cta{display:inline-block;padding:10px 18px;border-radius:12px;background:#b03a78;color:#fff!important;text-decoration:none;font-weight:600}
+html.native .seo-landing{display:none}</style>
+<!-- SEO:JSONLD:END -->
 <link rel="manifest" href="manifest.webmanifest" />
 <link rel="icon" href="assets/icons/icon-32.png" sizes="32x32" type="image/png" />
 <link rel="icon" href="assets/icons/icon-192.png" sizes="192x192" type="image/png" />
@@ -122,8 +176,6 @@
     <div class="hk-logo" id="hk-logo-cats" role="img" aria-label="Hayden Keys"></div>
     <h1>Hayden Keys</h1>
     <p class="hk-tagline">Learn any song on the piano for free!</p>
-    <!-- Crawlable intro for search engines and screen readers; visually hidden so the design is unchanged. -->
-    <p style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Hayden Keys is a free app to learn piano for beginners: 250+ short piano lessons, 240+ songs with chords for every section, falling-note play-along, and Wait for me, which listens to your real piano or keyboard. Learn chords, both hands, reading notes and jazz tricks. No ads, no account.</p>
     <noscript><p>Hayden Keys is a free app to learn piano for beginners, with step-by-step piano lessons, chords and 240+ songs to play on your own piano or keyboard. Please turn on JavaScript to start learning.</p></noscript>
     <div class="hk-level-chip" id="hk-level-chip"></div>
   </header>
@@ -155,6 +207,30 @@
             markdown in the app's WebView was a dead end with no way back. -->
        <a href="https://github.com/Astryks/haydenkeys/blob/main/README.md" target="_blank" rel="noopener">Source code</a> · <a href="https://github.com/Astryks/haydenkeys/blob/main/THIRD_PARTY_NOTICES.md" target="_blank" rel="noopener">Licences</a></p>
   </footer>
+
+  <!-- Static, crawlable landing + FAQ for search engines (visible without JS; hidden inside the iOS app). Generated by scripts/build-seo.mjs. -->
+<!-- SEO:LANDING:START -->
+<section class="seo-landing" id="about-app" aria-labelledby="seo-h2">
+<h2 id="seo-h2">Free piano lessons for beginners</h2>
+<p>Learn piano for free with Ginger and Pepper, two cats who make practice fun. 250+ lessons and 240+ songs, with chords for every section and falling notes to play along. No ads. No account. No paywall.</p>
+<p><a class="seo-cta" href="https://apps.apple.com/app/id6819420632">Get Hayden Keys Free Piano Lessons on the App Store</a></p>
+<h3>Learn at your own pace</h3><p>250+ lessons to guide you from your first notes onward, teacher videos, inspiration videos and streaks to help you practise a little every day.</p>
+<h3>Play 240+ songs</h3><p>Chords for every section of every song, falling-note play-along so you can see what's coming, and upload a song to get its chords.</p>
+<h3>Wait for me, on a real piano</h3><p>Wait for me listens to your real piano and waits until you play the right note. No piano nearby? Use the on-screen keyboard.</p>
+<h3>Train your ear</h3><p>Chord Ear Gym teaches 24 chords by sound, and Guess the song tells you which song a recording is, then lets you jump into learning it.</p>
+<h3>Great for beginners</h3><p>Friendly mascots Ginger and Pepper, no sign-up, and it works with a real piano or the on-screen keyboard.</p>
+<h3>Free lessons and song chords</h3>
+<ul><li><a href="learn/beginner-piano-chords.html">Beginner piano chords: G, D, Em and C</a></li><li><a href="learn/piano-chord-chart.html">Piano chord chart: every major and minor chord</a></li><li><a href="learn/find-middle-c.html">How to find middle C on the piano</a></li><li><a href="learn/major-and-minor-chords.html">Major and minor chords in a key</a></li><li><a href="learn/easy-piano-songs.html">Easy piano songs for beginners</a></li><li><a href="songs/index.html">Piano chords for popular songs</a></li></ul>
+<h2>Frequently asked questions</h2>
+<h3>Is Hayden Keys free?</h3><p>Yes. Hayden Keys is completely free, with no ads, no subscription and no paywall. There is an optional tip jar in the iPhone and iPad app if you want to support development, and a tip unlocks nothing extra.</p>
+<h3>Do I need an account?</h3><p>No. There is no sign-up, so you can start in seconds. Your progress and streaks stay on your own device.</p>
+<h3>What are the best beginner piano chords?</h3><p>Start with G, D, Em and C. Hayden Keys' first lesson teaches these as the 1 - 5 - 6 - 4 pattern in G major, the I - V - vi - IV loop behind a huge number of pop songs.</p>
+<h3>Do I need a real piano or keyboard?</h3><p>Hayden Keys works with a real piano or keyboard, and Wait for me listens to the notes you play. No piano nearby? Use the on-screen keyboard.</p>
+<h3>Is my microphone audio recorded or uploaded?</h3><p>No. The microphone is optional and the sound is analysed on your device. It is never recorded or sent anywhere.</p>
+<h3>Do the song pages include lyrics?</h3><p>No. Song pages show the key and chord names only, never lyrics.</p>
+<p>Hayden Keys is made by Astryks. Learning guitar? Try <a href="https://jaxxguitar.com">Jaxx Guitar</a>.</p>
+</section>
+<!-- SEO:LANDING:END -->
 
   <!-- Portrait phones only (CSS): a dismissible tip, never a block. -->
   <button type="button" class="hk-rotate-tip" onclick="this.remove()" aria-label="Dismiss tip">📱 Tip: turn your phone sideways for bigger piano keys. <span aria-hidden="true">✕</span></button>

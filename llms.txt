@@ -1,0 +1,37 @@
+# Hayden Keys
+
+> Free piano lessons with Ginger and Pepper: 250+ lessons, 240+ songs and play-along that listens to your real piano. No ads, no account.
+
+Hayden Keys ("Hayden Keys Free Piano Lessons" on the App Store, app ID 6819420632) is a free piano learning app for iPhone and iPad, also playable in a web browser at https://haydenkeys.com/. It is made by Astryks. It has no ads, no account and no paywall; the only purchase is an optional tip jar that unlocks nothing. Song pages give the key and chord names only, never lyrics.
+
+## Features
+- Learn at your own pace: 250+ lessons to guide you from your first notes onward, teacher videos, inspiration videos and streaks to help you practise a little every day.
+- Play 240+ songs: Chords for every section of every song, falling-note play-along so you can see what's coming, and upload a song to get its chords.
+- Wait for me, on a real piano: Wait for me listens to your real piano and waits until you play the right note. No piano nearby? Use the on-screen keyboard.
+- Train your ear: Chord Ear Gym teaches 24 chords by sound, and Guess the song tells you which song a recording is, then lets you jump into learning it.
+- Great for beginners: Friendly mascots Ginger and Pepper, no sign-up, and it works with a real piano or the on-screen keyboard.
+
+## Links
+- [App Store](https://apps.apple.com/app/id6819420632)
+- [Web app](https://haydenkeys.com/)
+- [Free piano lessons](https://haydenkeys.com/learn/index.html)
+- [Piano chords for popular songs](https://haydenkeys.com/songs/index.html)
+- [Privacy policy](https://haydenkeys.com/privacy.html)
+
+## Lessons
+- [Beginner piano chords: G, D, Em and C](https://haydenkeys.com/learn/beginner-piano-chords.html): Learn your first piano chords, G, D, Em and C, the 1-5-6-4 pattern behind hundreds of songs. Notes for each chord, free.
+- [Piano chord chart: every major and minor chord](https://haydenkeys.com/learn/piano-chord-chart.html): Free piano chord chart with the notes of all 12 major and 12 minor chords. A simple reference for beginners.
+- [How to find middle C on the piano](https://haydenkeys.com/learn/find-middle-c.html): How to find middle C on any piano or keyboard: look for the groups of two black keys. A first piano lesson for beginners.
+- [Major and minor chords in a key](https://haydenkeys.com/learn/major-and-minor-chords.html): Why some chords in a key are major and others minor: the I ii iii IV V vi pattern, with the chords of G major and C major.
+- [Easy piano songs for beginners](https://haydenkeys.com/learn/easy-piano-songs.html): Easy piano songs for beginners with their key and chords. Free chord pages, no lyrics, and play-along in Hayden Keys.
+
+## FAQ
+- Is Hayden Keys free? Yes. Hayden Keys is completely free, with no ads, no subscription and no paywall. There is an optional tip jar in the iPhone and iPad app if you want to support development, and a tip unlocks nothing extra.
+- Do I need an account? No. There is no sign-up, so you can start in seconds. Your progress and streaks stay on your own device.
+- What are the best beginner piano chords? Start with G, D, Em and C. Hayden Keys' first lesson teaches these as the 1 - 5 - 6 - 4 pattern in G major, the I - V - vi - IV loop behind a huge number of pop songs.
+- Do I need a real piano or keyboard? Hayden Keys works with a real piano or keyboard, and Wait for me listens to the notes you play. No piano nearby? Use the on-screen keyboard.
+- Is my microphone audio recorded or uploaded? No. The microphone is optional and the sound is analysed on your device. It is never recorded or sent anywhere.
+- Do the song pages include lyrics? No. Song pages show the key and chord names only, never lyrics.
+
+## Sibling app
+- [Jaxx Guitar](https://jaxxguitar.com): free guitar lessons by Astryks, with the same no ads, no account approach.

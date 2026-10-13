@@ -1,3 +1,95 @@
+# Hayden Keys - search engines and AI search crawlers are welcome.
+User-agent: Googlebot
+Allow: /
+Disallow: /ios/
+Disallow: /node_modules/
+Disallow: /www/
+Disallow: /scripts/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /ios/
+Disallow: /node_modules/
+Disallow: /www/
+Disallow: /scripts/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /ios/
+Disallow: /node_modules/
+Disallow: /www/
+Disallow: /scripts/
+
+User-agent: GPTBot
+Allow: /
+Disallow: /ios/
+Disallow: /node_modules/
+Disallow: /www/
+Disallow: /scripts/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /ios/
+Disallow: /node_modules/
+Disallow: /www/
+Disallow: /scripts/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /ios/
+Disallow: /node_modules/
+Disallow: /www/
+Disallow: /scripts/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /ios/
+Disallow: /node_modules/
+Disallow: /www/
+Disallow: /scripts/
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /ios/
+Disallow: /node_modules/
+Disallow: /www/
+Disallow: /scripts/
+
+User-agent: Claude-User
+Allow: /
+Disallow: /ios/
+Disallow: /node_modules/
+Disallow: /www/
+Disallow: /scripts/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /ios/
+Disallow: /node_modules/
+Disallow: /www/
+Disallow: /scripts/
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /ios/
+Disallow: /node_modules/
+Disallow: /www/
+Disallow: /scripts/
+
+User-agent: Applebot
+Allow: /
+Disallow: /ios/
+Disallow: /node_modules/
+Disallow: /www/
+Disallow: /scripts/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /ios/
+Disallow: /node_modules/
+Disallow: /www/
+Disallow: /scripts/
+
 User-agent: *
 Allow: /
 Disallow: /ios/
