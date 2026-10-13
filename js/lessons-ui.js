@@ -1134,8 +1134,11 @@ function initLessonsTab(root) {
     };
     const hl = kb.highlightChord.bind(kb);
     const clr = kb.clearHighlights.bind(kb);
-    kb.highlightChord = (n, o) => { hl(n, o); relabel(); };
-    kb.clearHighlights = () => { clr(); relabel(); };
+    const hh = kb.highlightHands.bind(kb);
+    // Cartoon hands show the fingering for every chord a card lights up.
+    kb.highlightChord = (n, o) => { hl(n, o); relabel(); if (n.length >= 2) kb.showHands({ right: n }); else kb.hideHands(); };
+    kb.highlightHands = (o) => { hh(o); relabel(); kb.showHands({ left: o.left || [], right: o.right || [] }); };
+    kb.clearHighlights = () => { clr(); relabel(); kb.hideHands(); };
     relabel();
     if (card.show) kb.highlightChord(card.show);
     if (card.hands) kb.highlightHands(card.hands);

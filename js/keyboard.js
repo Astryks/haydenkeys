@@ -247,6 +247,50 @@ function renderKeyboard(container, { startMidi = 60, endMidi = 84, markMiddleC =
     mark(right, "right", rightLabel);
   }
 
+  // Cartoon hands over the keys, with the real fingering: a right-hand
+  // chord is thumb (1) · middle (3) · pinky (5) from the bottom note up; a
+  // left-hand low note is the pinky (5); a left-hand chord is 5 · 3 · 1.
+  // Fingers that play reach down onto their key; the rest stay curled.
+  const whiteCount = [...keyLayout.values()].filter((p) => !p.isBlack).length;
+  const whiteW = 100 / whiteCount;
+  const handsEl = document.createElement("div");
+  handsEl.className = "hk-hands";
+  container.appendChild(handsEl);
+  const centre = (m) => { const p = keyLayout.get(m); return p ? p.xPct + p.widthPct / 2 : null; };
+  function fingering(notes, side) {
+    const n = [...notes].sort((a, b) => a - b);
+    const pick = side === "right"
+      ? (n.length === 1 ? [1] : n.length === 2 ? [1, 5] : n.length === 3 ? [1, 3, 5] : [1, 2, 3, 5].slice(0, n.length))
+      : (n.length === 1 ? [5] : n.length === 2 ? [5, 1] : n.length === 3 ? [5, 3, 1] : [5, 3, 2, 1].slice(0, n.length));
+    const map = new Map();
+    n.forEach((m, i) => map.set(pick[i], m));
+    return map; // finger -> midi
+  }
+  function handHtml(notes, side) {
+    if (!notes.length) return "";
+    const fm = fingering(notes, side);
+    const dir = side === "right" ? 1 : -1; // finger 1 → 5 goes right for the right hand, left for the left hand
+    const [f0, m0] = [...fm.entries()][0];
+    const x1 = centre(m0) - dir * (f0 - 1) * whiteW;
+    const xs = {};
+    for (let f = 1; f <= 5; f++) xs[f] = fm.has(f) ? centre(fm.get(f)) : x1 + dir * (f - 1) * whiteW;
+    const lo = Math.min(...Object.values(xs)) - whiteW * 0.55, hi = Math.max(...Object.values(xs)) + whiteW * 0.55;
+    let h = `<div class="hk-hand hk-hand-${side}"><div class="hk-palm" style="left:${lo}%;width:${hi - lo}%"></div>`;
+    for (let f = 1; f <= 5; f++) {
+      const m = fm.get(f);
+      const down = m !== undefined;
+      const tip = down ? (isBlackKey(m) ? 46 : 70) : f === 1 ? 22 : 30;
+      h += `<div class="hk-finger ${down ? "hk-finger-down" : ""} ${f === 1 ? "hk-thumb" : ""}" style="left:${xs[f] - whiteW * 0.31}%;width:${whiteW * 0.62}%;--tip:${tip}%"><span>${f}</span></div>`;
+    }
+    return h + "</div>";
+  }
+  function showHands({ left = [], right = [] } = {}) {
+    handsEl.innerHTML = handHtml(left, "left") + handHtml(right, "right");
+    handsEl.classList.remove("hk-hands-on");
+    requestAnimationFrame(() => requestAnimationFrame(() => handsEl.classList.add("hk-hands-on")));
+  }
+  function hideHands() { handsEl.innerHTML = ""; }
+
   function onKeyPress(cb) {
     pressHandler = cb;
   }
@@ -255,7 +299,7 @@ function renderKeyboard(container, { startMidi = 60, endMidi = 84, markMiddleC =
     return keyElements.get(midi);
   }
 
-  return { clearHighlights, highlightChord, highlightHands, onKeyPress, getKeyElement, keyElements, keyLayout, startMidi, endMidi };
+  return { clearHighlights, highlightChord, highlightHands, showHands, hideHands, onKeyPress, getKeyElement, keyElements, keyLayout, startMidi, endMidi };
 }
 
 export { renderKeyboard, computeKeyLayout, playTone, playChord, midiToName, isBlackKey, freqFromMidi, getAudioContext };

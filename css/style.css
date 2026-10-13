@@ -1633,3 +1633,15 @@ body.hk-lesson-open .hk-lesson-topbar { padding-top: 6px !important; }
 /* All 4 chords on one keyboard (lesson card "Count to 5"). */
 .hk-four-chords-wrap { margin: 8px 0; }
 .hk-four-chords { width: 100%; max-width: 420px; height: auto; display: block; }
+/* Cartoon hands over the keyboard, showing which finger plays which key. */
+.hk-hands { position: absolute; inset: 0; pointer-events: none; z-index: 4; }
+.hk-palm { position: absolute; top: -2%; height: 14%; border-radius: 0 0 40% 40% / 0 0 100% 100%; background: #f2c8a5; border: 1.5px solid #c98f6a; opacity: 0.93; }
+.hk-finger { position: absolute; top: 4%; height: 18%; border-radius: 999px; background: linear-gradient(90deg, #eab894, #f6d2b4 45%, #e8b28d); border: 1.5px solid #c98f6a; box-sizing: border-box; opacity: 0.93; transition: height 0.35s cubic-bezier(.3,1.4,.5,1); display: flex; align-items: flex-end; justify-content: center; }
+.hk-thumb { top: 8%; }
+.hk-hands-on .hk-finger { height: calc(var(--tip) - 4%); }
+.hk-hands-on .hk-thumb { height: calc(var(--tip) - 8%); }
+.hk-finger span { font: 800 clamp(8px, 1.6vw, 12px)/1 system-ui, sans-serif; color: #7a4a2c; margin-bottom: 3px; }
+.hk-finger-down { background: linear-gradient(90deg, #e9ae86, #f7cdaa 45%, #e5a77e); box-shadow: 0 3px 6px rgba(0,0,0,0.25); }
+.hk-finger-down span { color: #fff; background: #8a63d2; border-radius: 999px; padding: 2px 4px; }
+.hk-hand-left .hk-finger-down span { background: #e5739a; }
+@media (prefers-reduced-motion: reduce) { .hk-finger { transition: none; } }
