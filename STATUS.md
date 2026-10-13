@@ -2671,3 +2671,4 @@ All done 2026-10-07 (see the notes under each item).
 - App icon (iOS AppIcon 1024, square, no alpha) and web icons (16–512) re-rendered from the new logo.
 - Not changed: the on-screen playing keyboard (already a real top-down keyboard), the panda's mini keyboard and the thank-you heart (both flat keyboard graphics, black keys at the back).
 - Lesson 1 first card reworded (owner, 2026-10-13): "In just a moment, you'll know 4 chords… But 🐻 bear with us to cover the basics first… First, let's find middle C. Try this on your real piano: look in the middle of the keys. Middle C is…" (website now; next TestFlight build).
+- Key names card (Lesson 1 micro-lesson "Key names: A0, A1, A2…", owner 2026-10-13): "every white key is a letter: A B C D E F G … A B C … and they repeat again and again"; under the picture just "Middle C is C4" ("Same letter, same colour" removed). Website now; next TestFlight build.
