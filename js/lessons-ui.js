@@ -244,6 +244,10 @@ const KC_C = [60, 64, 67], KC_G = [55, 59, 62], KC_AM = [57, 60, 64], KC_F = [53
 const LG_D = [62, 66, 69], LG_A = [57, 61, 64], LG_C = [60, 64, 67], LG_G = [55, 59, 62];
 // Where Is My Mind? (key of E): E, C#m, G#, A, all near middle C.
 const WM_E = [64, 68, 71], WM_CSM = [61, 64, 68], WM_GS = [56, 60, 63], WM_A = [57, 61, 64];
+// Beanie (key of F), two hands: the left hand plays each chord's letter low,
+// the right hand one simple 3-key shape; together they make the 7th chords.
+//   Gm7 = G2 + Bb D F · C7 = C3 + E G Bb · Fmaj7 = F2 + A C E · Dm7 = D3 + F A C
+const BN_GM7 = [43, 58, 62, 65], BN_C7 = [48, 64, 67, 70], BN_FMAJ7 = [41, 57, 60, 64], BN_DM7 = [50, 53, 57, 60];
 // I Don't Want to Talk About It (key of Bb): Bb, Cm, F, Bb.
 const TA_BB = [58, 62, 65], TA_CM = [60, 63, 67], TA_F = [53, 57, 60];
 // Glory Box (D# minor): the right hand keeps D#m (D# F# A#, all black keys)
@@ -254,7 +258,7 @@ const GB_1 = [51, ...GB_RH], GB_2 = [49, ...GB_RH], GB_3 = [48, ...GB_RH], GB_4 
 const H_G = [43, ...G], H_D = [50, ...D], H_EM = [52, ...EM], H_C = [48, ...C];
 // The last card of each day also completes the older, wordier lessons it
 // replaces, so Today moves straight on (they stay in the Roadmap).
-const DAY_ENDS = { "m-pop-song": [1, ["lesson-1"]], "d2-tears": [2, ["lesson-2", "lesson-4"]], "d3-song": [3, ["lesson-twohand-preview", "lesson-eartraining", "song-1"]], "d4-your-style": [4, []] };
+const DAY_ENDS = { "m-pop-song": [1, ["lesson-1"]], "d2-beanie": [2, ["lesson-2", "lesson-4"]], "d3-song": [3, ["lesson-twohand-preview", "lesson-eartraining", "song-1"]], "d4-your-style": [4, []] };
 // A little picture of piano keys for chat bubbles. `marks` colours keys
 // and labels them: { midi: { fill, label, above } }.
 function keysPic(lo, hi, marks = {}, { w = 20, font = 0, captions = [] } = {}) {
@@ -500,6 +504,12 @@ const MICRO_CARDS = {
       <p>A 2020 hit with an 80s sound. The verse and chorus loop <b>4 chords</b> in the key of <b>C</b>: <b>C → Am → Em → G</b>.</p>
       <p>All <b>white keys</b>! Chords <b>1 · 6 · 3 · 5</b>: happy, sad, sad, happy.</p>`,
     say: "Play the loop: <b>C → Am → Em → G</b> 🕶️", want: { seq: [C, AM, EM, G] }, demoSeq: [[C, "C"], [AM, "Am"], [EM, "Em"], [G, "G"]], tip: "🎹 It's quick (about 118 beats a minute): one chord every 4 beats.", done: "That's Save Your Tears! 🎉🕶️", video: "song-save-your-tears", song: "Save Your Tears", shareSong: "Save Your Tears" },
+  "d2-beanie": { twoHand: true, chat: `<h3 data-q="One more, with two hands? 🙌">Yes! "Beanie" by Chezile 🧢</h3>
+      <p>A slow, gentle 2024 hit in the key of <b>F</b>. The whole song loops <b>4 chords</b>: <b>Gm7 → C7 → Fmaj7 → Dm7</b> (chords <b>2 · 5 · 1 · 6</b>).</p>
+      <h3 data-q="7th chords? Aren't those hard? 😬">Here's the trick: your two hands build them 🙌</h3>
+      <p><span class="hk-hand-l">L</span> <b>Left hand</b> plays each chord's <b>letter</b>, down low: <b>G → C → F → D</b>.</p>
+      <p><span class="hk-hand-r">R</span> <b>Right hand</b> plays a simple <b>press · skip · press · skip · press</b> shape on top. Together they make each fancy 7th chord!</p>`,
+    say: "Play <b>Beanie</b> with two hands 🧢<br><span class=\"hk-hand-l\">L</span> Left hand, low: <b>G2 → C3 → F2 → D3</b><br><span class=\"hk-hand-r\">R</span> Right hand: <b>B♭ D F → E G B♭ → A C E → F A C</b>", want: { seq: [BN_GM7, BN_C7, BN_FMAJ7, BN_DM7] }, demoSeq: [[BN_GM7, "Gm7"], [BN_C7, "C7"], [BN_FMAJ7, "Fmaj7"], [BN_DM7, "Dm7"]], range: [36, 76], tip: "🎹 Play it slowly and softly, one chord every 4 beats.", done: "That's Beanie! 🧢🎹", video: "song-beanie", song: "Beanie", shareSong: "Beanie" },
   "d3-mind": { chat: `<h3 data-q="Another real song? 🎶">Yes! "Where Is My Mind?" by the Pixies 🌀</h3>
       <p>A 1988 rock song that became famous on the piano: the French pianist <b>Maxence Cyrin</b> turned it into a slow, dreamy piano piece.</p>
       <p>The whole song loops <b>4 chords</b> in the key of <b>E</b>: <b>E → C#m → G# → A</b>.</p>

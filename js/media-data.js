@@ -461,7 +461,8 @@ const VIDEOS = {
  "song-ya-lili-v": {"id": "IJHPpTYtIqk", "title": "Balti feat. Hamouda - Ya Lili (Official Music Video)", "author_name": "Thisiz Balti", "noEmbed": true},
  "song-glory-box": {"id": "4qQyUi4zfDs", "title": "Portishead - Glory Box", "author_name": "PortisheadVEVO"},
  "song-i-don-t-want-to-talk-about-it": {"id": "esUHMBHJsn8", "title": "Rod Stewart - I Don't Want To Talk About It (Official Video)", "author_name": "Rod Stewart"},
- "song-save-your-tears": {"id": "XXYlFuWEuKI", "title": "The Weeknd - Save Your Tears (Official Music Video)", "author_name": "TheWeekndVEVO"}
+ "song-save-your-tears": {"id": "XXYlFuWEuKI", "title": "The Weeknd - Save Your Tears (Official Music Video)", "author_name": "TheWeekndVEVO"},
+ "song-beanie": {"id": "tERTBPdVivc", "title": "Chezile - Beanie (Official Visualizer)", "author_name": "Chezile"}
 };
 const SONG_VIDEOS = {
  "Creep": "creep",
@@ -708,6 +709,7 @@ const SONG_VIDEOS = {
  "Ya Lili": "song-ya-lili-v",
  "Glory Box": "song-glory-box",
  "I Don't Want to Talk About It": "song-i-don-t-want-to-talk-about-it",
- "Save Your Tears": "song-save-your-tears"
+ "Save Your Tears": "song-save-your-tears",
+ "Beanie": "song-beanie"
 };
 export { PEOPLE, VIDEOS, SONG_VIDEOS };

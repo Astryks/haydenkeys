@@ -857,6 +857,10 @@ const SONG_ART = {
  "Save Your Tears|The Weeknd": {
   "img": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/83/3a/f7/833af71b-2e0c-3303-24f5-8f5c546c073b/20UMGIM21167.rgb.jpg/400x400bb.jpg",
   "url": "https://music.apple.com/us/album/save-your-tears/1505683624?i=1505683980&uo=4"
+ },
+ "Beanie|Chezile": {
+  "img": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/a3/20/4d/a3204d28-a2a0-e949-5b95-2aec1d5eeee7/810482896134.jpg/400x400bb.jpg",
+  "url": "https://music.apple.com/us/album/beanie/1739267342?i=1739267347&uo=4"
  }
 };
 export { SONG_ART };

@@ -154,6 +154,7 @@ const MICRO_LESSONS = [
   { id: "d2-keys-chords", title: "Chords vs keys", subtitle: "A key is a family of chords", description: "A chord is 3 or more notes played together. A key is a family of chords with a home." },
   { id: "d2-key-c", title: "Same 4 chords, key of C", subtitle: "C · G · Am · F", description: "The 1-5-6-4 loop, moved to the key of C." },
   { id: "d2-tears", title: "Song: Save Your Tears", subtitle: "The Weeknd · C Am Em G", description: "Play the 4-chord loop of Save Your Tears in the key of C." },
+  { id: "d2-beanie", title: "Song: Beanie, two hands", subtitle: "Chezile · Gm7 C7 Fmaj7 Dm7", description: "Two hands make 7th chords: a low note plus a simple 3-key shape." },
   // Lesson 3: two hands, and your ears
   { id: "d3-left", title: "Your left hand", subtitle: "Lesson 3", description: "The left hand plays the low notes." },
   { id: "d3-together", title: "Both hands, key of C", subtitle: "Low C + C chord", description: "Left hand low C, right hand C chord." },
