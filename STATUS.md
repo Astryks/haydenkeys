@@ -2665,3 +2665,8 @@ All done 2026-10-07 (see the notes under each item).
 - **Glory Box**: new Lesson 4 card after Jazz: the right hand holds D#m (three black keys) while the left hand walks D# → C# → C → B, which makes D#m, D#m/C#, B#ø7, Bmaj7.
 - **Where Is My Mind?**: Lesson 3 (added earlier today).
 - All 4 are in the song library. Tested in Chrome: every new card opens with its video, 0 page errors.
+
+## 2026-10-13: pianos drawn with real keyboards (website now; next TestFlight build, not in build 40 under review)
+- Every drawn piano (logo / app icon, home scenes, the upright, the grand, and the close-up keyboard the cats run across) now shows its keyboard as you'd see it from a little above: the keys lie flat (a shallow band, slightly wider at the front), white keys show their thin front edges, and the black keys are raised blocks toward the back with a dark front face and a shadow. Before, the keys were a flat strip on the front of the case, so they looked like they were standing up facing you. One shared helper, `keybed()` in js/cats.js; styles in css/cats.css.
+- App icon (iOS AppIcon 1024, square, no alpha) and web icons (16–512) re-rendered from the new logo.
+- Not changed: the on-screen playing keyboard (already a real top-down keyboard), the panda's mini keyboard and the thank-you heart (both flat keyboard graphics, black keys at the back).

@@ -479,3 +479,7 @@ html.hk-supporter .hk-header .hk-logo { position: relative; overflow: visible; }
 @keyframes hk-ty-note { 0% { opacity: 0; transform: translateY(10px); } 25% { opacity: 1; } 100% { opacity: 0; transform: translateY(-34px); } }
 @keyframes hk-ty-fall { 0% { opacity: 0; transform: translateY(0) rotate(0); } 8% { opacity: 1; } 85% { opacity: 1; } 100% { opacity: 0; transform: translateY(105vh) rotate(200deg); } }
 @keyframes hk-ty-sway { from { margin-left: -12px; } to { margin-left: 12px; } }
+/* Keyboards seen from a little above (keybed() in js/cats.js). */
+.hc-cats .hc-wkey-front { fill: #d8cfc0; stroke: #bfb6a8; stroke-width: 0.4; }
+.hc-cats .hc-bkey-front { fill: #050507; }
+.hc-cats .hc-bkey-shadow { fill: #000; opacity: 0.18; }

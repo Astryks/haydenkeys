@@ -110,12 +110,41 @@ function catSide(coat, { blink = 0 } = {}) {
   </g>`;
 }
 
+// A keyboard seen from a little above, as on a real piano: the keys lie
+// flat, so you see the white key tops as a shallow band (a touch wider at
+// the front), their thin front edges, and the black keys as raised blocks
+// toward the back (with a small dark front face and a shadow).
+// x, y = back-left corner; w = width at the front; n = white keys;
+// depth = how deep the key tops look; edge = white key front height.
+function keybed(x, y, w, n, depth, edge = 2.5) {
+  const cx = x + w / 2, shrink = 0.965;
+  const bx = (t) => cx + (x + t * w - cx) * shrink; // t: 0..1 along the keyboard, at the back
+  const fx = (t) => x + t * w;                      // ...at the front
+  const yf = y + depth;
+  const f = (v) => v.toFixed(1);
+  const kw = 1 / n;
+  let out = `<path d="M${f(bx(0))} ${y} L${f(bx(1))} ${y} L${f(fx(1))} ${f(yf)} L${f(fx(0))} ${f(yf)} Z" class="hc-wkey"/>`;
+  out += `<rect x="${f(fx(0))}" y="${f(yf)}" width="${f(w)}" height="${edge}" class="hc-wkey-front"/>`;
+  for (let i = 1; i < n; i++) out += `<path d="M${f(bx(i * kw))} ${y} L${f(fx(i * kw))} ${f(yf)} v${edge}" class="hc-keyline"/>`;
+  const bd = depth * 0.6, lift = Math.max(0.8, depth * 0.09);
+  const ym = y + bd;
+  const at = (t, yy) => bx(t) + (fx(t) - bx(t)) * ((yy - y) / depth);
+  for (let i = 0; i < n - 1; i++) {
+    if (![0, 1, 3, 4, 5].includes(i % 7)) continue;
+    const t0 = (i + 0.69) * kw, t1 = (i + 1.31) * kw;
+    const a = at(t0, y), b = at(t1, y), c = at(t1, ym), d = at(t0, ym);
+    out += `<path d="M${f(d)} ${f(ym)} L${f(c)} ${f(ym)} L${f(c + 0.6)} ${f(ym + lift * 0.9)} L${f(d + 0.6)} ${f(ym + lift * 0.9)} Z" class="hc-bkey-shadow"/>`;
+    out += `<path d="M${f(a)} ${f(y - lift)} L${f(b)} ${f(y - lift)} L${f(c)} ${f(ym - lift)} L${f(d)} ${f(ym - lift)} Z" class="hc-bkey"/>`;
+    out += `<path d="M${f(d)} ${f(ym - lift)} L${f(c)} ${f(ym - lift)} L${f(c)} ${f(ym)} L${f(d)} ${f(ym)} Z" class="hc-bkey-front"/>`;
+  }
+  return out;
+}
+
 // An upright piano (left) and a grand (right) on a 400 x 240 stage.
 function upright(x, y, w = 132) {
   // Real proportions: a white key is about 2.35 cm, drawn at w/150 px per cm.
   const kw = 2.35 * (w / 150), n = Math.floor((w - 16) / kw), x0 = x + (w - n * kw) / 2;
-  const keys = `<rect x="${x0}" y="${y + 70}" width="${n * kw}" height="18" rx="1" class="hc-wkey"/>` + Array.from({ length: n - 1 }, (_, i) => `<path d="M${(x0 + (i + 1) * kw).toFixed(1)} ${y + 70} v18" class="hc-keyline"/>`).join("");
-  const blacks = Array.from({ length: n }, (_, i) => [0, 1, 3, 4, 5].includes(i % 7) && i < n - 1 ? `<rect x="${(x0 + (i + 0.68) * kw).toFixed(1)}" y="${y + 70}" width="${(kw * 0.62).toFixed(1)}" height="11" rx="0.5" class="hc-bkey"/>` : "").join("");
+  const keys = keybed(x0, y + 72, n * kw, n, 12, 3), blacks = "";
   return `<g class="hc-upright">
     <ellipse cx="${x + w / 2}" cy="${y + 151}" rx="${w / 2 + 6}" ry="4" fill="#2a1d10" opacity="0.18"/>
     <g filter="url(#hc-vol-big)">
@@ -135,8 +164,7 @@ function upright(x, y, w = 132) {
 }
 function grand(x, y) {
   const kw = 2.82, n = 42, x0 = x + 14;
-  const keys = `<rect x="${x0}" y="${y + 52}" width="${n * kw}" height="16" rx="1" class="hc-wkey"/>` + Array.from({ length: n - 1 }, (_, i) => `<path d="M${(x0 + (i + 1) * kw).toFixed(1)} ${y + 52} v16" class="hc-keyline"/>`).join("");
-  const blacks = Array.from({ length: n }, (_, i) => [0, 1, 3, 4, 5].includes(i % 7) && i < n - 1 ? `<rect x="${(x0 + (i + 0.68) * kw).toFixed(1)}" y="${y + 52}" width="1.75" height="10" rx="0.4" class="hc-bkey"/>` : "").join("");
+  const keys = keybed(x0, y + 54, n * kw, n, 11, 3), blacks = "";
   return `<g class="hc-grand">
     <ellipse cx="${x + 80}" cy="${y + 133}" rx="84" ry="4" fill="#000" opacity="0.18"/>
     <g filter="url(#hc-vol-big)">
@@ -183,8 +211,7 @@ const tree = (x, y) => {
 const keyboardStrip = (y) => {
   // Close-up: 2.4 px per cm, so a white key is about 5.6 px and a cat spans ~13 keys.
   const kw = 5.64, n = 72;
-  const keys = `<rect x="0" y="${y}" width="400" height="40" class="hc-wkey"/>` + Array.from({ length: n }, (_, i) => `<path d="M${(i * kw).toFixed(1)} ${y} v40" class="hc-keyline"/>`).join("");
-  const b = Array.from({ length: n }, (_, i) => [0, 1, 3, 4, 5].includes(i % 7) ? `<rect x="${(i * kw + kw * 0.66).toFixed(1)}" y="${y}" width="${(kw * 0.6).toFixed(1)}" height="25" rx="0.6" class="hc-bkey"/>` : "").join("");
+  const keys = keybed(0, y + 3, 400, n, 31, 6), b = "";
   const g = Array.from({ length: 24 }, (_, i) => `<rect x="${(i * kw * 3).toFixed(1)}" y="${y}" width="${(kw * 2).toFixed(1)}" height="40" class="hc-glow hc-run-glow" style="animation-delay:${(i * 0.16).toFixed(2)}s"/>`).join("");
   return `<rect x="0" y="${y - 14}" width="400" height="14" class="hc-black-wood"/>${keys}${b}${g}<rect x="0" y="${y + 40}" width="400" height="${240 - y - 40}" class="hc-black-wood"/>`;
 };
