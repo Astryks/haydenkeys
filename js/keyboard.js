@@ -49,7 +49,11 @@ if (typeof navigator !== "undefined" && navigator.audioSession) {
   try { navigator.audioSession.type = "playback"; } catch (e) { /* older Safari */ }
 }
 function unlockAudio() {
-  const c = getAudioContext();
+  let c = getAudioContext();
+  // Back from YouTube (or a call): iOS can hand back an "interrupted" engine
+  // that never plays again. Replace it right here, inside the tap, where iOS
+  // lets a new one start straight away.
+  if (c.state === "interrupted" || c.state === "closed") { c = freshAudioContext(); c.resume?.().catch(() => {}); }
   try {
     const b = c.createBuffer(1, 1, c.sampleRate);
     const s = c.createBufferSource();
@@ -68,7 +72,14 @@ function unlockAudio() {
   // Load the real piano sound early, so the first notes aren't the backup tone.
   loadSampledPiano(getAudioContext());
 }
-if (typeof document !== "undefined") document.addEventListener("visibilitychange", () => { if (!document.hidden) getAudioContext(); });
+if (typeof document !== "undefined") document.addEventListener("visibilitychange", () => {
+  if (document.hidden) return;
+  // Coming back to the app: wake the sound; if iOS left it stuck, the next tap
+  // (unlockAudio) swaps in a fresh engine.
+  const c = getAudioContext();
+  if (c.state !== "running") c.resume?.().catch(() => {});
+});
+if (typeof window !== "undefined") window.addEventListener("pageshow", () => { const c = getAudioContext(); if (c.state !== "running") c.resume?.().catch(() => {}); });
 if (typeof window !== "undefined") ["touchend", "pointerdown", "keydown"].forEach((t) => window.addEventListener(t, unlockAudio, true));
 
 function freqFromMidi(midi) {

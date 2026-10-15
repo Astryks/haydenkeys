@@ -421,9 +421,9 @@ const MICRO_CARDS = {
   "m-four": { say: `Here are your <b>4 chords</b> together on one piano 👇${PIC_FOUR_CHORDS}<b>G</b> and <b>C</b> are all white keys and sound happy 😀<br><b>Em</b> is all white too, and sounds a little sad 🥲<br><b>D</b> has one black key (F♯) ⚫<br>See how they sit side by side and even share some keys?`, want: { tap: true }, ok: "Got it 👍", done: "4 chords, one piano! 🎹" },
   "q-four": { say: "Quick quiz! 🧠<br>Which of your 4 chords uses a <b>black key</b>?", want: { choice: "D" }, options: ["G", "C", "D", "Em"], noKeys: true, done: "Yes! D has F♯, a black key ⚫" },
   "m-num-shape": { say: "See the pattern? ✋<br>Every chord is the <b>same shape</b>:<br><b>press · skip · press · skip · press</b><br>Play <b>G</b>, then slide the shape to <b>C</b>!", want: { seq: [G, C] }, demoSeq: [[G, "G"], [C, "C"], [EM, "Em"], [D, "D ⚫"]], tip: "The only twist: <b>D</b> uses one <b>black key</b> (F♯) ⚫", done: "Same shape, any chord! ✋🎉" },
-  "m-two-hands": { say: `Now let's use <b>both hands</b> 🙌<br><span class="hk-hand-l">L</span> <b>Left hand</b>: plays <b>one low note</b>. It makes the sound deep and full, like a bass.<br><span class="hk-hand-r">R</span> <b>Right hand</b>: plays the <b>chord</b>, near middle C, like you've been doing.<br><br><b>Where does my right hand go?</b> Find middle C, then the <b>G</b> just to its left: the G chord starts there.<br><b>Where does my left hand go?</b> From that G, keep going left to the <b>next G</b> (7 white keys down). That's low G, for your left hand.<br>Pink <b>L</b> = left hand · blue <b>R</b> = right hand 😄`, want: { tap: true }, ok: "Got it! 🙌", range: [36, 76], hands: { left: [43], right: [55, 59, 62], leftLabel: "G", rightLabel: "G chord" }, demo: [43, 55, 59, 62], done: "Left low, right on the chord 🎨" },
+  "m-two-hands": { say: `Now let's use <b>both hands</b> 🙌<br><span class="hk-hand-l">L</span> <b>Left hand</b>: plays <b>one low note</b>. It makes the sound deep and full, like a bass.<br><span class="hk-hand-r">R</span> <b>Right hand</b>: plays the <b>chord</b>, near middle C, like you've been doing.<br><br><b>Where does my right hand go?</b> Find middle C (<b>C4</b>), then the <b>G</b> just to its left: that's <b>G3</b>. The G chord is <b>G3 · B3 · D4</b>.<br><b>Where does my left hand go?</b> From G3, count <b>7 white keys</b> to the left to the next G: that's <b>G2</b>, for your left hand.<br><small>It's always 7 white keys from one G to the next, on any piano or keyboard, big or small, because the 7 letters A to G repeat. Every full-size piano and most keyboards (49 keys or more) have G2.</small><br>Pink <b>L</b> = left hand · blue <b>R</b> = right hand 😄`, want: { tap: true }, ok: "Got it! 🙌", range: [36, 76], hands: { left: [43], right: [55, 59, 62], leftLabel: "G", rightLabel: "G chord" }, demo: [43, 55, 59, 62], done: "Left low, right on the chord 🎨" },
   "m-two-hand-g": { twoHand: true, say: "Your first <b>two-hand chord</b>: <b>G</b> 🙌<br><span class=\"hk-hand-l\">L</span> Left hand: low <b>G</b><br><span class=\"hk-hand-r\">R</span> Right hand: <b>G · B · D</b><br>On your piano, press them all together.", want: { seq: [H_G] }, demoSeq: [[H_G, "G"]], range: [36, 76], done: "Big, deep G! 🙌" },
-  "m-two-hand-all": { twoHand: true, say: "Now all <b>4 chords</b> with two hands 🎹🎹<br>Your left hand always plays the chord's <b>own letter</b>, down low:<br><b>G</b> → low G · <b>C</b> → low C · <b>D</b> → low D · <b>Em</b> → low E<br>Play <b>G → C → D → Em</b>", want: { seq: [H_G, H_C, H_D, H_EM] }, demoSeq: [[H_G, "G"], [H_C, "C"], [H_D, "D"], [H_EM, "Em"]], range: [36, 76], tip: "🎹 On your real piano, press both hands together.", done: "All 4 chords with two hands! 🏆" },
+  "m-two-hand-all": { twoHand: true, say: "Now all <b>4 chords</b> with two hands 🎹🎹<br><span class=\"hk-hand-r\">R</span> Right hand: the same chords as before, near middle C.<br><span class=\"hk-hand-l\">L</span> Left hand: the chord's <b>own letter</b>, down low:<br>• <b>G</b> → <b>G2</b> (7 white keys left of the G chord's G3)<br>• <b>C</b> → <b>C3</b> (7 white keys left of middle C)<br>• <b>D</b> → <b>D3</b> (one white key right of C3)<br>• <b>Em</b> → <b>E3</b> (two white keys right of C3)<br>Play <b>G → C → D → Em</b>", want: { seq: [H_G, H_C, H_D, H_EM] }, demoSeq: [[H_G, "G"], [H_C, "C"], [H_D, "D"], [H_EM, "Em"]], range: [36, 76], tip: "🎹 On your real piano, press both hands together.", done: "All 4 chords with two hands! 🏆" },
   "m-boom": { say: "<b>Boom!</b> You know 4 chords 💥<br>Play them in a row with your right hand:<br><b>G → D → Em → C</b><br>Next: real songs, first with easy chords, then with two hands!", want: { seq: [G, D, EM, C] }, demoSeq: [[G, "G"], [D, "D"], [EM, "Em"], [C, "C"]], tip: "🎹 Now play the loop on your <b>real piano</b>!", done: "That's the loop in 100+ songs! 🎉" },
   "m-song-ateam": { say: "Try <b>The A Team</b> by Ed Sheeran with <b>easy chords</b> 🎶 (right hand only)<br><b>G → D → Em → C</b><br><small>(Shown in the easy key of G.)</small>", want: { seq: [G, D, EM, C] }, demoSeq: [[G, "G"], [D, "D"], [EM, "Em"], [C, "C"]], tip: "🎹 Now play along with the real song!", done: "You just played The A Team! 🎉" , video: "the-a-team", song: "The A Team", shareSong: "The A Team" },
   "m-song-ateam-2h": { twoHand: true, say: "Now <b>The A Team</b> again, a <b>harder</b> way that sounds <b>richer and deeper</b> (and makes you look good on piano! 😎)<br>Same chords, plus the low note in your left hand, just like you learned.<br><span class=\"hk-hand-l\">L</span> Left hand, low: <b>G2 → D3 → E3 → C3</b><br><span class=\"hk-hand-r\">R</span> Right hand: <b>G → D → Em → C</b>", want: { seq: [H_G, H_D, H_EM, H_C] }, demoSeq: [[H_G, "G"], [H_D, "D"], [H_EM, "Em"], [H_C, "C"]], range: [36, 76], tip: "🎹 On your real piano, press both hands together.", done: "Rich and deep! 😎🎶" },
@@ -1097,10 +1097,11 @@ function initLessonsTab(root) {
     // Shown once, the first time a chord card appears, then never again.
     const PHONE_NOTE_KEY = "hk_phone_note_seen";
     let phoneNoteSeen = false;
+    let showPhoneNote = false;
     try { phoneNoteSeen = localStorage.getItem(PHONE_NOTE_KEY) === "1"; } catch (e) { /* ignore */ }
     if (!phoneNoteSeen && ((w0.notes && w0.notes.length >= 3) || (w0.seq && w0.seq.some((c) => c.length >= 3)))) {
       try { localStorage.setItem(PHONE_NOTE_KEY, "1"); } catch (e) { /* ignore */ }
-      thread.insertAdjacentHTML("beforeend", `<div class="hk-phone-note">${icon("piano", 20)}<span>On the screen, tap the keys <b>one at a time</b>. On <b>your piano</b>, press them <b>together</b>.</span></div>`);
+      showPhoneNote = true;
     }
     const reply = (html, cls = "") => {
       thread.querySelector(".hk-micro-oops")?.remove();
@@ -1144,7 +1145,24 @@ function initLessonsTab(root) {
     if (card.show) kb.highlightChord(card.show);
     if (card.hands) kb.highlightHands(card.hands);
     // Two-hand cards: the lowest note is the left hand (pink L), the rest the right hand (blue R).
-    const lightStep = (notes) => (card.twoHand ? kb.highlightHands({ left: [notes[0]], right: notes.slice(1) }) : kb.highlightChord(notes));
+    // Song loops: the chord you're on, in big letters, above the keys (and the next one).
+    const seqLabels = card.want.seq && card.demoSeq ? card.demoSeq.map(([, l]) => l) : null;
+    let nowEl = null;
+    if (seqLabels && seqLabels.length > 1) {
+      nowEl = document.createElement("div");
+      nowEl.className = "hk-micro-now";
+      keyboardWrap.insertAdjacentElement("beforebegin", nowEl);
+    }
+    const showNow = (i) => {
+      if (!nowEl || i < 0) return;
+      nowEl.innerHTML = `<span class="hk-now-label">Now</span><b>${seqLabels[i]}</b>${seqLabels[i + 1] ? `<span class="hk-now-next">next: ${seqLabels[i + 1]}</span>` : ""}`;
+    };
+    const lightStep = (notes) => {
+      const i = card.want.seq ? card.want.seq.indexOf(notes) : -1;
+      showNow(i);
+      const name = i >= 0 && seqLabels ? seqLabels[i] : undefined;
+      return card.twoHand ? kb.highlightHands({ left: [notes[0]], right: notes.slice(1), leftLabel: name }) : kb.highlightChord(notes);
+    };
     const say = content.querySelector("#hk-micro-say");
     const demoNotes = card.demo || card.show || card.help || (card.want.notes || []);
     controls.innerHTML = `
@@ -1157,8 +1175,9 @@ function initLessonsTab(root) {
       ${card.song || card.video ? `<button class="hk-btn hk-micro-skip" id="hk-micro-skip">Next →</button>` : card.want.seq || card.want.notes || card.want.pc !== undefined ? `<button class="hk-btn hk-micro-skip" id="hk-micro-skip">Skip →</button>` : ""}`;
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     async function playSeq(seq) {
-      for (const [notes, label] of seq) {
+      for (const [i, [notes, label]] of seq.entries()) {
         if (!content.isConnected) return;
+        showNow(i);
         kb.highlightChord(notes, { number: label, rootMidi: notes[0] });
         playChord(notes, { duration: 0.9 });
         await sleep(900);
@@ -1305,6 +1324,8 @@ function initLessonsTab(root) {
     });
     onLessonExit(unsub);
     if (card.want.seq) lightStep(card.want.seq[0]);
+    // Small, at the bottom of the first chord card.
+    if (showPhoneNote) controls.insertAdjacentHTML("afterend", `<p class="hk-phone-note-small">The keys can be hard to press together on the app. Try turning your phone sideways, or press the keys one at a time. But the real practice is on your piano: press them all together on the piano in front of you! 🎹</p>`);
     if (card.want.tap) controls.querySelector("#hk-micro-ok").addEventListener("click", success);
     // Song cards: you can always move on without pressing the chords.
     controls.querySelector("#hk-micro-skip")?.addEventListener("click", () => success({ skipped: true }));

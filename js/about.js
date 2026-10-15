@@ -33,7 +33,7 @@ function initAboutTab(root) {
 
       <section class="hk-how-section">
         <h3>Where the AI comes in</h3>
-        <p>The "upload your own recording" feature uses <strong>basic-pitch</strong>, an open-source AI model from Spotify,
+        <p>The "upload your own recording" feature uses <strong>basic-pitch</strong>, an open-source AI model,
            to work out which notes were played. It runs <strong>entirely on your device</strong>, so your recording is never uploaded.</p>
       </section>
 
@@ -57,7 +57,7 @@ function initAboutTab(root) {
 
       <section class="hk-how-section">
         <h3>Open-source credit</h3>
-        <p>Note detection uses Spotify's <strong>basic-pitch</strong> (Apache License 2.0), built right into the app. The piano
+        <p>Note detection uses the open-source <strong>basic-pitch</strong> model (Apache License 2.0), built right into the app. The piano
            sound is the Splendid Grand Piano (Steinway samples released into the public domain by Akai), played with
            <strong>smplr</strong> (MIT License). Full details are in the
            <a href="https://github.com/Astryks/haydenkeys/blob/main/THIRD_PARTY_NOTICES.md" target="_blank" rel="noopener">third-party notices</a>.</p>

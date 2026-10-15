@@ -10,7 +10,7 @@ import { icon } from "./icons.js";
 // The page opens with a short, visual tour of the technology and the tip
 // jar (app only), then the full explanation of how the app hears notes.
 const TECH = [
-  ["song", "Upload any song", "A music AI from Spotify, called Basic Pitch, runs right on your phone. It listens to your recording and writes down every note it hears. Then we group the notes into the chords you can play."],
+  ["song", "Upload any song", "A small music AI (Basic Pitch) runs right on your phone. It listens to your recording and writes down every note it hears. Then we group the notes into the chords you can play."],
   ["search", "Guess the song", "Apple's ShazamKit turns a few seconds of the song into a tiny audio fingerprint and finds its name. Only the fingerprint is sent, never the recording."],
   ["hand", "Wait for me", "The microphone listens only for your piano keys. It works out the pitch of a single note, and for a chord it checks how strong each of the 12 notes is in the sound, many times a second."],
   ["piano", "A real grand piano", "Every note you hear comes from real recordings of a Steinway grand piano, built into the app."],
@@ -22,7 +22,6 @@ function initHowItWorksTab(root) {
     <div class="hk-how">
       <section class="hk-tech">
         <h2>How Hayden Keys works</h2>
-        <p class="hk-how-sub">Some amazing technology, packed into a free app.</p>
         <div class="hk-tech-grid">${TECH.map(([ic, t, d]) => `<div class="hk-tech-card">${icon(ic, 40)}<b>${t}</b><p>${d}</p></div>`).join("")}</div>
       </section>
       <h2>How does the app know what notes you played?</h2>
@@ -73,10 +72,11 @@ function initHowItWorksTab(root) {
            <strong>plain pattern-matching, not AI</strong>, the same kind the app's song library uses.</p>
       </section>
 
-      <p class="hk-honest-note">This is how Spotify's open-source basic-pitch model really works, just in simpler words.
-         It's free to use under the Apache License 2.0.</p>
+      <div class="hk-how-cta"><button class="hk-btn hk-btn-primary" data-tab="lessons" type="button">Start learning ▶</button></div>
     </div>`;
 
+  // "Start learning" opens your lesson (the Lessons tab picks up where you left off).
+  root.querySelector(".hk-how-cta button")?.addEventListener("click", () => document.querySelector('.hk-tab[data-tab="lessons"]')?.click());
   initWaveDemo();
   initOvertoneDiagram();
 }

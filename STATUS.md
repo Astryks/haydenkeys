@@ -2694,3 +2694,13 @@ All done 2026-10-07 (see the notes under each item).
 - **Two hands before "Boom!"** (16–18): what each hand is for (left = one low note for a deep, full sound; right = the chord) and where to find them (right: G just left of middle C; left: the next G down, 7 white keys), then G with two hands, then all 4 with two hands; Boom! (19) then songs easy → two hands.
 - **Skip →** on every card where you press keys; key taps one at a time count for 8 s (two-hand cards were hard to finish on screen).
 - **iOS build 43** uploaded to TestFlight 2026-10-15 with these changes.
+
+## 2026-10-15 (later): owner feedback
+- **How it works**: tagline "Some amazing technology…" removed; no Spotify mentions (here and in About); a **Start learning ▶** button after point 5 opens your lesson.
+- **Footer**: just "Hayden Keys © <year>" (year updates itself) plus two small links, Privacy and Licences (kept: the App Store needs the privacy policy reachable, and the MIT/Apache licences of smplr and basic-pitch ask for their notices). About & Credits and Source code links removed.
+- **Lesson 5 (G chord)**: small note at the bottom of the first chord card: "The keys can be hard to press together on the app. Try turning your phone sideways, or press the keys one at a time. But the real practice is on your piano…". Video changed (the old one taught C G Am F with two hands).
+- **Lesson 16**: exact notes: right hand G chord = G3 · B3 · D4 (the G just left of middle C4); left hand = G2, 7 white keys left; note that one G to the next is always 7 white keys on any piano or keyboard.
+- **Lesson 18**: where the left hand goes for each chord: G → G2, C → C3 (7 white keys left of middle C), D → D3, Em → E3; right hand as before.
+- **Sound after YouTube**: coming back from a video, a stuck ("interrupted") audio engine is replaced inside your next tap (iOS lets a new one start there); the app also wakes the sound when it comes back to the front.
+- **Song cards (e.g. 21)**: the chord you're on, in big letters above the keys ("Now G · next: D"), during play and "Hear it"; the left-hand key shows the chord letter.
+- **Videos**: owner rule: no Pianote, over 1M views. Audit: 13 Pianote videos and most others under 1M; replacements being researched.

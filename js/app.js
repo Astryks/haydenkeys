@@ -81,6 +81,7 @@ function init() {
   const logo = document.getElementById("hk-logo-cats");
   if (logo) logo.innerHTML = pianoLogo({ label: "Hayden Keys" });
 
+  document.querySelectorAll(".hk-year").forEach((el) => { el.textContent = String(new Date().getFullYear()); });
   document.querySelectorAll("[data-tab]").forEach((btn) => {
     btn.addEventListener("click", () => {
       showTab(btn.dataset.tab);

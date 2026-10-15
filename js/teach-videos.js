@@ -5,7 +5,8 @@ import { videoHtml } from "./media.js";
 
 const TEACH = {
   "m-find-c": ["teach-hands"],
-  "m-chord-g": ["teach-first-chords"],
+  "m-chord-g": ["teach-g-chord"],
+  "m-two-hand-all": ["teach-gdemc-two-hands"],
   "m-boom": ["teach-changing"],
   "m-two-hands": ["teach-two-hands"],
   "d3-together": ["teach-two-hands"],

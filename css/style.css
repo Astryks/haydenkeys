@@ -1645,3 +1645,11 @@ body.hk-lesson-open .hk-lesson-topbar { padding-top: 6px !important; }
 .hk-finger-down span { color: #fff; background: #8a63d2; border-radius: 999px; padding: 2px 4px; }
 .hk-hand-left .hk-finger-down span { background: #e5739a; }
 @media (prefers-reduced-motion: reduce) { .hk-finger { transition: none; } }
+.hk-footer-small { font-size: 0.8em; opacity: 0.75; margin-left: 6px; }
+.hk-how-cta { display: flex; justify-content: center; margin: 22px 0 8px; }
+.hk-phone-note-small { font-size: 12.5px; line-height: 1.4; color: var(--hk-muted, #6d6880); margin: 10px 4px 0; text-align: center; }
+/* The chord you're on, above the keys on song cards. */
+.hk-micro-now { display: flex; align-items: baseline; justify-content: center; gap: 10px; margin: 6px 0 4px; }
+.hk-micro-now b { font: 900 34px/1 system-ui, sans-serif; color: var(--hk-accent, #7c5cff); }
+.hk-now-label { font: 700 12px/1 system-ui, sans-serif; text-transform: uppercase; letter-spacing: .08em; color: var(--hk-muted, #6d6880); }
+.hk-now-next { font: 600 14px/1 system-ui, sans-serif; color: var(--hk-muted, #6d6880); }

@@ -116,6 +116,8 @@ const PEOPLE = {
 const VIDEOS = {
  "teach-hands": {"id": "zIO4VMEFybY", "title": "Piano Finger Numbers for Beginners: Easy Tips to Get Started", "author_name": "Hoffman Academy", "kind": "teacher"},
  "teach-hands-2": {"id": "rZznie6UU_o", "title": "Proper Hand Posture At The Piano", "author_name": "Pianote", "kind": "teacher"},
+ "teach-g-chord": {"id": "NCSfgn8C-70", "title": "How To Play: G Major Chord (Beginner Piano Lessons: 15)", "author_name": "Dylan Laine", "kind": "teacher"},
+ "teach-gdemc-two-hands": {"id": "zsjQQEsbTz8", "title": "Play Piano Chords Without Reading Music! [G D Em C]", "author_name": "Learn With Rob", "kind": "teacher"},
  "teach-first-chords": {"id": "xz0GOZMRK70", "title": "Piano Chords for Beginners: Learn All Major & Minor Chords + FREE 144 Chord Chart PDF", "author_name": "Hoffman Academy", "kind": "teacher"},
  "teach-first-chords-2": {"id": "EpM6CndtFPM", "title": "Your First Piano Chords - Piano Lesson (Pianote)", "author_name": "Pianote", "kind": "teacher"},
  "teach-changing": {"id": "Rgo8_XEHnvM", "title": "Change Chords Faster On The Piano", "author_name": "Pianote", "kind": "teacher"},
