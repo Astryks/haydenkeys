@@ -2693,3 +2693,4 @@ All done 2026-10-07 (see the notes under each item).
 - **No numbers in Lesson 1** (they confused counting all keys vs white keys): cards 13–15 are now "Your 4 chords on one piano" (G C D Em picture, which are happy/sad, D's black key) and a quiz "Which chord uses a black key?". Two-hand song text no longer mentions 1 · 5 · 6 · 4.
 - **Two hands before "Boom!"** (16–18): what each hand is for (left = one low note for a deep, full sound; right = the chord) and where to find them (right: G just left of middle C; left: the next G down, 7 white keys), then G with two hands, then all 4 with two hands; Boom! (19) then songs easy → two hands.
 - **Skip →** on every card where you press keys; key taps one at a time count for 8 s (two-hand cards were hard to finish on screen).
+- **iOS build 43** uploaded to TestFlight 2026-10-15 with these changes.
