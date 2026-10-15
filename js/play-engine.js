@@ -91,6 +91,7 @@ function createPracticePlayer({
     el.classList.remove("hk-key-right", "hk-key-wrong");
     void el.offsetWidth;
     el.classList.add(cls);
+    if (cls === "hk-key-wrong") window.dispatchEvent(new CustomEvent("hk-wrong-note"));
     setTimeout(() => el.classList.remove(cls), 380);
   }
 
