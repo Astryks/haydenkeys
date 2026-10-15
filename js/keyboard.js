@@ -3,7 +3,7 @@
 // a set of notes (for chord-shape teaching), click/tap-to-play with a
 // synthesized tone, and reports which MIDI note was pressed.
 
-import { loadSampledPiano, getSampledPianoIfReady } from "./piano-sample.js";
+import { loadSampledPiano, getSampledPianoIfReady, resetSampledPiano } from "./piano-sample.js";
 import { emitNoteOn } from "./input-hub.js";
 
 const NOTE_NAMES = [
@@ -25,6 +25,12 @@ function isBlackKey(midi) {
 // app (keyboard clicks, lesson playback, calibration tone) shares one
 // context instead of fighting over autoplay permission.
 let sharedAudioCtx = null;
+function freshAudioContext() {
+  try { sharedAudioCtx && sharedAudioCtx.close(); } catch (e) { /* ignore */ }
+  sharedAudioCtx = null;
+  resetSampledPiano();
+  return getAudioContext();
+}
 function getAudioContext() {
   if (!sharedAudioCtx) {
     sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -54,7 +60,13 @@ function unlockAudio() {
   // Keep listening for taps for the whole session: iOS can suspend or
   // "interrupt" audio later (a call, Siri, the app going to the
   // background), and it only comes back from inside a real tap.
-  if (c.state !== "running") c.resume?.();
+  if (c.state !== "running") {
+    c.resume?.().catch(() => {});
+    // Still stuck a moment later (iOS "interrupted"): use a fresh engine.
+    setTimeout(() => { if (sharedAudioCtx === c && c.state !== "running") freshAudioContext(); }, 400);
+  }
+  // Load the real piano sound early, so the first notes aren't the backup tone.
+  loadSampledPiano(getAudioContext());
 }
 if (typeof document !== "undefined") document.addEventListener("visibilitychange", () => { if (!document.hidden) getAudioContext(); });
 if (typeof window !== "undefined") ["touchend", "pointerdown", "keydown"].forEach((t) => window.addEventListener(t, unlockAudio, true));
@@ -91,8 +103,14 @@ function playTone(midi, opts = {}) {
   // iOS can hand back a paused audio engine for a moment (after a call, the
   // photo picker, or the first tap). A note scheduled then is never heard,
   // so wait for the engine to wake up and play it then.
+  // If iOS won't wake it (it can stay "interrupted" after a call, Siri or
+  // the microphone, and then every note in the app is silent), start a
+  // fresh audio engine and play the note on that.
   if (ctx.state !== "running" && !opts._retried) {
-    ctx.resume?.().then(() => playTone(midi, { ...opts, _retried: true })).catch(() => playTone(midi, { ...opts, _retried: true }));
+    let done = false;
+    const go = () => { if (!done) { done = true; playTone(midi, { ...opts, _retried: true }); } };
+    ctx.resume?.().then(go).catch(() => {});
+    setTimeout(() => { if (done) return; if (ctx.state !== "running") freshAudioContext(); go(); }, 350);
     return;
   }
   loadSampledPiano(ctx);

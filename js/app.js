@@ -82,7 +82,11 @@ function init() {
   if (logo) logo.innerHTML = pianoLogo({ label: "Hayden Keys" });
 
   document.querySelectorAll("[data-tab]").forEach((btn) => {
-    btn.addEventListener("click", () => showTab(btn.dataset.tab));
+    btn.addEventListener("click", () => {
+      showTab(btn.dataset.tab);
+      // Lessons opens the lesson you're up to, right where you left off.
+      if (btn.dataset.tab === "lessons") setTimeout(() => panels.lessons?.querySelector(".hk-hero[data-lesson]")?.click(), 0);
+    });
   });
 
   discoverApi = initDiscoverTab(panels.discover, {

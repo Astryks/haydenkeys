@@ -78,4 +78,7 @@ function getSampledPianoIfReady() {
   return pianoInstance;
 }
 
-export { loadSampledPiano, getSampledPianoIfReady };
+// A new audio engine needs its own copy of the samples.
+function resetSampledPiano() { pianoInstance = null; loadPromise = null; loadedSamples = 0; }
+
+export { loadSampledPiano, getSampledPianoIfReady, resetSampledPiano };
