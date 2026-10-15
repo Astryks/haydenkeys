@@ -2709,3 +2709,4 @@ All done 2026-10-07 (see the notes under each item).
 - **Touch cards**: 29 "Soft and strong" ends with the message (it sounds different; how hard you press changes the mood); 30 "Make one key sing" improved and moved forward; 31 "Soft or strong changes the mood" (gentle vs powerful, and really listen to how hard pianists press in your favourite songs).
 - **Lesson 2 new chords, all with 2 hands**: "Any major chord" opens with "We learned 4 chords, the easy way and the harder way with 2 hands. Now let's learn the other chords, all with 2 hands!"; F major (left F3), E major (left E3) and D minor (left D3) are now two-hand cards.
 - **New Lesson 3 card "Play by ear"**: pick a favourite song, find its first note by trying keys (too low → right, too high → left), then the next notes, then try your 4 chords under the tune; upload the song in Practice to check.
+- **iOS build 44** uploaded to TestFlight 2026-10-15 (everything above).
