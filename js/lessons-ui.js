@@ -402,6 +402,15 @@ const MICRO_CARDS = {
   "m-white-black": { say: `When you look at all the keys on your piano, every <b>white key is a letter</b>: <b>A B C D E F G</b> … <b>A B C</b> … and they repeat again and again 🔤<br>Each one gets a number: <b>A0, A1, A2</b>…${PIC_ALL_AS}Middle C is <b>C4</b>.`, labels: "octave", want: { tap: true }, ok: "Got it 👍", done: "Letters + numbers = every key's name! 🔤" },
   "m-black": { say: `Black keys are the notes <b>in between</b> ♯ ♭<br>They come in groups of <b>2</b> and <b>3</b>.${PIC_BLACK}Press a black key in a group of <b>3</b> 💙`, labels: "groups3", want: { pcs: [6, 8, 10] }, done: "That's a black key! ♯ 🎉" },
   "m-find-g": { say: "Now, to play over <b>100 songs</b> with <b>4 chords</b>, we'll use <b>G</b> as our <b>home key</b> 🏠, home because we'll keep coming back to it.<br>From middle C, step <b>left</b>:<br><b>C → B → A → G</b><br>Press <b>G</b>!", labels: "letters", want: { notes: [55] }, help: [55], done: "That's G, our home! 🏠" },
+  "m-hands-loose": { chat: `<h3 data-q="How should my hands sit on the keys? 🖐️">Loose, curved and close to the keys 🖐️</h3>
+      <p>Let your arm <b>hang loose</b> at your side for a second. See how your fingers curl naturally, like you're holding an orange? 🍊 Keep that shape and put your <b>fingertips</b> on the keys.</p>
+      <h3 data-q="What about my wrists?">Soft wrists, level with your hand 🙌</h3>
+      <p>Keep your wrists <b>loose</b> and roughly <b>level</b> with the back of your hand: not drooping below the keys, and not lifted up high. Sit so your forearms are about level with the keyboard.</p>
+      <p>To reach other keys, move your <b>whole arm</b> sideways. Don't bend or lift your wrist awkwardly to get there.</p>
+      <h3 data-q="Should I lift my fingers to press harder?">No: keep your fingers on the keys ☝️</h3>
+      <p>Your fingers should <b>rest on the keys</b>, or just above them. Press from there, letting the weight of your arm help. Lifting fingers high and hitting the keys makes it harder, slower and louder than you want.</p>
+      <p>Keep every finger curved, even the little one (it likes to go flat!). If anything feels <b>tight</b> or hurts, stop, shake your hands out and start again, relaxed.</p>`,
+    say: "Try it 🖐️<br>Rest your <b>5 fingertips</b> on 5 white keys, <b>G A B C D</b>, wrists loose and level.<br>Press each key gently, without lifting your fingers off the keys.", want: { tap: true }, ok: "My hands feel loose 👍", show: [55, 57, 59, 60, 62], done: "Loose wrists, curved fingers, close to the keys 🖐️✨" },
   "m-chord-g": { say: "Let's make a <b>chord</b> on G!<br>Press <b>G</b>, skip one, <b>B</b>, skip one, <b>D</b>.<br>That's the <b>G chord</b>!", want: { notes: G }, show: G, tip: "🎹 Now play the G chord on <b>your piano</b> too!", done: "Your first chord! 🎹" },
   "m-letters": { say: "Every key has a <b>letter</b> 🔤<br>The white keys go <b>C D E F G A B</b>… then start again!<br>Find <b>G</b> and press it.", labels: "letters", want: { notes: [67] }, done: "There's G! 🎉" },
   "m-jargon": { chat: `<h3 data-q="Wait, is G a key or a chord? 🤯">Good question! Both, kind of 😄</h3>
@@ -434,16 +443,16 @@ const MICRO_CARDS = {
   "m-song-roads": { say: "One more: <b>Country Roads</b> by John Denver with <b>easy chords</b> 🛣️<br><b>G → Em → D → C</b><br><small>(Shown in the easy key of G.)</small>", want: { seq: [G, EM, D, C] }, demoSeq: [[G, "G"], [EM, "Em"], [D, "D"], [C, "C"]], tip: "🎹 Now play along with the real song!", done: "Take me home! 🎉" , video: "country-roads", song: "Take Me Home, Country Roads", shareSong: "Take Me Home, Country Roads" },
   "m-song-roads-2h": { twoHand: true, say: "<b>Country Roads</b> with <b>two hands</b> 🛣️<br><span class=\"hk-hand-l\">L</span> Left hand, low: <b>G2 → E3 → D3 → C3</b><br><span class=\"hk-hand-r\">R</span> Right hand: <b>G → Em → D → C</b>", want: { seq: [H_G, H_EM, H_D, H_C] }, demoSeq: [[H_G, "G"], [H_EM, "Em"], [H_D, "D"], [H_C, "C"]], range: [36, 76], tip: "🎹 On your real piano, press both hands together.", done: "Take me home, with two hands! 🎉" },
   "q-which-song": { say: "Quick quiz! 🧠<br>Which song goes <b>G → D → Em → C</b>?", want: { choice: "The A Team" }, options: ["Perfect", "The A Team", "Viva La Vida"], noKeys: true, done: "Yes! The A Team 🎉" },
-  "m-soft-strong": { say: "Play <b>G</b> <b>softly</b>… then <b>strong</b> 💪<br>It feels different!<br><small>(Best on a real piano.)</small>", want: { times: 2, notes: G }, show: G, soft: true, done: "Soft and strong. Nice! 🎉" },
-  "m-sing": { say: "Play <b>C</b> and press the <b>top key</b> a bit <b>harder</b>.<br>Now it sings! 🎶", want: { notes: C }, show: C, sing: true, done: "Beautiful! 🎶" },
+  "m-soft-strong": { say: "Play <b>G</b> <b>softly</b>… then <b>strong</b> 💪<br>Listen: same keys, but does it sound the same?<br><small>(Best on a real piano. Tap <b>Soft</b> and <b>Strong</b> to hear it.)</small>", want: { times: 2, notes: G }, show: G, soft: true, done: "It sounds different! How hard you press the keys matters: it changes the mood 💛" },
+  "m-sing": { say: "Now make one key <b>sing</b> 🎶<br>Play the <b>C chord</b> (C · E · G), but press the <b>top key</b> (G) a little <b>harder</b> than the other two.<br>Hear how the top note stands out, like a singer in front of the band? Pianists do this all the time so the tune shines through.<br><small>Tap <b>Hear it</b> to hear it first.</small>", want: { notes: C }, show: C, sing: true, done: "Beautiful! 🎶" },
   "m-another-song": { say: "Same 4 chords, <b>new order</b>:<br><b>G → Em → C → D</b><br>That's the shape of songs like <i>Perfect</i>!", want: { seq: [G, EM, C, D] }, demoSeq: [[G, "G"], [EM, "Em"], [C, "C"], [D, "D"]], done: "Two songs' worth of chords! 🏆" },
-  "m-feel": { chat: `<h3 data-q="Why does soft or strong matter? 🤔">Your touch is the feeling 💛</h3>
-      <p>The same chords can sound gentle, sad or powerful. It all depends on <b>how hard you press the keys</b>.</p>
-      <p>That's how a song's <b>emotion</b> and <b>overall feeling</b> change as it goes: soft and quiet in one part, big and strong in another.</p>
-      <h3 data-q="How do I get better at that? 🎧">Listen like a pianist 🎧</h3>
-      <p>Put on <b>acoustic versions</b> of your favourite songs.</p>
-      <p><b>Really listen</b> to the piano in different parts of the song. When does it get softer? When does it get stronger?</p>`,
-    say: "Next time you hear a song, follow the piano 🎧", want: { tap: true }, ok: "I'll listen! 🎧", noKeys: true, done: "Your ears are your best teacher 👂💛" },
+  "m-feel": { chat: `<h3 data-q="So how hard I press really matters? 🤔">Yes! Your touch changes the mood 💛</h3>
+      <p>The <b>same chord</b> can sound completely different:</p>
+      <p>🤫 Pressed <b>softly</b>: gentle, calm, a little sad.<br>💪 Pressed <b>strong</b>: big, happy, powerful.</p>
+      <p>That's how pianists make a song feel the way it does: soft and quiet in one part, big and strong in another.</p>
+      <h3 data-q="How do I learn that? 🎧">Listen to your favourite songs 🎧</h3>
+      <p><b>Really pay attention</b> to how hard the pianist presses the keys. Is the verse soft? Does the chorus get stronger? Acoustic and piano versions make it easy to hear.</p>`,
+    say: "Tap <b>Soft</b>, then <b>Strong</b>: same chord, different mood 💛<br>Next time you hear a song, follow how hard the piano plays 🎧", want: { tap: true }, ok: "I'll listen! 🎧", show: G, soft: true, done: "Your ears are your best teacher 👂💛" },
   "m-pop-song": { chat: `<h3 data-q="Can I play other songs too? 🎶">Yes! Hundreds of them 🎉</h3>
       <p>Lots of pop songs use the same <b>4 chords</b> you know.</p>
       <p>Pick one in <b>Practice</b>, or <b>upload any song</b> there and we'll find the chords for you!</p>`,
@@ -467,15 +476,17 @@ const MICRO_CARDS = {
       <p>That's why <b>Em</b> (chord 6 in the key of G) sounds sad!</p>`,
     say: "Hear them: <b>1 · 4 · 5</b> happy, then <b>6</b> sad.", want: { tap: true }, ok: "Got it 👍", demoSeq: [[G, "1 😀"], [C, "4 😀"], [D, "5 😀"], [EM, "6 🥲"]], done: "1 4 5 happy · 2 3 6 sad 👍" },
   "q-chord6": { say: "Quick quiz! 🧠<br>In a major key, chord <b>6</b> sounds…", want: { choice: "Sad 🥲" }, options: ["Happy 😀", "Sad 🥲"], noKeys: true, done: "Yes! Chord 6 is sad 🥲" },
-  "d2-recipe-major": { chat: `<h3 data-q="Can I play ANY chord? 🤔">Yes! Every chord has a recipe 🧑‍🍳</h3>
+  "d2-recipe-major": { twoHand: true, chat: `<h3 data-q="What's next? 🚀">We learned 4 chords, the easy way and the harder way with 2 hands 🙌</h3>
+      <p>Now let's learn the <b>other chords</b>, all with <b>2 hands</b>! Left hand plays the chord's letter down low, right hand plays the chord, just like before.</p>
+      <h3 data-q="Can I play ANY chord? 🤔">Yes! Every chord has a recipe 🧑‍🍳</h3>
       <p>A <b>major</b> chord (happy 😀): start on any key, count <b>4 keys up</b>, then <b>3 more</b>. Count the black keys too!</p>
       <p>C major: <b>C</b> → 4 up → <b>E</b> → 3 up → <b>G</b>.</p>`,
-    say: "Use the recipe: build <b>F major</b> 😀<br><b>F · A · C</b>", want: { notes: F_MAJ }, help: F_MAJ, done: "F major! 😀 The recipe works!" },
-  "d2-e-major": { say: "Now <b>E major</b>: <b>E · G♯ · B</b><br>The recipe lands on a <b>black key</b> ⚫ That's fine!", want: { notes: E_MAJ }, help: E_MAJ, done: "E major! 😀 Black keys are part of the recipe." },
-  "d2-recipe-minor": { chat: `<h3 data-q="And the sad chords? 🥲">Minor is the recipe flipped 🔄</h3>
+    say: "Use the recipe: build <b>F major</b> with 2 hands 😀<br><span class=\"hk-hand-r\">R</span> Right hand: <b>F · A · C</b><br><span class=\"hk-hand-l\">L</span> Left hand: low <b>F3</b> (7 white keys left of the right hand's F)", want: { seq: [[53, ...F_MAJ]] }, demoSeq: [[[53, ...F_MAJ], "F"]], range: [40, 76], done: "F major! 😀 The recipe works!" },
+  "d2-e-major": { twoHand: true, say: "Now <b>E major</b> with 2 hands<br><span class=\"hk-hand-r\">R</span> Right hand: <b>E · G♯ · B</b> (the recipe lands on a <b>black key</b> ⚫, that's fine!)<br><span class=\"hk-hand-l\">L</span> Left hand: low <b>E3</b>", want: { seq: [[52, ...E_MAJ]] }, demoSeq: [[[52, ...E_MAJ], "E"]], range: [40, 76], done: "E major! 😀 Black keys are part of the recipe." },
+  "d2-recipe-minor": { twoHand: true, chat: `<h3 data-q="And the sad chords? 🥲">Minor is the recipe flipped 🔄</h3>
       <p>A <b>minor</b> chord (sad 🥲): count <b>3 keys up</b>, then <b>4 more</b>.</p>
       <p>Shortcut: play the major chord and move the <b>middle key one step down</b>.</p>`,
-    say: "Build <b>D minor</b> 🥲<br><b>D · F · A</b>", want: { notes: D_MIN }, help: D_MIN, done: "D minor! 🥲" },
+    say: "Build <b>D minor</b> with 2 hands 🥲<br><span class=\"hk-hand-r\">R</span> Right hand: <b>D · F · A</b><br><span class=\"hk-hand-l\">L</span> Left hand: low <b>D3</b>", want: { seq: [[50, ...D_MIN]] }, demoSeq: [[[50, ...D_MIN], "Dm"]], range: [40, 76], done: "D minor! 🥲" },
   "d2-all-chords": { say: "Here are <b>all 24</b> major and minor chords 🎹<br>Tap any of them to see and hear it.", want: { tap: true }, ok: "Got it 👍", chart: true, done: "12 happy + 12 sad = every chord! 🎉" },
   "q-chord-recipe": { say: "Quick quiz! 🧠<br>Which notes make <b>A major</b>?<br><small>(4 keys up, then 3 more)</small>", want: { choice: "A · C♯ · E" }, options: ["A · C · E", "A · C♯ · E"], noKeys: true, done: "Yes! A · C♯ · E 😀 (A · C · E is A minor 🥲)" },
   "d2-keys-chords": { chat: `<h3 data-q="What's the difference between a chord and a key? 🤔">Good question! 🙌</h3>
@@ -497,6 +508,15 @@ const MICRO_CARDS = {
   "d3-walk": { twoHand: true, say: "Same trick as Lesson 1, now in the <b>key of C</b> (Let It Be!) 🚶<br>👈 Left hand plays each chord's <b>letter</b>, down low:<br><b>C3 → G2 → A2 → F2</b><br>🖐️ Right hand plays <b>C → G → Am → F</b>.", want: { seq: [[48, ...KC_C], [43, ...KC_G], [45, ...KC_AM], [41, ...KC_F]] }, demoSeq: [[[48, ...KC_C], "C"], [[43, ...KC_G], "G"], [[45, ...KC_AM], "Am"], [[41, ...KC_F], "F"]], range: [36, 76], done: "Your bass is walking! 🚶" },
   "d3-ear-1": { say: "Use your ears 👂<br>Tap <b>🔊 Hear it</b>.<br>Is it <b>happy</b> or <b>sad</b>?", want: { choice: "sad" }, demo: AM, done: "Yes, sad! That was A minor 🥲" },
   "d3-ear-2": { say: "One more 👂<br>Happy or sad?", want: { choice: "happy" }, demo: D, done: "Yes, happy! That was D major 😀" },
+  "d3-by-ear": { chat: `<h3 data-q="Can I play songs just by listening? 👂">Yes! It's called playing by ear 👂</h3>
+      <p>It's a skill, like a muscle: the more you try, the easier it gets. Here's how to start:</p>
+      <p><b>1. Pick a favourite song</b> and listen to the first few notes of the tune (the part you'd sing).</p>
+      <p><b>2. Find the first note.</b> Hum it, then try keys on your piano until one matches. Too low? Go right. Too high? Go left.</p>
+      <p><b>3. Find the next notes</b> the same way, one at a time. Small steps up or down are most common.</p>
+      <h3 data-q="And the chords? 🎹">Then try your chords underneath 🎹</h3>
+      <p>Play the tune's note and try your 4 chords (G, C, D, Em) under it. The one that sounds <b>right</b>, not clashing, is usually the chord. Lots of pop songs use just these 4!</p>
+      <p>Stuck? Upload the song in <b>Practice</b> and Hayden Keys will find the chords for you to check.</p>`,
+    say: "Try it now with any song in your head 👂<br>Find its first note on the keys, then the next one.", want: { tap: true }, ok: "I'll try it! 👂", done: "Your ears will get better every time 👂✨" },
   "d3-linger": { chat: `<h3 data-q="Can I play a real song now? 🎶">Yes! "Linger" by The Cranberries 💜</h3>
       <p>The whole song loops just <b>4 chords</b>: <b>D → A → C → G</b>.</p>
       <p>You know the shape! Press · skip · press · skip · press. Only <b>D</b> and <b>A</b> use one black key each.</p>`,

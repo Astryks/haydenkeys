@@ -5,14 +5,13 @@ import { videoHtml } from "./media.js";
 
 const TEACH = {
   "m-find-c": ["teach-hands"],
-  "m-chord-g": ["teach-g-chord"],
-  "m-two-hand-all": ["teach-gdemc-two-hands"],
-  "m-boom": ["teach-changing"],
+  "m-hands-loose": ["teach-hand-placement"],
   "m-two-hands": ["teach-two-hands"],
+  "d2-all-chords": ["teach-all-chords"],
   "d3-together": ["teach-two-hands"],
-  "d3-song": ["teach-lh-chords-rh-melody"],
+  "d3-song": ["teach-lh-accompaniment"],
+  "d3-by-ear": ["teach-by-ear"],
   "lesson-24": ["teach-two-hands"],
-  "lesson-29": ["teach-changing-2"],
   "d4-blues": ["teach-blues-improv"],
   "d4-jazz": ["teach-jazz-improv"],
   "lesson-36": ["teach-jazz-improv"],
