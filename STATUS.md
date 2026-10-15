@@ -2710,3 +2710,9 @@ All done 2026-10-07 (see the notes under each item).
 - **Lesson 2 new chords, all with 2 hands**: "Any major chord" opens with "We learned 4 chords, the easy way and the harder way with 2 hands. Now let's learn the other chords, all with 2 hands!"; F major (left F3), E major (left E3) and D minor (left D3) are now two-hand cards.
 - **New Lesson 3 card "Play by ear"**: pick a favourite song, find its first note by trying keys (too low → right, too high → left), then the next notes, then try your 4 chords under the tune; upload the song in Practice to check.
 - **iOS build 44** uploaded to TestFlight 2026-10-15 (everything above).
+
+## 2026-10-15: Hotel California and Stairway to Heaven, with their solos (iOS build 45)
+- **Stairway to Heaven** added to the song library (same data as Jaxx: A minor, intro walk-down Am Am/G# C/G D/F# Fmaj7 G, full 12-section map incl. "Guitar solo" over Am G F; official Led Zeppelin video). Hotel California was already in the library with its solo section.
+- **New Lesson 4 cards (two hands), after Rock**: "Song: Hotel California" (the 8-chord loop Bm F#7 A E G D Em F#7 that carries the whole song and the twin-guitar solo); "Song: Stairway to Heaven" (intro: right hand holds A C E while the left walks A G# G F# F, then G Am); "Stairway to Heaven: the solo" (Am G F loop under Jimmy Page's solo). Chords under the solos only, never the guitar notes (copyright).
+- Jaxx Guitar already has both songs with their solos (library maps + "Solo study" lessons: chords under the solo, the scale and position, original practice licks).
+- **iOS build 45** uploaded to TestFlight.

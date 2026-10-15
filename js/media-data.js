@@ -455,7 +455,8 @@ const VIDEOS = {
  "song-glory-box": {"id": "4qQyUi4zfDs", "title": "Portishead - Glory Box", "author_name": "PortisheadVEVO"},
  "song-i-don-t-want-to-talk-about-it": {"id": "esUHMBHJsn8", "title": "Rod Stewart - I Don't Want To Talk About It (Official Video)", "author_name": "Rod Stewart"},
  "song-save-your-tears": {"id": "XXYlFuWEuKI", "title": "The Weeknd - Save Your Tears (Official Music Video)", "author_name": "TheWeekndVEVO"},
- "song-beanie": {"id": "tERTBPdVivc", "title": "Chezile - Beanie (Official Visualizer)", "author_name": "Chezile"}
+ "song-beanie": {"id": "tERTBPdVivc", "title": "Chezile - Beanie (Official Visualizer)", "author_name": "Chezile"},
+ "song-stairway-to-heaven": {"id": "Ly6ZhQVnVow", "title": "Led Zeppelin - Stairway To Heaven (Live at Earl's Court 1975) [Official Video]", "author_name": "Led Zeppelin"}
 };
 const SONG_VIDEOS = {
  "Creep": "creep",
@@ -703,6 +704,7 @@ const SONG_VIDEOS = {
  "Glory Box": "song-glory-box",
  "I Don't Want to Talk About It": "song-i-don-t-want-to-talk-about-it",
  "Save Your Tears": "song-save-your-tears",
- "Beanie": "song-beanie"
+ "Beanie": "song-beanie",
+ "Stairway to Heaven": "song-stairway-to-heaven"
 };
 export { PEOPLE, VIDEOS, SONG_VIDEOS };

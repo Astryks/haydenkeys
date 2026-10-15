@@ -247,6 +247,10 @@ const WM_E = [64, 68, 71], WM_CSM = [61, 64, 68], WM_GS = [56, 60, 63], WM_A = [
 // Beanie (key of F), two hands: the left hand plays each chord's letter low,
 // the right hand one simple 3-key shape; together they make the 7th chords.
 //   Gm7 = G2 + Bb D F · C7 = C3 + E G Bb · Fmaj7 = F2 + A C E · Dm7 = D3 + F A C
+// Hotel California (B minor), two hands: left hand low, right hand near middle C.
+const HC_BM = [47, 59, 62, 66], HC_FS7 = [42, 58, 61, 64], HC_A = [45, 57, 61, 64], HC_E = [40, 56, 59, 64], HC_G = [43, 55, 59, 62], HC_D = [50, 57, 62, 66], HC_EM = [40, 55, 59, 64];
+// Stairway to Heaven: the intro's bass walks down A G# G F# F under the right hand.
+const SW_AM = [45, 57, 60, 64], SW_AMGS = [44, 57, 60, 64], SW_CG = [43, 55, 60, 64], SW_DFS = [42, 57, 62, 66], SW_FMAJ7 = [41, 57, 60, 64], SW_G = [43, 55, 59, 62], SW_F = [41, 53, 57, 60];
 const BN_GM7 = [43, 58, 62, 65], BN_C7 = [48, 64, 67, 70], BN_FMAJ7 = [41, 57, 60, 64], BN_DM7 = [50, 53, 57, 60];
 // I Don't Want to Talk About It (key of Bb): Bb, Cm, F, Bb.
 const TA_BB = [58, 62, 65], TA_CM = [60, 63, 67], TA_F = [53, 57, 60];
@@ -562,6 +566,21 @@ const MICRO_CARDS = {
       <p><b>Rock</b> plays simple chords <b>strong</b>, with a driving beat. A rock favourite is <b>1 · ♭7 · 4</b>.</p>
       <p>That's <i>Sweet Home Alabama</i> by Lynyrd Skynyrd: <b>D · C · G</b>.</p>`,
     say: "Rock it! Play <b>D → C → G</b>, strong 💪", want: { seq: [D, C, G] }, demoSeq: [[D, "D"], [C, "C"], [G, "G"]], done: "That's rock! 🎸" },
+  "d4-hotel": { twoHand: true, chat: `<h3 data-q="Can I play a rock classic? 🎸">Yes! "Hotel California" by the Eagles 🌵</h3>
+      <p>A 1976 rock classic in <b>B minor</b>. The whole song, verses, chorus and the famous ending solo, sits on one loop of <b>8 chords</b>:</p>
+      <p><b>Bm → F♯7 → A → E → G → D → Em → F♯7</b></p>
+      <h3 data-q="And the guitar solo? 🎸">The solo uses the same 8 chords 🔁</h3>
+      <p>At the end, two guitars trade the lead and then play together over this <b>same loop</b>. Learn the loop, play the video, and you're playing under one of rock's greatest solos. (We teach the chords, not the guitar notes.)</p>`,
+    say: "Play the loop with <b>two hands</b> 🌵<br><span class=\"hk-hand-l\">L</span> Left hand, low: <b>B · F♯ · A · E · G · D · E · F♯</b><br><span class=\"hk-hand-r\">R</span> Right hand: <b>Bm → F♯7 → A → E → G → D → Em → F♯7</b>", want: { seq: [HC_BM, HC_FS7, HC_A, HC_E, HC_G, HC_D, HC_EM, HC_FS7] }, demoSeq: [[HC_BM, "Bm"], [HC_FS7, "F♯7"], [HC_A, "A"], [HC_E, "E"], [HC_G, "G"], [HC_D, "D"], [HC_EM, "Em"], [HC_FS7, "F♯7"]], range: [36, 76], tip: "🎹 Slow and steady: one chord every 4 beats. Then play it with the video, right through the solo!", done: "Welcome to the Hotel California! 🌵🎸", video: "song-hotel-california", song: "Hotel California", shareSong: "Hotel California" },
+  "d4-stairway": { twoHand: true, chat: `<h3 data-q="What about Stairway to Heaven? 🪜">Led Zeppelin, 1971: one of the most famous intros ever 🪜</h3>
+      <p>It's in <b>A minor</b>. The magic is the <b>bass line</b>: it walks down one key at a time, <b>A → G♯ → G → F♯ → F</b>, while the top stays nearly still.</p>
+      <h3 data-q="How do my hands do that?">Your right hand mostly stays put 🙌</h3>
+      <p><span class="hk-hand-r">R</span> Right hand holds <b>A · C · E</b> for most of it. <span class="hk-hand-l">L</span> Your left hand walks down. Each new bass note makes a new chord: <b>Am → Am/G♯ → C/G → D/F♯ → Fmaj7</b>, then <b>G → Am</b>.</p>`,
+    say: "The intro, with two hands 🪜<br><span class=\"hk-hand-l\">L</span> Left hand walks down: <b>A → G♯ → G → F♯ → F → G → A</b><br><span class=\"hk-hand-r\">R</span> Right hand: <b>A C E</b> (C/G: G C E · D/F♯: A D F♯ · G: G B D)", want: { seq: [SW_AM, SW_AMGS, SW_CG, SW_DFS, SW_FMAJ7, SW_G, SW_AM] }, demoSeq: [[SW_AM, "Am"], [SW_AMGS, "Am/G♯"], [SW_CG, "C/G"], [SW_DFS, "D/F♯"], [SW_FMAJ7, "Fmaj7"], [SW_G, "G"], [SW_AM, "Am"]], range: [36, 76], tip: "🎹 Play it slowly and gently, letting each chord ring.", done: "That's the Stairway intro! 🪜✨", video: "song-stairway-to-heaven", song: "Stairway to Heaven", shareSong: "Stairway to Heaven" },
+  "d4-stairway-solo": { twoHand: true, chat: `<h3 data-q="And the famous solo? 🎸">Jimmy Page's solo sits on just 3 chords 🎸</h3>
+      <p>Near the end the song speeds up and Jimmy Page plays his famous guitar solo over a loop of <b>Am → G → F</b>, round and round.</p>
+      <p>Play this loop with two hands while the video plays, and you're the band behind the solo! (We teach the chords, not the guitar notes.)</p>`,
+    say: "The solo loop, two hands 🎸<br><span class=\"hk-hand-l\">L</span> Left hand, low: <b>A → G → F</b><br><span class=\"hk-hand-r\">R</span> Right hand: <b>Am → G → F</b>", want: { seq: [SW_AM, SW_G, SW_F] }, demoSeq: [[SW_AM, "Am"], [SW_G, "G"], [SW_F, "F"]], range: [36, 76], tip: "🎹 Strong and steady: this part rocks!", done: "You played under the Stairway solo! 🎸🔥" },
   "d4-blues": { chat: `<h3 data-q="What's the blues? 🎺">The parent of rock and jazz 🎺</h3>
       <p>The <b>blues</b> came from African American musicians in the southern United States in the late 1800s. Rock and jazz both grew out of it.</p>
       <h3 data-q="How do I play it?">3 chords, 12 bars 🔢</h3>
