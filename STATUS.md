@@ -2758,3 +2758,4 @@ Read every lesson start to finish as a beginner: all 271 lessons (Lessons 1–4 
 
 **Tested** in headless Chrome (fresh profile, service worker unregistered): all 78 Lesson 1–4 cards open with text and buttons, and every key card has Skip. The 3 new key cards were completed by tapping the on-screen keys. "Hear it in time" plays and lights the keys. A full run opened all 271 lessons (every step page too) with 0 page errors.
 - Service worker cache **hayden-keys-v33**. Website only; no iOS build.
+- **iOS build 46** uploaded to TestFlight 2026-10-17 (includes the 2026-10-16 full lesson audit).
