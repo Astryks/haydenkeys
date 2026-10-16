@@ -2716,3 +2716,45 @@ All done 2026-10-07 (see the notes under each item).
 - **New Lesson 4 cards (two hands), after Rock**: "Song: Hotel California" (the 8-chord loop Bm F#7 A E G D Em F#7 that carries the whole song and the twin-guitar solo); "Song: Stairway to Heaven" (intro: right hand holds A C E while the left walks A G# G F# F, then G Am); "Stairway to Heaven: the solo" (Am G F loop under Jimmy Page's solo). Chords under the solos only, never the guitar notes (copyright).
 - Jaxx Guitar already has both songs with their solos (library maps + "Solo study" lessons: chords under the solo, the scale and position, original practice licks).
 - **iOS build 45** uploaded to TestFlight.
+
+## 2026-10-16: full lesson audit (flow, errors, missing techniques)
+Read every lesson start to finish as a beginner: all 271 lessons (Lessons 1–4 cards, then every later lesson page, dumped in headless Chrome). Checked every Lesson 1–4 chord's notes against its voicing array; all correct.
+
+**Problems found and fixed**
+- **Numbers used before they were taught:** Lesson 1 has no numbers, but Lesson 2 ("Chords vs keys", "Save Your Tears", then Lesson 4 "Pop") said "1 · 5 · 6 · 4" without ever saying what the numbers are. "Happy and sad numbers" (d2-pattern) now opens with: home G = 1, count up the letters (A 2, B 3, C 4, D 5, E 6), so the Lesson 1 loop G → D → Em → C is 1 · 5 · 6 · 4.
+- **Slash chords used before taught:** "Song: Stairway to Heaven" used Am/G♯, C/G, D/F♯ with no explanation. It now explains that C/G means a C chord with G as the lowest (left-hand) note.
+- **Wrong facts:** "Where Is My Mind?" said C#m has one black key (it has two, C♯ and G♯). Glory Box's D♯ F♯ A♯ aren't "three black keys in a row". "Music has flavours" promised 5 genres, but there are 6 (pop, rock, blues, jazz, trip-hop, classical). "Two hands" said G3 is "just left" of middle C (it's 4 white keys left); it now says "step left to the first G (C → B → A → G)".
+- **Song numbers that didn't match the chords** ("Chords: … (as numbers: …)" on Master lessons, the library and Practice): the verified chord lists (song-verified.js) had replaced the chords but kept the old numbers. 29 songs corrected chord for chord, using a `DEGREE_FIXES` map in songs-data.js (song-verified.js is shared with Jaxx, so it stays unchanged). For example: Valerie (was just "I - ii"), Hava Nagila, Jerusalema, Angels, I Want It That Way, Volare, Sweet Caroline (said "no vi" while showing G#m), Zombie and Despacito (minor key labelled with major numbers), Sweater Weather, Somebody's Me, River Flows in You, plus short songs whose numbers didn't line up with their chords (Ode to Joy, Minuet, Für Elise, Jingle Bells…).
+- **"Choose your song"** claimed all 10 songs use 1 · 5 · 6 · 4. Yellow, Riptide and The Night We Met don't. Now: "chords from your 4-chord family (1 · 4 · 5 · 6), in different keys and orders".
+- **"Same 4 chords, key of C"** (C G Am F aren't the same chords) is now **"Same loop, key of C"**.
+- **"Flip the order"** said "Em minor"; now "E minor".
+- **Stale text:** "Go deeper" said "More sheet-music lessons are coming soon" (they exist; now "come later in your roadmap"). "Canon, richer" said "One more day: the full performance!" (now "Next: …"). "Full performance" opened with "35 days done." (now "Canon in D, done! 🎉").
+- **Skip:** the "Black keys" card (press a black key in a group of 3) had no Skip button. Every key-press card now has one.
+- **Wrong teacher video:** "Hands separately & looping" showed Bill Hilton's jazz improvisation video. Removed: nothing over 1M views fits, so per the owner rule there's no video.
+
+**New cards and teaching (short, existing card style)**
+- **Lesson 1, "Keep a steady beat"** (after Boom!, before the songs): play each chord 4 times counting "one, two, three, four" and change on the next "one". "Hear it in time" plays the loop on the beat at 80 a minute. Boom!'s "Next:" line was updated to match.
+- **Lesson 1, "How to practise"** (before "Your turn: any pop song!"): 10–15 minutes a day, slow enough never to stop, loop just the 2 tricky chords, think one chord ahead, feel the black keys instead of staring at your hands.
+- **Lesson 3, "The lazy-hand trick"** (after the bass walks): inversions for smooth changes. G B D → F♯ A D → G B E → G C E, so the hand barely moves. The later "Inversions" lesson now refers back to it.
+- **Lesson 4, "Pop trick: sus chords"** (after Pop): D → Dsus4 (F♯ up to G) → D, plus Dsus2 (as in River Flows in You and Bubbly, both in the library).
+- **Pedals lesson:** how to change the pedal (heel down, play the new chord first, then "up-down").
+- **Major scale lessons:** a "Thumb under" tip on the note where the thumb tucks under (C, G and D scales; F already said it).
+
+**Research (what well-regarded teaching covers, compared with the app)**
+- Inversions and voice leading so changes barely move (now in Lesson 3): https://www.pianote.com/blog/?p=12743 (blog, not a video)
+- Sus chords: https://www.hooktheory.com/blog/suspended-chords/
+- Pedal timing (legato pedalling, change just after the chord): https://hub.yamaha.com/music-educators/instruments/piano/piano-pedagogy-pedaling
+- Practising mistakes slowly, hands separately, short sections: https://www.pianistmagazine.com/blogs/professionaladvice/what-to-do-when-you-make-a-mistake-in-your-piano-practice/
+- Short daily practice: https://www.pianote.com/blog/how-long-should-you-practice-piano/
+- Slash chords and lead sheets: https://www.upperhandspiano.com/post/slash-chords-what-are-they-and-how-do-we-play-them and https://www.hoffmanacademy.com/blog/how-to-read-piano-lead-sheets
+- Left-hand accompaniment patterns (root–5th–octave, octaves, chord picking): https://www.dummies.com/article/academics-the-arts/music/instruments/piano/great-left-hand-accompaniment-patterns-for-the-piano-or-keyboard-153052/ (already covered: Alternating bass, Alberti bass, Arpeggios, Waltz "oom-pah-pah", Piano Fluency video)
+- Playing by ear (melody first, then bass, then chord): https://en.wikibooks.org/wiki/Piano/Playing_by_Ear (already covered by "Play by ear")
+- Finding chords without looking (5-finger positions): https://www.pianote.com/blog/?p=201 (now one line in "How to practise")
+- Already covered elsewhere: hand posture, dynamics, scales and fingering, sheet music and counting (Reading sheet music), metronome and slow practice (Building speed), hands separately and looping, 7th chords, ear training.
+
+**Not changed**
+- The older auto-completed lessons (Lesson 1 "4 chords, 100 songs", "Major or minor?", "Flip the order", "Left hand vs. right hand", "Train your ear") still use numbers. They are only reachable from the Roadmap and are marked done when Lessons 1–3 finish.
+- Song numbers that are long descriptions instead of chord-for-chord numbers (e.g. Hey Jude's verse, the jazz standards) were left as they are.
+
+**Tested** in headless Chrome (fresh profile, service worker unregistered): all 78 Lesson 1–4 cards open with text and buttons, and every key card has Skip. The 3 new key cards were completed by tapping the on-screen keys. "Hear it in time" plays and lights the keys. A full run opened all 271 lessons (every step page too) with 0 page errors.
+- Service worker cache **hayden-keys-v33**. Website only; no iOS build.

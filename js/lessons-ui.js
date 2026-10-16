@@ -398,6 +398,11 @@ const IS_AM = [45, 57, 60, 64], IS_F = [41, 57, 60, 64], IS_C = [48, 55, 60, 64]
 // Lesson 4: 7th chords for blues and jazz, in reach of the lesson keyboard.
 const C7 = [60, 64, 67, 70], F7 = [53, 57, 60, 63], G7 = [55, 59, 62, 65], DM7 = [62, 65, 69, 72], CMAJ7 = [60, 64, 67, 71];
 const F_MAJ = [65, 69, 72], E_MAJ = [64, 68, 71], D_MIN = [62, 65, 69];
+// The lazy-hand trick (Lesson 3): G → D → Em → C with the right hand staying
+// put. D = F#3 A3 D4, Em = G3 B3 E4, C = G3 C4 E4 (inversions near the G chord).
+const D_INV = [54, 57, 62], EM_INV = [55, 59, 64], C_INV = [55, 60, 64];
+// Sus chords (Lesson 4): D, Dsus4 (F# up to G), back to D.
+const DSUS4 = [62, 67, 69], D_AGAIN = [62, 66, 69];
 const MICRO_CARDS = {
   "m-intro": { say: "Welcome to Hayden Keys! 🎹<br>In just a moment, you'll know <b>4 chords</b> that play <b>100+ songs</b>:<br><b>G · D · Em · C</b> 🎶<br><br>But 🐻 <b>bear</b> with us to cover the <b>basics</b> first. It'll only take a few seconds! ⏱️<br><br>Go to <b>your piano</b> (or keyboard) 🎹", want: { tap: true }, ok: "I'm at my piano! 🎹", noKeys: true, done: "Let's find middle C! 🚀" },
   "m-black-keys": { say: "Look at the <b>black keys</b> 👀<br>They come in groups of <b>2</b> and <b>3</b>, again and again.<br>Press any black key in a group of <b>2</b>!", want: { pcs: [1, 3] }, labels: "groups", done: "That's your map! 🗺️ Every piano has it." },
@@ -434,10 +439,11 @@ const MICRO_CARDS = {
   "m-four": { say: `Here are your <b>4 chords</b> together on one piano 👇${PIC_FOUR_CHORDS}<b>G</b> and <b>C</b> are all white keys and sound happy 😀<br><b>Em</b> is all white too, and sounds a little sad 🥲<br><b>D</b> has one black key (F♯) ⚫<br>See how they sit side by side and even share some keys?`, want: { tap: true }, ok: "Got it 👍", done: "4 chords, one piano! 🎹" },
   "q-four": { say: "Quick quiz! 🧠<br>Which of your 4 chords uses a <b>black key</b>?", want: { choice: "D" }, options: ["G", "C", "D", "Em"], noKeys: true, done: "Yes! D has F♯, a black key ⚫" },
   "m-num-shape": { say: "See the pattern? ✋<br>Every chord is the <b>same shape</b>:<br><b>press · skip · press · skip · press</b><br>Play <b>G</b>, then slide the shape to <b>C</b>!", want: { seq: [G, C] }, demoSeq: [[G, "G"], [C, "C"], [EM, "Em"], [D, "D ⚫"]], tip: "The only twist: <b>D</b> uses one <b>black key</b> (F♯) ⚫", done: "Same shape, any chord! ✋🎉" },
-  "m-two-hands": { say: `Now let's use <b>both hands</b> 🙌<br><span class="hk-hand-l">L</span> <b>Left hand</b>: plays <b>one low note</b>. It makes the sound deep and full, like a bass.<br><span class="hk-hand-r">R</span> <b>Right hand</b>: plays the <b>chord</b>, near middle C, like you've been doing.<br><br><b>Where does my right hand go?</b> Find middle C (<b>C4</b>), then the <b>G</b> just to its left: that's <b>G3</b>. The G chord is <b>G3 · B3 · D4</b>.<br><b>Where does my left hand go?</b> From G3, count <b>7 white keys</b> to the left to the next G: that's <b>G2</b>, for your left hand.<br><small>It's always 7 white keys from one G to the next, on any piano or keyboard, big or small, because the 7 letters A to G repeat. Every full-size piano and most keyboards (49 keys or more) have G2.</small><br>Pink <b>L</b> = left hand · blue <b>R</b> = right hand 😄`, want: { tap: true }, ok: "Got it! 🙌", range: [36, 76], hands: { left: [43], right: [55, 59, 62], leftLabel: "G", rightLabel: "G chord" }, demo: [43, 55, 59, 62], done: "Left low, right on the chord 🎨" },
+  "m-two-hands": { say: `Now let's use <b>both hands</b> 🙌<br><span class="hk-hand-l">L</span> <b>Left hand</b>: plays <b>one low note</b>. It makes the sound deep and full, like a bass.<br><span class="hk-hand-r">R</span> <b>Right hand</b>: plays the <b>chord</b>, near middle C, like you've been doing.<br><br><b>Where does my right hand go?</b> Find middle C (<b>C4</b>), then step left to the first <b>G</b> (C → B → A → G): that's <b>G3</b>. The G chord is <b>G3 · B3 · D4</b>.<br><b>Where does my left hand go?</b> From G3, count <b>7 white keys</b> to the left to the next G: that's <b>G2</b>, for your left hand.<br><small>It's always 7 white keys from one G to the next, on any piano or keyboard, big or small, because the 7 letters A to G repeat. Every full-size piano and most keyboards (49 keys or more) have G2.</small><br>Pink <b>L</b> = left hand · blue <b>R</b> = right hand 😄`, want: { tap: true }, ok: "Got it! 🙌", range: [36, 76], hands: { left: [43], right: [55, 59, 62], leftLabel: "G", rightLabel: "G chord" }, demo: [43, 55, 59, 62], done: "Left low, right on the chord 🎨" },
   "m-two-hand-g": { twoHand: true, say: "Your first <b>two-hand chord</b>: <b>G</b> 🙌<br><span class=\"hk-hand-l\">L</span> Left hand: low <b>G</b><br><span class=\"hk-hand-r\">R</span> Right hand: <b>G · B · D</b><br>On your piano, press them all together.", want: { seq: [H_G] }, demoSeq: [[H_G, "G"]], range: [36, 76], done: "Big, deep G! 🙌" },
   "m-two-hand-all": { twoHand: true, say: "Now all <b>4 chords</b> with two hands 🎹🎹<br><span class=\"hk-hand-r\">R</span> Right hand: the same chords as before, near middle C.<br><span class=\"hk-hand-l\">L</span> Left hand: the chord's <b>own letter</b>, down low:<br>• <b>G</b> → <b>G2</b> (7 white keys left of the G chord's G3)<br>• <b>C</b> → <b>C3</b> (7 white keys left of middle C)<br>• <b>D</b> → <b>D3</b> (one white key right of C3)<br>• <b>Em</b> → <b>E3</b> (two white keys right of C3)<br>Play <b>G → C → D → Em</b>", want: { seq: [H_G, H_C, H_D, H_EM] }, demoSeq: [[H_G, "G"], [H_C, "C"], [H_D, "D"], [H_EM, "Em"]], range: [36, 76], tip: "🎹 On your real piano, press both hands together.", done: "All 4 chords with two hands! 🏆" },
-  "m-boom": { say: "<b>Boom!</b> You know 4 chords 💥<br>Play them in a row with your right hand:<br><b>G → D → Em → C</b><br>Next: real songs, first with easy chords, then with two hands!", want: { seq: [G, D, EM, C] }, demoSeq: [[G, "G"], [D, "D"], [EM, "Em"], [C, "C"]], tip: "🎹 Now play the loop on your <b>real piano</b>!", done: "That's the loop in 100+ songs! 🎉" },
+  "m-boom": { say: "<b>Boom!</b> You know 4 chords 💥<br>Play them in a row with your right hand:<br><b>G → D → Em → C</b><br>Next: keep a steady beat, then real songs!", want: { seq: [G, D, EM, C] }, demoSeq: [[G, "G"], [D, "D"], [EM, "Em"], [C, "C"]], tip: "🎹 Now play the loop on your <b>real piano</b>!", done: "That's the loop in 100+ songs! 🎉" },
+  "m-count": { say: "Keep a <b>steady beat</b> 🥁<br>Play each chord <b>4 times</b>, counting out loud: <b>one, two, three, four</b>. Change chord on the next <b>one</b>, without stopping.<br><b>G</b> ×4 → <b>D</b> ×4 → <b>Em</b> ×4 → <b>C</b> ×4<br><small>Tap <b>Hear it in time</b> first. Here, one press per chord is enough.</small>", want: { seq: [G, D, EM, C] }, demoSeq: [[G, "G"], [D, "D"], [EM, "Em"], [C, "C"]], along: "count", tip: "🎹 On your piano: slow and steady beats fast and wobbly. Tap your foot on every count!", done: "That's the beat! 🥁 Songs are just chords on a steady beat." },
   "m-song-ateam": { say: "Try <b>The A Team</b> by Ed Sheeran with <b>easy chords</b> 🎶 (right hand only)<br><b>G → D → Em → C</b><br><small>(Shown in the easy key of G.)</small>", want: { seq: [G, D, EM, C] }, demoSeq: [[G, "G"], [D, "D"], [EM, "Em"], [C, "C"]], tip: "🎹 Now play along with the real song!", done: "You just played The A Team! 🎉" , video: "the-a-team", song: "The A Team", shareSong: "The A Team" },
   "m-song-ateam-2h": { twoHand: true, say: "Now <b>The A Team</b> again, a <b>harder</b> way that sounds <b>richer and deeper</b> (and makes you look good on piano! 😎)<br>Same chords, plus the low note in your left hand, just like you learned.<br><span class=\"hk-hand-l\">L</span> Left hand, low: <b>G2 → D3 → E3 → C3</b><br><span class=\"hk-hand-r\">R</span> Right hand: <b>G → D → Em → C</b>", want: { seq: [H_G, H_D, H_EM, H_C] }, demoSeq: [[H_G, "G"], [H_D, "D"], [H_EM, "Em"], [H_C, "C"]], range: [36, 76], tip: "🎹 On your real piano, press both hands together.", done: "Rich and deep! 😎🎶" },
   "m-song-perfect": { say: "Now <b>Perfect</b> by Ed Sheeran with <b>easy chords</b> 💕<br>Same chords, new order:<br><b>G → Em → C → D</b><br><small>(Shown in the easy key of G.)</small>", want: { seq: [G, EM, C, D] }, demoSeq: [[G, "G"], [EM, "Em"], [C, "C"], [D, "D"]], tip: "🎹 Now play along with the real song!", done: "You just played Perfect! 💕" , video: "perfect", song: "Perfect", shareSong: "Perfect" },
@@ -457,6 +463,13 @@ const MICRO_CARDS = {
       <h3 data-q="How do I learn that? 🎧">Listen to your favourite songs 🎧</h3>
       <p><b>Really pay attention</b> to how hard the pianist presses the keys. Is the verse soft? Does the chorus get stronger? Acoustic and piano versions make it easy to hear.</p>`,
     say: "Tap <b>Soft</b>, then <b>Strong</b>: same chord, different mood 💛<br>Next time you hear a song, follow how hard the piano plays 🎧", want: { tap: true }, ok: "I'll listen! 🎧", show: G, soft: true, done: "Your ears are your best teacher 👂💛" },
+  "m-practise": { chat: `<h3 data-q="How should I practise? 🤔">Little and often 📅</h3>
+      <p><b>10 to 15 minutes every day</b> beats one long session a week. Your brain keeps learning between sessions, even while you sleep.</p>
+      <h3 data-q="What if I keep making the same mistake? 🙈">Slow down and loop the tricky bit 🐢</h3>
+      <p>Play <b>slowly enough that you never stop</b>, then speed up a little. Stuck on one change? Don't start the song again: play just <b>those 2 chords</b>, back and forth, slowly, until they're easy.</p>
+      <h3 data-q="Any pro tricks? 😎">Think one chord ahead 👀</h3>
+      <p>While you hold a chord, think of the <b>next</b> one and where it is. Try not to stare at your hands: feel for the groups of black keys instead.</p>`,
+    say: "Little and often, slow first, loop the tricky bit, think ahead 🐢👀", want: { tap: true }, ok: "Got it 👍", noKeys: true, done: "That's how pianists practise! 🎹" },
   "m-pop-song": { chat: `<h3 data-q="Can I play other songs too? 🎶">Yes! Hundreds of them 🎉</h3>
       <p>Lots of pop songs use the same <b>4 chords</b> you know.</p>
       <p>Pick one in <b>Practice</b>, or <b>upload any song</b> there and we'll find the chords for you!</p>`,
@@ -474,7 +487,10 @@ const MICRO_CARDS = {
   "d2-minor": { say: "Now move the middle key <b>one step down</b> to the black key: <b>C · E♭ · G</b><br>It sounds <b>sad</b> 🥲 That's <b>C minor</b>!", want: { notes: CMIN }, show: CMIN, done: "Sad! 🥲 One key changed it." },
   "q-sad": { say: "Quick quiz! 🧠<br>Which one sounds <b>sad</b>?", want: { choice: "C minor" }, options: ["C major", "C minor"], noKeys: true, done: "Yes! Minor sounds sad 🥲" },
   "d2-am": { say: "<b>A minor</b>: <b>A · C · E</b><br>All white keys, and it's sad 🥲", want: { notes: AM }, show: AM, done: "That's A minor! 🎉" },
-  "d2-pattern": { chat: `<h3 data-q="Which chords are happy and which are sad? 🤔">Here's a secret 🤫</h3>
+  "d2-pattern": { chat: `<h3 data-q="Chords have numbers? 🔢">Yes: count up the letters from home 🔢</h3>
+      <p>In the key of G, home is <b>G = 1</b>. Count up the letters: <b>A = 2</b>, <b>B = 3</b>, <b>C = 4</b>, <b>D = 5</b>, <b>E = 6</b>.</p>
+      <p>So your Lesson 1 loop <b>G → D → Em → C</b> is <b>1 · 5 · 6 · 4</b>! Musicians use the numbers because they stay the same in every key.</p>
+      <h3 data-q="Which chords are happy and which are sad? 🤔">Here's a secret 🤫</h3>
       <p>In every <b>major</b> key, chords <b>1, 4 and 5</b> are happy 😀 (in the key of G: <b>G, C and D</b>)</p>
       <p>Chords <b>2, 3 and 6</b> are sad 🥲 (in the key of G: <b>Am, Bm and Em</b>)</p>
       <p>That's why <b>Em</b> (chord 6 in the key of G) sounds sad!</p>`,
@@ -499,7 +515,7 @@ const MICRO_CARDS = {
       <h3 data-q="Can a song move to a different key?">Yes, and the numbers stay the same 🔢</h3>
       <p>Move a song to a new key and the letters change, but the numbers <b>1 · 5 · 6 · 4</b> stay the same. Let's try it!</p>`,
     say: "Ready to play in a new key? 🚀", want: { tap: true }, ok: "Let's go! 🚀", noKeys: true, done: "Same numbers, new letters 🎉" },
-  "d2-key-c": { say: "Same 4 chords, new <b>key</b> (C):<br><b>C → G → Am → F</b><br>Songs like <i>Let It Be</i>!", want: { seq: [KC_C, KC_G, KC_AM, KC_F] }, demoSeq: [[KC_C, "C"], [KC_G, "G"], [KC_AM, "Am"], [KC_F, "F"]], done: "Same numbers, new key! 🏆" },
+  "d2-key-c": { say: "Same loop, new <b>key</b> (C):<br><b>C → G → Am → F</b><br>Songs like <i>Let It Be</i>!", want: { seq: [KC_C, KC_G, KC_AM, KC_F] }, demoSeq: [[KC_C, "C"], [KC_G, "G"], [KC_AM, "Am"], [KC_F, "F"]], done: "Same numbers, new key! 🏆" },
   "d3-left": { chat: `<h3 data-q="How do I find the low notes on my real piano? 👈">Further left, lower down the piano 👈</h3>
       <p><b>Middle C is C4</b>. Smaller numbers are further <b>left</b> (lower). Bigger numbers are further <b>right</b> (higher).</p>
       <p>🖐️ <b>Right hand</b> stays near middle C: the G chord is <b>G3 · B3 · D4</b>.</p>
@@ -510,6 +526,10 @@ const MICRO_CARDS = {
     say: "Press <b>G2</b> with your <b>left hand</b> 👈<br>(the blue key marked G 2)", labels: "octave", want: { notes: [43] }, show: [43], done: "Left hand on G2! 👈" },
   "d3-together": { say: "Both hands, now in the <b>key of C</b> 🙌<br>👈 Left hand, low: <b>C3</b><br>🖐️ Right hand, on middle C: <b>C4 · E4 · G4</b>", want: { notes: [48, ...KC_C] }, show: [48, ...KC_C], done: "Two hands in C! 🙌" },
   "d3-walk": { twoHand: true, say: "Same trick as Lesson 1, now in the <b>key of C</b> (Let It Be!) 🚶<br>👈 Left hand plays each chord's <b>letter</b>, down low:<br><b>C3 → G2 → A2 → F2</b><br>🖐️ Right hand plays <b>C → G → Am → F</b>.", want: { seq: [[48, ...KC_C], [43, ...KC_G], [45, ...KC_AM], [41, ...KC_F]] }, demoSeq: [[[48, ...KC_C], "C"], [[43, ...KC_G], "G"], [[45, ...KC_AM], "Am"], [[41, ...KC_F], "F"]], range: [36, 76], done: "Your bass is walking! 🚶" },
+  "d3-lazy": { chat: `<h3 data-q="My hand jumps around a lot. Is there a trick? 🤔">Yes! The lazy-hand trick 😎</h3>
+      <p>A chord's keys can go in any order: <b>D</b> can be <b>D · F♯ · A</b> or <b>F♯ · A · D</b>. It's still D! These are called <b>inversions</b>.</p>
+      <p>So pick the version of the next chord that's <b>closest</b> to where your hand already is. Keep the keys the two chords share, and move the others just one step.</p>`,
+    say: "Play <b>G → D → Em → C</b> with a lazy right hand 😎<br><b>G B D</b> → <b>F♯ A D</b> → <b>G B E</b> → <b>G C E</b><br>Your hand hardly moves!", want: { seq: [G, D_INV, EM_INV, C_INV] }, demoSeq: [[G, "G"], [D_INV, "D"], [EM_INV, "Em"], [C_INV, "C"]], tip: "🎹 Pianists do this all the time: smoother, faster, and it sounds better. Try it in your songs!", done: "Smooth! Same chords, less jumping 😎" },
   "d3-ear-1": { say: "Use your ears 👂<br>Tap <b>🔊 Hear it</b>.<br>Is it <b>happy</b> or <b>sad</b>?", want: { choice: "sad" }, demo: AM, done: "Yes, sad! That was A minor 🥲" },
   "d3-ear-2": { say: "One more 👂<br>Happy or sad?", want: { choice: "happy" }, demo: D, done: "Yes, happy! That was D major 😀" },
   "d3-by-ear": { chat: `<h3 data-q="Can I play songs just by listening? 👂">Yes! It's called playing by ear 👂</h3>
@@ -539,7 +559,7 @@ const MICRO_CARDS = {
       <p>A 1988 rock song that became famous on the piano: the French pianist <b>Maxence Cyrin</b> turned it into a slow, dreamy piano piece.</p>
       <p>The whole song loops <b>4 chords</b> in the key of <b>E</b>: <b>E → C#m → G# → A</b>.</p>
       <h3 data-q="That's a lot of black keys! 😬">A few, but it's the same shape every time 🙌</h3>
-      <p>Each chord is still <b>press · skip · press · skip · press</b>. <b>E</b>, <b>C#m</b> and <b>A</b> each have one black key; <b>G#</b> has two. Watch the glowing keys and take it slowly.</p>`,
+      <p>Each chord is still <b>press · skip · press · skip · press</b>. <b>E</b> and <b>A</b> each have one black key; <b>C#m</b> and <b>G#</b> have two. Watch the glowing keys and take it slowly.</p>`,
     say: "Play the loop: <b>E → C#m → G# → A</b> 🌀", want: { seq: [WM_E, WM_CSM, WM_GS, WM_A] }, demoSeq: [[WM_E, "E"], [WM_CSM, "C#m"], [WM_GS, "G#"], [WM_A, "A"]], tip: "🎹 Play it slowly and softly, like Maxence Cyrin's piano version!", done: "That's Where Is My Mind? 🎉🌀", video: "where-is-my-mind", song: "Where Is My Mind?", shareSong: "Where Is My Mind?" },
   "d3-talk": { chat: `<h3 data-q="Can we do a slow one? 🎤">Yes! "I Don't Want to Talk About It" 💔</h3>
       <p>Written by <b>Danny Whitten</b> (1971) and made famous by <b>Rod Stewart</b> (1977). A gentle ballad in the key of <b>B♭</b>.</p>
@@ -558,10 +578,14 @@ const MICRO_CARDS = {
   "d4-genres": { chat: `<h3 data-q="What's Lesson 4 about? 🤔">Music has flavours 🍦</h3>
       <p>They're called <b>genres</b> (say "zhon-ruhs"): <b>pop</b>, <b>rock</b>, <b>blues</b>, <b>jazz</b>, <b>classical</b>, and many more like reggae, country and R&amp;B.</p>
       <p>Same piano, same keys. What changes is <b>which chords</b> they love and <b>how</b> they play them.</p>`,
-    say: "Let's taste 5 flavours! 🎶", want: { tap: true }, ok: "Let's go! 🚀", noKeys: true, done: "Here we go! 🎹" },
+    say: "Let's taste 6 flavours! 🎶", want: { tap: true }, ok: "Let's go! 🚀", noKeys: true, done: "Here we go! 🎹" },
   "d4-pop": { chat: `<h3 data-q="What makes a song pop? 🎤">Catchy chords, round and round 🎤</h3>
       <p><b>Pop</b> loves a short loop of 4 chords that repeats, so you can sing along. You already know the most famous one: <b>1 · 5 · 6 · 4</b>!</p>`,
     say: "Pop! Play <b>G → D → Em → C</b> 🎤", want: { seq: [G, D, EM, C] }, demoSeq: [[G, "1"], [D, "5"], [EM, "6"], [C, "4"]], done: "That's pop! 🎤 (Perfect, Let It Be…)" },
+  "d4-sus": { chat: `<h3 data-q="Any pop tricks with the chords I know? ✨">Sus chords: a chord that waits ⏳</h3>
+      <p>Take <b>D</b> (D · F♯ · A) and move the middle key <b>one key up</b>, F♯ → G. That's <b>Dsus4</b>: it sounds like it's waiting. Move it back and it feels like coming home.</p>
+      <p>Move the middle key <b>down</b> instead (F♯ → E) and you get <b>Dsus2</b>: open and dreamy, like in <i>River Flows in You</i> and <i>Bubbly</i>.</p>`,
+    say: "Play <b>D → Dsus4 → D</b> ⏳<br><b>D F♯ A</b> → <b>D G A</b> → <b>D F♯ A</b>", want: { seq: [D, DSUS4, D_AGAIN] }, demoSeq: [[D, "D"], [DSUS4, "Dsus4"], [D_AGAIN, "D"]], done: "Waiting… and home! ✨" },
   "d4-rock": { chat: `<h3 data-q="And rock? 🎸">Big, simple, strong chords 🎸</h3>
       <p><b>Rock</b> plays simple chords <b>strong</b>, with a driving beat. A rock favourite is <b>1 · ♭7 · 4</b>.</p>
       <p>That's <i>Sweet Home Alabama</i> by Lynyrd Skynyrd: <b>D · C · G</b>.</p>`,
@@ -575,7 +599,9 @@ const MICRO_CARDS = {
   "d4-stairway": { twoHand: true, chat: `<h3 data-q="What about Stairway to Heaven? 🪜">Led Zeppelin, 1971: one of the most famous intros ever 🪜</h3>
       <p>It's in <b>A minor</b>. The magic is the <b>bass line</b>: it walks down one key at a time, <b>A → G♯ → G → F♯ → F</b>, while the top stays nearly still.</p>
       <h3 data-q="How do my hands do that?">Your right hand mostly stays put 🙌</h3>
-      <p><span class="hk-hand-r">R</span> Right hand holds <b>A · C · E</b> for most of it. <span class="hk-hand-l">L</span> Your left hand walks down. Each new bass note makes a new chord: <b>Am → Am/G♯ → C/G → D/F♯ → Fmaj7</b>, then <b>G → Am</b>.</p>`,
+      <p><span class="hk-hand-r">R</span> Right hand holds <b>A · C · E</b> for most of it. <span class="hk-hand-l">L</span> Your left hand walks down. Each new bass note makes a new chord: <b>Am → Am/G♯ → C/G → D/F♯ → Fmaj7</b>, then <b>G → Am</b>.</p>
+      <h3 data-q="What does the slash in C/G mean? 🤔">The letter after the slash is the bass 👈</h3>
+      <p><b>C/G</b> means: play a <b>C</b> chord, with <b>G</b> as the lowest note (your left hand). You'll see slash chords on lots of chord charts.</p>`,
     say: "The intro, with two hands 🪜<br><span class=\"hk-hand-l\">L</span> Left hand walks down: <b>A → G♯ → G → F♯ → F → G → A</b><br><span class=\"hk-hand-r\">R</span> Right hand: <b>A C E</b> (C/G: G C E · D/F♯: A D F♯ · G: G B D)", want: { seq: [SW_AM, SW_AMGS, SW_CG, SW_DFS, SW_FMAJ7, SW_G, SW_AM] }, demoSeq: [[SW_AM, "Am"], [SW_AMGS, "Am/G♯"], [SW_CG, "C/G"], [SW_DFS, "D/F♯"], [SW_FMAJ7, "Fmaj7"], [SW_G, "G"], [SW_AM, "Am"]], range: [36, 76], tip: "🎹 Play it slowly and gently, letting each chord ring.", done: "That's the Stairway intro! 🪜✨", video: "song-stairway-to-heaven", song: "Stairway to Heaven", shareSong: "Stairway to Heaven" },
   "d4-stairway-solo": { twoHand: true, chat: `<h3 data-q="And the famous solo? 🎸">Jimmy Page's solo sits on just 3 chords 🎸</h3>
       <p>Near the end the song speeds up and Jimmy Page plays his famous guitar solo over a loop of <b>Am → G → F</b>, round and round.</p>
@@ -591,7 +617,7 @@ const MICRO_CARDS = {
   "d4-glory": { twoHand: true, chat: `<h3 data-q="What's trip-hop? 🎧">Slow beats, dreamy chords 🎧</h3>
       <p><b>Trip-hop</b> came from <b>Bristol</b>, England, in the 1990s: slow hip-hop beats with moody, jazzy chords. <b>Portishead's "Glory Box"</b> (1994) is a classic.</p>
       <h3 data-q="Is it hard? 😬">Here's the trick: your right hand never moves 🙌</h3>
-      <p>🖐️ <b>Right hand</b>: hold <b>D♯ · F♯ · A♯</b> (three black keys in a row: a D♯ minor chord) the whole time.</p>
+      <p>🖐️ <b>Right hand</b>: hold <b>D♯ · F♯ · A♯</b> (three black keys: a D♯ minor chord) the whole time.</p>
       <p>👈 <b>Left hand</b> walks down, one key at a time: <b>D♯ → C♯ → C → B</b>.</p>
       <p>Each new bass note turns the same right hand into a new chord: <b>D♯m → D♯m/C♯ → B♯ø7 → Bmaj7</b>. That's the whole song!</p>`,
     say: "Right hand stays on <b>D♯ F♯ A♯</b> 🖐️<br>👈 Left hand walks down: <b>D♯ → C♯ → C → B</b>", want: { seq: [GB_1, GB_2, GB_3, GB_4] }, demoSeq: [[GB_1, "D♯m"], [GB_2, "/C♯"], [GB_3, "B♯ø7"], [GB_4, "Bmaj7"]], range: [45, 76], tip: "🎧 Play it slowly and softly, with a lazy beat.", done: "That's trip-hop! 🎧✨", video: "song-glory-box", song: "Glory Box", shareSong: "Glory Box" },
@@ -1211,7 +1237,7 @@ function initLessonsTab(root) {
       ${card.want.tap ? `<button class="hk-btn hk-btn-primary" id="hk-micro-ok">${card.ok || "Got it!"}</button>` : ""}
       ${card.want.choice ? (card.options || ["happy", "sad"]).map((o) => `<button class="hk-btn hk-micro-choice" data-choice="${o}">${o === "happy" ? "😀 Happy" : o === "sad" ? "🥲 Sad" : o}</button>`).join("") : ""}
       ${card.extra === "pop" ? `<button class="hk-btn" data-go-tab="practice">${icon("song", 20)} Find a song in Practice</button>` : ""}
-      ${card.song || card.video ? `<button class="hk-btn hk-micro-skip" id="hk-micro-skip">Next →</button>` : card.want.seq || card.want.notes || card.want.pc !== undefined ? `<button class="hk-btn hk-micro-skip" id="hk-micro-skip">Skip →</button>` : ""}`;
+      ${card.song || card.video ? `<button class="hk-btn hk-micro-skip" id="hk-micro-skip">Next →</button>` : card.want.seq || card.want.notes || card.want.pcs || card.want.pc !== undefined ? `<button class="hk-btn hk-micro-skip" id="hk-micro-skip">Skip →</button>` : ""}`;
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     async function playSeq(seq) {
       for (const [i, [notes, label]] of seq.entries()) {
@@ -1267,6 +1293,24 @@ function initLessonsTab(root) {
         btn.innerHTML = "■ Stop";
         const bars = [C7, C7, C7, C7, F7, F7, C7, C7, G7, F7, C7, G7];
         kb.playTimeline(voicingsToEvents(bars, 2.0).map((e) => ({ ...e, hand: "right" })), { onDone: () => { delete btn.dataset.running; btn.innerHTML = label; } });
+      });
+    }
+
+    // Keep the beat: each chord 4 times on the beat (80 a minute), twice round.
+    if (card.along === "count") {
+      thread.insertAdjacentHTML("beforeend", `<div class="hk-micro-song"><div class="hk-micro-song-btns"><button class="hk-btn" id="hk-along-count">${icon("play", 20)} Hear it in time</button></div></div>`);
+      const btn = thread.querySelector("#hk-along-count");
+      const label = btn.innerHTML;
+      btn.addEventListener("click", () => {
+        if (btn.dataset.running) { kb.stopPlayAlong(); return; }
+        btn.dataset.running = "1";
+        btn.innerHTML = "■ Stop";
+        const BEAT = 0.75;
+        const events = [];
+        [G, D, EM, C, G, D, EM, C].forEach((ch, i) => {
+          for (let k = 0; k < 4; k++) ch.forEach((m) => events.push({ midi: m, start: (i * 4 + k) * BEAT, dur: BEAT * 0.8, hand: "right" }));
+        });
+        kb.playTimeline(events, { onDone: () => { delete btn.dataset.running; btn.innerHTML = label; } });
       });
     }
 
@@ -1659,7 +1703,7 @@ function initLessonsTab(root) {
     function showList() {
       kb.stopPlayAlong();
       content.innerHTML = chatHtml(`<h3>Pick a song you love 🎶</h3>
-        <p>All of these use the <b>1 · 5 · 6 · 4</b> pattern you know, some in a different key. The falling blocks show you what to press.</p>`, "idle") +
+        <p>All of these use chords from your 4-chord family (<b>1 · 4 · 5 · 6</b>), in different keys and orders. The falling blocks show you what to press.</p>`, "idle") +
         `<div class="hk-choose-list">${CHOOSE_SONGS.map((s) => `
           <button class="hk-ph-song" data-song="${s.title}">${icon("song", 32)}
             <span class="hk-ph-song-body"><b>${s.title}</b><span>${s.artist} · ${s.chords.join(" · ")}</span></span>${icon("play", 28)}</button>`).join("")}</div>`;
@@ -2520,7 +2564,7 @@ function initLessonsTab(root) {
         kb.clearHighlights();
         content.innerHTML = mascotSay(`
           <h3>You read your first tune from sheet music!</h3>
-          <p>More sheet-music lessons are coming soon.</p>`);
+          <p>More sheet-music lessons come later in your roadmap.</p>`);
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Next lesson →</button>`;
         controls.querySelector("#hk-done").addEventListener("click", startNextLesson);
       }
@@ -2543,7 +2587,7 @@ function initLessonsTab(root) {
         content.innerHTML = `
           <p class="hk-step-indicator">Chord ${step + 1} of 4</p>
           <div class="hk-big-degree">${chord.number}<span class="hk-big-letter">${chord.letter}</span></div>
-          ${mascotSay(`<p>A shape you already know: <strong>${chord.letter} ${chord.quality}</strong>. This time the order is
+          ${mascotSay(`<p>A shape you already know: <strong>${chord.letter.replace(/m$/, "")} ${chord.quality}</strong>. This time the order is
              1, 6, 4, 5.</p>`)}`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Next</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
@@ -3068,7 +3112,9 @@ function initLessonsTab(root) {
         <button class="hk-btn" id="hk-pedal-off">&#9658; Without the pedal</button>
         <button class="hk-btn hk-btn-primary" id="hk-pedal-on">&#9658; With the pedal</button>
       </div>
-      <p class="hk-honest-note">(A simple demo: with the pedal, the notes just ring longer and blend together.)</p>`,
+      <p class="hk-honest-note">(A simple demo: with the pedal, the notes just ring longer and blend together.)</p>
+      <h3>When do I change the pedal?</h3>
+      <p>Keep your <strong>heel on the floor</strong>. Play the new chord <strong>first</strong>, then quickly lift the pedal and press it down again: "play, up-down". Change it on every new chord, or the old chord smudges into the new one.</p>`,
       "assets/mascot-poses/grand-piano.png");
     controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Fun, got it! Next lesson →</button>`;
     // The buttons live inside the chat bubble, which is built a moment
@@ -3105,7 +3151,7 @@ function initLessonsTab(root) {
         kb.clearHighlights();
         content.innerHTML = mascotSay(`
           <h3>Lesson complete.</h3>
-          <p>An inversion is the same chord with a different note on the bottom. Next time you practise your first 4 chords, try this C shape. It feels smoother!</p>`);
+          <p>An inversion is the same chord with a different note on the bottom. It's the lazy-hand trick from Lesson 3: pick the shape of the next chord that's closest to where your hand already is.</p>`);
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Next lesson →</button>`;
         controls.querySelector("#hk-done").addEventListener("click", startNextLesson);
       }
@@ -3252,7 +3298,8 @@ function initLessonsTab(root) {
         content.innerHTML = `
           <p class="hk-step-indicator">Note ${step + 1} of 8</p>
           <div class="hk-big-degree">${step + 1}<span class="hk-big-letter">finger ${finger}</span></div>
-          <p>${scale.key} major scale, degree ${step + 1}. Key signature: <strong>${scale.accidentals}</strong>.</p>`;
+          <p>${scale.key} major scale, degree ${step + 1}. Key signature: <strong>${scale.accidentals}</strong>.</p>
+          ${step > 0 && finger === 1 ? `<p>👍 <strong>Thumb under:</strong> slide your thumb under your other fingers to reach this key, so you never run out of fingers. Keep your wrist level and smooth.</p>` : ""}`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-next">Next</button>`;
         controls.querySelector("#hk-next").addEventListener("click", () => { step++; renderStep(); });
         playTone(midi, { duration: 0.4 });
@@ -3725,7 +3772,7 @@ function initLessonsTab(root) {
       } else {
         markLessonComplete("lesson-34");
         kb.clearHighlights();
-        content.innerHTML = `<h3>Lesson complete.</h3><p>One more day: the full performance!</p>`;
+        content.innerHTML = `<h3>Lesson complete.</h3><p>Next: the full performance!</p>`;
         controls.innerHTML = `<button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-done">Next lesson →</button>`;
         controls.querySelector("#hk-done").addEventListener("click", startNextLesson);
       }
@@ -3756,7 +3803,7 @@ function initLessonsTab(root) {
           ...SONGS.filter((s) => s.confidence === "confirmed" && /minor/i.test(s.key)).map((s) => s.title),
         ]);
         content.innerHTML = `
-          <h3>35 days done.</h3>
+          <h3>Canon in D, done! 🎉</h3>
           <p>You can play scales in four major and three minor keys, use both hands together, and play 7th chords and inversions. You've also played two classical pieces!</p>
           <p>That makes you a <strong>strong early-intermediate</strong> player. Advanced piano takes years, so keep going!</p>
           <p>You now know the main pattern behind <strong>${touched.size} of ${SONGS.length}</strong> songs in the library.</p>`;

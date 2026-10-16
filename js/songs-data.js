@@ -4825,6 +4825,39 @@ SONGS.forEach((s) => {
 
 // Song maps researched in Oct 2026 from chord charts; the form may differ slightly from the recording.
 const APPROX_STRUCTURES = new Set(["Where Is My Mind?", "Linger", "Bad Guy", "Last Christmas", "Die With a Smile", "Blinding Lights", "Starboy", "As It Was", "Someone You Loved", "Sunflower", "One Dance", "Stay", "Believer", "I Wanna Be Yours", "Heat Waves", "Yellow", "The Night We Met", "Closer", "Lucid Dreams", "You Belong With Me", "Lover", "Shake It Off", "Shallow", "Million Reasons", "Always Remember Us This Way", "Have Yourself a Merry Little Christmas", "Thinking Out Loud", "The A Team", "Galway Girl", "Gin and Juice", "Despacito", "Knockin' on Heaven's Door", "Wonderwall", "Love Yourself", "Count on Me", "Zombie", "Hey Soul Sister", "Viva La Vida", "Budapest", "Sweet Home Alabama", "Wonderful Tonight", "Over the Rainbow", "Chasing Cars", "Sweet Caroline", "Livin' on a Prayer", "I Will Survive", "Mr. Brightside", "Autumn Leaves", "All the Things You Are", "So What", "Blue Monk", "Amazing Grace", "Break My Heart Again", "Can't Help Falling in Love", "Just the Way You Are", "Sweet Child O' Mine", "Hotel California", "Summer of '69", "Hallelujah", "Imagine", "Happy Birthday to You", "Twinkle Twinkle Little Star", "Brown Eyed Girl", "Three Little Birds", "Jingle Bells", "Hey Jude", "Take Me Home, Country Roads", "Autumn Leaves (Chet Baker, simplified)", "Clocks", "Piano Man", "Hello", "Counting Stars", "Comptine d'un autre été", "River Flows in You", "Radioactive", "Billie Jean", "Sweet Dreams (Are Made of This)", "Fly Me to the Moon", "Take Five", "All of Me (jazz standard)", "Summertime", "Satin Doll", "Cantaloupe Island", "Prelude in C major, BWV 846", "Hungarian Rhapsody No. 2", "Blank Space", "Bad Romance", "What Was I Made For?", "Ocean Eyes", "When the Party's Over", "Karma Police", "No Surprises", "Everything In Its Right Place", "Pyramid Song", "I Want It That Way", "Man! I Feel Like a Woman!", "Total Eclipse of the Heart", "Take On Me", "Like a Prayer", "Valerie", "Before He Cheats", "Pata Pata", "Hava Nagila", "Hoppípolla", "Dilemma", "Hot in Herre", "I'm Like a Bird", "Bubbly", "Like a Star", "Anak", "Tadhana", "Sukiyaki", "Kal Ho Naa Ho", "Volare (Nel blu, dipinto di blu)", "Dragostea Din Tei", "Jerusalema", "Vintersaga", "Ode to Joy", "Minuet in G Major", "Für Elise", "Canon in D", "Symphony No. 5 (Theme)", "Morning Mood", "Moonlight Sonata (3rd Movement)", "La Campanella", "Fantaisie-Impromptu", "Piano Concerto No. 2", "Chasse-Neige", "Clair de Lune", "Nocturne in E-flat Major, Op. 9 No. 2", "Rondo alla Turca", "Revolutionary Étude", "Tennessee Whiskey", "Angels", "My Way", "Lose Control", "Aïcha", "Shchedryk", "Zorba's Dance", "Şımarık", "Young, Wild & Free", "Can You Feel the Love Tonight", "There Will Never Be Another You", "When I Was Your Man", "Set Fire to the Rain", "Heart and Soul", "All I Want for Christmas Is You", "Let Her Go", "Dancing Queen", "Misty", "Say You Won't Let Go", "Somebody's Me", "My Funny Valentine (easy version)", "Sweater Weather", "A Horse With No Name", "Summer Nights", "Take the A Train", "Die for You", "Still D.R.E.", "Gymnopédie No. 1", "Levitating", "Let It Go", "Africa", "Stella by Starlight", "All of Me", "25 Minutes", "The Blue Danube (waltz)", "Wildest Dreams", "Happy", "Bohemian Rhapsody", "My Funny Valentine", "November Rain", "Someday", "Drop It Like It's Hot", "Banana Pancakes", "Blue Bossa", "Almost Blue", "Make You Feel My Love", "My Love Mine All Mine", "Papaoutai", "Vivir Mi Vida", "Nel blu, dipinto di blu (Volare)", "Atemlos durch die Nacht", "Kesariya", "Sekai ni Hitotsu Dake no Hana", "Eight", "Tamally Maak", "La Vie en rose", "Mas Que Nada", "Bella Ciao", "Tage wie diese", "Agar Tum Saath Ho", "Plastic Love", "The Moon Represents My Heart (Yuèliàng Dàibiǎo Wǒ de Xīn)", "Habibi Ya Nour El Ein", "Non, je ne regrette rien", "Ai Se Eu Te Pego", "L'Italiano", "Auf uns", "Pal Pal Dil Ke Paas", "Spring Day", "Tián Mì Mì", "Ya Lili", "La Bamba", "Trem-Bala", "Felicità", "Stille Nacht, heilige Nacht", "Ue o Muite Arukō (Sukiyaki)", "Love Scenario", "Sunny Day (Qíng Tiān)", "Ya Rayah", "Les Champs-Elysées", "Guantanamera", "Tempo Perdido", "Sarà perché ti amo", "Tum Hi Ho", "Lemon", "Through the Night", "Fairy Tale (Tóng Huà)", "Lamma Bada Yatathanna", "Je veux", "Bailando", "Evidências", "99 Luftballons", "Channa Mereya", "Marigold", "Stay With Me", "Mouse Loves Rice (Lǎoshǔ Ài Dàmǐ)", "Glory Box", "I Don't Want to Talk About It", "Save Your Tears", "Beanie", "Stairway to Heaven"]);
+// Numbers (scale degrees) for the verified chord lists, chord for chord
+// (audit 2026-10-16: some were in the old order, wrong or incomplete).
+const DEGREE_FIXES = {
+  "Valerie": "Imaj7 - ii7 - IV - iii",
+  "Hava Nagila": "I - iv - bvii - I7",
+  "Jerusalema": "vi - IV - I - V",
+  "Zombie": "i - VImaj7 - III - VII",
+  "Despacito": "i - VI - III - VII",
+  "Angels": "V - vi - IV - I",
+  "I Want It That Way": "vi - IV - I - V",
+  "Volare (Nel blu, dipinto di blu)": "I - vi - ii7 - V7",
+  "Sweater Weather": "VI - i - iv - III",
+  "Somebody's Me": "I - IV - ii - V",
+  "River Flows in You": "vi - IVsus2 - I - V",
+  "Summer Nights": "I - IV - V - ii7",
+  "Sweet Caroline": "I - IV - V - vi",
+  "Can't Help Falling in Love": "I - iii - vi - IV - V",
+  "Kal Ho Naa Ho": "I - vi - IV - v7",
+  "Vintersaga": "i - III - iv - v - VI - VII",
+  "Sukiyaki": "I - vi - IV - V",
+  "Amazing Grace": "I - IV - V - vi",
+  "Minuet in G Major": "I - IV - V7 - I",
+  "Happy Birthday to You": "I - V7 - I7 - IV",
+  "Twinkle Twinkle Little Star": "I - IV - I - V7",
+  "Jingle Bells": "I - IV - V7 - I",
+  "Hallelujah": "I - vi - IV - V - III7",
+  "Ode to Joy": "I - V - I - V",
+  "Symphony No. 5 (Theme)": "i - iv - V7 - i",
+  "Rondo alla Turca": "i - V - III - VII",
+  "Für Elise": "i - V - i - III - VII - i - V",
+  "Anak": "i - iv - VII - III - VI - iv - V - i",
+  "I Wanna Be Yours": "i - iv - v - i",
+};
 // Verified 2026-10-07 against the original recordings (song-verified.js):
 // the real key, tempo and whole-song map, plus solo guides for guitar.
 // It replaces the older data above for every song it covers; only songs
@@ -4837,6 +4870,9 @@ SONGS.forEach((song) => {
     ...(v.tuning ? { tuning: v.tuning } : {}), ...(v.capoNote ? { capoNote: v.capoNote } : {}),
     ...(v.solos ? { solos: v.solos } : {}), ...(v.durationSec ? { durationSec: v.durationSec } : {}),
   });
+  // The verified chords can come in a different order from the old list, so
+  // the numbers shown with them ("as numbers: …") are corrected to match.
+  if (DEGREE_FIXES[song.title]) song.degreeSequence = DEGREE_FIXES[song.title];
   SONG_STRUCTURES[song.title] = v.structure;
   if (v.status === "uncertain") APPROX_STRUCTURES.add(song.title);
   else APPROX_STRUCTURES.delete(song.title);

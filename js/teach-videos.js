@@ -1,5 +1,5 @@
 // Real teachers' hands on video, shown at the top of the lessons they
-// match (official channels only: Hoffman Academy, Pianote, Bill Hilton;
+// match (owner rule: no Pianote, only videos over 1M views;
 // IDs checked with YouTube oEmbed, 2026-10-07).
 import { videoHtml } from "./media.js";
 
@@ -16,7 +16,6 @@ const TEACH = {
   "d4-jazz": ["teach-jazz-improv"],
   "lesson-36": ["teach-jazz-improv"],
   "lesson-jazz-preview": ["teach-jazz-improv"],
-  "lesson-handsloop": ["teach-jazz-improv"],
   "lesson-pedals": ["teach-pedal"],
 };
 
