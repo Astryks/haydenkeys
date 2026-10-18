@@ -58,12 +58,42 @@ function renderNoteHighway(container, keyLayout, { lookaheadSec = 2.2, hitLineFr
     return hitLineY - (secondsUntilHit / lookaheadSec) * hitLineY;
   }
 
-  function render(now, notes) {
+  // opts (all optional, used by uploaded songs' "Every note" view):
+  //  bars: [seconds] — a thin line + bar number where each bar starts
+  //  velocity: true — soft notes drawn lighter, strong ones solid with an outline
+  //  loop: { start, end } — the looped section is marked at its edges
+  function render(now, notes, opts = {}) {
     const w = canvas.width;
     const h = canvas.height;
     const hitLineY = h * hitLineFrac;
     ctx.clearRect(0, 0, w, h);
     const colors = handColors();
+
+    if (opts.bars && opts.bars.length) {
+      ctx.font = "700 10px system-ui, sans-serif";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "bottom";
+      opts.bars.forEach((t, i) => {
+        if (t > now + lookaheadSec || t < now - lookaheadSec) return;
+        const y = yForTime(t, now, hitLineY);
+        if (y < 0 || y > h) return;
+        ctx.strokeStyle = "rgba(255,255,255,0.22)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+        ctx.fillStyle = "rgba(255,255,255,0.55)";
+        ctx.fillText(String(i + 1), 3, y - 1);
+      });
+    }
+    if (opts.loop) {
+      ctx.fillStyle = "rgba(255, 214, 102, 0.85)";
+      [opts.loop.start, opts.loop.end].forEach((t) => {
+        const y = yForTime(t, now, hitLineY);
+        if (y >= 0 && y <= h) ctx.fillRect(0, y - 1.5, w, 3);
+      });
+    }
 
     // Hit line
     ctx.strokeStyle = "rgba(255,255,255,0.25)";
@@ -99,8 +129,18 @@ function renderNoteHighway(container, keyLayout, { lookaheadSec = 2.2, hitLineFr
       ctx.fillStyle = note.hand === "left" ? colors.left : colors.right;
       // Item 59: "ghost" notes (the hand the app is playing for you in
       // hands-separately practice) are drawn faded.
-      ctx.globalAlpha = note.ghost ? 0.3 : note.time <= now && endTime > now ? 1 : 0.85;
+      const sounding = note.time <= now && endTime > now;
+      ctx.globalAlpha = note.ghost ? 0.3 : sounding ? 1 : 0.85;
+      // How hard the key is pressed: soft notes lighter, strong ones solid.
+      const vel = opts.velocity && !note.ghost && note.velocity != null ? note.velocity : null;
+      if (vel != null && !sounding) ctx.globalAlpha = 0.4 + 0.6 * Math.min(1, Math.max(0, (vel - 20) / 80));
       ctx.fillRect(x + 1, topY, Math.max(2, blockWidth - 2), blockHeight);
+      if (vel != null && vel >= 85) {
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = note.hand === "left" ? "#7a2e49" : "#1d4f6e";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x + 2, topY + 1, Math.max(1, blockWidth - 4), Math.max(1, blockHeight - 2));
+      }
       // "L" / "R" on each block (when there's room), so the hand is
       // clear from the falling notes too, not only from the colour.
       if (!note.ghost && blockHeight >= 16 && blockWidth >= 12) {

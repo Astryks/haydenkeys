@@ -2793,3 +2793,37 @@ Read every lesson start to finish as a beginner: all 271 lessons (Lessons 1–4 
 - Service worker cache **hayden-keys-v33**. Website only; no iOS build.
 - **iOS build 46** uploaded to TestFlight 2026-10-17 (includes the 2026-10-16 full lesson audit).
 - **iOS build 47** uploaded to TestFlight 2026-10-18: the full 2026-10-18 lesson restructure, chord name follows the music, Whole song every note, sound-stopping fix, Godfather / Back to Black / Michael Jackson.
+
+## 2026-10-19: uploads hear every note (Onsets and Frames piano model, bars, hands)
+
+Owner: "when users upload an mp3 it should be super detailed" — every note, not just chords.
+
+**What changed**
+- **New note finder for piano: Google Magenta's Onsets and Frames** (Apache-2.0), running on the device. Code adapted from Magenta.js 1.23.1 in `js/vendor/onsets-frames/onsets-frames.js`; weights are Magenta's `onsets_frames_uni` checkpoint stored as 8-bit numbers (**15.7 MB**, was 62.5 MB float32; same notes on our tests) in `js/vendor/onsets-frames/model/`. No CDN: it loads from the app's own files only when a song is uploaded. It shares basic-pitch's TensorFlow.js (the basic-pitch bundle was rebuilt from the same npm packages to also export `tf`), WebGL with CPU fallback.
+- **Memory stays flat on long songs**: the audio is processed in ~8-second chunks (with 3 frames of overlap for the convolutions) and the LSTMs carry their state between chunks. Progress shows "Finding every note... 40% (about 12 s left)".
+- **Which note finder (Settings → Note finder: Auto / Piano / Any)**. Auto runs both models on ~20 s of the music; if they agree (piano-led) it uses Onsets and Frames, otherwise Basic Pitch. Auto also falls back to Basic Pitch if the piano model fails or the device would take more than ~2.5 minutes (measured after the second chunk). Changing it re-listens to the song with the chosen one. Remembered for next time.
+- **Every note view** (`js/transcribe-detail.js`, new): beat tracking (onset curve from the notes, tempo by autocorrelation, beats by dynamic programming so the grid follows tempo drift, then smoothed), 4/4 vs 3/4 and beat 1 (bass notes, accents, chord changes over 2 beats), **bar lines + bar numbers** on the falling notes and "Bar 5" above the keys; **gentle quantizing** (a note moves onto the nearest 16th/triplet only when it's already within about a third of a step; nothing merged or dropped, so presses per bar stay as played); **left/right hand** chord by chord, keeping each hand within an octave-ish span and near where it just was; **velocity shading** (soft = lighter, strong = solid with an outline, legend under the keys).
+- Quick controls under the slider: **Easy chords / Every note** and **Loop 1 / 2 / 4 bars** (from the bar you're in; moving the slider moves the loop). Settings adds **Hands: Both / Left / Right** (the other hand faded and played for you; Wait for me waits only for your hand). Slow speeds and Wait for me work with every note. Piano uploads open on Every note; band recordings still open on Easy chords.
+- Fixed a memory leak: basic-pitch 1.0.1 never freed its per-window tensors (~400 per 40 s, growing with every upload) and a new model was loaded per upload. Now one model per visit and a TF scope around each run.
+- Easy (chords) is unchanged apart from using the new bar grid.
+
+**Tested** (headless Chrome, M-series Mac, WebGL), with recordings rendered from the app's own piano samples (all velocity layers) so the true notes are known. Scores: same key, start within 50 ms.
+
+| Recording | Basic Pitch P / R / F1 | Onsets and Frames P / R / F1 | O&F velocity correlation |
+|---|---|---|---|
+| Ode to Joy, both hands, 41 s, 158 notes | 0.84 / 0.95 / 0.89 | 0.96 / 0.85 / 0.91 (0.99 / 0.87 / 0.93 after quantizing) | 0.84 |
+| Waltz 3/4, tempo drifting 92–116 BPM, 57 s, 288 notes | 0.77 / 0.94 / 0.85 | 0.99 / 0.99 / 0.99 | 0.91 |
+| Ode to Joy ×5, 3 min 15 s, 790 notes | 0.83 / 0.93 / 0.87 | 0.98 / 0.86 / 0.92 | 0.82 |
+
+- O&F misses are mostly very soft low left-hand notes (the 5th of the chord under the melody). Basic Pitch's extra notes are mostly overtones.
+- Bars: Ode 100 BPM 4/4, 17/17 bar lines on the true bars; 3-minute file 81/81; waltz found 3/4 and 32/33 bar lines. Every correctly found note lands in the right bar (135/135, 286/286, 682/682). Hands right: 98% (Ode), 82% (waltz, where left-hand chords sit right under the melody).
+- Auto: piano recordings agreed 0.84–0.86 → piano model; a synthetic band clip (plucked guitar, bass, sung-like melody, drums) agreed 0.20 → Basic Pitch.
+- Speed, 3 min 15 s mp3: O&F 13.8 s (Auto incl. the check: 14.1 s), Basic Pitch 41 s. First use also downloads the 15.7 MB model (cached by the service worker afterwards). On the CPU backend O&F takes about 2× the song's length (85 s for 41 s), so Auto would hand a long song to Basic Pitch there. Memory for the 3-minute song: TF.js peak 79 MB (62.5 MB of it is the model's weights on the GPU), JS heap +60–135 MB peak, flat across uploads.
+- UI through the real upload (Practice → Choose a song), desktop and 390-px phone: every-note view, bar lines, loop (playing past the end wrapped back into bars 5–6), Hands Right + Wait for me ("Your turn: right hand F4"), Easy chords. No page errors.
+
+**Limitations**
+- Onsets and Frames only knows piano: on band/vocal recordings it is not used in Auto. Piano with singing on top may go either way.
+- The beat tracker works from the detected notes, not the raw audio: very free rubato, long silences or pickups can put bar 1 on the wrong beat (the bar lines are then off by a beat or two; notes are unaffected). Only 4/4 and 3/4 are tried (6/8 shows as 3/4 or 4/4 per the eighths).
+- Hand split is a heuristic (no fingering model); crossing hands and wide left-hand stretches can be assigned to the wrong hand.
+- Not yet run inside the iOS app (WKWebView); it uses the same TF.js WebGL backend basic-pitch already uses there. iOS needs the 15.7 MB model in the app bundle (www/ build copies js/).
+- Service worker cache **hayden-keys-v35**. Website only; no iOS build.
