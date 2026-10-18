@@ -36,4 +36,7 @@ function barSeconds(song) {
   return song && song.bpm > 0 ? ((song.beatsPerBar || 4) * 60) / song.bpm : null;
 }
 
-export { songSteps, barSeconds };
+// Shown wherever "Whole song" can be played.
+const WHOLE_SONG_NOTE = "It's easier to start with just the main chords. Every key takes practice, so it may feel like a lot at first.";
+
+export { songSteps, barSeconds, WHOLE_SONG_NOTE };

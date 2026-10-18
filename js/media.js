@@ -42,4 +42,19 @@ function wireVideos(root) {
   }));
 }
 
-export { peopleHtml, videoHtml, wireVideos };
+// The first time a teacher's video is shown, a friendly line under it.
+const TEACHER_NOTE_KEY = "hk_teacher_note_seen";
+// A video tucked inside a closed "Watch a teacher" strip only counts as
+// shown once the strip is opened (markTeacherNoteSeen).
+function firstTeacherNote({ shownNow = true } = {}) {
+  try {
+    if (localStorage.getItem(TEACHER_NOTE_KEY) === "1") return "";
+    if (shownNow) localStorage.setItem(TEACHER_NOTE_KEY, "1");
+  } catch (e) { /* storage off: show it every time */ }
+  return `<p class="hk-teacher-note">There are some amazing teachers on YouTube, search and find a learning style that works for you!</p>`;
+}
+function markTeacherNoteSeen() {
+  try { localStorage.setItem(TEACHER_NOTE_KEY, "1"); } catch (e) { /* ignore */ }
+}
+
+export { peopleHtml, videoHtml, wireVideos, firstTeacherNote, markTeacherNoteSeen };

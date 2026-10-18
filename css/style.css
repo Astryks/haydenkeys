@@ -1653,3 +1653,19 @@ body.hk-lesson-open .hk-lesson-topbar { padding-top: 6px !important; }
 .hk-micro-now b { font: 900 34px/1 system-ui, sans-serif; color: var(--hk-accent, #7c5cff); }
 .hk-now-label { font: 700 12px/1 system-ui, sans-serif; text-transform: uppercase; letter-spacing: .08em; color: var(--hk-muted, #6d6880); }
 .hk-now-next { font: 600 14px/1 system-ui, sans-serif; color: var(--hk-muted, #6d6880); }
+
+/* 2026-10-18: the "Now / next" banner keeps its height even when empty, so
+   the keys never jump; four-chord chips; two-hand chord names; notes. */
+.hk-micro-now { min-height: 38px; align-items: center; }
+.hk-micro-now:empty::before { content: ""; }
+.hk-four-chips { margin: 8px 0 8px 64px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.hk-four-chip { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px; border-radius: 12px; border: 2px solid var(--c); background: #fff; color: var(--c); cursor: pointer; font: inherit; }
+.hk-four-chip b { font-size: 1.3rem; font-weight: 900; }
+.hk-four-chip span { font-size: 0.72rem; font-weight: 700; color: #5a5470; }
+.hk-four-chip-on { background: var(--c); color: #fff; }
+.hk-four-chip-on span { color: #fff; }
+.hk-chart-keys { margin: 4px 0 8px 64px; min-height: 2.6em; font-size: 0.95rem; color: #3a2d6b; }
+.hk-whole-note, .hk-teacher-note, .hk-small-note { font-size: 0.86rem; line-height: 1.4; color: #5a5470; margin: 2px 0 0; }
+.hk-teacher-note { background: #f3eefe; border-radius: 10px; padding: 8px 10px; color: #4b3a86; font-weight: 600; }
+.hk-practice-simple #hk-practice-now { order: 2; }
+@media (max-width: 520px) { .hk-four-chips, .hk-chart-keys { margin-left: 0; } }

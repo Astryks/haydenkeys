@@ -16,6 +16,7 @@ import { shareButton } from "./share.js";
 import { videoHtml, wireVideos } from "./media.js";
 import { SONG_VIDEOS } from "./media-data.js";
 import { SONG_ART } from "./song-art-data.js";
+import { WHOLE_SONG_NOTE } from "./song-map.js";
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const TIERS = ["Beginner", "Intermediate", "Advanced"];
@@ -192,6 +193,7 @@ function initPracticeHome(root) {
         <button class="hk-part" data-part="main">${icon("play", 18)} Main chords<small>${esc([...new Set(song.chords.filter((c) => /^[A-G]/.test(c)))].slice(0, 4).join(" · "))}</small></button>
         <button class="hk-part" data-part="whole" ${SONG_STRUCTURES[song.title] ? "" : "disabled"}>${icon("song", 18)} Whole song<small>${SONG_STRUCTURES[song.title] ? (APPROX_STRUCTURES.has(song.title) ? "start to finish (our best guide)" : "every section, start to finish") : "coming soon"}</small></button>
       </div>
+      ${SONG_STRUCTURES[song.title] ? `<p class="hk-whole-note hk-part-note">${WHOLE_SONG_NOTE}</p>` : ""}
       <div class="hk-rotate-hint">${icon("piano", 20)}<span><b>Tip:</b> turn your phone <b>sideways</b> (rotation lock off) for bigger keys.</span></div>
       <div class="hk-player-tip">${icon("piano", 20)} Press Play, watch the chords fall and play along on your own piano.</div>
       <div class="hk-practice-simple" id="hk-player"></div>

@@ -17,8 +17,14 @@
 // this module's loader directly, so there's exactly one fallback path.
 
 let pianoInstance = null;
+let pianoCtx = null;
 let loadPromise = null;
 let loadedSamples = 0;
+// Bumped every time the audio engine is replaced. A load that started on
+// an old engine must never become the piano: its notes would go to a
+// closed engine and every note in the app would be silent from then on.
+let generation = 0;
+const sampleFiles = new Map();
 
 // Kicks off loading (idempotent — safe to call from multiple places,
 // e.g. once per tab that plays audio) and returns a promise that
@@ -26,6 +32,7 @@ let loadedSamples = 0;
 // reason. Never throws.
 function loadSampledPiano(ctx) {
   if (loadPromise) return loadPromise;
+  const gen = generation;
   loadPromise = import("./vendor/smplr-1.1.0.mjs")
     .then(({ SplendidGrandPiano }) => {
       // Item 60: samples are vendored in this repo (assets/piano-samples/,
@@ -44,11 +51,16 @@ function loadSampledPiano(ctx) {
         // ~23 MB). All layers are still kept in the repo.
         notesToLoad: { notes: Array.from({ length: 88 }, (_, i) => 21 + i), velocityRange: [100, 100] },
         storage: {
+          // Each file is downloaded once per session and kept, so a new
+          // audio engine (after iOS interrupts the old one) reuses it.
           fetch: (url) => {
             const cut = url.lastIndexOf("/") + 1;
-            return fetch(url.slice(0, cut) + encodeURIComponent(decodeURIComponent(url.slice(cut)))).then((r) => {
-              if (r.status === 200) loadedSamples++;
-              return r;
+            const real = url.slice(0, cut) + encodeURIComponent(decodeURIComponent(url.slice(cut)));
+            if (!sampleFiles.has(real)) sampleFiles.set(real, fetch(real).then((r) => (r.status === 200 ? r.arrayBuffer() : null)).catch(() => null));
+            return sampleFiles.get(real).then((buf) => {
+              if (!buf) { sampleFiles.delete(real); return new Response(null, { status: 404 }); }
+              if (gen === generation) loadedSamples++;
+              return new Response(buf.slice(0), { status: 200 });
             });
           },
         },
@@ -57,11 +69,17 @@ function loadSampledPiano(ctx) {
         // smplr resolves even if every sample failed to load — then every
         // note would be silent. Only switch over from the synth if samples
         // actually arrived.
+        if (gen !== generation) {
+          // The engine was replaced while this was loading: drop it.
+          try { piano.disconnect(); } catch (e) { /* ignore */ }
+          return null;
+        }
         if (!loadedSamples) {
           console.warn("Hayden Keys: no piano samples loaded, staying on the synth tone.");
           return null;
         }
         pianoInstance = piano;
+        pianoCtx = ctx;
         return piano;
       });
     })
@@ -74,11 +92,17 @@ function loadSampledPiano(ctx) {
 
 // Synchronous check — null until loadSampledPiano()'s promise has
 // actually resolved with a usable instrument.
-function getSampledPianoIfReady() {
+function getSampledPianoIfReady(ctx) {
+  if (ctx && pianoCtx !== ctx) return null;
   return pianoInstance;
 }
 
-// A new audio engine needs its own copy of the samples.
-function resetSampledPiano() { pianoInstance = null; loadPromise = null; loadedSamples = 0; }
+// A new audio engine needs its own copy of the samples. The old piano is
+// disposed (its voices, nodes and timers), so nothing piles up.
+function resetSampledPiano() {
+  generation++;
+  try { pianoInstance?.disconnect(); } catch (e) { /* ignore */ }
+  pianoInstance = null; pianoCtx = null; loadPromise = null; loadedSamples = 0;
+}
 
 export { loadSampledPiano, getSampledPianoIfReady, resetSampledPiano };

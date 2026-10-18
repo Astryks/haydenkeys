@@ -114,6 +114,27 @@ const PEOPLE = {
 // Song videos (official artist / label / "Topic" channels only, each
 // checked with YouTube's oEmbed): acoustic versions where one exists.
 const VIDEOS = {
+ // 2026-10-18: lesson videos checked on the watch page (views over 1M,
+ // playableInEmbed) and with oEmbed (200). Official channels or teachers only.
+ "teach-four-chords": {"id": "gmvwZRwn-j0", "title": "Piano chords for beginners: learn four chords to play hundreds of songs", "author_name": "Bill Hilton", "kind": "teacher"},
+ "teach-mary": {"id": "dJBq89uZYmI", "title": "Mary Had A Little Lamb | EASY ONE HAND Piano Tutorial", "author_name": "Easy Keys", "kind": "teacher"},
+ "song-hound-dog": {"id": "-eHJ12Vhpyc", "title": "Elvis Presley - Hound Dog (Official Audio)", "author_name": "ElvisPresleyVEVO"},
+ "song-love-story": {"id": "8xg3vE8Ie_E", "title": "Taylor Swift - Love Story", "author_name": "Taylor Swift"},
+ "song-let-it-be": {"id": "CGj85pVzRJs", "title": "The Beatles - Let It Be (Official Music Video)", "author_name": "TheBeatlesVEVO"},
+ "song-fallin": {"id": "Urdlvw0SSEc", "title": "Alicia Keys - Fallin' (Official HD Video)", "author_name": "aliciakeysVEVO"},
+ "song-three-little-birds": {"id": "HNBCVM4KbUM", "title": "Bob Marley & The Wailers - Three Little Birds (Official Music Video)", "author_name": "BobMarleyVEVO"},
+ "song-ring-of-fire": {"id": "1WaV2x8GXj0", "title": "Ring of Fire", "author_name": "Johnny Cash - Topic"},
+ "song-chan-chan": {"id": "tGbRZ73NvlY", "title": "Buena Vista Social Club - Chan Chan (Official HD Video)", "author_name": "World Circuit Records"},
+ "song-oh-happy-day": {"id": "KJohGa66FJM", "title": "The Edwin Hawkins Singers - Oh Happy Day (Official Audio)", "author_name": "EdwinHawkinsVEVO"},
+ "song-wake-me-up": {"id": "IcrbM1l_BoI", "title": "Avicii - Wake Me Up (Official Video)", "author_name": "AviciiOfficialVEVO"},
+ "song-sensualite": {"id": "iXKkxZ7U-lo", "title": "Axelle Red - Sensualité (Clip Officiel)", "author_name": "Axelle Red"},
+ "song-passacaglia": {"id": "GAIZxaToV2A", "title": "Passacaglia – Handel/Halvorsen (Piano Solo)", "author_name": "Kassia", "kind": "teacher"},
+ "song-bohemian-rhapsody": {"id": "fJ9rUzIMcZQ", "title": "Queen – Bohemian Rhapsody (Official Video Remastered)", "author_name": "Queen Official"},
+ "song-godfather": {"id": "Flb01Ni3p3M", "title": "Love Theme From \"The Godfather\"", "author_name": "Nino Rota - Topic"},
+ "song-back-to-black": {"id": "TJAfLE39ZZ8", "title": "Amy Winehouse - Back To Black", "author_name": "AmyWinehouseVEVO"},
+ "song-man-in-the-mirror": {"id": "PivWY9wn5ps", "title": "Michael Jackson - Man In The Mirror (Official Video)", "author_name": "michaeljacksonVEVO"},
+ "song-heal-the-world": {"id": "BWf-eARnf6U", "title": "Michael Jackson - Heal The World (Official Video)", "author_name": "michaeljacksonVEVO"},
+ "song-now-we-are-free": {"id": "ghxzLw2wRis", "title": "Now We Are Free (Gladiator)", "author_name": "Lisa Gerrard - Topic"},
  "teach-by-ear": {"id": "3sXrWz763J8", "title": "How to Play By Ear INSTANTLY 🎹 [Ear Training Explained]", "author_name": "Piano With Corey", "kind": "teacher"},
  "teach-hand-placement": {"id": "U4mU0uu-0Aw", "title": "Good Hand Placement Is A GAME CHANGER For Beginners | Easy Lesson", "author_name": "Piano From Scratch", "kind": "teacher"},
  "teach-all-chords": {"id": "06pyLmYs-1g", "title": "How To Memorize Every Major & Minor Chord On Piano", "author_name": "Piano From Scratch", "kind": "teacher"},
@@ -222,7 +243,7 @@ const VIDEOS = {
  "someone-like-you": {"id": "NAc83CF8Ejk", "title": "Adele - Someone Like You (Live in Her Home)", "author_name": "Adele"},
  "no-woman-no-cry": {"id": "mZ6VezKMoRY", "title": "Bob Marley & The Wailers - No Woman, No Cry (Live At The Rainbow 4th June 1977)", "author_name": "BobMarleyVEVO"},
  "dont-stop-believin": {"id": "VcjzHMhBtf0", "title": "Journey - Don't Stop Believin' (Escape Tour 1981: Live In Houston)", "author_name": "journeyVEVO"},
- "my-funny-valentine": {"id": "tczRmxcEoow", "title": "Chet Baker - My Funny Valentine (Remastered 2004)", "author_name": "Chet Baker - Topic"},
+ "my-funny-valentine": {"id": "QuMzUXPEPRM", "title": "My Funny Valentine", "author_name": "Chet Baker - Topic"},
  "jazz-loop": {"id": "otFVFLtRF_s", "title": "Herbie Hancock - Cantaloupe Island (Remastered 1999)", "author_name": "Herbie Hancock - Topic"},
  "creep": {"id": "XFkzRNyygfk", "title": "Radiohead - Creep", "author_name": "Radiohead"},
  "song-bad-guy": {"id": "DyDfgMOUjCI", "title": "Billie Eilish - bad guy", "author_name": "BillieEilishVEVO"},
@@ -459,6 +480,10 @@ const VIDEOS = {
  "song-stairway-to-heaven": {"id": "Ly6ZhQVnVow", "title": "Led Zeppelin - Stairway To Heaven (Live at Earl's Court 1975) [Official Video]", "author_name": "Led Zeppelin"}
 };
 const SONG_VIDEOS = {
+ "Love Theme from The Godfather": "song-godfather",
+ "Back to Black": "song-back-to-black",
+ "Man in the Mirror": "song-man-in-the-mirror",
+ "Heal the World": "song-heal-the-world",
  "Creep": "creep",
  "The A Team": "the-a-team",
  "Perfect": "perfect-acoustic",

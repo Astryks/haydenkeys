@@ -88,6 +88,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
   let pausedAt = 0; // seconds into the song/loop
   let playStartedAt = 0;
   let lastChordIndex = -1;
+  let lastStrikeSlot = -1;
   let kb = null;
   let highway = null;
   let highwayNotes = [];
@@ -193,6 +194,39 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
   function chordDuration() {
     return barSec() / playbackSpeed;
   }
+  // Whole song: the chord is pressed on every beat, like the recording
+  // (not one long press per chord), with the low note held each half bar.
+  const strikesPerBar = () => (part === "whole" && !songMeta.loops ? currentSong.beatsPerBar || 4 : 1);
+  function buildHighwayNotes() {
+    if (strikesPerBar() === 1) return stepsToHighwayNotes(songMeta.steps, chordDuration(), chordSymbolToMidi);
+    const notes = [];
+    const per = strikesPerBar();
+    const beat = chordDuration() / per;
+    const lhEvery = per % 2 === 0 ? per / 2 : per;
+    let at = 0;
+    songMeta.steps.forEach((step) => {
+      const midis = chordSymbolToMidi(step.chord);
+      const start = at * chordDuration();
+      const beats = Math.max(1, Math.round(step.len * per));
+      at += step.len;
+      if (!midis.length) return;
+      for (let b = 0; b < beats; b += lhEvery) notes.push({ midi: midis[0] - 12, time: start + b * beat, duration: Math.min(lhEvery, beats - b) * beat * 0.9, hand: "left" });
+      for (let b = 0; b < beats; b++) midis.forEach((midi) => notes.push({ midi, time: start + b * beat, duration: beat * 0.8, hand: "right" }));
+    });
+    return notes;
+  }
+  // The chord playing right now, and the next different one.
+  function showNowChord(i) {
+    const el = root.querySelector("#hk-practice-now");
+    const step = songMeta.steps[i];
+    if (!el || !step) return;
+    let j = i + 1;
+    if (songMeta.loops && j >= songMeta.steps.length) j = 0;
+    while (j < songMeta.steps.length && j !== i && songMeta.steps[j].chord === step.chord) j++;
+    const next = songMeta.steps[j];
+    const pretty = (c) => c.replace(/#/g, "♯").replace(/([A-G])b/g, "$1♭");
+    el.innerHTML = `<span class="hk-now-label">Now</span><b>${pretty(step.chord)}</b>${next && j !== i ? `<span class="hk-now-next">next: ${pretty(next.chord)}</span>` : ""}`;
+  }
 
   // Changing speed preserves *which chord* is currently at the playhead
   // (expressed as a fractional step position) rather than preserving the
@@ -206,7 +240,8 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
     playbackSpeed = newSpeed;
     pausedAt = stepFraction * chordDuration();
     playStartedAt = performance.now();
-    highwayNotes = stepsToHighwayNotes(songMeta.steps, chordDuration(), chordSymbolToMidi);
+    highwayNotes = buildHighwayNotes();
+    showNowChord(0);
     root.querySelectorAll("[data-speed]").forEach((btn) => {
       btn.classList.toggle("hk-speed-active", Number(btn.dataset.speed) === playbackSpeed);
     });
@@ -271,6 +306,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
         <div id="hk-wait-panel" class="hk-wait-panel hk-hidden"></div>
         <div id="hk-wait-status" class="hk-wait-status hk-hidden"></div>
         <div id="hk-highway" class="hk-highway-slot ${mode === "follow" ? "" : "hk-hidden"}"></div>
+        <div id="hk-practice-now" class="hk-micro-now hk-practice-now"></div>
         <div id="hk-practice-keyboard" class="hk-keyboard-wrap"></div>
         <div id="hk-sections" class="hk-sections"></div>
         <div class="hk-timeline" id="hk-timeline">
@@ -310,7 +346,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
     const highwayWrap = root.querySelector("#hk-highway");
     if (highway) highway.destroy();
     highway = renderNoteHighway(highwayWrap, kb.keyLayout);
-    highwayNotes = stepsToHighwayNotes(songMeta.steps, chordDuration(), chordSymbolToMidi);
+    highwayNotes = buildHighwayNotes();
 
     root.querySelector("#hk-song-select").addEventListener("change", (e) => {
       stopAll();
@@ -525,6 +561,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
         kb.highlightHands({ left: [midiNotes[0] - 12], right: midiNotes, rightLabel: step.chord });
       }
       highlightActiveSection(step.section);
+      showNowChord(stepIndex);
     }
     updateCursor();
     if (mode === "follow" && highway) {
@@ -660,13 +697,30 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
         }
       }
     }
+    // Whole song: press the chord again on every beat (see buildHighwayNotes).
+    const per = strikesPerBar();
+    const beatLen = chordDuration() / per;
+    if (per > 1 && chordIndex === lastChordIndex && !waitOn && playing) {
+      const beatSlot = Math.floor((loopedT + 1e-6) / beatLen);
+      if (beatSlot !== lastStrikeSlot) {
+        lastStrikeSlot = beatSlot;
+        const notes = chordSymbolToMidi(songMeta.steps[chordIndex].chord);
+        if (notes.length) playChord(notes, { duration: beatLen * 0.8 });
+        if (notes.length && per % 2 === 0 && beatSlot % (per / 2) === 0) playTone(notes[0] - 12, { duration: beatLen * (per / 2) * 0.9 });
+      }
+    }
     if (chordIndex !== lastChordIndex) {
       lastChordIndex = chordIndex;
+      lastStrikeSlot = Math.floor((loopedT + 1e-6) / beatLen);
       const step = songMeta.steps[chordIndex];
       const midiNotes = chordSymbolToMidi(step.chord);
+      showNowChord(chordIndex);
       if (kb && midiNotes.length) {
         kb.highlightHands({ left: [midiNotes[0] - 12], right: midiNotes, rightLabel: step.chord });
-        if (!waitOn) playChord(midiNotes, { duration: chordDuration() * step.len * 0.9 });
+        if (!waitOn) {
+          playChord(midiNotes, { duration: (per > 1 ? beatLen : chordDuration() * step.len) * 0.9 });
+          playTone(midiNotes[0] - 12, { duration: (per > 1 ? beatLen * Math.max(1, per / 2) : chordDuration() * step.len) * 0.9 });
+        }
       }
       if (waitOn && mode === "follow") {
         pausedAt = t;
