@@ -29,6 +29,7 @@ import {
 } from "./lessons-data.js";
 import { SONGS, SONG_STRUCTURES, ONE_FIVE_SIX_FOUR_SONGS, WORLD_LANGUAGES } from "./songs-data.js";
 import { songSteps, barSeconds, WHOLE_SONG_NOTE } from "./song-map.js";
+import { getSongDetail, songEvents, sectionRows } from "./song-detail.js";
 import { watchChats, chatHtml } from "./chat.js";
 import { pandaSvg, nextTrick } from "./panda.js";
 import { catsSvg, nextCatScene, nextHomeScene } from "./cats.js";
@@ -418,7 +419,22 @@ function barsToTimeline(bars, { barSec = 2.2, beats = 4, twoHand = true } = {}) 
 }
 // A song's whole-song map as a timeline, every chord's every key, in the
 // lesson keyboard's range, optionally moved into the card's easy key.
-function wholeSongTimeline(structure, { barSec, beats = 4, lo, hi, shift = 0 }) {
+// Songs with bar-by-bar detail (song-detail.js) play bar by bar instead:
+// the real tempo (and tempo changes), time signature, chords changing on
+// the right beat and pressed as often as the record has them.
+function wholeSongTimeline(structure, { barSec, beats = 4, lo, hi, shift = 0, song = null }) {
+  const detail = song && getSongDetail(song);
+  if (detail) {
+    const voice = (sym) => {
+      const notes = fitChord(sym, lo, hi);
+      return { left: notes.slice(0, 1), right: notes.slice(1) };
+    };
+    const tl = songEvents(detail, { voice, shift });
+    return {
+      events: tl.events.map((e) => ({ midi: e.midi, start: e.time, dur: e.duration, hand: e.hand })),
+      marks: tl.marks.map((m) => ({ t: m.t, label: m.label, where: m.where })),
+    };
+  }
   const bars = wholeSongChords(structure).map(({ chord, len }) => {
     const sym = transposeSymbol(chord, shift);
     return { notes: fitChord(sym, lo, hi), label: sym.replace(/#/g, "♯").replace(/([A-G])b/g, "$1♭"), len };
@@ -1243,10 +1259,11 @@ function initLessonsTab(root) {
       bannerMadeHere = true;
       return el;
     };
-    const showBanner = (label, next) => {
-      banner().innerHTML = label
+    const showBanner = (label, next, where) => {
+      banner().innerHTML = (label
         ? `<span class="hk-now-label">Now</span><b>${label}</b>${next ? `<span class="hk-now-next">next: ${next}</span>` : ""}`
-        : `<span class="hk-now-label">Get ready</span>${next ? `<span class="hk-now-next">first: ${next}</span>` : ""}`;
+        : `<span class="hk-now-label">Get ready</span>${next ? `<span class="hk-now-next">first: ${next}</span>` : ""}`)
+        + (where ? `<span class="hk-now-where">${where}</span>` : "");
     };
     // Plays a timeline of notes — [{ midi, start, dur, hand }] in
     // seconds — as falling blocks, with sound and live key highlights.
@@ -1257,7 +1274,7 @@ function initLessonsTab(root) {
       if (!events.length) return kb.stopPlayAlong;
       const notes = events.map((e) => ({ midi: e.midi, time: e.start + lead, duration: e.dur, hand: e.hand || "right" }));
       const total = Math.max(...notes.map((n) => n.time + n.duration)) + 0.2;
-      const ms = (marks || []).map((m) => ({ t: m.t + lead, label: m.label })).sort((a, b) => a.t - b.t);
+      const ms = (marks || []).map((m) => ({ t: m.t + lead, label: m.label, where: m.where })).sort((a, b) => a.t - b.t);
       let markIdx = -2;
       let label = null;
       const t0 = performance.now();
@@ -1285,7 +1302,7 @@ function initLessonsTab(root) {
             // "next" skips repeats of the same chord (G G G → next: D).
             let j = i + 1;
             while (skipRepeats && j < ms.length && i >= 0 && ms[j].label === ms[i].label) j++;
-            showBanner(label, ms[j]?.label);
+            showBanner(label, ms[j]?.label, i >= 0 ? ms[i].where : ms[0]?.where);
             lastKey = "";
           }
         }
@@ -1453,7 +1470,8 @@ function initLessonsTab(root) {
     // Narrow range = bigger keys. Day 3 adds the low bass notes.
     // Song cards with a Whole song get the octave below too (C3 up), so
     // every key of every chord fits: low note left hand, chord right hand.
-    const wholeData = card.whole || (card.song && SONG_STRUCTURES[card.song] ? { structure: SONG_STRUCTURES[card.song], song: SONGS.find((x) => x.title === card.song) } : null);
+    const cardSong = card.song ? SONGS.find((x) => x.title === card.song) : null;
+    const wholeData = card.whole || (cardSong && (SONG_STRUCTURES[card.song] || getSongDetail(cardSong)) ? { structure: SONG_STRUCTURES[card.song], song: cardSong, detailed: true } : null);
     const [lo, hi] = card.range || (id.startsWith("d3-") || id === "d2-octave" ? [43, 72] : wholeData ? [48, 72] : [53, 72]);
     const kb = lessonKeyboard(keyboardWrap, { startMidi: lo, endMidi: hi, markMiddleC: !card.hideMiddleC });
     if (card.noKeys) { keyboardWrap.style.display = "none"; main.querySelector("#hk-lesson-highway")?.classList.add("hk-hidden"); }
@@ -1701,7 +1719,7 @@ function initLessonsTab(root) {
         thread.querySelectorAll("[data-running]").forEach((x) => { delete x.dataset.running; if (x.dataset.label) x.innerHTML = x.dataset.label; });
         hearing++;
         const tl = b.dataset.along === "whole"
-          ? wholeSongTimeline(wholeData.structure, { barSec, beats, lo, hi, shift: card.shift || 0 })
+          ? wholeSongTimeline(wholeData.structure, { barSec, beats, lo, hi, shift: card.shift || 0, song: wholeData.detailed ? song : null })
           : barsToTimeline(Array.from({ length: rounds }, () => loop).flat().map(([notes, l]) => ({ notes, label: l, len: 1 })), { barSec: card.main ? barSec : Math.max(2.0, barSec), beats, twoHand: Boolean(card.twoHand) });
         b.dataset.label = label;
         b.dataset.running = "1";
@@ -2008,7 +2026,8 @@ function initLessonsTab(root) {
   // time — the main 4-chord part, or the whole song start to finish.
   function songLessonView({ content, controls, kb, song, intro = "", onNext, nextLabel = "Next lesson →" }) {
     const structure = SONG_STRUCTURES[song.title];
-    const rows = structure ? (() => {
+    const detail = getSongDetail(song);
+    const rows = detail ? sectionRows(detail) : structure ? (() => {
       const out = [];
       structure.forEach((part) => {
         const name = part.section.replace(/\s+\d+$/, "");
@@ -2021,19 +2040,19 @@ function initLessonsTab(root) {
     const video = SONG_VIDEOS[song.title];
     content.innerHTML = chatHtml(intro || `<h3>${song.title} 🎶</h3><p>By <b>${song.artist}</b>. Watch the chords fall onto the keys and play along on your piano.</p>`, "idle") + `
       <div class="hk-song-lesson">
-        <div class="hk-song-lesson-head"><b>${song.title}</b><span>${song.artist}</span><span class="hk-song-key">${icon("piano", 18)} Key of ${song.key.replace(/\s*\(.*\)/, "")}</span></div>
+        <div class="hk-song-lesson-head"><b>${song.title}</b><span>${song.artist}</span><span class="hk-song-key">${icon("piano", 18)} Key of ${(detail?.key || song.key).replace(/\s*\(.*\)/, "")}</span></div>
         <div class="hk-song-prog">
           <div class="hk-song-prog-title">The chords in this song</div>
           ${rows.map((r) => `<div class="hk-song-prog-row"><span>${r.label}</span><b>${r.chords.map((c) => `<i>${c}</i>`).join("")}</b></div>`).join("")}
         </div>
         ${video ? videoHtml(video) : ""}
-        ${structure ? `<p class="hk-whole-note">${WHOLE_SONG_NOTE}</p>` : ""}
+        ${structure || detail ? `<p class="hk-whole-note">${WHOLE_SONG_NOTE}</p>` : ""}
         ${songInspireHtml(song, { advanced: true })}
       </div>`;
     wireVideos(content);
     controls.innerHTML = `
       <button class="hk-btn" data-along="main">${icon("play", 20)} Main part (4 chords)</button>
-      ${structure ? `<button class="hk-btn" data-along="whole">${icon("song", 20)} Whole song</button>` : ""}
+      ${structure || detail ? `<button class="hk-btn" data-along="whole">${icon("song", 20)} Whole song</button>` : ""}
       <button class="hk-btn hk-btn-primary hk-btn-lesson-next" id="hk-song-next">${nextLabel}</button>`;
     controls.querySelectorAll("[data-along]").forEach((btn) => {
       const label = btn.innerHTML;
@@ -2046,7 +2065,7 @@ function initLessonsTab(root) {
         kb.onAlongEnd = () => { delete btn.dataset.running; btn.innerHTML = label; kb.onAlongEnd = null; };
         // Whole song: every key of every chord, pressed on every beat.
         if (btn.dataset.along === "whole") {
-          const tl = wholeSongTimeline(structure, { barSec: barSeconds(song) || 2.2, beats: song.beatsPerBar || 4, lo: kb.startMidi, hi: kb.endMidi });
+          const tl = wholeSongTimeline(structure, { barSec: barSeconds(song) || 2.2, beats: song.beatsPerBar || 4, lo: kb.startMidi, hi: kb.endMidi, song });
           kb.playTimeline(tl.events, { marks: tl.marks });
           return;
         }

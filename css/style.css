@@ -1679,3 +1679,11 @@ body.hk-lesson-open .hk-lesson-topbar { padding-top: 6px !important; }
 .hk-vel-soft { opacity: 0.45; }
 .hk-vel-strong { box-shadow: inset 0 0 0 2px #1d4f6e; }
 .hk-upload-vel-legend.hk-hidden { display: none; }
+
+/* ===== Bar-by-bar songs (Oct 2026): where you are in the song ===== */
+.hk-practice-where, .hk-now-where { display: block; text-align: center; font: 700 13px/1.3 system-ui, sans-serif; color: var(--hk-muted, #6d6880); margin: -2px 0 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.hk-practice-simple #hk-practice-where { order: 2; }
+.hk-micro-now { flex-wrap: wrap; }
+.hk-now-where { flex-basis: 100%; margin: 2px 0 0; font-size: 12px; }
+.hk-part-pick-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.hk-part-pick-3 .hk-part small { font-size: 0.72rem; text-align: center; }

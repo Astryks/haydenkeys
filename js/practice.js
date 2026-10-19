@@ -13,6 +13,7 @@ import { playBeat } from "./drums.js";
 import { getAudioContext } from "./keyboard.js";
 import { onNoteOn, onChroma, enableMic, disableMic, micOn } from "./input-hub.js";
 import { songSteps, barSeconds } from "./song-map.js";
+import { getSongDetail, songEvents, songChordSteps, tuneEvents, whereLabel, barIndexAt, pulseAt, prettyChord, voicePractice } from "./song-detail.js";
 
 const BASE_CHORD_DURATION_SEC = 1.6; // duration per chord at 1x (normal) speed
 const SPEEDS = [0.5, 0.75, 1];
@@ -37,8 +38,21 @@ const MODE_LABELS = {
 // realChords().
 // part "whole": the song start to finish from its section map (verses,
 // bridge, solos, key changes); part "main": just the main chords, looping.
+// Oct 2026: songs with bar-by-bar detail (song-detail.js) play "Whole
+// song" bar by bar at the real tempo and time signature, and the
+// public-domain pieces with a tune get part "tune". Their steps' `len` is
+// in seconds (at normal speed) instead of bars; `events` are the notes.
 function getSongSteps(song, part = "whole") {
   const isReal = (c) => parseChordSymbol(c) !== null;
+  const detail = part === "main" ? null : getSongDetail(song);
+  if (detail && part === "tune") {
+    const tune = tuneEvents(detail);
+    if (tune) return withTiming({ steps: tune.steps, loops: false, detail, events: tune.events, tune: true, range: tune.range });
+  }
+  if (detail) {
+    const { events } = songEvents(detail);
+    return withTiming({ steps: songChordSteps(detail), loops: false, detail, events });
+  }
   const structure = part === "main" ? null : SONG_STRUCTURES[song.title];
   if (structure) {
     // Each section's pattern loops until its bars are filled, like the
@@ -56,11 +70,11 @@ function getSongSteps(song, part = "whole") {
 function withTiming(meta) {
   let acc = 0;
   meta.starts = meta.steps.map((st) => {
-    const at = acc;
-    acc += st.len;
+    const at = st.t ?? acc;
+    acc = at + st.len;
     return at;
   });
-  meta.totalBars = acc;
+  meta.totalBars = meta.detail && !meta.tune ? meta.detail.total : acc;
   return meta;
 }
 
@@ -124,7 +138,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
   let micPaused = false;
   const targetPcs = () => {
     const step = songMeta.steps[waitIdx];
-    return step ? [...new Set(chordSymbolToMidi(step.chord).map((m) => ((m % 12) + 12) % 12))] : [];
+    return step ? [...new Set(stepMidis(step).map((m) => ((m % 12) + 12) % 12))] : [];
   };
   function waitSatisfied() {
     if (!holding) return;
@@ -190,14 +204,66 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
   // just a CSS animation slowed down independently of the real timing.
   // One bar at 1x: the recording's real tempo when we know it, so Whole
   // song lines up with the official video.
-  const barSec = () => barSeconds(currentSong) || BASE_CHORD_DURATION_SEC;
+  // Detailed songs: steps are measured in seconds, so one "unit" is 1s.
+  const barSec = () => (songMeta.detail ? 1 : barSeconds(currentSong) || BASE_CHORD_DURATION_SEC);
   function chordDuration() {
     return barSec() / playbackSpeed;
   }
   // Whole song: the chord is pressed on every beat, like the recording
   // (not one long press per chord), with the low note held each half bar.
-  const strikesPerBar = () => (part === "whole" && !songMeta.loops ? currentSong.beatsPerBar || 4 : 1);
+  const strikesPerBar = () => (part === "whole" && !songMeta.loops && !songMeta.events ? currentSong.beatsPerBar || 4 : 1);
+  // The notes of a step: a tune note (or notes), or the chord's keys.
+  const stepMidis = (step) => (step ? step.midis || chordSymbolToMidi(step.chord) : []);
+  // Which keys light up for a step: left hand low note + right hand chord.
+  function handsFor(step) {
+    if (step.midis) {
+      return {
+        left: step.midis.filter((m, k) => step.hands[k] === "left"),
+        right: step.midis.filter((m, k) => step.hands[k] !== "left"),
+        rightLabel: prettyChord(step.chord),
+      };
+    }
+    if (songMeta.detail) return { ...voicePractice(step.chord), rightLabel: prettyChord(step.chord) };
+    const midiNotes = chordSymbolToMidi(step.chord);
+    return { left: [midiNotes[0] - 12], right: midiNotes, rightLabel: step.chord };
+  }
+  // Detailed songs: notes are handed to the audio clock a moment ahead.
+  let schedT = 0;
+  function scheduleNotes(t) {
+    if (schedT < t - 0.3 || schedT > t + 0.5) schedT = t;
+    const ahead = t + 0.2;
+    let lo = 0;
+    let hi = highwayNotes.length;
+    while (lo < hi) { const mid = (lo + hi) >> 1; if (highwayNotes[mid].time < schedT) lo = mid + 1; else hi = mid; }
+    for (let k = lo; k < highwayNotes.length && highwayNotes[k].time < ahead; k++) {
+      const n = highwayNotes[k];
+      playTone(n.midi, { duration: n.duration, delay: Math.max(0, n.time - t), ...(n.accomp ? { velocity: 85 } : {}) });
+    }
+    schedT = ahead;
+  }
+  // "Chorus · bar 3 of 8" under the chord banner.
+  let lastWhereBar = -1;
+  function showWhere(t) {
+    const el = root.querySelector("#hk-practice-where");
+    if (!el || !songMeta.detail) return;
+    const x = t / chordDuration(); // seconds at normal speed
+    const i = barIndexAt(songMeta.detail, x);
+    if (i === lastWhereBar) return;
+    lastWhereBar = i;
+    el.textContent = whereLabel(songMeta.detail, x);
+  }
+  // The falling notes, with a thin line at each bar for bar-by-bar songs.
+  function drawHighway(t) {
+    if (!highway) return;
+    if (!songMeta.detail) return highway.render(t, highwayNotes);
+    const k = chordDuration();
+    highway.render(t, highwayNotes, { bars: songMeta.detail.bars.map((b) => b.t * k) });
+  }
   function buildHighwayNotes() {
+    if (songMeta.events) {
+      const k = chordDuration();
+      return songMeta.events.map((e) => ({ ...e, time: e.time * k, duration: e.duration * k }));
+    }
     if (strikesPerBar() === 1) return stepsToHighwayNotes(songMeta.steps, chordDuration(), chordSymbolToMidi);
     const notes = [];
     const per = strikesPerBar();
@@ -224,7 +290,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
     if (songMeta.loops && j >= songMeta.steps.length) j = 0;
     while (j < songMeta.steps.length && j !== i && songMeta.steps[j].chord === step.chord) j++;
     const next = songMeta.steps[j];
-    const pretty = (c) => c.replace(/#/g, "♯").replace(/([A-G])b/g, "$1♭");
+    const pretty = prettyChord;
     el.innerHTML = `<span class="hk-now-label">Now</span><b>${pretty(step.chord)}</b>${next && j !== i ? `<span class="hk-now-next">next: ${pretty(next.chord)}</span>` : ""}`;
   }
 
@@ -239,9 +305,11 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
     const stepFraction = currentTime() / chordDuration();
     playbackSpeed = newSpeed;
     pausedAt = stepFraction * chordDuration();
+    schedT = pausedAt;
     playStartedAt = performance.now();
     highwayNotes = buildHighwayNotes();
-    showNowChord(0);
+    // The banner stays on the chord you're on (it used to jump to the first).
+    showNowChord(stepIndexAtBars(songMeta, (songMeta.loops ? pausedAt % totalDuration() : pausedAt) / chordDuration()));
     root.querySelectorAll("[data-speed]").forEach((btn) => {
       btn.classList.toggle("hk-speed-active", Number(btn.dataset.speed) === playbackSpeed);
     });
@@ -249,7 +317,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
     if (mode === "follow" && highway) {
       const total = totalDuration();
       const loopedT = songMeta.loops ? pausedAt % total : pausedAt;
-      highway.render(loopedT, highwayNotes);
+      drawHighway(loopedT);
     }
   }
 
@@ -265,6 +333,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
   function render() {
     songMeta = getSongSteps(currentSong, part);
     ended = false;
+    lastWhereBar = -1;
     root.innerHTML = `
       <div class="hk-practice">
         <div class="hk-practice-header">
@@ -275,7 +344,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
         </div>
         <p class="hk-practice-meta">
           Key: ${currentSong.key} &middot; ${currentSong.degreeSequence}
-          ${SONG_STRUCTURES[currentSong.title] ? `<span class="hk-badge hk-badge-match">Whole song</span>` : `<span class="hk-badge" title="Only the main chords for this song">Main chords only</span>`}
+          ${songMeta.detail || SONG_STRUCTURES[currentSong.title] ? `<span class="hk-badge hk-badge-match">Whole song</span>` : `<span class="hk-badge" title="Only the main chords for this song">Main chords only</span>`}
         </p>
         ${songMeta.noRealChords ? `<p class="hk-honest-note">We don't have this song's chords yet. The C chord below is just for practice. ${currentSong.notes || ""}</p>` : ""}
         <div class="hk-mode-picker" id="hk-mode-picker">
@@ -307,6 +376,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
         <div id="hk-wait-status" class="hk-wait-status hk-hidden"></div>
         <div id="hk-highway" class="hk-highway-slot ${mode === "follow" ? "" : "hk-hidden"}"></div>
         <div id="hk-practice-now" class="hk-micro-now hk-practice-now"></div>
+        ${songMeta.detail ? `<div id="hk-practice-where" class="hk-practice-where">${whereLabel(songMeta.detail, 0)}</div>` : ""}
         <div id="hk-practice-keyboard" class="hk-keyboard-wrap"></div>
         <div id="hk-sections" class="hk-sections"></div>
         <div class="hk-timeline" id="hk-timeline">
@@ -341,7 +411,9 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
       </div>`;
 
     const kbWrap = root.querySelector("#hk-practice-keyboard");
-    kb = renderKeyboard(kbWrap, { startMidi: 48, endMidi: 84 });
+    // The tune can go above or below the usual keys: widen to fit it.
+    const [loKey, hiKey] = songMeta.range ? [Math.min(48, songMeta.range[0] - (songMeta.range[0] % 12)), Math.max(84, songMeta.range[1])] : [48, 84];
+    kb = renderKeyboard(kbWrap, { startMidi: loKey, endMidi: hiKey });
 
     const highwayWrap = root.querySelector("#hk-highway");
     if (highway) highway.destroy();
@@ -382,7 +454,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
       const gaps = tapTimes.slice(1).map((t, i) => t - tapTimes[i]);
       const beatSec = gaps.reduce((a, b) => a + b, 0) / gaps.length / 1000;
       tappedBpm = Math.round(60 / beatSec);
-      const speed = Math.min(2.5, Math.max(0.25, barSec() / ((currentSong.beatsPerBar || 4) * beatSec)));
+      const speed = Math.min(2.5, Math.max(0.25, songMeta.detail ? songMeta.detail.pulseSec / beatSec : barSec() / ((currentSong.beatsPerBar || 4) * beatSec)));
       setSpeed(speed);
       btn.innerHTML = `${icon("tap", 18)} Tap tempo (♩ = ${tappedBpm})`;
     });
@@ -434,7 +506,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
     renderSections();
     renderControls();
     updateCursor();
-    if (mode === "follow" && highway) highway.render(pausedAt, highwayNotes);
+    if (mode === "follow" && highway) drawHighway(pausedAt);
 
     if (mode === "camera") startCameraMode();
   }
@@ -495,6 +567,12 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
 
   function renderSections() {
     const el = root.querySelector("#hk-sections");
+    if (songMeta.detail) {
+      el.innerHTML = songMeta.detail.sections
+        .map((s) => `<span class="hk-section-pill" data-section="${s.index}">${s.name}</span>`)
+        .join("");
+      return;
+    }
     const structure = SONG_STRUCTURES[currentSong.title];
     if (!structure) {
       el.innerHTML = "";
@@ -554,19 +632,18 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
     playStartedAt = performance.now();
     ended = false;
     lastChordIndex = stepIndex;
+    schedT = pausedAt;
+    showWhere(pausedAt);
     const step = songMeta.steps[stepIndex];
     if (step) {
-      const midiNotes = chordSymbolToMidi(step.chord);
-      if (kb && midiNotes.length) {
-        kb.highlightHands({ left: [midiNotes[0] - 12], right: midiNotes, rightLabel: step.chord });
-      }
+      if (kb && stepMidis(step).length) kb.highlightHands(handsFor(step));
       highlightActiveSection(step.section);
       showNowChord(stepIndex);
     }
     updateCursor();
     if (mode === "follow" && highway) {
       const loopedT = songMeta.loops ? pausedAt % totalDuration() : pausedAt;
-      highway.render(loopedT, highwayNotes);
+      drawHighway(loopedT);
     }
   }
 
@@ -620,11 +697,14 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
 
   function rewind() {
     pausedAt = 0;
+    schedT = 0;
+    lastWhereBar = -1;
+    showWhere(0);
     playStartedAt = performance.now();
     lastChordIndex = -1;
     ended = false;
     updateCursor();
-    if (mode === "follow" && highway) highway.render(0, highwayNotes);
+    if (mode === "follow" && highway) drawHighway(0);
   }
 
   function stopAll() {
@@ -665,7 +745,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
       const step = songMeta.steps[songMeta.steps.length - 1];
       if (step) highlightActiveSection(step.section);
       updateCursor();
-      if (mode === "follow" && highway) highway.render(t, highwayNotes);
+      if (mode === "follow" && highway) drawHighway(t);
       return;
     }
     const loopedT = songMeta.loops ? t % total : t;
@@ -675,7 +755,18 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
     // so it can't drift out of sync with the falling notes or desync
     // on a speed change — there's no separate scheduling clock to
     // disagree with this one.
-    if (drumsOn && mode === "follow" && playing) {
+    // Detailed songs: the notes themselves, a moment ahead of the clock.
+    if (songMeta.events && mode === "follow" && playing && !waitOn) scheduleNotes(loopedT);
+    if (songMeta.detail) showWhere(loopedT);
+    // Detailed songs: drums and bass follow the song's own beats (time
+    // signature, tempo changes), not 4 even beats a bar.
+    const pulse = songMeta.detail && (drumsOn || bassOn) ? pulseAt(songMeta.detail, loopedT / chordDuration()) : null;
+    if (pulse && drumsOn && mode === "follow" && playing) {
+      if (pulse.n !== lastBeatSlot) {
+        lastBeatSlot = pulse.n;
+        playBeat(getAudioContext(), pulse.perBar % 3 === 0 && pulse.perBar !== 6 ? (pulse.inBar === 0 ? 0 : 1) : pulse.inBar, getAudioContext().currentTime);
+      }
+    } else if (drumsOn && mode === "follow" && playing) {
       const beatLenSec = chordDuration() / 4;
       const beatSlot = Math.floor(t / beatLenSec);
       if (beatSlot !== lastBeatSlot) {
@@ -684,7 +775,18 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
       }
     }
     const chordIndex = stepIndexAtBars(songMeta, loopedT / chordDuration());
-    if (bassOn && mode === "follow" && playing) {
+    if (pulse && bassOn && mode === "follow" && playing) {
+      if (pulse.n !== lastBassSlot) {
+        lastBassSlot = pulse.n;
+        const step = songMeta.steps[chordIndex];
+        const notes = step.midis ? [] : chordSymbolToMidi(step.chord);
+        if (notes.length && pulse.strong) {
+          let bass = notes[0] - 24;
+          while (bass < 28) bass += 12;
+          playTone(bass, { duration: (songMeta.detail.pulseSec / playbackSpeed) * 1.8 });
+        }
+      }
+    } else if (bassOn && mode === "follow" && playing) {
       const beatLenSec = chordDuration() / 4;
       const beatSlot = Math.floor(t / beatLenSec);
       if (beatSlot !== lastBassSlot) {
@@ -713,28 +815,31 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
       lastChordIndex = chordIndex;
       lastStrikeSlot = Math.floor((loopedT + 1e-6) / beatLen);
       const step = songMeta.steps[chordIndex];
-      const midiNotes = chordSymbolToMidi(step.chord);
+      const midiNotes = stepMidis(step);
       showNowChord(chordIndex);
       if (kb && midiNotes.length) {
-        kb.highlightHands({ left: [midiNotes[0] - 12], right: midiNotes, rightLabel: step.chord });
-        if (!waitOn) {
+        kb.highlightHands(handsFor(step));
+        if (!waitOn && !songMeta.events) {
           playChord(midiNotes, { duration: (per > 1 ? beatLen : chordDuration() * step.len) * 0.9 });
           playTone(midiNotes[0] - 12, { duration: (per > 1 ? beatLen * Math.max(1, per / 2) : chordDuration() * step.len) * 0.9 });
         }
       }
-      if (waitOn && mode === "follow") {
+      // (A rest has nothing to play, so it never waits.)
+      if (waitOn && mode === "follow" && midiNotes.length) {
         pausedAt = t;
         holding = true;
         waitIdx = chordIndex;
         heard = [];
         chromaHits = 0;
         const names = [...new Set(midiNotes.map((m) => ["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "A♭", "A", "B♭", "B"][((m % 12) + 12) % 12]))];
-        showWait(`${icon("hand", 20)} Your turn: play <b>${step.chord}</b> <span>(${names.join(" · ")})</span>`);
+        showWait(step.midis
+          ? `${icon("hand", 20)} Your turn: play <b>${names.join(" + ")}</b>`
+          : `${icon("hand", 20)} Your turn: play <b>${prettyChord(step.chord)}</b> <span>(${names.join(" · ")})</span>`);
       }
       highlightActiveSection(step.section);
     }
     updateCursor();
-    if (mode === "follow" && highway) highway.render(loopedT, highwayNotes);
+    if (mode === "follow" && highway) drawHighway(loopedT);
     if (playing) raf = requestAnimationFrame(loop);
   }
 
@@ -805,9 +910,11 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
   }
 
   function showEarCheckStep() {
+    // Rests have nothing to play: skip them.
+    while (earCheckIndex < songMeta.steps.length - 1 && !stepMidis(songMeta.steps[earCheckIndex]).length) earCheckIndex++;
     if (earCheckIndex >= songMeta.steps.length) return;
     const step = songMeta.steps[earCheckIndex];
-    const midiNotes = chordSymbolToMidi(step.chord);
+    const midiNotes = stepMidis(step);
     if (kb && midiNotes.length) kb.highlightChord(midiNotes, { letter: step.chord, rootMidi: midiNotes[0] });
     highlightActiveSection(step.section);
     const statusEl = root.querySelector("#hk-ear-status");
@@ -841,7 +948,7 @@ function initPracticeTab(root, { initialSong, part = "whole" } = {}) {
     const n = songMeta.steps.length;
     cameraStepIndex = ((i % n) + n) % n;
     const step = songMeta.steps[cameraStepIndex];
-    const midiNotes = chordSymbolToMidi(step.chord);
+    const midiNotes = stepMidis(step);
     if (kb && midiNotes.length) kb.highlightChord(midiNotes, { letter: step.chord, rootMidi: midiNotes[0] });
     highlightActiveSection(step.section);
     pausedAt = songMeta.starts[cameraStepIndex] * chordDuration();

@@ -7,6 +7,10 @@
 const PITCH_CLASS = {
   C: 0, "C#": 1, Db: 1, D: 2, "D#": 3, Eb: 3, E: 4, F: 5, "F#": 6, Gb: 6,
   G: 7, "G#": 8, Ab: 8, A: 9, "A#": 10, Bb: 10, B: 11,
+  // Spellings classical scores use (Cb, E#, double sharps like F##).
+  Cb: 11, Fb: 4, "E#": 5, "B#": 0,
+  "C##": 2, "D##": 4, "E##": 6, "F##": 7, "G##": 9, "A##": 11, "B##": 1,
+  Cbb: 10, Dbb: 0, Ebb: 2, Fbb: 3, Gbb: 5, Abb: 7, Bbb: 9,
 };
 
 // Order matters: more specific/longer suffixes must be checked before
@@ -18,8 +22,23 @@ const PITCH_CLASS = {
 // Item 56: added 9ths and altered 7ths — "Dm9" used to match plain "m"
 // and light up an ordinary Dm, "C9" played a C7, "G7b9"/"D7b5" lost
 // their defining note, and "6/9" had no 9th.
+// Oct 2026 (hyper-detailed song data): added 13, 7alt, 9sus4, 7sus2,
+// 6sus2, 6add9, 7#11, add11 and the bracketed/"mM7" spellings, and an
+// exact (case-sensitive) match first, so "CM7" isn't read as "Cm7".
 const QUALITY_INTERVALS = [
+  { suffix: "m(maj7)", intervals: [0, 3, 7, 11] },
+  { suffix: "m(add9)", intervals: [0, 3, 7, 14] },
+  { suffix: "(add9)", intervals: [0, 4, 7, 14] },
   { suffix: "mmaj7", intervals: [0, 3, 7, 11] },
+  { suffix: "6add9", intervals: [0, 4, 7, 9, 14] },
+  { suffix: "madd9", intervals: [0, 3, 7, 14] },
+  { suffix: "9sus4", intervals: [0, 5, 7, 10, 14] },
+  { suffix: "7sus2", intervals: [0, 2, 7, 10] },
+  { suffix: "6sus2", intervals: [0, 2, 7, 9] },
+  { suffix: "7alt", intervals: [0, 4, 10, 13, 20] }, // 3, b7, b9, b13
+  { suffix: "7#11", intervals: [0, 4, 7, 10, 18] },
+  { suffix: "add11", intervals: [0, 4, 7, 17] },
+  { suffix: "13", intervals: [0, 4, 7, 10, 14, 21] },
   { suffix: "maj9", intervals: [0, 4, 7, 11, 14] },
   { suffix: "m9", intervals: [0, 3, 7, 10, 14] },
   { suffix: "7b9", intervals: [0, 4, 7, 10, 13] },
@@ -27,7 +46,6 @@ const QUALITY_INTERVALS = [
   { suffix: "7b5", intervals: [0, 4, 6, 10] },
   { suffix: "7#5", intervals: [0, 4, 8, 10] },
   { suffix: "7sus4", intervals: [0, 5, 7, 10] },
-  { suffix: "m(maj7)", intervals: [0, 3, 7, 11] },
   { suffix: "m7b5", intervals: [0, 3, 6, 10] },
   { suffix: "m7", intervals: [0, 3, 7, 10] },
   { suffix: "m6", intervals: [0, 3, 7, 9] },
@@ -49,8 +67,11 @@ const QUALITY_INTERVALS = [
 
 // Parses "C#m7" -> { root: 1, intervals: [0,3,7,10] }. Returns null if
 // the symbol can't be parsed (caller should skip/fallback gracefully).
+// Other ways of writing the same chord.
+const QUALITY_ALIASES = { mM7: "mmaj7", M7: "maj7", min: "m", "-": "m", "-7": "m7", maj: "", M: "", "°": "dim", "°7": "dim7", "ø": "m7b5", "+": "aug", sus: "sus4", "(maj7)": "maj7" };
+
 function parseChordSymbol(symbol) {
-  const match = /^([A-G])(#|b)?(.*)$/.exec(symbol.trim());
+  const match = /^([A-G])(##|#|bb|b)?(.*)$/.exec(String(symbol).trim());
   if (!match) return null;
   const [, letter, accidental, rest] = match;
   const rootName = `${letter}${accidental || ""}`;
@@ -60,13 +81,18 @@ function parseChordSymbol(symbol) {
   // is a quality, not a slash chord, so it's matched first.)
   let qualityPart = rest;
   let bass = null;
-  const slash = /^(.*)\/([A-G](#|b)?)$/.exec(rest);
+  const slash = /^(.*)\/([A-G](##|#|bb|b)?)$/.exec(rest);
   if (slash && !/^6\/9$/i.test(rest)) {
     qualityPart = slash[1];
     bass = PITCH_CLASS[slash[2]];
   }
-  const quality = QUALITY_INTERVALS.find((q) => qualityPart.toLowerCase().startsWith(q.suffix));
-  return { root, intervals: quality ? quality.intervals : [0, 4, 7], bass: bass ?? null };
+  // An exact match first (case matters: "M7" is major 7, "m7" minor 7),
+  // then the old forgiving prefix match for anything unusual.
+  const exactName = QUALITY_ALIASES[qualityPart] ?? qualityPart;
+  const exact = QUALITY_INTERVALS.find((q) => q.suffix === exactName);
+  const quality = exact || QUALITY_INTERVALS.find((q) => qualityPart.toLowerCase().startsWith(q.suffix));
+  // `known`: the whole chord name was understood (nothing ignored).
+  return { root, intervals: quality ? quality.intervals : [0, 4, 7], bass: bass ?? null, known: Boolean(exact) };
 }
 
 // Returns MIDI notes for a chord symbol in a comfortable octave
