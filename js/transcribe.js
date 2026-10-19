@@ -823,7 +823,7 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
         <span class="hk-upload-clock" id="hk-upload-total">0:00</span>
       </div>
       <div class="hk-upload-quick">
-        ${seg("mode", [["easy", "Easy chords"], ["detailed", "Every note"]], mode)}
+        ${seg("mode", [["easy", "Easy"], ["detailed", "Entire song"]], mode)}
         ${seg("loop", [["off", "No loop"], ["1", "Loop 1 bar"], ["2", "2 bars"], ["4", "4 bars"]], "off")}
       </div>
       <p class="hk-upload-loopnote hk-hidden" id="hk-upload-loopnote"></p>
@@ -858,7 +858,7 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
     const timing = grid ? ` About ${grid.bpm} beats a minute, ${grid.beatsPerBar} beats in a bar, ${bars.length} bars.` : "";
     container.querySelector("#hk-upload-summary").textContent = mode === "easy"
       ? `Easy: ${new Set(easyNotes.map((n) => n.chord)).size} simple chords.${timing}`
-      : `Every note: ${detailedNotes.length} notes, found by ${finderName}.${timing} Our best guess from the recording.`;
+      : `Entire song: all ${detailedNotes.length} notes, found by ${finderName}.${timing} Our best guess from the recording.`;
     container.querySelector("#hk-upload-vel-legend").classList.toggle("hk-hidden", mode === "easy" || !detailedNotes.some((n) => n.velocity != null));
     seek.max = String(totalDuration);
     container.querySelector("#hk-upload-total").textContent = formatClock(totalDuration);
