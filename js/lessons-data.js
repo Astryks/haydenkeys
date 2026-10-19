@@ -200,6 +200,7 @@ const MICRO_LESSONS = [
   // Lesson 4: back to single keys, and harder songs
   { id: "d4-harder", title: "Harder songs, one key at a time", subtitle: "Lesson 4", description: "Back to single keys and tunes, with some harder songs." },
   { id: "d2-beanie", title: "Song: Beanie, two hands", subtitle: "Chezile · Gm7 C7 Fmaj7 Dm7", description: "Two hands make 7th chords: a low note plus a simple 3-key shape." },
+  { id: "d4-van-gogh", title: "Calm piano: Van Gogh", subtitle: "Virginio Aiello · Dm Gm A Dm", description: "A slow, calm piece in D minor. Two hands, and let each chord breathe." },
   { id: "d4-passacaglia", title: "Passacaglia", subtitle: "Handel–Halvorsen · G minor", description: "A famous piece built on one repeating chord loop. Play its top line, one key at a time." },
   { id: "d4-bohemian", title: "Song: Bohemian Rhapsody", subtitle: "Queen · Bb Gm Cm F7", description: "The ballad part's chords." },
   { id: "d4-godfather", title: "Movie music: The Godfather", subtitle: "Nino Rota · Cm Fm G7", description: "The love theme's chords with two hands; find the tune by ear." },

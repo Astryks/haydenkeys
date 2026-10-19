@@ -9,7 +9,7 @@
 ### Next steps (2026-10-19)
 1. **Owner: test build 48 on a phone** from TestFlight: upload a piano recording → Every note; Whole song on Bohemian Rhapsody (tempo changes); a few lessons in a row to confirm sound never drops.
 2. **Owner: App Store.** Check in App Store Connect which build is in review / live. If it is older than 48, decide whether to submit 48 (Claude doesn't submit for review without your OK).
-3. **Owner choice still open:** "Van Gogh" breathing triad (Virginio Aiello). Its chord order isn't confirmed by a reliable source; pick option 1 / 2 / 3 from the chat, or skip it.
+3. ~~**Owner choice still open:** "Van Gogh" breathing triad (Virginio Aiello).~~ **Done 2026-10-19 (option 1):** added as a close version (Dm Gm A Dm, "our best guide"), see "Van Gogh" below. Website now; next TestFlight build.
 4. **Ear check worth doing:** the 209 "our best guide" bar-by-bar songs (bar counts were fitted to the recording length). 9 songs keep their old map: La Campanella, Rachmaninoff Piano Concerto No. 2, Chasse-Neige, Drop It Like It's Hot, Master of Puppets, Pal Pal Dil Ke Paas, Ya Lili, Mouse Loves Rice, plus Hound Dog (own 12-bar map).
 5. **Offered, not started (say the word):** import sheet music / tab files (MusicXML, Guitar Pro via alphaTab) for exact notes of licensed songs; server-side Demucs to split the piano out of a full band before listening; more public-domain pieces in The tune.
 6. Still from before: Google Search Console + Bing (steps below), Google Play listing, screenshot captions.
@@ -57,6 +57,15 @@ ExportOptionsUpload.plist: method `app-store-connect`, destination `upload`, tea
 - Payments: only the optional Tip jar (Apple In-App Purchase, unlocks nothing, app only). Don't submit for review until the owner says so. The owner types all passwords.
 
 ---
+
+## Van Gogh (Virginio Aiello), close version (2026-10-19)
+
+Owner chose option 1. **Chords only, no melody, no sheet music.**
+- **Song library:** "Van Gogh" by Virginio Aiello (2021), genre Contemporary Piano, so it sits in the **Film & classical** row. D minor, about 60 BPM, 4/4, chords **Dm → Gm → A → Dm** (i · iv · V · i), confidence "close version". Its note says honestly: "Close version: the piece's chords, in a common order (our best guide)": no reliable chart confirms the real chord order. Album art from iTunes (Van Gogh - Single, Virginio Aiello & On Piano).
+- **Whole song:** bar by bar, 44 bars of the same loop (Opening 4, Theme 8, Theme again 8, Middle 8, Theme last time 8, Ending 8), one press a bar (two in the Middle) so each chord rings; about 2:56 against the 3:02 recording. Shown as "bar by bar (our best guide)". The section names are a guide too. Data lives in the repo now: `scripts/song-detail-extra.json` (same format as the research files), which `scripts/build-song-detail.mjs` also reads; `js/song-detail-data.js` rebuilt (243 of 252 songs bar by bar).
+- **Lesson card:** Lesson 4, card 93 of 97, "Calm piano: Van Gogh", right after Beanie: two hands (left hand low D3 / G2 / A2, right hand the triad Dm / Gm / A), "let each chord breathe": press softly, hold for 4 slow counts. The card says it's a close version and our best guide. Lesson 4's intro card mentions it. Lesson 4 is now cards 91–97; DAY_ENDS unchanged (Gladiator still ends Lesson 4).
+- **Video:** the official upload on Virginio Aiello's own channel (@virginioaiello, UCTvJOisVyL29Ap9r9izbngg): "Van Gogh - Virginio Aiello, On Piano", **l-fxH--8LFI**, 22,298,549 views, playableInEmbed true, oEmbed OK (checked 2026-10-19). On the song card and the lesson card.
+- **Tested (headless Chrome, 402 px):** all 97 lesson cards open with no page errors; the Van Gogh card plays its Whole song (Opening · bar 1 of 4) and finishes when Dm Gm A Dm are pressed; in the library the song opens in Film & classical with its art, Main chords (Dm · Gm · A) and Whole song play with no errors and no sideways scroll. Cache v37.
 
 ## Hyper-detailed songs: every song bar by bar (2026-10-19)
 

@@ -2,7 +2,8 @@
 // "hyper detailed" songs), from the research files found-1.json ...
 // found-6.json (one object per song: title, artist, key, bpm,
 // timeSignature, sections[{ name, bars: ["G:2 D:2", ...], piano, bpm? }],
-// optional melody [[midi, startBeat, durBeats]], confidence).
+// optional melody [[midi, startBeat, durBeats]], confidence), plus
+// scripts/song-detail-extra.json for songs added later (e.g. Van Gogh).
 //
 //   node scripts/build-song-detail.mjs [research-dir]
 //
@@ -78,6 +79,9 @@ for (let i = 1; i <= 6; i++) {
   research.push(...d.songs);
   skipped.push(...(d.skipped || []).map((s) => s.title || s));
 }
+// Songs added after the research batch live in the repo, same format.
+const EXTRA = path.join(ROOT, "scripts/song-detail-extra.json");
+if (fs.existsSync(EXTRA)) research.push(...JSON.parse(fs.readFileSync(EXTRA, "utf8")).songs);
 
 const lib = new Map(SONGS.map((s) => [`${s.title}|${s.artist}`, s]));
 const out = {};

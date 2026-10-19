@@ -510,6 +510,7 @@ function oomPahTimeline(bars, { barSec = 2.0, rounds = 2 } = {}) {
   return { events, marks };
 }
 // Back to Black (D minor), Heal the World (A major), Godfather theme (C minor): two hands.
+// Van Gogh (D minor) reuses the Back to Black shapes: D3 + Dm, G2 + Gm, A2 + A.
 const BB_DM = [50, 62, 65, 69], BB_GM = [43, 55, 58, 62], BB_BB = [46, 58, 62, 65], BB_A = [45, 57, 61, 64];
 const HW_A = [45, 57, 61, 64], HW_BM7 = [47, 59, 62, 66, 69], HW_CSM = [49, 61, 64, 68], HW_BM7E = [40, 59, 62, 66, 69];
 const GF_CM = [48, 60, 63, 67], GF_FM = [41, 53, 56, 60], GF_G7 = [43, 55, 59, 62, 65];
@@ -691,6 +692,14 @@ const MICRO_CARDS = {
       <p><span class="hk-hand-l">L</span> <b>Left hand</b> plays each chord's <b>letter</b>, down low: <b>G → C → F → D</b>.</p>
       <p><span class="hk-hand-r">R</span> <b>Right hand</b> plays a simple <b>press · skip · press · skip · press</b> shape on top. Together they make each fancy 7th chord!</p>`,
     say: "Play the verse with two hands 🧢<br><span class=\"hk-hand-l\">L</span> Left hand, low: <b>G2 → C3 → F2 → D3</b><br><span class=\"hk-hand-r\">R</span> Right hand: <b>B♭ D F → E G B♭ → A C E → F A C</b>", want: { seq: [BN_GM7, BN_C7, BN_FMAJ7, BN_DM7] }, demoSeq: [[BN_GM7, "Gm7"], [BN_C7, "C7"], [BN_FMAJ7, "Fmaj7"], [BN_DM7, "Dm7"]], range: [36, 76], tip: "🎹 Play it slowly and softly, one chord per bar of 1-2-3, 4-5-6.", done: "That's Beanie! 🧢🎹", video: "song-beanie", song: "Beanie", shareSong: "Beanie" },
+  "d4-van-gogh": { twoHand: true, range: [36, 76], chat: `<h3 data-q="Something slow and calm? 🌙">"Van Gogh" by Virginio Aiello 🌻</h3>
+      <p>A gentle solo piano piece that went viral in 2021. It's in <b>D minor</b>, and slow: about <b>60 beats a minute</b>, one beat every second.</p>
+      <p>A <b>close version</b> of its chords: <b>Dm → Gm → A → Dm</b> (chords 1, 4 and 5 of D minor). This is our best guide: we couldn't find a chart we trust for the real order, so these are the piece's chords in a common order.</p>
+      <h3 data-q="How do I make it sound calm? 🌬️">Let each chord breathe 🌬️</h3>
+      <p><span class="hk-hand-l">L</span> <b>Left hand</b> plays each chord's letter, low: <b>D → G → A → D</b>.</p>
+      <p><span class="hk-hand-r">R</span> <b>Right hand</b> plays the 3-key chord on top. A has one black key: <b>C♯</b>.</p>
+      <p>Press softly, then <b>hold</b> and let the chord ring for 4 slow counts before you move. The tune is copyrighted, so we only show the chords: play the video and find it by ear if you like!</p>`,
+    say: "Play the chords with two hands 🌻<br><span class=\"hk-hand-l\">L</span> Left, low: <b>D3 → G2 → A2 → D3</b><br><span class=\"hk-hand-r\">R</span> Right: <b>Dm → Gm → A → Dm</b>", want: { seq: [BB_DM, BB_GM, BB_A, [...BB_DM]] }, demoSeq: [[BB_DM, "Dm"], [BB_GM, "Gm"], [BB_A, "A"], [BB_DM, "Dm"]], tip: "🎹 Breathe in, press. Breathe out, let it ring. One chord every 4 slow counts.", done: "Beautiful, like a painting! 🌻🎹", video: "song-van-gogh", song: "Van Gogh", shareSong: "Van Gogh" },
   "d4-passacaglia": { range: [36, 72], along: { label: "Hear it with the chords", build: () => barsToTimeline(PASSA_LOOP.concat(PASSA_LOOP).map(([notes, label]) => ({ notes, label, len: 0.5 })), { barSec: 2.6, beats: 4 }) }, watch: "song-passacaglia", chat: `<h3 data-q="What's a passacaglia? 🎻">One chord loop, played again and again 🔁</h3>
       <p>A <b>passacaglia</b> is a piece built on one chord loop that repeats while the music on top keeps changing. <b>Handel</b> wrote this one around 1720, and in <b>1894</b> <b>Johan Halvorsen</b> turned it into a famous duet. It's so old that it's free for everyone to play.</p>
       <p>It's in <b>G minor</b>, and the loop goes: <b>Gm → Cm → F → B♭ → E♭ → Cm → D</b>.</p>
@@ -849,7 +858,7 @@ const MICRO_CARDS = {
       <p>Ask your family about their favourite old songs, find your own classics and learn them. Upload any song in <b>Practice</b> and we'll find the chords!</p>`,
     say: "Find a classic you love and learn it 🎶", want: { tap: true }, ok: "I'll find one! 🔍", noKeys: true, watch: "song-sensualite", done: "Old songs, new player: you! 🎹✨" },
   "d4-harder": { chat: `<h3 data-q="What's in Lesson 4? 🚀">Single keys, and harder songs 💪</h3>
-      <p>Back to playing <b>single keys</b> and tunes, with some harder songs: <b>Beanie</b> with its 7th chords, a famous <b>classical</b> piece, Queen's <b>Bohemian Rhapsody</b>, and <b>movie music</b> (The Godfather and Gladiator) you'll find by ear.</p>`,
+      <p>Back to playing <b>single keys</b> and tunes, with some harder songs: <b>Beanie</b> with its 7th chords, the calm <b>Van Gogh</b>, a famous <b>classical</b> piece, Queen's <b>Bohemian Rhapsody</b>, and <b>movie music</b> (The Godfather and Gladiator) you'll find by ear.</p>`,
     say: "Ready for a challenge? 💪", want: { tap: true }, ok: "Let's go! 🚀", noKeys: true, done: "Here we go! 🎹" },
 };
 

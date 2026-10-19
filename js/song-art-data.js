@@ -861,6 +861,10 @@ const SONG_ART = {
  "Beanie|Chezile": {
   "img": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/a3/20/4d/a3204d28-a2a0-e949-5b95-2aec1d5eeee7/810482896134.jpg/400x400bb.jpg",
   "url": "https://music.apple.com/us/album/beanie/1739267342?i=1739267347&uo=4"
+ },
+ "Van Gogh|Virginio Aiello": {
+  "img": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/5c/bd/41/5cbd41a7-c661-b5fe-d9a6-fb22af50b69a/0195937087887_cover.jpg/400x400bb.jpg",
+  "url": "https://music.apple.com/us/album/van-gogh/1744931151?i=1744931156&uo=4"
  }
 };
 export { SONG_ART };
