@@ -1,6 +1,20 @@
 # Status
 
-## ▶ Start here: handoff summary (2026-10-07)
+## ▶ Start here: where things stand (2026-10-19)
+
+**Latest TestFlight build: 48** (uploaded 2026-10-19). Everything requested so far is built, tested in headless Chrome, committed and pushed (0 uncommitted, 0 unpushed). The older handoff below is kept for history; its "Latest build: 40" is out of date.
+
+**In build 48 (since build 40):** the full Lessons 1–4 restructure (96 cards: wrist/loose hands, two-hand chords, Mary Had a Little Lamb, Interstellar, ear training, genres, Hound Dog, Pepito → Sensualité, Beanie, Passacaglia, Bohemian Rhapsody, Godfather, Gladiator), Hotel California / Stairway to Heaven, Back to Black, Michael Jackson, the sound-stopping fix (iOS interrupted audio, one shared engine), chord name follows the music, videos only from official channels over 1M views (no Pianote), uploads hear every note (Onsets and Frames + Note finder setting), and **Whole song bar by bar for 242 songs** (33 checked, 209 "our best guide"; The tune note for note for 15 public-domain pieces). Details in the dated sections at the bottom of this file.
+
+### Next steps (2026-10-19)
+1. **Owner: test build 48 on a phone** from TestFlight: upload a piano recording → Every note; Whole song on Bohemian Rhapsody (tempo changes); a few lessons in a row to confirm sound never drops.
+2. **Owner: App Store.** Check in App Store Connect which build is in review / live. If it is older than 48, decide whether to submit 48 (Claude doesn't submit for review without your OK).
+3. **Owner choice still open:** "Van Gogh" breathing triad (Virginio Aiello). Its chord order isn't confirmed by a reliable source; pick option 1 / 2 / 3 from the chat, or skip it.
+4. **Ear check worth doing:** the 209 "our best guide" bar-by-bar songs (bar counts were fitted to the recording length). 9 songs keep their old map: La Campanella, Rachmaninoff Piano Concerto No. 2, Chasse-Neige, Drop It Like It's Hot, Master of Puppets, Pal Pal Dil Ke Paas, Ya Lili, Mouse Loves Rice, plus Hound Dog (own 12-bar map).
+5. **Offered, not started (say the word):** import sheet music / tab files (MusicXML, Guitar Pro via alphaTab) for exact notes of licensed songs; server-side Demucs to split the piano out of a full band before listening; more public-domain pieces in The tune.
+6. Still from before: Google Search Console + Bing (steps below), Google Play listing, screenshot captions.
+
+## ▶ Start here: older handoff summary (2026-10-07)
 
 **Hayden Keys** (piano), repo https://github.com/Astryks/haydenkeys, site https://haydenkeys.com, bundle `com.haydenkeys.app`. Sibling app: Jaxx Guitar (https://github.com/Astryks/jaxxguitar).
 
