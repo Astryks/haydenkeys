@@ -2,7 +2,7 @@
 
 ## ▶ Start here: where things stand (2026-10-19)
 
-**Latest TestFlight build: 48** (uploaded 2026-10-19). Everything requested so far is built, tested in headless Chrome, committed and pushed (0 uncommitted, 0 unpushed). The older handoff below is kept for history; its "Latest build: 40" is out of date.
+**Latest TestFlight build: 49** (uploaded 2026-10-19: build 48 + Van Gogh and the Easy / Entire song switch for uploads). Everything requested so far is built, tested in headless Chrome, committed and pushed (0 uncommitted, 0 unpushed). The older handoff below is kept for history; its "Latest build: 40" is out of date.
 
 **In build 48 (since build 40):** the full Lessons 1–4 restructure (96 cards: wrist/loose hands, two-hand chords, Mary Had a Little Lamb, Interstellar, ear training, genres, Hound Dog, Pepito → Sensualité, Beanie, Passacaglia, Bohemian Rhapsody, Godfather, Gladiator), Hotel California / Stairway to Heaven, Back to Black, Michael Jackson, the sound-stopping fix (iOS interrupted audio, one shared engine), chord name follows the music, videos only from official channels over 1M views (no Pianote), uploads hear every note (Onsets and Frames + Note finder setting), and **Whole song bar by bar for 242 songs** (33 checked, 209 "our best guide"; The tune note for note for 15 public-domain pieces). Details in the dated sections at the bottom of this file.
 
