@@ -2840,3 +2840,4 @@ Owner: "when users upload an mp3 it should be super detailed" — every note, no
 - Hand split is a heuristic (no fingering model); crossing hands and wide left-hand stretches can be assigned to the wrong hand.
 - Not yet run inside the iOS app (WKWebView); it uses the same TF.js WebGL backend basic-pitch already uses there. iOS needs the 15.7 MB model in the app bundle (www/ build copies js/).
 - Service worker cache **hayden-keys-v35**. Website only; no iOS build.
+- **iOS build 48** uploaded to TestFlight 2026-10-19: detailed piano transcription for uploads (Onsets and Frames) and bar-by-bar Whole song for 242 songs (+ The tune for 15 public-domain pieces).
