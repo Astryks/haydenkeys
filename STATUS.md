@@ -2,7 +2,7 @@
 
 ## ▶ Start here: where things stand (2026-10-19)
 
-**Latest TestFlight build: 51** (uploaded 2026-10-26). Everything requested so far is built, tested in headless Chrome, committed and pushed (0 uncommitted, 0 unpushed). The older handoff below is kept for history; its "Latest build: 40" is out of date.
+**Latest TestFlight build: 52** (uploaded 2026-10-26: sound recovery fix). Everything requested so far is built, tested in headless Chrome, committed and pushed (0 uncommitted, 0 unpushed). The older handoff below is kept for history; its "Latest build: 40" is out of date.
 
 **In build 48 (since build 40):** the full Lessons 1–4 restructure (96 cards: wrist/loose hands, two-hand chords, Mary Had a Little Lamb, Interstellar, ear training, genres, Hound Dog, Pepito → Sensualité, Beanie, Passacaglia, Bohemian Rhapsody, Godfather, Gladiator), Hotel California / Stairway to Heaven, Back to Black, Michael Jackson, the sound-stopping fix (iOS interrupted audio, one shared engine), chord name follows the music, videos only from official channels over 1M views (no Pianote), uploads hear every note (Onsets and Frames + Note finder setting), and **Whole song bar by bar for 242 songs** (33 checked, 209 "our best guide"; The tune note for note for 15 public-domain pieces). Details in the dated sections at the bottom of this file.
 
@@ -2890,3 +2890,4 @@ Owner: "when users upload an mp3 it should be super detailed" — every note, no
 - **Fix:** the microphone code marks the sound "dirty" every time it switches the audio mode; tapping a video and coming back to the app do the same; and a running engine whose clock stops advancing counts as stuck. On the next tap (inside the tap, where iOS allows a new engine to start) a fresh engine replaces it (at most once every 1.5 s; Hayden also reloads the piano samples into it).
 - **Tested:** in desktop Chrome, healthy taps keep the same engine (no false alarms), a dirty flag swaps in a fresh running engine that plays. The real iOS behaviour can only be confirmed on a phone: please test several lessons in a row with Wait for me / the microphone and a video.
 - Owner also asked about Perfect (yr2cLuKJ2a8): the lesson's G Em C D is the original Ab Fm Db Eb (I vi IV V) moved to the easy key of G; the video plays it in Ab.
+- **iOS build 52** uploaded to TestFlight 2026-10-26: sound recovery fix (silent engine after mic/video/app switches).
