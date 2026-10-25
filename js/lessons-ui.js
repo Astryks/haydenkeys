@@ -514,9 +514,10 @@ function oomPahTimeline(bars, { barSec = 2.0, rounds = 2 } = {}) {
 const BB_DM = [50, 62, 65, 69], BB_GM = [43, 55, 58, 62], BB_BB = [46, 58, 62, 65], BB_A = [45, 57, 61, 64];
 const HW_A = [45, 57, 61, 64], HW_BM7 = [47, 59, 62, 66, 69], HW_CSM = [49, 61, 64, 68], HW_BM7E = [40, 59, 62, 66, 69];
 const GF_CM = [48, 60, 63, 67], GF_FM = [41, 53, 56, 60], GF_G7 = [43, 55, 59, 62, 65];
-// Interstellar (simple version): left hand A, F, C, G low; right hand keeps
-// E on top (Am, Fmaj7, C, G6 sounds — the high E is the film's ticking pedal).
-const IS_AM = [45, 57, 60, 64], IS_F = [41, 57, 60, 64], IS_C = [48, 55, 60, 64], IS_G = [43, 55, 59, 64];
+// Interstellar main theme (simple version): A minor, the loop Fmaj7 → Em/G →
+// Am → Em7/G (Hooktheory's analysis: VI7 v6 i v65, 96 BPM). Left hand F, G, A, G
+// low; the right hand keeps E on top (E is in all four chords: the ticking pedal).
+const IS_F = [41, 57, 60, 64], IS_EMG = [43, 55, 59, 64], IS_AM = [45, 57, 60, 64], IS_EM7G = [43, 55, 59, 62, 64];
 // Lesson 4: 7th chords for blues and jazz, in reach of the lesson keyboard.
 const C7 = [60, 64, 67, 70], F7 = [53, 57, 60, 63], G7 = [55, 59, 62, 65], DM7 = [62, 65, 69, 72], CMAJ7 = [60, 64, 67, 71];
 const F_MAJ = [65, 69, 72], E_MAJ = [64, 68, 71], D_MIN = [62, 65, 69];
@@ -600,7 +601,13 @@ const MICRO_CARDS = {
       <p><b>Middle C is C4.</b> Smaller numbers are further <b>left</b> (lower). Bigger numbers are further <b>right</b>.</p>
       <h3 data-q="So A3 and A2 are both A?">Yes! Same letter, same colour 🎨</h3>
       <p><b>A3</b> is the A just left of middle C. <b>A2</b> is the A one group further left.</p>
-      ${PIC_A2_A3_C4}`,
+      ${PIC_A2_A3_C4}
+      <h3 data-q="Why is it C4 right after A3, not C3? 🤔">The number goes up at C, not at A 🔢</h3>
+      <p>The letters start at A, but the <b>numbers change at C</b>. That's just the rule musicians agreed on.</p>
+      <p>So going right: <b>A3 → B3 → C4</b>. B3 is the last key of group 3, and the very next white key, middle C, starts group 4.</p>
+      <h3 data-q="So where is C0? 🎹">There's no C0 on a piano 🙂</h3>
+      <p>The lowest key on a full piano is <b>A0</b>. Going right: <b>A0 → B0 → C1</b> (with one black key, A♯0, in between). Those first 3 keys are all of group 0.</p>
+      <p>C0 would be lower than the lowest key, so it isn't on the piano. That's why the first C you can play is <b>C1</b>.</p>`,
     say: "Press <b>A3</b>, then <b>A2</b>!", labels: "octave", want: { seq: [[57], [45]] }, demoSeq: [[[57], "A3"], [[45], "A2"]], done: "Same colour, same letter, one group lower! 🎉" },
   "d2-song-key": { say: "Remember <b>home</b>? 🏠<br>A song's <b>key</b> is its home chord.<br>Play <b>G → D → G</b>. Back home!", want: { seq: [G, D, G] }, demoSeq: [[G, "home"], [D, "away"], [G, "home"]], done: "This song is in the key of G 🏠" },
   "d2-mirror": { chat: `<h3 data-q="A song in the key of G? 🎶">Yes! "Man in the Mirror" by Michael Jackson 🕺</h3>
@@ -656,6 +663,13 @@ const MICRO_CARDS = {
       <p>Music has flavours, called <b>genres</b> (say "zhon-ruhs"): pop, rock, blues, jazz, classical and many more.</p>
       <p>Same piano, same keys. What changes is <b>which chords</b> they love and <b>how</b> they play them.</p>`,
     say: "Let's train our ears to hear different genres too. Let's look at <b>jazz</b> 🎷", want: { tap: true }, ok: "Let's go! 🎷", noKeys: true, done: "Here comes jazz! 🎷" },
+  "d3-greats": { chat: `<h3 data-q="How do I find my own sound? 🌟">Learn from the greats, then make it yours 🎼</h3>
+      <p>Every great musician started by <b>studying the greats before them</b>: listening closely, copying, asking "how did they do that?"</p>
+      <p>In the video below, conductor <b>Leonard Bernstein</b> plays and explains the music of <b>Bach</b>. Watch how he doesn't just repeat it: he shows what's inside it, then plays it with <b>his own feeling</b>, gentle, joyful or grand.</p>
+      <h3 data-q="So what should I do? 🎹">Two steps 👣</h3>
+      <p>1️⃣ <b>Learn the details</b>: the right keys, chords and timing, slowly and properly.</p>
+      <p>2️⃣ Then <b>wander and have fun</b> 🎈: play it softer, slower, louder or sadder, add a note, change the rhythm. Don't be afraid to make it your own. There's no wrong way to explore.</p>`,
+    say: "Watch Bernstein, then try it: play any chord you know <b>softly</b>, then <b>strongly</b> 🎹", want: { tap: true }, ok: "I'll make it mine 🌟", noKeys: true, done: "Learn it, then make it yours 🌟", video: "bernstein-bach" },
   "d3-linger": { chat: `<h3 data-q="Another pop song? 🎶">Yes! "Linger" by The Cranberries 💜</h3>
       <p>The whole song loops just <b>4 chords</b>: <b>D → A → C → G</b>.</p>
       <p>You know the shape! Press · skip · press · skip · press. Only <b>D</b> and <b>A</b> use one black key each.</p>`,
@@ -675,11 +689,12 @@ const MICRO_CARDS = {
     say: "Play the first line, one key at a time 🐑<br><b>E D C D E E E</b>", want: { seq: [[64], [62], [60], [62], [64], [64], [64]].map((n) => [...n]) }, demoSeq: [[[64], "E"], [[62], "D"], [[60], "C"], [[62], "D"], [[64], "E"], [[64], "E"], [[64], "E"]], tip: "🎹 Now the whole tune with the falling blocks, then try a song you love!", done: "You played a tune by ear! 🐑🎶" },
   "d3-interstellar": { chat: `<h3 data-q="Can I play some movie music? 🎬">Yes! Hans Zimmer's Interstellar 🚀</h3>
       <p>The theme from the film <b>Interstellar</b> (2014) by <b>Hans Zimmer</b> is in <b>A minor</b>: dreamy and a little sad.</p>
-      <p>In this simple version, one high <b>E</b> keeps ticking on top ⏱️, like the ticking clock in the film, while the chords change underneath.</p>
+      <p>The whole theme is one loop of <b>4 chords</b>: <b>Fmaj7 → Em → Am → Em7</b>, again and again 🔁. A high <b>E</b> keeps ticking on top ⏱️, like the ticking clock in the film, because <b>E is in all four chords</b>.</p>
       <h3 data-q="What do my two hands do?">Left hand low, right hand keeps the E 🙌</h3>
-      <p>👈 <b>Left hand</b>, low down: <b>A2 → F2 → C3 → G2</b>.</p>
-      <p>🖐️ <b>Right hand</b>, near middle C: the top note is <b>always E4</b> (just right of middle C). Only the bottom notes move.</p>`,
-    say: "Both hands! 🚀<br>👈 Left, low: <b>A2 → F2 → C3 → G2</b><br>🖐️ Right: keep <b>E4</b> on top", want: { seq: [IS_AM, IS_F, IS_C, IS_G] }, demoSeq: [[IS_AM, "Am"], [IS_F, "F"], [IS_C, "C"], [IS_G, "G"]], range: [41, 76], along: "interstellar", tip: "🎹 On your real piano, tap the top <b>E</b> softly again and again, like a clock ⏱️", done: "Hello, space! 🚀✨" },
+      <p>👈 <b>Left hand</b>, low down, one note per chord: <b>F2 → G2 → A2 → G2</b> (up, up, back down).</p>
+      <p>🖐️ <b>Right hand</b>, near middle C: the top note is <b>always E4</b> (just right of middle C). Underneath it: <b>A3 C4</b> for Fmaj7, <b>G3 B3</b> for Em, <b>A3 C4</b> for Am, <b>G3 B3 D4</b> for Em7.</p>
+      <p><small>Slow and steady, about 96 beats a minute. Chords from Hooktheory's public analysis; the film's full melody is Hans Zimmer's, so we teach the chords and the ticking E.</small></p>`,
+    say: "Both hands! 🚀<br>👈 Left, low: <b>F2 → G2 → A2 → G2</b><br>🖐️ Right: keep <b>E4</b> on top", want: { seq: [IS_F, IS_EMG, IS_AM, IS_EM7G] }, demoSeq: [[IS_F, "Fmaj7"], [IS_EMG, "Em"], [IS_AM, "Am"], [IS_EM7G, "Em7"]], range: [41, 76], along: "interstellar", tip: "🎹 On your real piano, tap the top <b>E</b> softly again and again, like a clock ⏱️", done: "Hello, space! 🚀✨" },
   "q-l2-fun": { say: "Fun quiz! 🧠<br>How do you turn <b>C major</b> 😀 into <b>C minor</b> 🥲?", want: { choice: "Move the middle key one key left" }, options: ["Move every key one key right", "Move the middle key one key left", "Add a black key on top"], noKeys: true, done: "Yes! Just your middle finger moves 👈🥲" },
   "d2-letitbe": { chat: `<h3 data-q="One last song for Lesson 2? 🎶">Yes! "Let It Be" by The Beatles 🎹</h3>
       <p>A 1970 piano classic in the key of <b>C</b>. Its main loop uses <b>4 new chords</b>, different from your first 4: <b>C → G → Am → F</b>.</p>
@@ -1695,8 +1710,8 @@ function initLessonsTab(root) {
     if (card.along === "interstellar") alongBtn("Hear both hands in time", () => {
       const events = [];
       const marks = [];
-      const BAR = 2.4;
-      [[IS_AM, "Am"], [IS_F, "F"], [IS_C, "C"], [IS_G, "G"], [IS_AM, "Am"], [IS_F, "F"], [IS_C, "C"], [IS_G, "G"]].forEach(([ch, label], i) => {
+      const BAR = 2.5; // 4 beats at 96 BPM
+      [[IS_F, "Fmaj7"], [IS_EMG, "Em"], [IS_AM, "Am"], [IS_EM7G, "Em7"], [IS_F, "Fmaj7"], [IS_EMG, "Em"], [IS_AM, "Am"], [IS_EM7G, "Em7"]].forEach(([ch, label], i) => {
         marks.push({ t: i * BAR, label });
         events.push({ midi: ch[0], start: i * BAR, dur: BAR * 0.95, hand: "left" });
         ch.slice(1, -1).forEach((m) => events.push({ midi: m, start: i * BAR, dur: BAR * 0.95, hand: "right" }));

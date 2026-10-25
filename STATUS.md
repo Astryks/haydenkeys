@@ -2867,3 +2867,10 @@ Owner: "when users upload an mp3 it should be super detailed" — every note, no
 - Not yet run inside the iOS app (WKWebView); it uses the same TF.js WebGL backend basic-pitch already uses there. iOS needs the 15.7 MB model in the app bundle (www/ build copies js/).
 - Service worker cache **hayden-keys-v35**. Website only; no iOS build.
 - **iOS build 48** uploaded to TestFlight 2026-10-19: detailed piano transcription for uploads (Onsets and Frames) and bar-by-bar Whole song for 242 songs (+ The tune for 15 public-domain pieces).
+
+## 2026-10-25: key numbers explained, Interstellar fixed, learn from the greats
+- **Lesson 2 "A2, A3, C4?" card:** now explains that the numbers change at C, not A (A3 → B3 → C4), and that a piano starts A0, A♯0, B0, then C1: there is no C0 on a piano (it would be below the lowest key).
+- **Interstellar card (Lesson 2) was wrong:** it used A F C G. Now the main theme's loop in A minor, **Fmaj7 → Em/G → Am → Em7/G** (left hand F2 G2 A2 G2, right hand keeps E4 ticking on top, E is in all four chords), 96 BPM, per Hooktheory's analysis (VI7 v6 i v65). Chords only; the melody is Hans Zimmer's. The owner's reference tutorial (QueeNote, 491k views) isn't added as a video (under the 1M rule, not official).
+- **New Lesson 3 card "Learn from the greats, then make it yours"** (before "The other main genres"): study great musicians, learn the details, then wander and make it your own, with Leonard Bernstein's official Omnibus excerpt on Bach (w2jTuvh3jh0, Leonard Bernstein's own channel; 14.8k views, added at the owner's request despite the 1M rule).
+- Not built into iOS yet (next build).
+- **Pending (owner asked 25 Oct):** a Lesson 4 "Just for fun: guitar solos on piano" (November Rain, Don't Cry, Pink Floyd, Stairway). Note-for-note copyrighted solos can't be added; offered instead: the chords under each solo, the scale to improvise with, our own short licks, and a link to licensed sheet music.

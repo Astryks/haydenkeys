@@ -161,7 +161,7 @@ const MICRO_LESSONS = [
   { id: "d2-key-c", title: "Same loop, key of C", subtitle: "C · G · Am · F", description: "The 1-5-6-4 loop, moved to the key of C." },
   { id: "d2-tears", title: "Song: Save Your Tears", subtitle: "The Weeknd · C Am Em G", description: "Play the 4-chord loop of Save Your Tears in the key of C." },
   { id: "d2-mary", title: "Play a tune by ear: Mary Had a Little Lamb", subtitle: "One key at a time", description: "Listen, then find a song's tune one key at a time. Start with Mary Had a Little Lamb." },
-  { id: "d3-interstellar", title: "Interstellar", subtitle: "Hans Zimmer · both hands", description: "Left hand A F C G low, right hand keeps a ticking E on top." },
+  { id: "d3-interstellar", title: "Interstellar", subtitle: "Hans Zimmer · both hands", description: "Fmaj7, Em, Am, Em7: left hand F G A G low, right hand keeps a ticking E on top." },
   { id: "q-l2-fun", title: "Fun quiz!", subtitle: "Quick check", description: "How do you turn a major chord into a minor chord?" },
   { id: "d2-letitbe", title: "Song: Let It Be", subtitle: "The Beatles · C G Am F", description: "One last easy song with 4 new chords: C, G, Am and F." },
   // Lesson 3: train your ears: happy or sad, then the genres
@@ -179,6 +179,7 @@ const MICRO_LESSONS = [
   { id: "d3-song", title: "Two-hand song: Linger", subtitle: "Both hands · D A C G", description: "Play Linger with both hands." },
   { id: "d3-talk", title: "Song: I Don't Want to Talk About It", subtitle: "Rod Stewart · Bb Cm F", description: "Play the verse loop of I Don't Want to Talk About It." },
   { id: "d4-sus", title: "Pop trick: sus chords", subtitle: "D · Dsus4 · D", description: "Move one key of a chord to make it wait, then come home." },
+  { id: "d3-greats", title: "Learn from the greats, then make it yours", subtitle: "Leonard Bernstein on Bach", description: "Study great musicians, learn the details, then wander and have fun with it." },
   { id: "d3-more-genres", title: "The other main genres", subtitle: "Rock, R&B, reggae and more", description: "A quick tour of the other big styles of music." },
   { id: "d4-rock", title: "Rock", subtitle: "D · C · G", description: "Big, strong chords, like Sweet Home Alabama." },
   { id: "d3-mind", title: "Song: Where Is My Mind?", subtitle: "Pixies · piano version · E C#m G# A", description: "Play the 4-chord loop of Where Is My Mind? on the piano." },

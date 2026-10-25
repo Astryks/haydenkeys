@@ -142,6 +142,7 @@ const VIDEOS = {
  "teach-hands": {"id": "a_kVafB-0C4", "title": "How to start playing piano or keyboard // Complete beginner tutorial - basic technique and exercises", "author_name": "Piano From Scratch", "kind": "teacher"},
  "teach-two-hands": {"id": "VXD0p_g_UTg", "title": "Play with 2 Hands on Piano (Practice these 10 Easy Exercises)", "author_name": "Learn Piano with Jazer Lee", "kind": "teacher"},
  "teach-jazz-improv": {"id": "ABuewbFpyhg", "title": "Jazz Piano For Beginners || Tutorial #1: starting to improvise", "author_name": "Bill Hilton", "kind": "teacher"},
+ "bernstein-bach": {"id": "w2jTuvh3jh0", "title": "Omnibus: The Music of JS Bach (excerpt) | Leonard Bernstein", "author_name": "Leonard Bernstein", "kind": "teacher"},
  "teach-blues-improv": {"id": "jsCiyPHI3kI", "title": "How to Play Boogie Woogie Piano - WikiHow", "author_name": "Arthur Migliazza", "kind": "teacher"},
  "teach-pedal": {"id": "xwYBBWFDZRA", "title": "What do the pedals on a piano do? | Cunningham Piano Company, Philadelphia, King of Prussia, PA", "author_name": "CunninghamPiano", "kind": "teacher"},
  "trem-bala-acoustic-v2": {"id": "TEjqASLuRGw", "title": "Trem-Bala (Música Autoral) Ana Vilela", "author_name": "Ana Vilela", "kind": "acoustic"},
