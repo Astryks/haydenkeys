@@ -251,6 +251,10 @@ const WM_E = [64, 68, 71], WM_CSM = [61, 64, 68], WM_GS = [56, 60, 63], WM_A = [
 // Hotel California (B minor), two hands: left hand low, right hand near middle C.
 const HC_BM = [47, 59, 62, 66], HC_FS7 = [42, 58, 61, 64], HC_A = [45, 57, 61, 64], HC_E = [40, 56, 59, 64], HC_G = [43, 55, 59, 62], HC_D = [50, 57, 62, 66], HC_EM = [40, 55, 59, 64];
 // Stairway to Heaven: the intro's bass walks down A G# G F# F under the right hand.
+// Guitar solos on piano (Lesson 4, just for fun): the chords under each solo, two hands.
+const NR_BM = [47, 59, 62, 66], NR_FS = [42, 54, 58, 61], NR_E = [40, 56, 59, 64], NR_D = [38, 57, 62, 66], NR_G = [43, 55, 59, 62], NR_A = [45, 57, 61, 64], NR_B5 = [47, 59, 66];
+const DC_DM = [38, 57, 62, 65], DC_F = [41, 57, 60, 65], DC_G = [43, 55, 59, 62], DC_AM = [45, 57, 60, 64];
+const CN_BM = [47, 59, 62, 66], CN_A = [45, 57, 61, 64], CN_G = [43, 55, 59, 62], CN_EM = [40, 55, 59, 64];
 const SW_AM = [45, 57, 60, 64], SW_AMGS = [44, 57, 60, 64], SW_CG = [43, 55, 60, 64], SW_DFS = [42, 57, 62, 66], SW_FMAJ7 = [41, 57, 60, 64], SW_G = [43, 55, 59, 62], SW_F = [41, 53, 57, 60];
 const BN_GM7 = [43, 58, 62, 65], BN_C7 = [48, 64, 67, 70], BN_FMAJ7 = [41, 57, 60, 64], BN_DM7 = [50, 53, 57, 60];
 // I Don't Want to Talk About It (key of Bb): Bb, Cm, F, Bb.
@@ -798,6 +802,30 @@ const MICRO_CARDS = {
       <p>Near the end the song speeds up and Jimmy Page plays his famous guitar solo over a loop of <b>Am → G → F</b>, round and round.</p>
       <p>Play this loop with two hands while the video plays, and you're the band behind the solo! (We teach the chords, not the guitar notes.)</p>`,
     say: "The solo loop, two hands 🎸<br><span class=\"hk-hand-l\">L</span> Left hand, low: <b>A → G → F</b><br><span class=\"hk-hand-r\">R</span> Right hand: <b>Am → G → F</b>", want: { seq: [SW_AM, SW_G, SW_F] }, demoSeq: [[SW_AM, "Am"], [SW_G, "G"], [SW_F, "F"]], range: [36, 76], tip: "🎹 Strong and steady: this part rocks!", done: "You played under the Stairway solo! 🎸🔥" },
+  "d4-solos-fun": { chat: `<h3 data-q="Can I play guitar solos on piano? 🎸">Yes, just for fun! 🎉</h3>
+      <p>The most famous guitar solos sit on top of a <b>short loop of chords</b> that goes round and round. You just played one: Stairway to Heaven's <b>Am → G → F</b>.</p>
+      <h3 data-q="How does it work on piano?">Be the band, then be the guitarist 🎹</h3>
+      <p>1️⃣ Learn the <b>chord loop</b> under each solo with two hands, and play along with the real song.</p>
+      <p>2️⃣ Then your right hand <b>makes up its own solo</b> with 5 notes that always fit (the last card).</p>
+      <p><small>The guitar solos themselves are the guitarists' own music, so we teach the chords and the notes to improvise with. For the exact notes, buy the licensed sheet music of the song.</small></p>`,
+    say: "Ready to be the band? 🎸", want: { tap: true }, ok: "Let's rock! 🎸", noKeys: true, done: "Let's rock! 🎸" },
+  "d4-solo-nrain": { twoHand: true, chat: `<h3 data-q="November Rain's big solo? 🌧️">Slash's final solo, over 6 chords 🎸</h3>
+      <p>At the end of <b>November Rain</b> (Guns N' Roses, 1991) the song turns dark, into <b>B minor</b>, and Slash plays the famous last solo over this loop:</p>
+      <p><b>Bm → F♯ → E → D → G → A → B</b>, two chords per bar, then a big <b>B</b> for two bars.</p>`,
+    say: "The final solo loop, two hands 🌧️<br><span class=\"hk-hand-l\">L</span> Left hand, low: <b>B F♯ E D G A B</b><br><span class=\"hk-hand-r\">R</span> Right hand: the chords", want: { seq: [NR_BM, NR_FS, NR_E, NR_D, NR_G, NR_A, NR_B5] }, demoSeq: [[NR_BM, "Bm"], [NR_FS, "F♯"], [NR_E, "E"], [NR_D, "D"], [NR_G, "G"], [NR_A, "A"], [NR_B5, "B5"]], range: [36, 76], tip: "🎹 Play it big and slow, about 78 beats a minute.", done: "You're the band under Slash! 🎸🌧️", video: "solo-november-rain" },
+  "d4-solo-dontcry": { twoHand: true, chat: `<h3 data-q="And Don't Cry? 💧">A soft solo over 5 chords 🎸</h3>
+      <p>In <b>Don't Cry</b> (Guns N' Roses, 1991) the guitar solo sits on <b>Dm → F → G → Am → G</b>.</p>
+      <p><small>The record is tuned half a step lower (G♯ minor, chords C♯m E F♯ G♯m F♯). We use the easier all-white-key shapes; the chord names come from Hooktheory's analysis.</small></p>`,
+    say: "The solo loop, two hands 💧<br><span class=\"hk-hand-l\">L</span> Left hand, low: <b>D F G A G</b><br><span class=\"hk-hand-r\">R</span> Right hand: <b>Dm F G Am G</b>", want: { seq: [DC_DM, DC_F, DC_G, DC_AM, DC_G] }, demoSeq: [[DC_DM, "Dm"], [DC_F, "F"], [DC_G, "G"], [DC_AM, "Am"], [DC_G, "G"]], range: [36, 76], tip: "🎹 Gentle and steady, about 125 beats a minute.", done: "Beautiful! 💧🎸", video: "solo-dont-cry" },
+  "d4-solo-numb": { twoHand: true, chat: `<h3 data-q="A Pink Floyd solo? 🌙">Comfortably Numb: one of the greatest solos ever 🎸</h3>
+      <p>In <b>Comfortably Numb</b> (Pink Floyd, 1979) David Gilmour's final solo floats over the verse chords in <b>B minor</b>:</p>
+      <p><b>Bm → A → G → Em</b>, round and round.</p>`,
+    say: "The solo loop, two hands 🌙<br><span class=\"hk-hand-l\">L</span> Left hand, low: <b>B A G E</b><br><span class=\"hk-hand-r\">R</span> Right hand: <b>Bm A G Em</b>", want: { seq: [CN_BM, CN_A, CN_G, CN_EM] }, demoSeq: [[CN_BM, "Bm"], [CN_A, "A"], [CN_G, "G"], [CN_EM, "Em"]], range: [36, 76], tip: "🎹 Slow and dreamy: let each chord ring.", done: "Comfortably played! 🌙🎸", video: "solo-comfortably-numb" },
+  "d4-solo-yours": { chat: `<h3 data-q="Can I make my own solo? 🎨">Yes! With 5 magic notes ✨</h3>
+      <p>Guitarists solo with the <b>minor pentatonic</b> scale: just <b>5 notes</b> that sound good over the whole loop. For November Rain's end and Comfortably Numb (both in B minor) it's <b>B · D · E · F♯ · A</b>.</p>
+      <h3 data-q="How do I solo?">Left hand loops, right hand wanders 🎈</h3>
+      <p>Left hand plays the low notes of the loop. Right hand picks any of the 5 notes: go up, come down, repeat one, hold a long one. There are no wrong notes here. Make it yours!</p>`,
+    say: "Play the 5 notes up: <b>B D E F♯ A B</b> 🎨<br>Then make up your own solo!", want: { seq: [[59], [62], [64], [66], [69], [71]] }, demoSeq: [[[59], "B"], [[62], "D"], [[64], "E"], [[66], "F♯"], [[69], "A"], [[71], "B"]], tip: "🎹 Now wander: any of these 5 notes, any order, over the loop. Have fun!", done: "That's your own solo! 🎨🎸" },
   "d4-blues": { chat: `<h3 data-q="What's the blues? 🎺">The parent of rock and jazz 🎺</h3>
       <p>The <b>blues</b> came from African American musicians in the southern United States in the late 1800s. Rock and jazz both grew out of it.</p>
       <h3 data-q="Which chords does it use?">Just 3: chords 1, 4 and 5, as 7ths 🔢</h3>
