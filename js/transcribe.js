@@ -16,6 +16,7 @@ import { SONGS } from "./songs-data.js";
 import { icon } from "./icons.js";
 import { onNoteOn, enableMic, micOn } from "./input-hub.js";
 import { parseChordSymbol } from "./chord-utils.js";
+import { analyzeBeat, quantizeNotes, assignHands, barAt } from "./transcribe-detail.js";
 
 // Item 44: a short cleanup pass on basic-pitch's raw note output.
 //
@@ -295,12 +296,119 @@ async function decodeNatively(file, ctx) {
   return buf;
 }
 
-async function transcribeFile(file, onStatus = () => {}) {
+// ----- Which note finder -----
+// "auto"  : Onsets and Frames (Google Magenta, piano-only, every note with
+//           how hard it was played) when the recording sounds piano-led,
+//           otherwise Basic Pitch (Spotify, any instrument).
+// "piano" : always Onsets and Frames ("Detailed piano").
+// "any"   : always Basic Pitch.
+// Both run on this device; nothing is uploaded anywhere.
+const FINDER_KEY = "hk-note-finder";
+function getNoteFinder() {
+  try { return localStorage.getItem(FINDER_KEY) || "auto"; } catch (e) { return "auto"; }
+}
+function setNoteFinder(v) {
+  try { localStorage.setItem(FINDER_KEY, v); } catch (e) { /* private mode: just this time */ }
+}
+
+let bpModulePromise = null;
+function loadBasicPitchModule() {
+  if (!bpModulePromise) {
+    bpModulePromise = import("./vendor/basic-pitch/basic-pitch.bundle.js").catch((err) => {
+      bpModulePromise = null;
+      throw err;
+    });
+  }
+  return bpModulePromise;
+}
+
+let bpInstance = null;
+// Basic Pitch on a mono 22050 Hz AudioBuffer → cleaned notes.
+async function runBasicPitch(audioBuffer, onProgress = () => {}) {
+  const { BasicPitch, outputToNotesPoly, addPitchBendsToNoteEvents, noteFramesToTime } = await loadBasicPitchModule();
+  // One model for the whole visit: making a new one per song kept every
+  // earlier copy's weights in memory.
+  if (!bpInstance) bpInstance = new BasicPitch(new URL("./vendor/basic-pitch/model/model.json", import.meta.url).href);
+  const basicPitch = bpInstance;
+  const frames = [];
+  const onsets = [];
+  const contours = [];
+  // basic-pitch 1.0.1 never frees the tensors it makes for each 2-second
+  // window (about 400 for a 40-second song), so memory grew with every
+  // upload. A manual scope frees them; the model's own weights are loaded
+  // first so they stay.
+  const { tf } = await loadBasicPitchModule();
+  await basicPitch.model;
+  tf.engine().startScope();
+  try {
+    await basicPitch.evaluateModel(
+      audioBuffer,
+      (f, o, c) => {
+        frames.push(...f);
+        onsets.push(...o);
+        contours.push(...c);
+      },
+      onProgress
+    );
+  } finally {
+    tf.engine().endScope();
+  }
+  // Item 44: the library's own defaults (0.5/0.3), plus cleanupNotes().
+  const rawNotes = noteFramesToTime(addPitchBendsToNoteEvents(contours, outputToNotesPoly(frames, onsets)));
+  const notes = cleanupNotes(rawNotes);
+  console.log(`Hayden Keys: basic-pitch — ${rawNotes.length} raw notes, ${notes.length} after cleanup`);
+  return notes;
+}
+
+let oafPromise = null;
+function loadOnsetsFrames(onStatus) {
+  if (!oafPromise) {
+    oafPromise = (async () => {
+      const [{ tf }, oaf] = await Promise.all([
+        loadBasicPitchModule(),
+        import("./vendor/onsets-frames/onsets-frames.js"),
+      ]);
+      await tf.ready();
+      const model = await oaf.createOnsetsFrames(tf, new URL("./vendor/onsets-frames/model", import.meta.url).href, { onStatus });
+      return { model, oaf, tf };
+    })().catch((err) => {
+      oafPromise = null;
+      throw err;
+    });
+  }
+  return oafPromise;
+}
+
+function excerpt(samples, rate, fromSec, lenSec) {
+  const a = Math.max(0, Math.floor(fromSec * rate));
+  return samples.subarray(a, Math.min(samples.length, a + Math.floor(lenSec * rate)));
+}
+
+// How well two note lists agree (same key, starting within 70 ms): F1.
+function agreement(a, b) {
+  if (!a.length || !b.length) return 0;
+  const used = new Set();
+  let hit = 0;
+  a.forEach((x) => {
+    const i = b.findIndex((y, k) => !used.has(k) && y.pitchMidi === x.pitchMidi && Math.abs(y.startTimeSeconds - x.startTimeSeconds) < 0.07);
+    if (i >= 0) { used.add(i); hit++; }
+  });
+  const p = hit / a.length;
+  const r = hit / b.length;
+  return p + r ? (2 * p * r) / (p + r) : 0;
+}
+const PIANO_AGREEMENT = 0.5;
+
+function secondsText(s) {
+  return s >= 90 ? `about ${Math.round(s / 60)} min left` : `about ${Math.max(1, Math.round(s))} s left`;
+}
+
+async function transcribeFile(file, onStatus = () => {}, { engine = getNoteFinder() } = {}) {
   let audioBuffer;
+  let decoded = null;
   const audioCtx = getAudioContext();
   try {
     onStatus("Reading your song...");
-    let decoded = null;
     var nativeError = null;
     try {
       decoded = await decodeNatively(file, audioCtx);
@@ -324,53 +432,92 @@ async function transcribeFile(file, onStatus = () => {}) {
   }
 
   // basic-pitch (code + model weights) is vendored locally in
-  // js/vendor/basic-pitch/ — no runtime CDN dependency. See
-  // THIRD_PARTY_NOTICES.md for exact version/provenance. A failure here
-  // means a genuinely different problem than "no internet" (nothing is
-  // fetched remotely anymore) — most likely the browser lacking
-  // WebGL/WASM support that TensorFlow.js needs.
-  let BasicPitch, outputToNotesPoly, addPitchBendsToNoteEvents, noteFramesToTime, basicPitch;
+  // js/vendor/basic-pitch/ — no runtime CDN dependency. A failure to
+  // start it means the browser lacks WebGL/WASM that TensorFlow.js needs.
+  const basic = async (why) => {
+    if (why) onStatus(why);
+    try {
+      await loadBasicPitchModule();
+    } catch (err) {
+      throw new Error(`Couldn't start the note finder (${err.message}). Try updating your browser or using a different one.`);
+    }
+    try {
+      onStatus("Finding the notes (long songs take a while)...");
+      const notes = await runBasicPitch(audioBuffer, (progress) => onStatus(`Finding the notes... ${Math.round(progress * 100)}%`));
+      notes.engine = "basic-pitch";
+      return notes;
+    } catch (err) {
+      throw new Error(`Couldn't find the notes: ${err.message}.`);
+    }
+  };
+
+  if (engine === "any") return basic();
+
+  // ----- Onsets and Frames (piano), vendored in js/vendor/onsets-frames/ -----
+  let oafKit;
   try {
-    onStatus("Getting the note finder ready...");
-    ({ BasicPitch, outputToNotesPoly, addPitchBendsToNoteEvents, noteFramesToTime } =
-      await import("./vendor/basic-pitch/basic-pitch.bundle.js"));
-    basicPitch = new BasicPitch(new URL("./vendor/basic-pitch/model/model.json", import.meta.url).href);
+    onStatus("Getting the piano note finder ready...");
+    oafKit = await loadOnsetsFrames(onStatus);
   } catch (err) {
-    throw new Error(`Couldn't start the note finder (${err.message}). Try updating your browser or using a different one.`);
+    console.warn("Hayden Keys: Onsets and Frames couldn't start, using Basic Pitch", err);
+    return basic("Using the everyday note finder...");
+  }
+  const { model, oaf } = oafKit;
+  let y16;
+  try {
+    y16 = await oaf.toMono16k(decoded);
+  } catch (err) {
+    return basic();
+  }
+  const duration = y16.length / oaf.SAMPLE_RATE;
+
+  if (engine === "auto") {
+    // Is it piano-led? Run both note finders on ~20 s of the music: on a
+    // piano recording they hear (nearly) the same notes; with a band or a
+    // singer, Basic Pitch also hears the voice, guitar and bass that the
+    // piano model leaves out.
+    onStatus("Listening to which instruments are playing...");
+    let start = 0;
+    while (start < y16.length && Math.abs(y16[start]) < 0.02) start++;
+    const fromSec = Math.min(Math.max(0, start / oaf.SAMPLE_RATE - 0.2), Math.max(0, duration - 20));
+    const lenSec = Math.min(20, duration - fromSec);
+    try {
+      const exOaf = await model.transcribe(excerpt(y16, oaf.SAMPLE_RATE, fromSec, lenSec));
+      const bpSamples = excerpt(audioBuffer.getChannelData(0), 22050, fromSec, lenSec);
+      const exBuf = audioCtx.createBuffer(1, bpSamples.length, 22050);
+      exBuf.getChannelData(0).set(bpSamples);
+      const exBp = await runBasicPitch(exBuf);
+      const f1 = agreement(exOaf, exBp);
+      lastPianoCheck = { oaf: exOaf.length, basicPitch: exBp.length, agreement: f1 };
+      console.log(`Hayden Keys: piano check — ${exOaf.length} piano-model notes, ${exBp.length} Basic Pitch notes, agreement ${f1.toFixed(2)}`);
+      if (f1 < PIANO_AGREEMENT) return basic("This sounds like more than a piano, so we'll use the everyday note finder...");
+    } catch (err) {
+      console.warn("Hayden Keys: piano check failed", err);
+      return basic();
+    }
   }
 
   try {
-    const frames = [];
-    const onsets = [];
-    const contours = [];
-    onStatus("Finding the notes (long songs take a while)...");
-    await basicPitch.evaluateModel(
-      audioBuffer,
-      (f, o, c) => {
-        frames.push(...f);
-        onsets.push(...o);
-        contours.push(...c);
-      },
-      (progress) => onStatus(`Finding the notes... ${Math.round(progress * 100)}%`)
-    );
-    // Item 44: this used to call outputToNotesPoly with onsetThresh/
-    // frameThresh loosened to 0.25/0.25 — the library's own real
-    // defaults, visible in its source, are 0.5/0.3. That's a real cause
-    // of the reported "6233 notes for one song" explosion: a much more
-    // sensitive-than-default detector picks up far more noise/harmonic
-    // blips as if they were genuine note onsets. Using the library's
-    // own defaults instead, plus a short post-filter pass below,
-    // meaningfully cuts that down without a different model/algorithm.
-    const rawNotes = noteFramesToTime(
-      addPitchBendsToNoteEvents(contours, outputToNotesPoly(frames, onsets))
-    );
-    const notes = cleanupNotes(rawNotes);
-    console.log(`Hayden Keys: basic-pitch transcription result — ${rawNotes.length} raw notes, ${notes.length} after cleanup`, notes);
+    onStatus("Finding every note...");
+    const notes = await model.transcribe(y16, {
+      // In auto mode, a device that would take more than ~2.5 minutes
+      // switches to the quicker everyday note finder instead.
+      budgetSec: engine === "auto" ? Math.max(150, duration * 0.8) : Infinity,
+      onProgress: (frac, left) => onStatus(`Finding every note... ${Math.round(frac * 100)}%${frac < 1 && frac > 0.05 ? ` (${secondsText(left)})` : ""}`),
+    });
+    notes.engine = "onsets-frames";
+    console.log(`Hayden Keys: Onsets and Frames — ${notes.length} notes in ${duration.toFixed(1)} s of audio`);
     return notes;
   } catch (err) {
-    throw new Error(`Couldn't find the notes: ${err.message}.`);
+    if (err?.code === "too-slow") {
+      console.warn(`Hayden Keys: piano model too slow here (${Math.round(err.projectedSec)} s), using Basic Pitch`);
+      return basic("This device is a bit slow for the detailed piano finder, so we'll use the quicker one...");
+    }
+    console.warn("Hayden Keys: Onsets and Frames failed, using Basic Pitch", err);
+    return basic("Using the everyday note finder...");
   }
 }
+let lastPianoCheck = null;
 
 // Item 57: "Easy mode" = the song's CHORDS, as simple shapes you can
 // actually play. (Item 56's version only thinned the raw notes out,
@@ -589,27 +736,36 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
     container.innerHTML = `<p class="hk-honest-note">We couldn't hear any notes in this clip.</p>`;
     return;
   }
+  // Which note finder made these notes: Onsets and Frames notes carry a
+  // velocity (saved uploads keep it, even when the array's own `engine`
+  // tag is lost).
+  const engine = notes.engine || (notes.some((n) => n.velocity != null) ? "onsets-frames" : "basic-pitch");
   const midiValues = notes.map((n) => n.pitchMidi).sort((a, b) => a - b);
   // Item 57: wide enough for Easy mode's shapes (roots 42-54, triads up
   // to 73) even when the recording itself sits higher or lower.
   const minMidi = Math.max(21, Math.min(41, midiValues[0] - 3));
   const maxMidi = Math.min(108, Math.max(74, midiValues[midiValues.length - 1] + 3));
-  // Item 56: split hands at Middle C like real piano music, not at the
-  // median note — on a full band recording most detected notes are bass,
-  // so a median split painted half the bass line as "right hand". Falls
-  // back to the median only if nearly everything is on one side.
-  const aboveMiddleC = midiValues.filter((m) => m >= 60).length / midiValues.length;
-  const handSplitMidi = aboveMiddleC >= 0.1 && aboveMiddleC <= 0.9 ? 60 : midiValues[Math.floor(midiValues.length / 2)];
-  const detailedNotes = notes
+
+  // Every note: the beat and bars first, then each note's start lined up
+  // with them (gently — see transcribe-detail.js; nothing is merged or
+  // dropped, so every bar keeps the presses that were played), then a
+  // hand for every note, chord by chord, keeping each hand's span
+  // comfortable and close to where it just was.
+  const rawNotes = notes
     .slice()
     .sort((a, b) => a.startTimeSeconds - b.startTimeSeconds)
     .map((n) => ({
       midi: n.pitchMidi,
       time: n.startTimeSeconds,
-      duration: Math.max(0.15, n.durationSeconds),
-      hand: n.pitchMidi < handSplitMidi ? "left" : "right",
+      duration: Math.max(0.12, n.durationSeconds),
+      velocity: n.velocity != null ? n.velocity : n.amplitude != null ? Math.round(Math.min(1, n.amplitude) * 127) : null,
     }));
-  const beatGuess = estimateBeat(detailedNotes);
+  const grid = analyzeBeat(rawNotes);
+  const detailedNotes = assignHands(quantizeNotes(rawNotes, grid)).map((n) => ({ ...n, duration: Math.max(0.12, n.duration) }));
+  const bars = grid ? grid.bars : [];
+  const beatGuess = grid
+    ? { beatSec: grid.beatSec, offsetSec: bars[0] ?? grid.beats[0], bpm: grid.bpm }
+    : estimateBeat(detailedNotes);
   // Easy chords change at most every 2 beats when the tempo is known
   // (every second otherwise) — about as fast as a beginner can follow.
   // Slow songs (a beat of 0.75s or more) can change chord every beat;
@@ -621,13 +777,9 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
   const SPEEDS = [0.5, 0.75, 1];
   const beat = beatGuess;
 
-  // Item 56: the original recording, played in sync. Hearing the actual
-  // song (vocals included) is what tells you where you are in it — the
-  // piano re-synthesis alone doesn't. When it's on, it IS the clock:
-  // the highway and keyboard follow the media element's own position,
-  // so they can't drift from the audio. Slower speeds keep the pitch
-  // (browsers' default preservesPitch). Original on + piano notes off is
-  // the default whenever the file is available.
+  // Item 56: the original recording, played in sync. When it's on, it IS
+  // the clock: the highway and keyboard follow the media element's own
+  // position, so they can't drift from the audio.
   let originalEl = null;
   if (file) {
     originalEl = document.createElement("audio");
@@ -636,23 +788,29 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
     originalEl.preservesPitch = true;
     originalEl.webkitPreservesPitch = true;
   }
-  // Item 57: three ways to listen — the original recording on its own,
-  // piano only (the recording muted, just the detected notes on piano),
-  // or the piano laid over the recording.
   let soundMode = originalEl ? "original" : "piano"; // "original" | "piano" | "both"
   let originalOn = soundMode !== "piano";
   let pianoOn = soundMode !== "original";
   let drumsOn = false;
   let lastBeatSlot = null;
 
-  // Easy mode (just chords) is the default; Hard mode shows every note.
-  let highwayNotes = easyNotes.length ? easyNotes : detailedNotes;
+  // A piano recording opens on Every note; a band recording (Basic
+  // Pitch) opens on Easy chords, which are much easier to follow there.
+  let mode = engine === "onsets-frames" || !easyNotes.length ? "detailed" : "easy";
+  let handsMode = "both"; // "both" | "left" | "right": the other hand is drawn faded and played for you
+  let baseNotes = mode === "easy" ? easyNotes : detailedNotes;
+  let highwayNotes = baseNotes;
   let totalDuration = 0;
   function computeTotal() {
-    totalDuration = Math.max(...highwayNotes.map((n) => n.time + n.duration)) + 0.5;
+    totalDuration = Math.max(...baseNotes.map((n) => n.time + n.duration)) + 0.5;
+  }
+  function applyHands() {
+    highwayNotes = handsMode === "both" ? baseNotes : baseNotes.map((n) => ({ ...n, ghost: n.hand !== handsMode }));
   }
   computeTotal();
 
+  const finder = getNoteFinder();
+  const seg = (name, items, active) => `<div class="hk-seg">${items.map(([v, label]) => `<button class="${v === active ? "hk-speed-active" : ""}" data-${name}="${v}">${label}</button>`).join("")}</div>`;
   container.innerHTML = `
     <div class="hk-upload-player">
       <button class="hk-upload-bigplay" id="hk-upload-playpause" aria-label="Play">▶ Play</button>
@@ -664,7 +822,12 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
         <input type="range" id="hk-upload-seek" class="hk-upload-seek-range" min="0" step="0.05" value="0" aria-label="Playback position" />
         <span class="hk-upload-clock" id="hk-upload-total">0:00</span>
       </div>
-      <p class="hk-upload-hands"><span class="hk-hand-l">L</span> left hand &nbsp;·&nbsp; <span class="hk-hand-r">R</span> right hand</p>
+      <div class="hk-upload-quick">
+        ${seg("mode", [["easy", "Easy"], ["detailed", "Entire song"]], mode)}
+        ${seg("loop", [["off", "No loop"], ["1", "Loop 1 bar"], ["2", "2 bars"], ["4", "4 bars"]], "off")}
+      </div>
+      <p class="hk-upload-loopnote hk-hidden" id="hk-upload-loopnote"></p>
+      <p class="hk-upload-hands"><span class="hk-hand-l">L</span> left hand &nbsp;·&nbsp; <span class="hk-hand-r">R</span> right hand<span class="hk-upload-vel-legend" id="hk-upload-vel-legend"> &nbsp;·&nbsp; <span class="hk-vel-soft"></span> soft <span class="hk-vel-strong"></span> strong</span></p>
       <div class="hk-upload-wait hk-hidden" id="hk-upload-wait"></div>
       ${window.Capacitor?.isNativePlatform?.() ? `<button class="hk-btn hk-upload-guess" id="hk-upload-guess">${icon("search", 20)} Guess the song</button><div id="hk-upload-recognized"></div>` : ""}
       <div class="hk-upload-match" id="hk-upload-match"></div>
@@ -672,9 +835,11 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
         <summary>${icon("gear", 22)} Settings</summary>
         <div class="hk-set-row"><span>Speed</span><div class="hk-seg">${SPEEDS.map((s) => `<button class="${s === 1 ? "hk-speed-active" : ""}" data-speed="${s}">${s === 1 ? "Normal" : s === 0.5 ? "Slow" : "0.75×"}</button>`).join("")}</div></div>
         <div class="hk-set-row"><span>Wait for me</span><div class="hk-seg"><button class="hk-speed-active" data-wait="off">Off</button><button data-wait="on">On</button></div></div>
-        <div class="hk-set-row"><span>Notes</span><div class="hk-seg"><button class="${easyNotes.length ? "hk-speed-active" : ""}" data-mode="easy">Easy</button><button class="${easyNotes.length ? "" : "hk-speed-active"}" data-mode="detailed">Hard</button></div></div>
+        <div class="hk-set-row"><span>Hands</span>${seg("hands", [["both", "Both"], ["left", "Left"], ["right", "Right"]], "both")}</div>
         ${originalEl ? `<div class="hk-set-row"><span>Sound</span><div class="hk-seg"><button class="hk-speed-active" data-sound="original">Song</button><button data-sound="piano">Piano</button><button data-sound="both">Both</button></div></div>` : ""}
         ${beat ? `<div class="hk-set-row"><span>Drum beat</span><div class="hk-seg"><button class="hk-speed-active" data-beat="off">Off</button><button data-beat="on">On</button></div></div>` : ""}
+        ${file ? `<div class="hk-set-row"><span>Note finder</span>${seg("finder", [["auto", "Auto"], ["piano", "Piano"], ["any", "Any"]], finder)}</div>
+        <p class="hk-upload-fine" id="hk-upload-finder-note">Piano: every note and how hard it's played (best for solo piano). Any: any instrument, for songs with singing, guitar or a band. Auto picks for you. Both work on your device.</p>` : ""}
         <p class="hk-honest-note" id="hk-upload-summary"></p>
       </details>
     </div>`;
@@ -686,11 +851,15 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
   const seek = container.querySelector("#hk-upload-seek");
   const clock = container.querySelector("#hk-upload-clock");
   const nowEl = container.querySelector("#hk-upload-now");
+  const loopNote = container.querySelector("#hk-upload-loopnote");
 
   function updateSummary() {
-    container.querySelector("#hk-upload-summary").textContent = highwayNotes === easyNotes
-      ? `Easy: ${new Set(easyNotes.map((n) => n.chord)).size} simple chords.`
-      : "Hard: every note in the song.";
+    const finderName = engine === "onsets-frames" ? "the piano note finder (Onsets and Frames)" : "the everyday note finder (Basic Pitch)";
+    const timing = grid ? ` About ${grid.bpm} beats a minute, ${grid.beatsPerBar} beats in a bar, ${bars.length} bars.` : "";
+    container.querySelector("#hk-upload-summary").textContent = mode === "easy"
+      ? `Easy: ${new Set(easyNotes.map((n) => n.chord)).size} simple chords.${timing}`
+      : `Entire song: all ${detailedNotes.length} notes, found by ${finderName}.${timing} Our best guess from the recording.`;
+    container.querySelector("#hk-upload-vel-legend").classList.toggle("hk-hidden", mode === "easy" || !detailedNotes.some((n) => n.velocity != null));
     seek.max = String(totalDuration);
     container.querySelector("#hk-upload-total").textContent = formatClock(totalDuration);
   }
@@ -712,6 +881,8 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
   let raf = null;
   let scheduled = []; // setTimeout ids for audio
   let lastActiveKey = "";
+  let loopBars = 0; // 0 = off
+  let loopRange = null; // { start, end, fromBar, toBar }
 
   function currentTime() {
     if (!playing || holding) return pausedAt;
@@ -726,26 +897,27 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
 
   function scheduleAudioFrom(t) {
     clearScheduled();
-    if (!pianoOn) return;
+    // When practising one hand, the other hand is always played for you.
+    const ghostsOnly = !pianoOn && handsMode !== "both";
+    if (!pianoOn && !ghostsOnly) return;
+    const end = loopRange ? loopRange.end : Infinity;
     highwayNotes.forEach((n) => {
-      if (n.time < t) return; // already started — don't replay it mid-note on resume/seek
+      if (n.time < t || n.time >= end) return; // already started, or after the loop point
+      if (ghostsOnly && !n.ghost) return;
       const delayMs = ((n.time - t) / speed) * 1000;
-      scheduled.push(setTimeout(() => playTone(n.midi, { duration: n.duration / speed }), delayMs));
+      scheduled.push(setTimeout(() => playTone(n.midi, { duration: n.duration / speed, velocity: n.velocity ?? 100 }), delayMs));
     });
   }
 
-  // Item 55: use the SAME left/right hand split the highway already
-  // colors notes by, instead of a generic single-color highlight. Item
-  // 56: only touches the DOM when the set of sounding notes actually
-  // changes (not every animation frame), and labels each lit key with
-  // its note name via midiToName().
   function drawFrame(t) {
-    highway.render(t, highwayNotes);
+    highway.render(t, highwayNotes, { bars, velocity: mode === "detailed", loop: loopRange });
     const active = highwayNotes.filter((n) => t >= n.time && t < n.time + n.duration);
-    const key = active.map((n) => `${n.midi}${n.hand[0]}`).sort().join(",");
+    const barNo = bars.length ? barAt(bars, t) : 0;
+    const key = active.map((n) => `${n.midi}${n.hand[0]}`).sort().join(",") + `|${barNo}`;
     if (key !== lastActiveKey) {
       lastActiveKey = key;
       kb.keyElements.forEach((el) => el.querySelector(".hk-key-notename")?.remove());
+      const barText = barNo ? `<span class="hk-upload-bar">Bar ${barNo}</span> ` : "";
       if (active.length) {
         kb.highlightHands({
           left: active.filter((n) => n.hand === "left").map((n) => n.midi),
@@ -769,14 +941,26 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
         const chordLabel = active.find((n) => n.chord)?.chord;
         const lh = [...new Set(active.filter((n) => n.hand === "left").map((n) => n.midi))].sort((a, b) => a - b).map(midiToName);
         const rh = [...new Set(active.filter((n) => n.hand === "right").map((n) => n.midi))].sort((a, b) => a - b).map(midiToName);
-        nowEl.innerHTML = `${chordLabel ? `<b>${chordLabel}</b> &nbsp;` : ""}${lh.length ? `<span class="hk-hand-l">L</span> ${lh.join(" ")}` : ""}${lh.length && rh.length ? " &nbsp; " : ""}${rh.length ? `<span class="hk-hand-r">R</span> ${rh.join(" ")}` : ""}`;
+        nowEl.innerHTML = `${barText}${chordLabel ? `<b>${chordLabel}</b> &nbsp;` : ""}${lh.length ? `<span class="hk-hand-l">L</span> ${lh.join(" ")}` : ""}${lh.length && rh.length ? " &nbsp; " : ""}${rh.length ? `<span class="hk-hand-r">R</span> ${rh.join(" ")}` : ""}`;
       } else {
         kb.clearHighlights();
-        nowEl.innerHTML = "&nbsp;";
+        nowEl.innerHTML = barText || "&nbsp;";
       }
     }
     if (!seekDragging) seek.value = String(Math.min(t, totalDuration));
     clock.textContent = formatClock(t);
+  }
+
+  // Jump the clock (and everything that follows it) to time t.
+  function jumpTo(t) {
+    pausedAt = t;
+    holding = false;
+    nextGroup = groupAt(t);
+    lastBeatSlot = null;
+    if (!playing) { drawFrame(t); return; }
+    playStartedAt = performance.now();
+    if (originalOn && originalEl) { originalEl.currentTime = t; originalEl.play().catch(() => {}); }
+    scheduleAudioFrom(t);
   }
 
   function loop() {
@@ -787,13 +971,19 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
       return;
     }
     let t = holding ? pausedAt : currentTime();
+    if (loopRange && !holding && t >= loopRange.end) {
+      jumpTo(loopRange.start);
+      t = loopRange.start;
+    }
     if (waitOn && !holding && nextGroup && t >= nextGroup.time) { hold(nextGroup); t = pausedAt; }
     drawFrame(t);
     if (drumsOn && beat && t >= beat.offsetSec) {
-      const slot = Math.floor((t - beat.offsetSec) / beat.beatSec);
+      const slot = grid ? grid.beats.findIndex((b, i) => t >= b && t < (grid.beats[i + 1] ?? Infinity)) : Math.floor((t - beat.offsetSec) / beat.beatSec);
       if (slot !== lastBeatSlot) {
         lastBeatSlot = slot;
-        playBeat(getAudioContext(), slot, getAudioContext().currentTime);
+        // beat 1 of each bar gets the bar's first drum hit
+        const inBar = grid ? ((slot - grid.firstBeatIndex) % grid.beatsPerBar + grid.beatsPerBar) % grid.beatsPerBar : slot;
+        playBeat(getAudioContext(), inBar, getAudioContext().currentTime);
       }
     }
     if (t >= totalDuration) {
@@ -807,6 +997,7 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
 
   function play() {
     if (pausedAt >= totalDuration) pausedAt = 0;
+    if (loopRange && (pausedAt < loopRange.start - 0.01 || pausedAt >= loopRange.end)) pausedAt = loopRange.start;
     holding = false;
     nextGroup = groupAt(pausedAt);
     playing = true;
@@ -833,35 +1024,82 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
   }
   container._hkStopPlayback = pause;
 
+  // Restarts playback around a settings change.
+  function restartAround(fn) {
+    const wasPlaying = playing;
+    if (playing) pause();
+    fn();
+    if (wasPlaying) play();
+  }
+
   playBtn.addEventListener("click", () => {
     if (playing) pause();
     else play();
   });
   container.querySelectorAll("[data-speed]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const wasPlaying = playing;
-      if (playing) pause();
+    btn.addEventListener("click", () => restartAround(() => {
       speed = Number(btn.dataset.speed);
       container.querySelectorAll("[data-speed]").forEach((b) => b.classList.toggle("hk-speed-active", b === btn));
-      if (wasPlaying) play();
-    });
+    }));
   });
   container.querySelectorAll("[data-sound]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const wasPlaying = playing;
-      if (playing) pause();
+    btn.addEventListener("click", () => restartAround(() => {
       soundMode = btn.dataset.sound;
       originalOn = soundMode !== "piano";
       pianoOn = soundMode !== "original";
       container.querySelectorAll("[data-sound]").forEach((b) => b.classList.toggle("hk-speed-active", b === btn));
-      if (wasPlaying) play();
-    });
+    }));
   });
   container.querySelectorAll("[data-beat]").forEach((btn) => {
     btn.addEventListener("click", () => {
       drumsOn = btn.dataset.beat === "on";
       lastBeatSlot = null;
       container.querySelectorAll("[data-beat]").forEach((b) => b.classList.toggle("hk-speed-active", b === btn));
+    });
+  });
+  container.querySelectorAll("[data-hands]").forEach((btn) => {
+    btn.addEventListener("click", () => restartAround(() => {
+      handsMode = btn.dataset.hands;
+      applyHands();
+      lastActiveKey = null;
+      nextGroup = groupAt(pausedAt);
+      container.querySelectorAll("[data-hands]").forEach((b) => b.classList.toggle("hk-speed-active", b === btn));
+      drawFrame(pausedAt);
+    }));
+  });
+
+  // ----- Loop a section: 1, 2 or 4 bars from the bar you're in -----
+  function setLoop(nBars, at) {
+    loopBars = nBars;
+    if (!nBars) {
+      loopRange = null;
+    } else if (bars.length) {
+      let i = Math.max(0, barAt(bars, at) - 1);
+      if (at < bars[0]) i = 0;
+      const start = i === 0 && at < bars[0] ? Math.max(0, bars[0] - (grid.beatSec * grid.beatsPerBar)) : bars[i];
+      const barLen = grid.beatSec * grid.beatsPerBar;
+      const end = bars[i + nBars] ?? start + nBars * barLen;
+      loopRange = { start, end, fromBar: i + 1, toBar: i + nBars };
+    } else {
+      // No beat found: loop 4-second pieces instead of bars.
+      const start = Math.floor(at / 4) * 4;
+      loopRange = { start, end: start + 4 * nBars };
+    }
+    container.querySelectorAll("[data-loop]").forEach((b) => b.classList.toggle("hk-speed-active", b.dataset.loop === (nBars ? String(nBars) : "off")));
+    loopNote.classList.toggle("hk-hidden", !loopRange);
+    if (loopRange) {
+      loopNote.innerHTML = `${icon("review", 18)} ${loopRange.fromBar ? (loopRange.fromBar === loopRange.toBar ? `Looping bar ${loopRange.fromBar}` : `Looping bars ${loopRange.fromBar}–${loopRange.toBar}`) : `Looping ${formatClock(loopRange.start)}–${formatClock(loopRange.end)}`}. Move the slider to loop somewhere else.`;
+    }
+  }
+  container.querySelectorAll("[data-loop]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const n = btn.dataset.loop === "off" ? 0 : Number(btn.dataset.loop);
+      const at = currentTime();
+      restartAround(() => {
+        setLoop(n, at);
+        if (loopRange) pausedAt = loopRange.start;
+        drawFrame(pausedAt);
+      });
     });
   });
 
@@ -873,13 +1111,14 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
   let heldGroup = null;
   let heard = [];
   const waitEl = container.querySelector("#hk-upload-wait");
+  // The next chord (notes starting together) the learner has to play —
+  // the hand the app plays for you doesn't wait.
   const groupAt = (t0) => {
-    const first = highwayNotes.find((n) => n.time >= t0 - 0.001);
+    const first = highwayNotes.find((n) => !n.ghost && n.time >= t0 - 0.001);
     if (!first) return null;
-    return { time: first.time, notes: highwayNotes.filter((n) => Math.abs(n.time - first.time) < 0.06) };
+    return { time: first.time, notes: highwayNotes.filter((n) => !n.ghost && Math.abs(n.time - first.time) < 0.06) };
   };
   let nextGroup = null;
-  const pcName = (m) => ["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "A♭", "A", "B♭", "B"][((m % 12) + 12) % 12];
   function showWait(html, ok = false) {
     waitEl.classList.toggle("hk-hidden", !waitOn);
     waitEl.classList.toggle("hk-wait-ok", ok);
@@ -931,17 +1170,38 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
     } else showWait("");
   }));
   container.querySelectorAll("[data-mode]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const wasPlaying = playing;
-      if (playing) pause();
-      highwayNotes = btn.dataset.mode === "easy" ? easyNotes : detailedNotes;
+    btn.addEventListener("click", () => restartAround(() => {
+      mode = btn.dataset.mode;
+      baseNotes = mode === "easy" && easyNotes.length ? easyNotes : detailedNotes;
+      applyHands();
       computeTotal();
       pausedAt = Math.min(pausedAt, totalDuration);
       lastActiveKey = null; // force a full keyboard redraw for the new note set
+      nextGroup = groupAt(pausedAt);
       container.querySelectorAll("[data-mode]").forEach((b) => b.classList.toggle("hk-speed-active", b === btn));
       updateSummary();
       drawFrame(pausedAt);
-      if (wasPlaying) play();
+    }));
+  });
+  // Note finder: remembered for next time, and (when we still have the
+  // file) this song is listened to again with the chosen one.
+  container.querySelectorAll("[data-finder]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const v = btn.dataset.finder;
+      setNoteFinder(v);
+      container.querySelectorAll("[data-finder]").forEach((b) => b.classList.toggle("hk-speed-active", b === btn));
+      const want = v === "piano" ? "onsets-frames" : v === "any" ? "basic-pitch" : null;
+      if (!file || !want || want === engine) return;
+      pause();
+      const note = container.querySelector("#hk-upload-finder-note");
+      container.querySelectorAll("[data-finder]").forEach((b) => { b.disabled = true; });
+      try {
+        const again = await transcribeFile(file, (text) => { note.textContent = text; }, { engine: v });
+        if (container.isConnected) renderTranscribedPlayback(container, again, { file });
+      } catch (err) {
+        note.textContent = err.message;
+        container.querySelectorAll("[data-finder]").forEach((b) => { b.disabled = false; });
+      }
     });
   });
 
@@ -961,12 +1221,16 @@ function renderTranscribedPlayback(container, notes, { file = null } = {}) {
   seek.addEventListener("change", () => {
     pausedAt = Number(seek.value);
     seekDragging = false;
+    // Moving outside the loop moves the loop to where you are.
+    if (loopRange && (pausedAt < loopRange.start || pausedAt >= loopRange.end)) setLoop(loopBars, pausedAt);
     drawFrame(pausedAt);
     if (resumeAfterSeek) play();
     resumeAfterSeek = false;
   });
 
+  // For tests and debugging: what the view is showing.
+  container._hkDetail = { engine, grid, detailedNotes, easyNotes, get mode() { return mode; }, get loopRange() { return loopRange; }, seekTo: (t) => { pausedAt = t; drawFrame(t); } };
   drawFrame(0);
 }
 
-export { transcribeFile, resampleToMono22050, renderTranscribedPlayback };
+export { transcribeFile, resampleToMono22050, renderTranscribedPlayback, getNoteFinder, setNoteFinder };

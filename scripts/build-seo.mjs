@@ -295,7 +295,8 @@ ${C.faq.map(([q, a]) => `<h3>${esc(q)}</h3><p>${esc(a)}</p>`).join("\n")}
 </section>`;
 const LANDING_CSS = `<style>.seo-landing{max-width:760px;margin:24px auto;padding:0 20px;font-size:16px;line-height:1.6}.seo-landing h2{margin-top:1.4em}
 .seo-landing h3{margin:1em 0 .2em;font-size:1.05em}.seo-cta{display:inline-block;padding:10px 18px;border-radius:12px;background:${C.accent};color:#fff!important;text-decoration:none;font-weight:600}
-html.native .seo-landing{display:none}</style>`;
+html.native .seo-landing{display:none}
+html.hk-app-ready .seo-landing:not(.seo-open){display:none}</style>`;
 const NATIVE = `<script>if(location.protocol==="capacitor:"||window.Capacitor)document.documentElement.classList.add("native");</script>`;
 let idx = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
 const put = (name, html) => {

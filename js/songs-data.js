@@ -54,8 +54,21 @@ import { VERIFIED } from "./song-verified.js";
 //   "D" - I-vi-V-IV direction (e.g. Photograph) - close to Lesson 4's order
 
 const SONGS = [
+  // Added 2026-10-18 (owner requests: Godfather theme, Back to Black, Michael Jackson). Chords exactly as in
+  // the published charts cited in STATUS.md, in the original key; no lyrics, no melody.
+  {"title": "Love Theme from The Godfather", "artist": "Nino Rota", "genre": "Film", "popularityRank": 126, "year": 1972, "key": "C minor", "chords": ["Cm", "Fm6", "Cm/Eb", "Fm", "Cm/G", "G7sus4", "G7"], "bpm": 67, "beatsPerBar": 4, "degreeSequence": "i - iv6 - i - iv - i/5 - V7sus4 - V7", "confidence": "close version", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "Nino Rota's love theme from The Godfather (1972), also sung as 'Speak Softly Love'. In C minor; the middle part turns to Eb with Bb7, and the theme comes back a half step higher (C# minor) and then in D minor. The tune itself is copyrighted, so the app teaches only the chords."},
+  {"title": "Back to Black", "artist": "Amy Winehouse", "genre": "Soul", "popularityRank": 126, "year": 2006, "key": "D minor", "chords": ["Dm", "Dm7/C", "Gm", "Gm/Ab", "Bb", "Bb7", "A", "A7/E"], "bpm": 124, "beatsPerBar": 4, "degreeSequence": "i - i7/b7 - iv - iv/b5 - VI - VI7 - V - V7/2", "confidence": "close version", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "Amy Winehouse's 2006 soul classic, in D minor, with a 60s girl-group piano feel. Verses and choruses ride the same descending loop (Dm Dm7/C Gm Gm/Ab Bb Bb7 A A7/E); the break moves to Dm7 Dm7/C Bbmaj9 Bbmaj9/A F F/E A7. A simple version of the loop is Dm Gm Bb A."},
+  {"title": "Man in the Mirror", "artist": "Michael Jackson", "genre": "Pop / Soul", "popularityRank": 126, "year": 1988, "key": "G major", "chords": ["G", "D/F#", "Em", "D", "Cadd9", "C/D"], "bpm": 100, "beatsPerBar": 4, "degreeSequence": "I - V/7 - vi - V - IVadd9 - IV/5", "confidence": "close version", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "From Bad (1987), a 1988 number one. In G major, with the same chords as Lesson 1 in the verse (G D/F# Em D Cadd9); the chorus goes G G/B C D7sus4, and near the end the whole song steps up to Ab major."},
+  {"title": "Heal the World", "artist": "Michael Jackson", "genre": "Pop", "popularityRank": 126, "year": 1991, "key": "A major", "chords": ["A", "Bm7", "C#m", "Bm7/E"], "bpm": 81, "beatsPerBar": 4, "degreeSequence": "I - ii7 - iii - ii7/5", "confidence": "close version", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "From Dangerous (1991). In A major; the verse loops A Bm7 C#m Bm7/E, and the last choruses step up to B major and then C# major."},
   // Added Oct 2026 owner requests (Glory Box; I Dont Want to Talk About It) (researched chords, maps and videos).
-  {"title": "Beanie", "artist": "Chezile", "genre": "Pop", "popularityRank": 125, "year": 2024, "key": "F major", "chords": ["Gm7", "C7", "Fmaj7", "Dm7"], "degreeSequence": "ii7 - V7 - Imaj7 - vi7", "confidence": "close version", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "Chezile's viral 2024 hit. The whole song loops one 4-chord progression, Gm7 - C7 - Fmaj7 - Dm7 (ii-V-I-vi in F: Musicnotes' original published key and Ultimate Guitar; Hooktheory charts the same pattern a half step lower, in E: F#m7 B7 E7 C#m). Slow and gentle."},
+  {"title": "Stairway to Heaven", "artist": "Led Zeppelin", "genre": "Rock", "popularityRank": 125, "year": 1971, "key": "A minor", "chords": ["Am", "Am/G#", "C/G", "D/F#", "Fmaj7", "G"], "degreeSequence": "i with a descending bass line (A–G#–G–F#–F), then bVII – i", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Intermediate", "notes": "The famous intro is a fingerpicked Am chord over a bass line that walks down by half steps, A–G#–G–F#–F, landing on Fmaj7 and G back to Am - the chord names here are that intro's widely agreed harmony. The later 12-string section moves around C, D, Fmaj7 and Am, and the guitar solo is played over a repeating Am–G–F. Taught on piano in Lesson 4 (intro and solo chords, two hands). No transcription of the guitar part is included."},
+
+  // Added Oct 2026 owner requests (Glory Box; I Dont Want to Talk About It) (researched chords, maps and videos).
+  {"title": "Beanie", "artist": "Chezile", "genre": "Pop", "popularityRank": 125, "year": 2024, "key": "F major", "chords": ["Gm7", "C7", "Fmaj7", "Dm7"], "bpm": 68, "beatsPerBar": 4, "degreeSequence": "ii7 - V7 - Imaj7 - vi7", "confidence": "close version", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "Chezile's viral 2024 hit. The whole song loops one 4-chord progression, Gm7 - C7 - Fmaj7 - Dm7 (ii-V-I-vi in F: Musicnotes' original published key and Ultimate Guitar; Hooktheory charts the same pattern a half step lower, in E: F#m7 B7 E7 C#m, because the recording is tuned about half way between E and F). A slow, swaying 12/8 feel; the chorus starts on Dm7: Dm7 - Gm7 - C7 - Fmaj7."},
+
+  // Added 2026-10-19 (owner request, "option 1"): a close version. Chords only (no melody); the
+  // chord order is our best guide, not confirmed by a reliable chart.
+  {"title": "Van Gogh", "artist": "Virginio Aiello", "genre": "Contemporary Piano", "popularityRank": 126, "year": 2021, "key": "D minor", "chords": ["Dm", "Gm", "A", "Dm"], "bpm": 60, "beatsPerBar": 4, "degreeSequence": "i - iv - V - i", "confidence": "close version", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "Close version: the piece's chords, in a common order (our best guide). Virginio Aiello's slow solo piano piece went viral in 2021. In D minor, about 60 BPM in 4/4, built on the minor-key loop Dm - Gm - A - Dm (i - iv - V - i). We couldn't find a reliable chart for the real chord order, so treat it as a guide. The tune is copyrighted, so the app teaches only the chords."},
 
   // Added Oct 2026 owner requests (Glory Box; I Dont Want to Talk About It) (researched chords, maps and videos).
   {"title": "Save Your Tears", "artist": "The Weeknd", "genre": "Pop", "popularityRank": 125, "year": 2020, "key": "C major", "chords": ["C", "Am", "Em", "G"], "degreeSequence": "I - vi - iii - V", "confidence": "confirmed", "oneFiveSixFourMatch": false, "difficulty": "Beginner", "notes": "From After Hours (2020), about 118 BPM. Verse and chorus loop C - Am - Em - G (often played as Am7 and Em7); the pre-chorus goes Dm - Am - F - G (Hooktheory, Musicnotes: C major). 80s synth-pop feel."},
@@ -2166,15 +2179,87 @@ const ONE_FIVE_SIX_FOUR_SONGS = SONGS.filter((s) => s.oneFiveSixFourMatch && !s.
 // Songs NOT in this map fall back to the existing simple-loop Practice
 // view using their top-level `chords` array, looped indefinitely.
 const SONG_STRUCTURES = {
+  // 2026-10-18: section maps from the published charts cited in STATUS.md (original keys, exact chords).
+  "Love Theme from The Godfather": [
+    { section: "Intro", chords: ["Cm", "Fm", "G7", "Cm"], bars: 4 },
+    { section: "Theme (C minor)", chords: ["Cm", "Cm", "Fm6", "Cm", "Cm", "Cm/Eb", "Fm", "Fm", "Fm6", "Fm6", "Cm", "Cm", "Cm/G", "G7sus4", "G7", "Cm"], per: 0.5, bars: 8 },
+    { section: "Middle part", chords: ["Bb7", "Bb7/D", "Eb", "Eb", "Db/F", "Bb7", "G", "G"], per: 0.5, bars: 4 },
+    { section: "Theme again", chords: ["Cm", "Cm", "Fm6", "Cm", "Cm", "Cm/Eb", "Fm", "Fm", "Fm6", "Fm6", "Cm", "Cm", "G7sus4", "G7", "Cm", "Ab7"], per: 0.5, bars: 8 },
+    { section: "Theme a half step higher (C# minor)", chords: ["C#m", "C#m", "F#m6", "C#m", "C#m", "C#m/E", "F#m6", "F#m6", "F#m6", "F#m6", "C#m", "C#m", "C#m/G#", "G#7sus4", "G#7", "C#m"], per: 0.5, bars: 8 },
+    { section: "Middle part (C# minor)", chords: ["B7", "B7/D#", "E", "E", "D/F#", "B7", "G#", "G#"], per: 0.5, bars: 4 },
+    { section: "Last theme (D minor)", chords: ["Dm", "Dm", "Gm/D", "Dm", "Dm", "Dm/F", "Gm", "Gm", "Gm6", "Gm6", "Dm", "Dm", "Dm", "A7sus4", "A7", "Dm"], per: 0.5, bars: 8 },
+    { section: "Ending", chords: ["Dm", "Gm", "A7", "Dm"], bars: 4 },
+  ],
+  "Back to Black": [
+    { section: "Intro", chords: ["Dm", "Dm7/C", "Gm", "Gm/Ab", "Bb", "Bb7", "A", "A7/E"], per: 0.5, bars: 8 },
+    { section: "Verse 1", chords: ["Dm", "Dm7/C", "Gm", "Gm/Ab", "Bb", "Bb7", "A", "A7/E"], per: 0.5, bars: 16 },
+    { section: "Chorus", chords: ["Dm", "Dm7/C", "Gm", "Gm/Ab", "Bb", "Bb7", "A", "A7/E"], per: 0.5, bars: 16 },
+    { section: "Verse 2", chords: ["Dm", "Dm7/C", "Gm", "Gm/Ab", "Bb", "Bb7", "A", "A7/E"], per: 0.5, bars: 16 },
+    { section: "Chorus", chords: ["Dm", "Dm7/C", "Gm", "Gm/Ab", "Bb", "Bb7", "A", "A7/E"], per: 0.5, bars: 16 },
+    { section: "Break", chords: ["Dm7", "Dm7/C", "Bbmaj9", "Bbmaj9/A", "F", "F/E", "A7", "A7"], bars: 16 },
+    { section: "Last chorus", chords: ["Dm", "Dm7/C", "Gm", "Gm/Ab", "Bb", "Bb7", "A", "A7/E"], per: 0.5, bars: 16 },
+    { section: "Ending", chords: ["A7", "A7/G", "F6"], bars: 3 },
+  ],
+  "Man in the Mirror": [
+    { section: "Intro", chords: ["G", "D/F#", "Em", "D", "Cadd9", "Cadd9", "C/D", "C/D"], per: 0.5, bars: 4 },
+    { section: "Verse 1", chords: ["G", "D/F#", "Em", "D", "Cadd9", "Cadd9", "C/D", "C/D"], per: 0.5, bars: 16 },
+    { section: "Pre-chorus", chords: ["Am7", "G/B", "Cadd9", "G/B", "Am7", "G/B", "Cadd9", "C/D"], per: 0.5, bars: 4 },
+    { section: "Chorus", chords: ["G", "G/B", "C", "D7sus4", "G", "G/B", "C", "D7sus4", "G", "G7/B", "C", "C#dim", "Csus4/D", "Csus4/D", "Csus4/D", "G"], per: 0.5, bars: 8 },
+    { section: "Interlude", chords: ["G", "D/F#", "Em", "D", "Cadd9", "Cadd9", "C/D", "C/D"], per: 0.5, bars: 4 },
+    { section: "Verse 2", chords: ["G", "D/F#", "Em", "D", "Cadd9", "Cadd9", "C/D", "C/D"], per: 0.5, bars: 16 },
+    { section: "Pre-chorus", chords: ["Am7", "G/B", "Cadd9", "G/B", "Am7", "G/B", "Cadd9", "C/D"], per: 0.5, bars: 4 },
+    { section: "Chorus (x2)", chords: ["G", "G/B", "C", "D7sus4", "G", "G/B", "C", "D7sus4", "G", "G/B", "C", "C#dim", "Csus4/D", "Csus4/D", "Csus4/D", "Csus4/D"], per: 0.5, bars: 16 },
+    { section: "Choruses, up to Ab major", chords: ["Ab", "Ab/C", "Db", "Db/Eb", "Ab", "Ab/C", "Db", "Db/Eb", "Ab", "Ab/C", "Db", "Ddim", "Dbsus4/Eb", "Dbsus4/Eb", "Dbsus4/Eb", "Dbsus4/Eb"], per: 0.5, bars: 24 },
+    { section: "Outro", chords: ["Ab", "Eb/G", "Fm", "Eb", "Dbadd9", "Dbadd9", "Dbadd9", "Dbadd9"], per: 0.5, bars: 8 },
+  ],
+  "Heal the World": [
+    { section: "Intro", chords: ["A", "Bm7", "C#m", "Bm7/E"], bars: 4 },
+    { section: "Verse 1", chords: ["A", "Bm7", "C#m", "Bm7/E"], per: 0.5, bars: 8 },
+    { section: "Pre-chorus", chords: ["Bm7", "C#m", "D", "C#m", "Bm7", "Bm7", "D/E", "E"], per: 0.5, bars: 4 },
+    { section: "Chorus", chords: ["A", "A", "Bm7", "Bm7", "Bm7/E", "E", "A", "A", "E/G#", "F#m", "C#m", "C#m", "D", "C#m", "Bm7", "D/E", "A", "A"], per: 0.5, bars: 9 },
+    { section: "Instrumental", chords: ["Bm7", "C#m", "Bm7/E", "Bm7/E"], per: 0.5, bars: 2 },
+    { section: "Verse 2", chords: ["A", "Bm7", "C#m", "Bm7/E"], per: 0.5, bars: 8 },
+    { section: "Pre-chorus", chords: ["Bm7", "C#m", "D", "C#m", "Bm7", "Bm7", "D/E", "E"], per: 0.5, bars: 4 },
+    { section: "Chorus", chords: ["A", "A", "Bm7", "Bm7", "Bm7/E", "E", "A", "A", "E/G#", "F#m", "C#m", "C#m", "D", "C#m", "Bm7", "D/E", "A", "A"], per: 0.5, bars: 9 },
+    { section: "Bridge", chords: ["G", "A", "G", "A"], bars: 4 },
+    { section: "Bridge (end)", chords: ["F#m", "C#m", "D", "C#m", "Bm7", "Bm7", "D/E", "E"], per: 0.5, bars: 4 },
+    { section: "Verse 3", chords: ["A", "Bm7", "C#m", "Bm7/E"], per: 0.5, bars: 8 },
+    { section: "Pre-chorus", chords: ["Bm7", "C#m", "D", "C#m", "Bm7", "Bm7", "D/E", "E"], per: 0.5, bars: 4 },
+    { section: "Chorus", chords: ["A", "A", "Bm7", "Bm7", "Bm7/E", "E", "A", "A", "E/G#", "F#m", "C#m", "C#m", "D", "C#m", "Bm7", "D/E", "A", "A"], per: 0.5, bars: 9 },
+    { section: "Chorus, up to B major", chords: ["B", "B", "C#m7", "C#m7", "C#m7/F#", "F#", "B", "F#/A#", "G#m", "D#m", "E", "D#m", "C#m7", "E/F#", "B", "B"], per: 0.5, bars: 8 },
+    { section: "Chorus, up to C# major (outro)", chords: ["C#", "C#", "D#m7/G#", "D#m7/G#", "G#", "G#", "C#", "G#/C", "A#m", "Fm", "F#", "Fm", "D#m7", "F#/G#", "C#", "C#"], per: 0.5, bars: 8 },
+  ],
+  "Stairway to Heaven": [
+    { section: "Intro (fingerpicked, recorders)", chords: ["Am", "Am/G#", "C/G", "D/F#", "Fmaj7", "G", "Am", "Am", "C", "D", "Fmaj7", "Am", "C", "G", "D", "D"], bars: 16 },
+    { section: "Verse 1", chords: ["Am", "Am/G#", "C/G", "D/F#", "Fmaj7", "G", "Am", "Am", "C", "D", "Fmaj7", "Am", "C", "G", "D", "D"], bars: 12 },
+    { section: "Verse 2", chords: ["Am", "Am/G#", "C/G", "D/F#", "Fmaj7", "G", "Am", "Am", "C", "D", "Fmaj7", "Am", "C", "G", "D", "D"], bars: 12 },
+    { section: "Middle section 1 (electric 12-string)", chords: ["Am7", "Dsus4", "Am7", "Em", "D", "D"], bars: 11 },
+    { section: "Fanfare interlude", chords: ["C", "D/F#", "Fmaj7", "Am", "C", "G", "D", "D"], bars: 3 },
+    { section: "Verse 3", chords: ["Am7", "Dsus4", "Am7", "Em", "D", "D"], bars: 11 },
+    { section: "Middle section 2", chords: ["Am7", "Dsus4", "Am7", "Em", "D", "D"], bars: 11 },
+    { section: "Strummed section (drums enter, slightly faster)", chords: ["C", "G", "Am", "Am", "C", "G", "F", "F"], bars: 20 },
+    { section: "Pre-solo fanfare", chords: ["Am", "G", "D", "C"], bars: 4 },
+    { section: "Guitar solo (about 98 BPM; bars counted at 72 BPM)", chords: ["Am", "G", "F"], bars: 21 },
+    { section: "Final hard-rock section (about 98 BPM; bars counted at 72 BPM)", chords: ["Am", "G", "F", "G"], bars: 18 },
+    { section: "Ending (solo vocal)", chords: ["Am"], bars: 5 },
+  ],
   "Beanie": [
-    { section: "Intro", chords: ["Gm7", "C7", "Fmaj7", "Dm7"], bars: 8 },
-    { section: "Verse 1", chords: ["Gm7", "C7", "Fmaj7", "Dm7"], bars: 16 },
-    { section: "Chorus", chords: ["Gm7", "C7", "Fmaj7", "Dm7"], bars: 8 },
+    // Corrected 2026-10-18 (Hooktheory, chordseasy, chords-and-tabs, Musicnotes):
+    // a swaying 12/8 feel (counted here as 4 slow beats a bar, about 68 a
+    // minute), verses start on Gm7, the chorus starts on Dm7, no bridge.
+    { section: "Verse 1", chords: ["Gm7", "C7", "Fmaj7", "Dm7", "Gm7", "C7", "Fmaj7", "Fmaj7"], bars: 8 },
+    { section: "Chorus", chords: ["Dm7", "Gm7", "C7", "Fmaj7", "Dm7", "Gm7", "C7", "Fmaj7", "Dm7"], bars: 9 },
     { section: "Verse 2", chords: ["Gm7", "C7", "Fmaj7", "Dm7"], bars: 16 },
-    { section: "Chorus", chords: ["Gm7", "C7", "Fmaj7", "Dm7"], bars: 8 },
-    { section: "Bridge", chords: ["Gm7", "C7", "Fmaj7", "Dm7"], bars: 8 },
-    { section: "Final chorus", chords: ["Gm7", "C7", "Fmaj7", "Dm7"], bars: 8 },
-    { section: "Outro", chords: ["Gm7", "C7", "Fmaj7", "Dm7"], bars: 8 },
+    { section: "Final chorus", chords: ["Dm7", "Gm7", "C7", "Fmaj7", "Dm7", "Gm7", "C7", "Fmaj7", "Dm7"], bars: 9 },
+  ],
+  "Van Gogh": [
+    // 2026-10-19, our best guide: the piece's chords in a common order (not from a reliable chart).
+    { section: "Opening", chords: ["Dm", "Gm", "A", "Dm"], bars: 4 },
+    { section: "Theme", chords: ["Dm", "Gm", "A", "Dm"], bars: 8 },
+    { section: "Theme again", chords: ["Dm", "Gm", "A", "Dm"], bars: 8 },
+    { section: "Middle", chords: ["Dm", "Gm", "A", "Dm"], bars: 8 },
+    { section: "Theme, last time", chords: ["Dm", "Gm", "A", "Dm"], bars: 8 },
+    { section: "Ending", chords: ["Dm", "Gm", "A", "Dm"], bars: 8 },
   ],
   "Save Your Tears": [
     { section: "Intro", chords: ["C", "Am", "Em", "G"], bars: 8 },
@@ -4807,7 +4892,40 @@ SONGS.forEach((s) => {
 });
 
 // Song maps researched in Oct 2026 from chord charts; the form may differ slightly from the recording.
-const APPROX_STRUCTURES = new Set(["Where Is My Mind?", "Linger", "Bad Guy", "Last Christmas", "Die With a Smile", "Blinding Lights", "Starboy", "As It Was", "Someone You Loved", "Sunflower", "One Dance", "Stay", "Believer", "I Wanna Be Yours", "Heat Waves", "Yellow", "The Night We Met", "Closer", "Lucid Dreams", "You Belong With Me", "Lover", "Shake It Off", "Shallow", "Million Reasons", "Always Remember Us This Way", "Have Yourself a Merry Little Christmas", "Thinking Out Loud", "The A Team", "Galway Girl", "Gin and Juice", "Despacito", "Knockin' on Heaven's Door", "Wonderwall", "Love Yourself", "Count on Me", "Zombie", "Hey Soul Sister", "Viva La Vida", "Budapest", "Sweet Home Alabama", "Wonderful Tonight", "Over the Rainbow", "Chasing Cars", "Sweet Caroline", "Livin' on a Prayer", "I Will Survive", "Mr. Brightside", "Autumn Leaves", "All the Things You Are", "So What", "Blue Monk", "Amazing Grace", "Break My Heart Again", "Can't Help Falling in Love", "Just the Way You Are", "Sweet Child O' Mine", "Hotel California", "Summer of '69", "Hallelujah", "Imagine", "Happy Birthday to You", "Twinkle Twinkle Little Star", "Brown Eyed Girl", "Three Little Birds", "Jingle Bells", "Hey Jude", "Take Me Home, Country Roads", "Autumn Leaves (Chet Baker, simplified)", "Clocks", "Piano Man", "Hello", "Counting Stars", "Comptine d'un autre été", "River Flows in You", "Radioactive", "Billie Jean", "Sweet Dreams (Are Made of This)", "Fly Me to the Moon", "Take Five", "All of Me (jazz standard)", "Summertime", "Satin Doll", "Cantaloupe Island", "Prelude in C major, BWV 846", "Hungarian Rhapsody No. 2", "Blank Space", "Bad Romance", "What Was I Made For?", "Ocean Eyes", "When the Party's Over", "Karma Police", "No Surprises", "Everything In Its Right Place", "Pyramid Song", "I Want It That Way", "Man! I Feel Like a Woman!", "Total Eclipse of the Heart", "Take On Me", "Like a Prayer", "Valerie", "Before He Cheats", "Pata Pata", "Hava Nagila", "Hoppípolla", "Dilemma", "Hot in Herre", "I'm Like a Bird", "Bubbly", "Like a Star", "Anak", "Tadhana", "Sukiyaki", "Kal Ho Naa Ho", "Volare (Nel blu, dipinto di blu)", "Dragostea Din Tei", "Jerusalema", "Vintersaga", "Ode to Joy", "Minuet in G Major", "Für Elise", "Canon in D", "Symphony No. 5 (Theme)", "Morning Mood", "Moonlight Sonata (3rd Movement)", "La Campanella", "Fantaisie-Impromptu", "Piano Concerto No. 2", "Chasse-Neige", "Clair de Lune", "Nocturne in E-flat Major, Op. 9 No. 2", "Rondo alla Turca", "Revolutionary Étude", "Tennessee Whiskey", "Angels", "My Way", "Lose Control", "Aïcha", "Shchedryk", "Zorba's Dance", "Şımarık", "Young, Wild & Free", "Can You Feel the Love Tonight", "There Will Never Be Another You", "When I Was Your Man", "Set Fire to the Rain", "Heart and Soul", "All I Want for Christmas Is You", "Let Her Go", "Dancing Queen", "Misty", "Say You Won't Let Go", "Somebody's Me", "My Funny Valentine (easy version)", "Sweater Weather", "A Horse With No Name", "Summer Nights", "Take the A Train", "Die for You", "Still D.R.E.", "Gymnopédie No. 1", "Levitating", "Let It Go", "Africa", "Stella by Starlight", "All of Me", "25 Minutes", "The Blue Danube (waltz)", "Wildest Dreams", "Happy", "Bohemian Rhapsody", "My Funny Valentine", "November Rain", "Someday", "Drop It Like It's Hot", "Banana Pancakes", "Blue Bossa", "Almost Blue", "Make You Feel My Love", "My Love Mine All Mine", "Papaoutai", "Vivir Mi Vida", "Nel blu, dipinto di blu (Volare)", "Atemlos durch die Nacht", "Kesariya", "Sekai ni Hitotsu Dake no Hana", "Eight", "Tamally Maak", "La Vie en rose", "Mas Que Nada", "Bella Ciao", "Tage wie diese", "Agar Tum Saath Ho", "Plastic Love", "The Moon Represents My Heart (Yuèliàng Dàibiǎo Wǒ de Xīn)", "Habibi Ya Nour El Ein", "Non, je ne regrette rien", "Ai Se Eu Te Pego", "L'Italiano", "Auf uns", "Pal Pal Dil Ke Paas", "Spring Day", "Tián Mì Mì", "Ya Lili", "La Bamba", "Trem-Bala", "Felicità", "Stille Nacht, heilige Nacht", "Ue o Muite Arukō (Sukiyaki)", "Love Scenario", "Sunny Day (Qíng Tiān)", "Ya Rayah", "Les Champs-Elysées", "Guantanamera", "Tempo Perdido", "Sarà perché ti amo", "Tum Hi Ho", "Lemon", "Through the Night", "Fairy Tale (Tóng Huà)", "Lamma Bada Yatathanna", "Je veux", "Bailando", "Evidências", "99 Luftballons", "Channa Mereya", "Marigold", "Stay With Me", "Mouse Loves Rice (Lǎoshǔ Ài Dàmǐ)", "Glory Box", "I Don't Want to Talk About It", "Save Your Tears", "Beanie"]);
+const APPROX_STRUCTURES = new Set(["Van Gogh", "Where Is My Mind?", "Linger", "Bad Guy", "Last Christmas", "Die With a Smile", "Blinding Lights", "Starboy", "As It Was", "Someone You Loved", "Sunflower", "One Dance", "Stay", "Believer", "I Wanna Be Yours", "Heat Waves", "Yellow", "The Night We Met", "Closer", "Lucid Dreams", "You Belong With Me", "Lover", "Shake It Off", "Shallow", "Million Reasons", "Always Remember Us This Way", "Have Yourself a Merry Little Christmas", "Thinking Out Loud", "The A Team", "Galway Girl", "Gin and Juice", "Despacito", "Knockin' on Heaven's Door", "Wonderwall", "Love Yourself", "Count on Me", "Zombie", "Hey Soul Sister", "Viva La Vida", "Budapest", "Sweet Home Alabama", "Wonderful Tonight", "Over the Rainbow", "Chasing Cars", "Sweet Caroline", "Livin' on a Prayer", "I Will Survive", "Mr. Brightside", "Autumn Leaves", "All the Things You Are", "So What", "Blue Monk", "Amazing Grace", "Break My Heart Again", "Can't Help Falling in Love", "Just the Way You Are", "Sweet Child O' Mine", "Hotel California", "Summer of '69", "Hallelujah", "Imagine", "Happy Birthday to You", "Twinkle Twinkle Little Star", "Brown Eyed Girl", "Three Little Birds", "Jingle Bells", "Hey Jude", "Take Me Home, Country Roads", "Autumn Leaves (Chet Baker, simplified)", "Clocks", "Piano Man", "Hello", "Counting Stars", "Comptine d'un autre été", "River Flows in You", "Radioactive", "Billie Jean", "Sweet Dreams (Are Made of This)", "Fly Me to the Moon", "Take Five", "All of Me (jazz standard)", "Summertime", "Satin Doll", "Cantaloupe Island", "Prelude in C major, BWV 846", "Hungarian Rhapsody No. 2", "Blank Space", "Bad Romance", "What Was I Made For?", "Ocean Eyes", "When the Party's Over", "Karma Police", "No Surprises", "Everything In Its Right Place", "Pyramid Song", "I Want It That Way", "Man! I Feel Like a Woman!", "Total Eclipse of the Heart", "Take On Me", "Like a Prayer", "Valerie", "Before He Cheats", "Pata Pata", "Hava Nagila", "Hoppípolla", "Dilemma", "Hot in Herre", "I'm Like a Bird", "Bubbly", "Like a Star", "Anak", "Tadhana", "Sukiyaki", "Kal Ho Naa Ho", "Volare (Nel blu, dipinto di blu)", "Dragostea Din Tei", "Jerusalema", "Vintersaga", "Ode to Joy", "Minuet in G Major", "Für Elise", "Canon in D", "Symphony No. 5 (Theme)", "Morning Mood", "Moonlight Sonata (3rd Movement)", "La Campanella", "Fantaisie-Impromptu", "Piano Concerto No. 2", "Chasse-Neige", "Clair de Lune", "Nocturne in E-flat Major, Op. 9 No. 2", "Rondo alla Turca", "Revolutionary Étude", "Tennessee Whiskey", "Angels", "My Way", "Lose Control", "Aïcha", "Shchedryk", "Zorba's Dance", "Şımarık", "Young, Wild & Free", "Can You Feel the Love Tonight", "There Will Never Be Another You", "When I Was Your Man", "Set Fire to the Rain", "Heart and Soul", "All I Want for Christmas Is You", "Let Her Go", "Dancing Queen", "Misty", "Say You Won't Let Go", "Somebody's Me", "My Funny Valentine (easy version)", "Sweater Weather", "A Horse With No Name", "Summer Nights", "Take the A Train", "Die for You", "Still D.R.E.", "Gymnopédie No. 1", "Levitating", "Let It Go", "Africa", "Stella by Starlight", "All of Me", "25 Minutes", "The Blue Danube (waltz)", "Wildest Dreams", "Happy", "Bohemian Rhapsody", "My Funny Valentine", "November Rain", "Someday", "Drop It Like It's Hot", "Banana Pancakes", "Blue Bossa", "Almost Blue", "Make You Feel My Love", "My Love Mine All Mine", "Papaoutai", "Vivir Mi Vida", "Nel blu, dipinto di blu (Volare)", "Atemlos durch die Nacht", "Kesariya", "Sekai ni Hitotsu Dake no Hana", "Eight", "Tamally Maak", "La Vie en rose", "Mas Que Nada", "Bella Ciao", "Tage wie diese", "Agar Tum Saath Ho", "Plastic Love", "The Moon Represents My Heart (Yuèliàng Dàibiǎo Wǒ de Xīn)", "Habibi Ya Nour El Ein", "Non, je ne regrette rien", "Ai Se Eu Te Pego", "L'Italiano", "Auf uns", "Pal Pal Dil Ke Paas", "Spring Day", "Tián Mì Mì", "Ya Lili", "La Bamba", "Trem-Bala", "Felicità", "Stille Nacht, heilige Nacht", "Ue o Muite Arukō (Sukiyaki)", "Love Scenario", "Sunny Day (Qíng Tiān)", "Ya Rayah", "Les Champs-Elysées", "Guantanamera", "Tempo Perdido", "Sarà perché ti amo", "Tum Hi Ho", "Lemon", "Through the Night", "Fairy Tale (Tóng Huà)", "Lamma Bada Yatathanna", "Je veux", "Bailando", "Evidências", "99 Luftballons", "Channa Mereya", "Marigold", "Stay With Me", "Mouse Loves Rice (Lǎoshǔ Ài Dàmǐ)", "Glory Box", "I Don't Want to Talk About It", "Save Your Tears", "Beanie", "Stairway to Heaven", "Love Theme from The Godfather", "Back to Black", "Man in the Mirror", "Heal the World"]);
+// Numbers (scale degrees) for the verified chord lists, chord for chord
+// (audit 2026-10-16: some were in the old order, wrong or incomplete).
+const DEGREE_FIXES = {
+  "Valerie": "Imaj7 - ii7 - IV - iii",
+  "Hava Nagila": "I - iv - bvii - I7",
+  "Jerusalema": "vi - IV - I - V",
+  "Zombie": "i - VImaj7 - III - VII",
+  "Despacito": "i - VI - III - VII",
+  "Angels": "V - vi - IV - I",
+  "I Want It That Way": "vi - IV - I - V",
+  "Volare (Nel blu, dipinto di blu)": "I - vi - ii7 - V7",
+  "Sweater Weather": "VI - i - iv - III",
+  "Somebody's Me": "I - IV - ii - V",
+  "River Flows in You": "vi - IVsus2 - I - V",
+  "Summer Nights": "I - IV - V - ii7",
+  "Sweet Caroline": "I - IV - V - vi",
+  "Can't Help Falling in Love": "I - iii - vi - IV - V",
+  "Kal Ho Naa Ho": "I - vi - IV - v7",
+  "Vintersaga": "i - III - iv - v - VI - VII",
+  "Sukiyaki": "I - vi - IV - V",
+  "Amazing Grace": "I - IV - V - vi",
+  "Minuet in G Major": "I - IV - V7 - I",
+  "Happy Birthday to You": "I - V7 - I7 - IV",
+  "Twinkle Twinkle Little Star": "I - IV - I - V7",
+  "Jingle Bells": "I - IV - V7 - I",
+  "Hallelujah": "I - vi - IV - V - III7",
+  "Ode to Joy": "I - V - I - V",
+  "Symphony No. 5 (Theme)": "i - iv - V7 - i",
+  "Rondo alla Turca": "i - V - III - VII",
+  "Für Elise": "i - V - i - III - VII - i - V",
+  "Anak": "i - iv - VII - III - VI - iv - V - i",
+  "I Wanna Be Yours": "i - iv - v - i",
+};
 // Verified 2026-10-07 against the original recordings (song-verified.js):
 // the real key, tempo and whole-song map, plus solo guides for guitar.
 // It replaces the older data above for every song it covers; only songs
@@ -4820,6 +4938,9 @@ SONGS.forEach((song) => {
     ...(v.tuning ? { tuning: v.tuning } : {}), ...(v.capoNote ? { capoNote: v.capoNote } : {}),
     ...(v.solos ? { solos: v.solos } : {}), ...(v.durationSec ? { durationSec: v.durationSec } : {}),
   });
+  // The verified chords can come in a different order from the old list, so
+  // the numbers shown with them ("as numbers: …") are corrected to match.
+  if (DEGREE_FIXES[song.title]) song.degreeSequence = DEGREE_FIXES[song.title];
   SONG_STRUCTURES[song.title] = v.structure;
   if (v.status === "uncertain") APPROX_STRUCTURES.add(song.title);
   else APPROX_STRUCTURES.delete(song.title);

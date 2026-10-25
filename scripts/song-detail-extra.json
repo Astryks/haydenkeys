@@ -1,0 +1,23 @@
+{
+  "note": "Songs added after the Oct 2026 research batch, in the same format as found-1..6.json. Chords only, no lyrics or melodies of copyrighted songs.",
+  "songs": [
+    {
+      "title": "Van Gogh",
+      "artist": "Virginio Aiello",
+      "key": "D minor",
+      "bpm": 60,
+      "timeSignature": "4/4",
+      "durationSec": 182,
+      "confidence": "best guide",
+      "source": "2026-10-19 close version (owner option 1): the piece's chords Dm Gm A Dm (i iv V i) in a common order; the real order is not confirmed by a reliable chart. Length fitted to the official upload (3:02).",
+      "sections": [
+        { "name": "Opening", "piano": "1", "bars": ["Dm:4", "Gm:4", "A:4", "Dm:4"] },
+        { "name": "Theme", "piano": "1", "bars": ["Dm:4", "Gm:4", "A:4", "Dm:4", "Dm:4", "Gm:4", "A:4", "Dm:4"] },
+        { "name": "Theme again", "piano": "1", "bars": ["Dm:4", "Gm:4", "A:4", "Dm:4", "Dm:4", "Gm:4", "A:4", "Dm:4"] },
+        { "name": "Middle", "piano": "2", "bars": ["Dm:4", "Gm:4", "A:4", "Dm:4", "Dm:4", "Gm:4", "A:4", "Dm:4"] },
+        { "name": "Theme, last time", "piano": "1", "bars": ["Dm:4", "Gm:4", "A:4", "Dm:4", "Dm:4", "Gm:4", "A:4", "Dm:4"] },
+        { "name": "Ending", "piano": "1", "bars": ["Dm:4", "Gm:4", "A:4", "Dm:4", "Dm:4", "Gm:4", "A:4", "Dm:4"] }
+      ]
+    }
+  ]
+}

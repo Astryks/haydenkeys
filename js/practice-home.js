@@ -16,6 +16,8 @@ import { shareButton } from "./share.js";
 import { videoHtml, wireVideos } from "./media.js";
 import { SONG_VIDEOS } from "./media-data.js";
 import { SONG_ART } from "./song-art-data.js";
+import { WHOLE_SONG_NOTE } from "./song-map.js";
+import { getSongDetail, sectionRows } from "./song-detail.js";
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const TIERS = ["Beginner", "Intermediate", "Advanced"];
@@ -90,6 +92,9 @@ async function songArt(song) {
 // "Intro · Verse 1 · Chorus 1: D A Bm G" — the song's chords, section by
 // section, with neighbouring sections that share chords grouped together.
 function progressionRows(song) {
+  // Bar-by-bar songs: every section's chords, in order.
+  const detail = getSongDetail(song);
+  if (detail) return sectionRows(detail);
   const structure = SONG_STRUCTURES[song.title];
   if (!structure) return [{ label: "Whole song", chords: song.chords }];
   const rows = [];
@@ -170,6 +175,10 @@ function initPracticeHome(root) {
   function openSong(i, { autoplay = false } = {}) {
     const song = list[i];
     if (!song) return showHome();
+    const detail = getSongDetail(song);
+    const hasWhole = Boolean(detail || SONG_STRUCTURES[song.title]);
+    const hasTune = Boolean(detail?.melody?.length);
+    const tempoLine = detail ? ` · ${detail.tsLabel} · ${detail.bpm} bpm` : "";
     document.body.classList.add("hk-song-open");
     root.innerHTML = `
       <div class="hk-player-bar">
@@ -181,17 +190,21 @@ function initPracticeHome(root) {
         <div class="hk-song-info">
           <h2>${esc(song.title)}</h2>
           <p>${esc(song.artist)}</p>
-          <span class="hk-song-key">${icon("piano", 18)} Key of ${esc(song.key.replace(/\s*\(.*\)/, ""))}</span>
+          <span class="hk-song-key">${icon("piano", 18)} Key of ${esc((detail?.key || song.key).replace(/\s*\(.*\)/, ""))}${esc(tempoLine)}</span>
         </div>
       </div>
       <div class="hk-song-prog">
         <div class="hk-song-prog-title">The chords in this song</div>
         ${progressionRows(song).map((r) => `<div class="hk-song-prog-row"><span>${esc(r.label)}</span><b>${r.chords.map((c) => `<i>${esc(c)}</i>`).join("")}</b></div>`).join("")}
       </div>
-      <div class="hk-part-pick" role="group" aria-label="What to play">
+      <div class="hk-part-pick ${hasTune ? "hk-part-pick-3" : ""}" role="group" aria-label="What to play">
         <button class="hk-part" data-part="main">${icon("play", 18)} Main chords<small>${esc([...new Set(song.chords.filter((c) => /^[A-G]/.test(c)))].slice(0, 4).join(" · "))}</small></button>
-        <button class="hk-part" data-part="whole" ${SONG_STRUCTURES[song.title] ? "" : "disabled"}>${icon("song", 18)} Whole song<small>${SONG_STRUCTURES[song.title] ? (APPROX_STRUCTURES.has(song.title) ? "start to finish (our best guide)" : "every section, start to finish") : "coming soon"}</small></button>
+        <button class="hk-part" data-part="whole" ${hasWhole ? "" : "disabled"}>${icon("song", 18)} Whole song<small>${detail
+          ? (detail.verified ? `${icon("check", 14)} bar by bar, checked against the recording` : "bar by bar (our best guide)")
+          : hasWhole ? (APPROX_STRUCTURES.has(song.title) ? "start to finish (our best guide)" : "every section, start to finish") : "coming soon"}</small></button>
+        ${hasTune ? `<button class="hk-part" data-part="tune">${icon("piano", 18)} The tune<small>every note, right hand</small></button>` : ""}
       </div>
+      ${hasWhole ? `<p class="hk-whole-note hk-part-note">${WHOLE_SONG_NOTE}</p>` : ""}
       <div class="hk-rotate-hint">${icon("piano", 20)}<span><b>Tip:</b> turn your phone <b>sideways</b> (rotation lock off) for bigger keys.</span></div>
       <div class="hk-player-tip">${icon("piano", 20)} Press Play, watch the chords fall and play along on your own piano.</div>
       <div class="hk-practice-simple" id="hk-player"></div>
@@ -208,7 +221,7 @@ function initPracticeHome(root) {
     root.querySelector(".hk-player-back").addEventListener("click", showHome);
     root.querySelector(".hk-player-next").addEventListener("click", () => openSong((i + 1) % list.length));
     // Whole song when we have its section map, otherwise the main chords.
-    const startPart = SONG_STRUCTURES[song.title] ? "whole" : "main";
+    const startPart = hasWhole ? "whole" : "main";
     const mountPlayer = (part) => {
       player?.suspend?.();
       root.querySelectorAll(".hk-part").forEach((b) => b.classList.toggle("hk-part-on", b.dataset.part === part));

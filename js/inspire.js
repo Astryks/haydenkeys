@@ -27,7 +27,7 @@ function songInspireHtml(song, { advanced = false } = {}) {
 
 const LESSON_STYLE = {
   "d4-jazz": "jazz", "d4-blues": "blues", "lesson-36": "jazz", "lesson-jazz-preview": "jazz", "lesson-handsloop": "jazz",
-  "lesson-almostblue": "jazz", "lesson-pedals": "classical", "lesson-35": "classical", "d4-genres": "pop",
+  "lesson-almostblue": "jazz", "lesson-pedals": "classical", "lesson-35": "classical", "d3-more-genres": "pop",
 };
 function lessonInspireHtml(lessonId) {
   const style = LESSON_STYLE[lessonId];

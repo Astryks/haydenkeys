@@ -33,6 +33,8 @@ function videoHtml(topic) {
 function wireVideos(root) {
   root.querySelectorAll(".hk-video-load").forEach((b) => b.addEventListener("click", () => {
     const box = b.closest(".hk-video");
+    // A video (in the app or in YouTube) changes the phone's audio mode: get a fresh sound engine on the next tap.
+    window.__audioDirty = true;
     const id = box.dataset.yt;
     if (window.Capacitor?.isNativePlatform?.() || box.dataset.noembed) {
       window.open(`https://www.youtube.com/watch?v=${encodeURIComponent(id)}`, "_blank");
@@ -42,4 +44,19 @@ function wireVideos(root) {
   }));
 }
 
-export { peopleHtml, videoHtml, wireVideos };
+// The first time a teacher's video is shown, a friendly line under it.
+const TEACHER_NOTE_KEY = "hk_teacher_note_seen";
+// A video tucked inside a closed "Watch a teacher" strip only counts as
+// shown once the strip is opened (markTeacherNoteSeen).
+function firstTeacherNote({ shownNow = true } = {}) {
+  try {
+    if (localStorage.getItem(TEACHER_NOTE_KEY) === "1") return "";
+    if (shownNow) localStorage.setItem(TEACHER_NOTE_KEY, "1");
+  } catch (e) { /* storage off: show it every time */ }
+  return `<p class="hk-teacher-note">Find any video on YouTube that works for you: there are some amazing musicians out there!</p>`;
+}
+function markTeacherNoteSeen() {
+  try { localStorage.setItem(TEACHER_NOTE_KEY, "1"); } catch (e) { /* ignore */ }
+}
+
+export { peopleHtml, videoHtml, wireVideos, firstTeacherNote, markTeacherNoteSeen };

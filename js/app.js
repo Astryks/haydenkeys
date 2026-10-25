@@ -70,6 +70,26 @@ function init() {
   // Item 56: Capacitor injects window.Capacitor into the native iOS
   // shell — flag it so web-only UI (.hk-web-only) can be hidden there.
   if (window.Capacitor?.isNativePlatform?.()) document.documentElement.classList.add("hk-native");
+  // Item 17: once the app is running, the web page looks like the app: the
+  // long "About & FAQ" text for search engines (and anyone without
+  // JavaScript) is tucked away behind a small footer link.
+  document.documentElement.classList.add("hk-app-ready");
+  const seo = document.getElementById("about-app");
+  const aboutLink = document.getElementById("hk-about-link");
+  if (seo && aboutLink) {
+    const openSeo = (scroll) => {
+      seo.classList.add("seo-open");
+      if (scroll) seo.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    // The small "About & FAQ" links (home screen and footer) open it.
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest("#hk-about-link, [data-about-faq]")) return;
+      e.preventDefault();
+      if (seo.classList.contains("seo-open")) { seo.classList.remove("seo-open"); return; }
+      openSeo(true);
+    });
+    if (location.hash === "#about-app") openSeo(true);
+  }
 
   TABS.forEach((t) => {
     panels[t] = document.getElementById(`panel-${t}`);

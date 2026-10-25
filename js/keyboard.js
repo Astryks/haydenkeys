@@ -25,11 +25,28 @@ function isBlackKey(midi) {
 // app (keyboard clicks, lesson playback, calibration tone) shares one
 // context instead of fighting over autoplay permission.
 let sharedAudioCtx = null;
+// When the engine was last replaced. iOS caps how many audio engines a page
+// may have, and each new one also has to decode the piano samples again, so
+// a stuck engine is replaced at most once every few seconds.
+let lastFreshAt = -Infinity;
+const FRESH_COOLDOWN_MS = 4000;
 function freshAudioContext() {
-  try { sharedAudioCtx && sharedAudioCtx.close(); } catch (e) { /* ignore */ }
+  const old = sharedAudioCtx;
   sharedAudioCtx = null;
   resetSampledPiano();
+  try { if (old && old.state !== "closed") old.close(); } catch (e) { /* ignore */ }
+  lastFreshAt = performance.now();
   return getAudioContext();
+}
+// Replaces the engine only if `c` is still the current one, is still not
+// running, and it wasn't just replaced. (Before this, every note of a chord,
+// and every note of a song play-along, could each replace the engine, and
+// the next check saw the old, closed engine and replaced it again: dozens of
+// engines and sample reloads, until iOS refused to make sound at all.)
+function replaceIfStuck(c) {
+  if (sharedAudioCtx !== c || c.state === "running") return sharedAudioCtx || c;
+  if (performance.now() - lastFreshAt < FRESH_COOLDOWN_MS) return c;
+  return freshAudioContext();
 }
 function getAudioContext() {
   if (!sharedAudioCtx) {
@@ -48,12 +65,31 @@ function getAudioContext() {
 if (typeof navigator !== "undefined" && navigator.audioSession) {
   try { navigator.audioSession.type = "playback"; } catch (e) { /* older Safari */ }
 }
+// iOS can also leave the engine saying "running" but silent after the audio
+// mode changes (microphone on/off for Wait for me, a YouTube video, a call).
+// The microphone code marks the sound "dirty" when it switches the mode, and a
+// running engine whose clock has stopped moving is stuck: either way the next
+// tap swaps in a fresh engine (owner report 2026-10-26: sound died after a
+// few lessons).
+let lastWall = 0, lastTime = 0;
+function stalled(c) {
+  const now = performance.now();
+  const stuck = c.state === "running" && lastWall > 0 && now - lastWall > 600 && c.currentTime - lastTime < 0.02;
+  lastWall = now; lastTime = c.currentTime;
+  return stuck;
+}
 function unlockAudio() {
   let c = getAudioContext();
+  const dirty = typeof window !== "undefined" && window.__audioDirty;
+  if ((dirty || stalled(c)) && performance.now() - lastFreshAt > 1500) {
+    if (dirty) window.__audioDirty = false;
+    lastWall = 0;
+    c = freshAudioContext(); c.resume?.().catch(() => {});
+  }
   // Back from YouTube (or a call): iOS can hand back an "interrupted" engine
   // that never plays again. Replace it right here, inside the tap, where iOS
   // lets a new one start straight away.
-  if (c.state === "interrupted" || c.state === "closed") { c = freshAudioContext(); c.resume?.().catch(() => {}); }
+  if (c.state === "interrupted" || c.state === "closed") { c = replaceIfStuck(c); c.resume?.().catch(() => {}); }
   try {
     const b = c.createBuffer(1, 1, c.sampleRate);
     const s = c.createBufferSource();
@@ -67,13 +103,15 @@ function unlockAudio() {
   if (c.state !== "running") {
     c.resume?.().catch(() => {});
     // Still stuck a moment later (iOS "interrupted"): use a fresh engine.
-    setTimeout(() => { if (sharedAudioCtx === c && c.state !== "running") freshAudioContext(); }, 400);
+    setTimeout(() => replaceIfStuck(c), 400);
   }
   // Load the real piano sound early, so the first notes aren't the backup tone.
   loadSampledPiano(getAudioContext());
 }
 if (typeof document !== "undefined") document.addEventListener("visibilitychange", () => {
   if (document.hidden) return;
+  // Back from another app (YouTube, a call): the next tap gets a fresh engine.
+  window.__audioDirty = true;
   // Coming back to the app: wake the sound; if iOS left it stuck, the next tap
   // (unlockAudio) swaps in a fresh engine.
   const c = getAudioContext();
@@ -101,6 +139,28 @@ function playSynthTone(midi, { duration = 0.6, gain = 0.18, delay = 0 } = {}) {
   osc.stop(startAt + duration + 0.05);
 }
 
+// Notes asked for while the engine is paused wait here, all together, for
+// ONE wake-up: resume it, and if that hasn't worked a moment later, swap in
+// one fresh engine. Each note keeps its place in time.
+let waiting = null;
+function whenRunning(ctx, midi, opts) {
+  const at = performance.now() / 1000 + (opts.delay || 0);
+  if (waiting) { waiting.notes.push({ midi, opts, at }); return; }
+  waiting = { notes: [{ midi, opts, at }] };
+  const mine = waiting;
+  let done = false;
+  const flush = () => {
+    if (done) return;
+    done = true;
+    if (waiting === mine) waiting = null;
+    const now = performance.now() / 1000;
+    // Notes whose moment has long passed are dropped, not played in a heap.
+    mine.notes.forEach((n) => { if (n.at > now - 0.15) playTone(n.midi, { ...n.opts, delay: Math.max(0, n.at - now), _retried: true }); });
+  };
+  ctx.resume?.().then(flush).catch(() => {});
+  setTimeout(() => { if (done) return; replaceIfStuck(ctx); flush(); }, 350);
+}
+
 // Item 45: richer piano timbre, as a progressive enhancement over the
 // plain oscillator synth above. Kicks off loading the real sampled
 // piano (piano-sample.js) on first call (idempotent, safe to call
@@ -118,14 +178,11 @@ function playTone(midi, opts = {}) {
   // the microphone, and then every note in the app is silent), start a
   // fresh audio engine and play the note on that.
   if (ctx.state !== "running" && !opts._retried) {
-    let done = false;
-    const go = () => { if (!done) { done = true; playTone(midi, { ...opts, _retried: true }); } };
-    ctx.resume?.().then(go).catch(() => {});
-    setTimeout(() => { if (done) return; if (ctx.state !== "running") freshAudioContext(); go(); }, 350);
+    whenRunning(ctx, midi, opts);
     return;
   }
   loadSampledPiano(ctx);
-  const piano = getSampledPianoIfReady();
+  const piano = getSampledPianoIfReady(ctx);
   // velocity 1-127 (default 100): how hard the key is pressed.
   const velocity = opts.velocity ?? 100;
   if (piano) {

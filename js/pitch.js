@@ -96,7 +96,7 @@ async function startLivePitchDetection(onPitch, { fftSize = 2048, onChroma = nul
   // The sound is set to "playback" (so it plays with the ringer on silent),
   // and iOS refuses the microphone in that mode. Listening needs "play and
   // record", which still plays out loud.
-  try { if (navigator.audioSession) navigator.audioSession.type = "play-and-record"; } catch (e) { /* older Safari */ }
+  try { if (navigator.audioSession) navigator.audioSession.type = "play-and-record"; window.__audioDirty = true; } catch (e) { /* older Safari */ }
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   // Item 56: created after the permission prompt, i.e. outside the tap
@@ -158,7 +158,7 @@ async function startLivePitchDetection(onPitch, { fftSize = 2048, onChroma = nul
   return function stop() {
     running = false;
     stream.getTracks().forEach((t) => t.stop());
-    try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch (e) { /* older Safari */ }
+    try { if (navigator.audioSession) navigator.audioSession.type = "playback"; window.__audioDirty = true; } catch (e) { /* older Safari */ }
     source.disconnect();
     audioCtx.close();
   };
