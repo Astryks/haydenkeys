@@ -65,8 +65,27 @@ function getAudioContext() {
 if (typeof navigator !== "undefined" && navigator.audioSession) {
   try { navigator.audioSession.type = "playback"; } catch (e) { /* older Safari */ }
 }
+// iOS can also leave the engine saying "running" but silent after the audio
+// mode changes (microphone on/off for Wait for me, a YouTube video, a call).
+// The microphone code marks the sound "dirty" when it switches the mode, and a
+// running engine whose clock has stopped moving is stuck: either way the next
+// tap swaps in a fresh engine (owner report 2026-10-26: sound died after a
+// few lessons).
+let lastWall = 0, lastTime = 0;
+function stalled(c) {
+  const now = performance.now();
+  const stuck = c.state === "running" && lastWall > 0 && now - lastWall > 600 && c.currentTime - lastTime < 0.02;
+  lastWall = now; lastTime = c.currentTime;
+  return stuck;
+}
 function unlockAudio() {
   let c = getAudioContext();
+  const dirty = typeof window !== "undefined" && window.__audioDirty;
+  if ((dirty || stalled(c)) && performance.now() - lastFreshAt > 1500) {
+    if (dirty) window.__audioDirty = false;
+    lastWall = 0;
+    c = freshAudioContext(); c.resume?.().catch(() => {});
+  }
   // Back from YouTube (or a call): iOS can hand back an "interrupted" engine
   // that never plays again. Replace it right here, inside the tap, where iOS
   // lets a new one start straight away.
@@ -91,6 +110,8 @@ function unlockAudio() {
 }
 if (typeof document !== "undefined") document.addEventListener("visibilitychange", () => {
   if (document.hidden) return;
+  // Back from another app (YouTube, a call): the next tap gets a fresh engine.
+  window.__audioDirty = true;
   // Coming back to the app: wake the sound; if iOS left it stuck, the next tap
   // (unlockAudio) swaps in a fresh engine.
   const c = getAudioContext();

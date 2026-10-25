@@ -33,6 +33,8 @@ function videoHtml(topic) {
 function wireVideos(root) {
   root.querySelectorAll(".hk-video-load").forEach((b) => b.addEventListener("click", () => {
     const box = b.closest(".hk-video");
+    // A video (in the app or in YouTube) changes the phone's audio mode: get a fresh sound engine on the next tap.
+    window.__audioDirty = true;
     const id = box.dataset.yt;
     if (window.Capacitor?.isNativePlatform?.() || box.dataset.noembed) {
       window.open(`https://www.youtube.com/watch?v=${encodeURIComponent(id)}`, "_blank");
