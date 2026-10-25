@@ -2,7 +2,7 @@
 
 ## ▶ Start here: where things stand (2026-10-19)
 
-**Latest TestFlight build: 53** (uploaded 2026-10-27: fun animations). Everything requested so far is built, tested in headless Chrome, committed and pushed (0 uncommitted, 0 unpushed). The older handoff below is kept for history; its "Latest build: 40" is out of date.
+**Latest TestFlight build: 53** (uploaded 2026-10-26: fun animations). Everything requested so far is built, tested in headless Chrome, committed and pushed (0 uncommitted, 0 unpushed). The older handoff below is kept for history; its "Latest build: 40" is out of date.
 
 **In build 48 (since build 40):** the full Lessons 1–4 restructure (96 cards: wrist/loose hands, two-hand chords, Mary Had a Little Lamb, Interstellar, ear training, genres, Hound Dog, Pepito → Sensualité, Beanie, Passacaglia, Bohemian Rhapsody, Godfather, Gladiator), Hotel California / Stairway to Heaven, Back to Black, Michael Jackson, the sound-stopping fix (iOS interrupted audio, one shared engine), chord name follows the music, videos only from official channels over 1M views (no Pianote), uploads hear every note (Onsets and Frames + Note finder setting), and **Whole song bar by bar for 242 songs** (33 checked, 209 "our best guide"; The tune note for note for 15 public-domain pieces). Details in the dated sections at the bottom of this file.
 
@@ -2892,6 +2892,6 @@ Owner: "when users upload an mp3 it should be super detailed" — every note, no
 - Owner also asked about Perfect (yr2cLuKJ2a8): the lesson's G Em C D is the original Ab Fm Db Eb (I vi IV V) moved to the easy key of G; the video plays it in Ab.
 - **iOS build 52** uploaded to TestFlight 2026-10-26: sound recovery fix (silent engine after mic/video/app switches).
 
-## 2026-10-27: fun animations merged
+## 2026-10-26: fun animations merged
 - Music notes float off pressed keys, sparkles on lesson complete, streak bounce, and the cat buddy (Ginger or Pepper) at the keyboard corner reacting to notes (PR #1 from 15 Oct, brought up to date with main, tested in a browser: page and lessons load with no errors). Quick, transform/opacity only, off under reduced motion.
-- **iOS build 53** uploaded to TestFlight 2026-10-27: fun animations.
+- **iOS build 53** uploaded to TestFlight 2026-10-26: fun animations.
