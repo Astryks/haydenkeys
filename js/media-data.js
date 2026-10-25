@@ -116,6 +116,7 @@ const PEOPLE = {
 const VIDEOS = {
  // 2026-10-18: lesson videos checked on the watch page (views over 1M,
  // playableInEmbed) and with oEmbed (200). Official channels or teachers only.
+ "teach-four-chords-gecd": {"id": "1D3aWUx771A", "title": "Learn 4 Chords - Quickly Play Hundreds of Songs! [EASY VERSION]", "author_name": "Become a Piano Superhuman", "kind": "teacher"},
  "teach-four-chords": {"id": "gmvwZRwn-j0", "title": "Piano chords for beginners: learn four chords to play hundreds of songs", "author_name": "Bill Hilton", "kind": "teacher"},
  "teach-mary": {"id": "dJBq89uZYmI", "title": "Mary Had A Little Lamb | EASY ONE HAND Piano Tutorial", "author_name": "Easy Keys", "kind": "teacher"},
  "song-hound-dog": {"id": "-eHJ12Vhpyc", "title": "Elvis Presley - Hound Dog (Official Audio)", "author_name": "ElvisPresleyVEVO"},

@@ -51,7 +51,7 @@ function firstTeacherNote({ shownNow = true } = {}) {
     if (localStorage.getItem(TEACHER_NOTE_KEY) === "1") return "";
     if (shownNow) localStorage.setItem(TEACHER_NOTE_KEY, "1");
   } catch (e) { /* storage off: show it every time */ }
-  return `<p class="hk-teacher-note">There are some amazing teachers on YouTube, search and find a learning style that works for you!</p>`;
+  return `<p class="hk-teacher-note">Find any video on YouTube that works for you: there are some amazing musicians out there!</p>`;
 }
 function markTeacherNoteSeen() {
   try { localStorage.setItem(TEACHER_NOTE_KEY, "1"); } catch (e) { /* ignore */ }

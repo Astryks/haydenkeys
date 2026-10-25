@@ -21,7 +21,9 @@ const TEACH = {
 function teachHtml(lessonId) {
   const keys = TEACH[lessonId];
   if (!keys) return "";
-  return `<details class="hk-teach"><summary>👀 Watch a real teacher's hands</summary>${keys.map((k) => videoHtml(k)).join("")}${firstTeacherNote({ shownNow: false })}</details>`;
+  // The first video in the course (card 1) always carries the "find any video" note, outside the fold.
+  const always = lessonId === "m-find-c" ? `<p class="hk-teacher-note">Find any video on YouTube that works for you: there are some amazing musicians out there!</p>` : "";
+  return `<details class="hk-teach"><summary>👀 Watch a real teacher's hands</summary>${keys.map((k) => videoHtml(k)).join("")}${always ? "" : firstTeacherNote({ shownNow: false })}</details>${always}`;
 }
 // Opening the strip shows its video (and the first-time note under it).
 function wireTeach(root) {
