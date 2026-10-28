@@ -2,7 +2,7 @@
 
 ## ▶ Start here: where things stand (2026-10-19)
 
-**Latest TestFlight build: 53** (uploaded 2026-10-26: fun animations). Everything requested so far is built, tested in headless Chrome, committed and pushed (0 uncommitted, 0 unpushed). The older handoff below is kept for history; its "Latest build: 40" is out of date.
+**Latest TestFlight build: 54** (uploaded 2026-10-28: App Review fixes). Everything requested so far is built, tested in headless Chrome, committed and pushed (0 uncommitted, 0 unpushed). The older handoff below is kept for history; its "Latest build: 40" is out of date.
 
 **In build 48 (since build 40):** the full Lessons 1–4 restructure (96 cards: wrist/loose hands, two-hand chords, Mary Had a Little Lamb, Interstellar, ear training, genres, Hound Dog, Pepito → Sensualité, Beanie, Passacaglia, Bohemian Rhapsody, Godfather, Gladiator), Hotel California / Stairway to Heaven, Back to Black, Michael Jackson, the sound-stopping fix (iOS interrupted audio, one shared engine), chord name follows the music, videos only from official channels over 1M views (no Pianote), uploads hear every note (Onsets and Frames + Note finder setting), and **Whole song bar by bar for 242 songs** (33 checked, 209 "our best guide"; The tune note for note for 15 public-domain pieces). Details in the dated sections at the bottom of this file.
 
@@ -2895,3 +2895,7 @@ Owner: "when users upload an mp3 it should be super detailed" — every note, no
 ## 2026-10-26: fun animations merged
 - Music notes float off pressed keys, sparkles on lesson complete, streak bounce, and the cat buddy (Ginger or Pepper) at the keyboard corner reacting to notes (PR #1 from 15 Oct, brought up to date with main, tested in a browser: page and lessons load with no errors). Quick, transform/opacity only, off under reduced motion.
 - **iOS build 53** uploaded to TestFlight 2026-10-26: fun animations.
+
+## 2026-10-28: App Review fixes
+- Rejected 27 Oct (2.3.7 name had "Free"; 2.1 crash or IAP not found; 1.5 support URL for Hayden). Added camera + photo library permission texts (iOS crashes when the upload's "Take video" opens the camera without one: Jaxx had none), a real support page at /support.html (contact support@astryks.com, FAQ incl. where the Tip jar is) linked in the footer.
+- **iOS build 54** uploaded to TestFlight 2026-10-28 with these fixes, for resubmission.

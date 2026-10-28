@@ -27,9 +27,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Hayden Keys uses your camera in the Practice tab's Camera Overlay mode to show which key to press next, projected right onto a live view of your real keyboard. Nothing is recorded or uploaded — the video is only used live, on your device.</string>
+	<string>Hayden Keys uses your camera in the Practice tab Camera Overlay mode to show which key to press next on a live view of your keyboard, and if you choose to record a video to upload a song. Everything is worked out on your device; nothing is sent anywhere.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Hayden Keys uses your microphone only to hear your piano keys, nothing else: when you turn on Wait for me, calibrate your keyboard, or use a listening step in a lesson. It works out which notes you played on your device. Nothing is recorded, saved or sent anywhere.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Hayden Keys opens your library only when you pick a song or video to upload. It is read on your device; nothing is sent anywhere.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
