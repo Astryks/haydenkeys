@@ -1,5 +1,13 @@
 # Status
 
+## 2026-11-10: Rejected again (Tip jar not found), fixed and resubmitted with build 55
+
+- **Real cause:** the Tip jar never appeared in the iOS app. `SceneDelegate.swift` created a plain `CAPBridgeViewController`, so the custom bridge view controller that registers the TipJar and SongRecognizer plugins was never used (song recognition never worked natively either). Fixed in SceneDelegate, plus `js/native-plugin.js`, which falls back to `Capacitor.nativePromise` (the app doesn't load @capacitor/core, so `registerPlugin` doesn't exist). Verified on the iPad simulator: Tip jar shows and loads Apple's prices ($1 / $5 / $10).
+- In-app tagline no longer says "for free".
+- Screenshots replaced (no "free", no album art or YouTube thumbnails): `ios/screenshots/app-store-v3/`. Apple flagged Jaxx for both (2.3.7, 5.2.1); Hayden's had the same issues so they were replaced too.
+- Build 55 attached, review notes updated with the fix and steps, reply sent to App Review, **resubmitted 2026-11-10, status Waiting for Review**.
+- Still in the app: real album covers in the song library (Apple only flagged screenshots). Swap for generic art if a reviewer raises 5.2.1 for in-app content.
+
 ## ▶ Start here: where things stand (2026-10-19)
 
 **Latest TestFlight build: 54** (uploaded 2026-10-28: App Review fixes). Everything requested so far is built, tested in headless Chrome, committed and pushed (0 uncommitted, 0 unpushed). The older handoff below is kept for history; its "Latest build: 40" is out of date.
