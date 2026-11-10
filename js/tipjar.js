@@ -6,6 +6,7 @@
 // small cosmetic keepsakes for supporters (html.hk-supporter: a gold heart
 // by the logo, gold bows for the cats on the home stage). Nothing is locked.
 import { showThanks } from "./thanks.js";
+import { nativePlugin } from "./native-plugin.js";
 const APP = "Hayden Keys";
 const P = "hk";
 const TIPS = [
@@ -20,9 +21,7 @@ const TIER_RANK = { small: 1, medium: 2, large: 3 };
 const JAR = `<svg class="${P}-tip-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 3.5h8M8.5 3.5v2.2c-1.9.9-3 2.6-3 4.8v7.3A2.7 2.7 0 0 0 8.2 20.5h7.6a2.7 2.7 0 0 0 2.7-2.7v-7.3c0-2.2-1.1-3.9-3-4.8V3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="14.5" r="2.4" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M12 13.4v2.2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>`;
 
 function tipPlugin() {
-  const cap = window.Capacitor;
-  if (!cap?.isNativePlatform?.()) return null;
-  return cap.registerPlugin ? cap.registerPlugin("TipJar") : cap.Plugins?.TipJar;
+  return nativePlugin("TipJar");
 }
 
 function thanked() {

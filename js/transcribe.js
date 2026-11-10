@@ -9,6 +9,7 @@
 // visualizer built just for uploads.
 
 import { renderKeyboard, playTone, midiToName } from "./keyboard.js";
+import { nativePlugin } from "./native-plugin.js";
 import { renderNoteHighway } from "./note-highway.js";
 import { playBeat } from "./drums.js";
 import { getAudioContext } from "./keyboard.js";
@@ -190,7 +191,7 @@ let lastDecoded = null;
 async function recognizeSong(decoded) {
   const cap = window.Capacitor;
   if (!cap?.isNativePlatform?.()) return null;
-  const plugin = cap.registerPlugin ? cap.registerPlugin("SongRecognizer") : cap.Plugins?.SongRecognizer;
+  const plugin = nativePlugin("SongRecognizer");
   if (!plugin) return null;
   let buf = decoded;
   if (![44100, 48000].includes(buf.sampleRate)) {
@@ -232,7 +233,7 @@ async function recognizeSong(decoded) {
 async function recognizeFile(file) {
   const cap = window.Capacitor;
   if (!cap?.isNativePlatform?.() || !file) return null;
-  const plugin = cap.registerPlugin ? cap.registerPlugin("SongRecognizer") : cap.Plugins?.SongRecognizer;
+  const plugin = nativePlugin("SongRecognizer");
   if (!plugin?.match || !plugin.beginFile) return null;
   const ext = (file.name.match(/\.([a-z0-9]+)$/i)?.[1] || (file.type.split("/")[1] || "m4a")).toLowerCase().replace("quicktime", "mov");
   const { id } = await plugin.beginFile();
@@ -275,7 +276,7 @@ async function recognizeFile(file) {
 async function decodeNatively(file, ctx) {
   const cap = window.Capacitor;
   if (!cap?.isNativePlatform?.()) return null;
-  const plugin = cap.registerPlugin ? cap.registerPlugin("SongRecognizer") : cap.Plugins?.SongRecognizer;
+  const plugin = nativePlugin("SongRecognizer");
   if (!plugin?.decodeAudio) return null;
   // Send the file in 2 MB pieces: one huge message can fail for long songs or videos.
   const ext = (file.name.match(/\.([a-z0-9]+)$/i)?.[1] || (file.type.split("/")[1] || "m4a")).toLowerCase().replace("quicktime", "mov");
